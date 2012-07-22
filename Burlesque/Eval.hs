@@ -12,7 +12,4 @@ eval [] = return ()
 
 
 evalI v@(BlsqIdent i) = lookupBuiltin i
-evalI v@(BlsqInt _) = modify (v:)
-evalI v@(BlsqChar _) = modify (v:)
-evalI v@(BlsqStr _) = modify (v:)
-evalI _ = return () 
+evalI v = modify (v:)
