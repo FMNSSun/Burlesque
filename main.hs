@@ -5,11 +5,13 @@ import Burlesque.Display
 
 import System.Environment
 
-runProgram p =
- mapM_ (putStrLn . toDisplay) $ execState (eval (runParserWithString parseBlsq p)) []
+runProgram :: String -> String -> String
+runProgram p stdin =
+ unlines . map toDisplay $ execState (eval (runParserWithString parseBlsq p)) [BlsqStr stdin]
 
 main = do
  args <- getArgs
  case args of
-   [file] -> do readFile file >>= runProgram
+   [file] -> do prog <- readFile file
+                interact $ runProgram prog
    _ -> error "Invalid usage"

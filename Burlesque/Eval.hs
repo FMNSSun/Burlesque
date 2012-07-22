@@ -13,7 +13,8 @@ eval [] = return ()
 
 builtins = [
   (".+", builtinAdd),
-  (".-", builtinSub)
+  (".-", builtinSub),
+  ("<-", builtinReverse)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -53,4 +54,10 @@ builtinSub = do
                                     then put $ (BlsqStr $ take (length a - length b) a) : xs
                                     else put $ (BlsqStr a) : xs
    _ -> put $ (BlsqError "Berlesque: (.-) Invalid arguments!") : st
- 
+
+builtinReverse :: BlsqState
+builtinReverse = do
+ st <- get
+ case st of
+  (BlsqStr a) : xs -> put $ (BlsqStr $ reverse a) : xs
+  _ -> put $ (BlsqError "Berlesque: (<-) Invalid arguments!") : st
