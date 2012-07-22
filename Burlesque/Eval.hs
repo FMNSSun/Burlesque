@@ -14,7 +14,9 @@ eval [] = return ()
 builtins = [
   (".+", builtinAdd),
   (".-", builtinSub),
-  ("<-", builtinReverse)
+  ("<-", builtinReverse),
+  ("ln", builtinLines),
+  ("ri", builtinReadInt)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -37,7 +39,7 @@ builtinAdd = do
    ((BlsqInt b):(BlsqInt a):xs) -> put $ (BlsqInt (a + b)) : xs
    ((BlsqStr b):(BlsqStr a):xs) -> put $ (BlsqStr (a ++ b)) : xs
    ((BlsqStr b):(BlsqInt a):xs) -> put $ (BlsqStr $ take a b) : xs
-   _ -> put $ (BlsqError "Berlesque: (.+) Invalid arguments!") : st
+   _ -> put $ (BlsqError "Burlesque: (.+) Invalid arguments!") : st
 
 -- | builtinSub
 --
@@ -53,11 +55,37 @@ builtinSub = do
    ((BlsqStr b):(BlsqStr a):xs) -> if b `isSuffixOf` a
                                     then put $ (BlsqStr $ take (length a - length b) a) : xs
                                     else put $ (BlsqStr a) : xs
-   _ -> put $ (BlsqError "Berlesque: (.-) Invalid arguments!") : st
+   _ -> put $ (BlsqError "Burlesque: (.-) Invalid arguments!") : st
 
+-- | builtinReverse
+-- Int -> Reverse digit
+-- Str -> Reverse string
 builtinReverse :: BlsqState
 builtinReverse = do
  st <- get
  case st of
   (BlsqStr a) : xs -> put $ (BlsqStr $ reverse a) : xs
-  _ -> put $ (BlsqError "Berlesque: (<-) Invalid arguments!") : st
+  (BlsqInt a) : xs -> put $ (BlsqInt . read . reverse . show $ a) : xs
+  _ -> put $ (BlsqError "Burlesque: (<-) Invalid arguments!") : st
+
+-- | builtinLines
+-- Str -> Returns a list of lines
+-- Int -> Number of digits
+builtinLines :: BlsqState
+builtinLines = do
+ st <- get
+ case st of
+  (BlsqStr a) : xs -> put $ (BlsqBlock . map BlsqStr . lines $ a) : xs
+  (BlsqInt a) : xs -> put $ (BlsqInt . length . show $ a) : xs
+  _ -> put $ (BlsqError "Burlesque: (ln) Invalid arguments!") : st
+
+-- | builtinReadInt
+-- Int -> Identity
+-- Str -> Convert to Int
+builtinReadInt :: BlsqState
+builtinReadInt = do
+ st <- get
+ case st of
+  (BlsqStr a) : xs -> put $ (BlsqInt . read $ a) : xs
+  (BlsqInt a) : xs -> put $ (BlsqInt a) : xs
+  _ -> put $ (BlsqError "Burlesque: (ri) Invalid arguments!") : st
