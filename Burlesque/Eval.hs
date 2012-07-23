@@ -86,6 +86,7 @@ builtinSub = do
 --
 -- > Int -> Reverse digit
 -- > Str -> Reverse string
+-- > Block -> Reverse block
 builtinReverse :: BlsqState
 builtinReverse = do
  st <- get
@@ -93,6 +94,7 @@ builtinReverse = do
   case st of
    (BlsqStr a) : xs -> (BlsqStr $ reverse a) : xs
    (BlsqInt a) : xs -> (BlsqInt . read . reverse . show $ a) : xs
+   (BlsqBlock a) : xs -> (BlsqBlock $ reverse a) : xs
    _ -> (BlsqError "Burlesque: (<-) Invalid arguments!") : st
 
 -- | > ln
