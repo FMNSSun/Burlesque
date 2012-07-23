@@ -29,6 +29,8 @@ runStack p xs = execState (eval p) xs
 builtins = [
   (".+", builtinAdd),
   (".-", builtinSub),
+  ("./", builtinDiv),
+  (".*", builtinMul),
   (".>", builtinGreater),
   (".<", builtinSmaller),
   ("==", builtinEqual),
@@ -84,6 +86,34 @@ builtinSub = do
                                      then (BlsqStr $ take (length a - length b) a) : xs
                                      else (BlsqStr a) : xs
     _ -> (BlsqError "Burlesque: (.-) Invalid arguments!") : st
+
+-- | > .*
+--
+-- > Int Int -> Regular integer multiplication
+-- > Str Int -> List containing n copies of Str
+-- > Char Int -> A string containing n copies of Char
+-- > Block Int -> A Block containing n copies of Block
+builtinMul :: BlsqState
+builtinMul = do
+ st <- get
+ putResult $
+  case st of
+    (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a * b) : xs
+    (BlsqInt b : BlsqStr a : xs) -> BlsqBlock (replicate b (BlsqStr a)) : xs
+    (BlsqInt b : BlsqChar a : xs) -> BlsqStr (replicate b a) : xs
+    (BlsqInt b : BlsqBlock a : xs) -> BlsqBlock (replicate b (BlsqBlock a)) : xs
+    _ -> (BlsqError "Burlesque: (.*) Invalid arguments!") : st
+
+-- | > ./
+--
+-- > Int Int -> Regular integer multiplication
+builtinDiv :: BlsqState
+builtinDiv = do
+ st <- get
+ putResult $
+  case st of
+    (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a `div` b) : xs
+    _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
 
 -- | > <-
 --
@@ -154,7 +184,7 @@ builtinSum = do
            q -> q
        sum' _ = BlsqError "Burlesque: (++) Invalid element!" 
 
--- | > > [~
+-- | > [~
 --
 -- > Block -> Last element
 -- > Str -> Last character
