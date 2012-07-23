@@ -1,5 +1,5 @@
 module Burlesque.Eval
-  (eval)
+  (eval, run, runStack)
  where
 
 import Burlesque.Types
@@ -8,6 +8,9 @@ import Burlesque.Parser
 import Data.Maybe
 import Data.List
 
+import Debug.Trace
+
+-- | Evaluate a Burlesque program
 eval :: BlsqProg -> BlsqState
 eval (x:xs) = evalI x >> eval xs
 eval [] = return ()
@@ -15,7 +18,13 @@ eval [] = return ()
 evalI v@(BlsqIdent i) = lookupBuiltin i
 evalI v = modify (v:)
 
-run p x = execState (eval p) [x]
+-- | Run program with empty stack
+run :: BlsqProg -> BlsqStack
+run p = runStack p []
+
+-- | Run program with predefined stack
+runStack :: BlsqProg -> BlsqStack -> BlsqStack
+runStack p xs = execState (eval p) xs
 
 builtins = [
   (".+", builtinAdd),
@@ -24,13 +33,17 @@ builtins = [
   ("ln", builtinLines),
   ("ri", builtinReadInt),
   ("ps", builtinParse),
+  ("if", builtinIff),
+  ("e!", builtinEval),
+  ("w!", builtinWhile),
   ("++", builtinSum),
   ("[~", builtinLast),
   ("~]", builtinInit),
   ("\\[", builtinConcat),
   ("m[", builtinMap),
   ("\\/", builtinSwap),
-  ("^^", builtinDup)
+  ("^^", builtinDup),
+  ("vv", builtinPop)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -189,7 +202,7 @@ builtinMap = do
    (BlsqBlock a : BlsqBlock b : xs) -> (BlsqBlock $ map' a b) : xs
    _ -> BlsqError "Burlesque: (m[) Invalid arguments!" : st
  where map' f [] = []
-       map' f (x:xs) = (run f x) ++ (map' f xs)
+       map' f (x:xs) = (runStack f [x]) ++ (map' f xs)
 
 -- | builtinSwap
 -- StackManip
@@ -210,3 +223,47 @@ builtinDup = do
   case st of
    (a : xs) -> (a : a : xs)
    _ -> BlsqError "Burlesque: (^^) Stack size error!" : st
+
+-- | builtinPop
+-- StackManip
+builtinPop :: BlsqState
+builtinPop = do
+ st <- get
+ putResult $
+  case st of
+   (a : xs) -> xs
+   _ -> BlsqError "Burlesque: (vv) Stack size error!" : st
+
+-- | builtinIff
+-- Block Int -> If and only if
+builtinIff :: BlsqState
+builtinIff = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt 0 : BlsqBlock b : xs) -> xs
+   (BlsqInt _ : BlsqBlock b : xs) -> runStack b xs
+   _ -> BlsqError "Burlesque (if) Invalid arguments!" : st
+
+-- | eval
+-- Block -> Eval
+builtinEval :: BlsqState
+builtinEval = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock b : xs) -> runStack b xs
+   _ -> BlsqError "Burlesque (e!) Invalid arguments!" : st
+
+builtinWhile :: BlsqState
+builtinWhile = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock b : BlsqBlock a : xs) -> while' a b xs
+   _ -> BlsqError "Burlesque (w!) Invalid arguments!" : st
+ where while' f g xs = case runStack g xs of
+                        (BlsqInt 0 : ys) -> xs
+                        (BlsqInt a : ys) -> while' f g $ runStack f xs
+                        (_ : ys) -> BlsqError "Burlesque (w!) Invalid!" : ys
+                        _ -> BlsqError "Burlesque (w!) Stack size error!" : xs
