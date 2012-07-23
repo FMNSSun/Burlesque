@@ -151,8 +151,8 @@ builtinSum = do
 
 -- | > > [~
 --
--- > > Block -> Last element
--- > > Str -> Last character
+-- > Block -> Last element
+-- > Str -> Last character
 builtinLast :: BlsqState
 builtinLast = do
  st <- get
