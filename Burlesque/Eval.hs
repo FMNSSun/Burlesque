@@ -10,7 +10,7 @@ import Data.List
 
 import Debug.Trace
 
--- | Evaluate a Burlesque program
+-- | > Evaluate a Burlesque program
 eval :: BlsqProg -> BlsqState
 eval (x:xs) = evalI x >> eval xs
 eval [] = return ()
@@ -18,11 +18,11 @@ eval [] = return ()
 evalI v@(BlsqIdent i) = lookupBuiltin i
 evalI v = modify (v:)
 
--- | Run program with empty stack
+-- | > Run program with empty stack
 run :: BlsqProg -> BlsqStack
 run p = runStack p []
 
--- | Run program with predefined stack
+-- | > Run program with predefined stack
 runStack :: BlsqProg -> BlsqStack -> BlsqStack
 runStack p xs = execState (eval p) xs
 
@@ -50,11 +50,11 @@ lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
 
 putResult = put
 
--- | builtinAdd
+-- | > .+
 -- 
--- Int Int -> Regular integer addition
--- Str Str -> String concatenation
--- Int Str -> Take first n characters of a string
+-- > Int Int -> Regular integer addition
+-- > Str Str -> String concatenation
+-- > Int Str -> Take first n characters of a string
 builtinAdd :: BlsqState
 builtinAdd = do
  st <- get
@@ -65,11 +65,11 @@ builtinAdd = do
     ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ take a b) : xs
     _ -> (BlsqError "Burlesque: (.+) Invalid arguments!") : st
 
--- | builtinSub
+-- | > .-
 --
--- Int Int -> Regular integer subtraction
--- Int Str -> Drop first n characters of a string
--- Str Str -> Opposite of string concatenation
+-- > Int Int -> Regular integer subtraction
+-- > Int Str -> Drop first n characters of a string
+-- > Str Str -> Opposite of string concatenation
 builtinSub :: BlsqState
 builtinSub = do
  st <- get
@@ -82,9 +82,10 @@ builtinSub = do
                                      else (BlsqStr a) : xs
     _ -> (BlsqError "Burlesque: (.-) Invalid arguments!") : st
 
--- | builtinReverse
--- Int -> Reverse digit
--- Str -> Reverse string
+-- | > <-
+--
+-- > Int -> Reverse digit
+-- > Str -> Reverse string
 builtinReverse :: BlsqState
 builtinReverse = do
  st <- get
@@ -94,9 +95,10 @@ builtinReverse = do
    (BlsqInt a) : xs -> (BlsqInt . read . reverse . show $ a) : xs
    _ -> (BlsqError "Burlesque: (<-) Invalid arguments!") : st
 
--- | builtinLines
--- Str -> Returns a list of lines
--- Int -> Number of digits
+-- | > ln
+--
+-- > Str -> Returns a list of lines
+-- > Int -> Number of digits
 builtinLines :: BlsqState
 builtinLines = do
  st <- get
@@ -106,9 +108,10 @@ builtinLines = do
    (BlsqInt a) : xs -> (BlsqInt . length . show $ a) : xs
    _ -> (BlsqError "Burlesque: (ln) Invalid arguments!") : st
 
--- | builtinReadInt
--- Int -> Identity
--- Str -> Convert to Int
+-- | > ri
+--
+-- > Int -> Identity
+-- > Str -> Convert to Int
 builtinReadInt :: BlsqState
 builtinReadInt = do
  st <- get
@@ -118,8 +121,9 @@ builtinReadInt = do
    (BlsqInt a) : xs -> (BlsqInt a) : xs
    _ -> (BlsqError "Burlesque: (ri) Invalid arguments!") : st
 
--- | builtinParse
--- Str -> Parses a string as a BlsqExp
+-- | > ps
+--
+-- > Str -> Parses a string as a BlsqExp
 builtinParse :: BlsqState
 builtinParse = do
  st <- get
@@ -128,8 +132,9 @@ builtinParse = do
    (BlsqStr a) : xs -> (BlsqBlock (runParserWithString parseBlsq a)) : xs
    _ -> (BlsqError "Burlesque: (ps) Invalid arguments!") : st
 
--- | builtinSum
--- Block -> Sum of all (Int) elements
+-- | > ++
+--
+-- > Block -> Sum of all (Int) elements
 builtinSum :: BlsqState
 builtinSum = do
  st <- get
@@ -144,9 +149,10 @@ builtinSum = do
            q -> q
        sum' _ = BlsqError "Burlesque: (++) Invalid element!" 
 
--- | builtinLast
--- Block -> Last element
--- Str -> Last character
+-- | > > [~
+--
+-- > > Block -> Last element
+-- > > Str -> Last character
 builtinLast :: BlsqState
 builtinLast = do
  st <- get
@@ -156,9 +162,10 @@ builtinLast = do
    (BlsqStr a) : xs -> BlsqChar (last a) : xs
    _ -> (BlsqError "Burlesque: ([~) Invalid arguments!") : st
 
--- | builtinInit
--- Block -> All except last elements
--- Str -> All except last character
+-- | > ~]
+--
+-- > Block -> All except last elements
+-- > Str -> All except last character
 builtinInit :: BlsqState
 builtinInit = do
  st <- get
@@ -168,8 +175,9 @@ builtinInit = do
    (BlsqStr a) : xs -> BlsqStr (init a) : xs
    _ -> (BlsqError "Burlesque: (~]) Invalid arguments!") : st
 
--- | builtinConcat
--- Block -> Concatenates Blocks in Block or Strings in Block
+-- | > \[
+--
+-- > Block -> Concatenates Blocks in Block or Strings in Block
 builtinConcat :: BlsqState
 builtinConcat = do
  st <- get
@@ -192,8 +200,9 @@ builtinConcat = do
            _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting String!"
        concat' _ = BlsqError "Burlesque: (\\[) Invalid element!"
 
--- | builtinMap
--- Block Block -> Map
+-- | > m[
+--
+-- > Block Block -> Map
 builtinMap :: BlsqState
 builtinMap = do
  st <- get
@@ -204,8 +213,9 @@ builtinMap = do
  where map' f [] = []
        map' f (x:xs) = (runStack f [x]) ++ (map' f xs)
 
--- | builtinSwap
--- StackManip
+-- | > \/
+--
+-- > StackManip -> Swap
 builtinSwap :: BlsqState
 builtinSwap = do
  st <- get
@@ -214,8 +224,9 @@ builtinSwap = do
    (a : b : xs) -> b : a : xs
    _ -> BlsqError "Burlesque: (\\/) Stack size error!" : st
 
--- | builtinDup
--- StackManip
+-- | > ^^
+--
+-- > StackManip -> Duplicate
 builtinDup :: BlsqState
 builtinDup = do
  st <- get
@@ -224,8 +235,9 @@ builtinDup = do
    (a : xs) -> (a : a : xs)
    _ -> BlsqError "Burlesque: (^^) Stack size error!" : st
 
--- | builtinPop
--- StackManip
+-- | > vv
+--
+-- > StackManip -> Pop
 builtinPop :: BlsqState
 builtinPop = do
  st <- get
@@ -234,8 +246,9 @@ builtinPop = do
    (a : xs) -> xs
    _ -> BlsqError "Burlesque: (vv) Stack size error!" : st
 
--- | builtinIff
--- Block Int -> If and only if
+-- | > if
+--
+-- > Block Int -> If and only if
 builtinIff :: BlsqState
 builtinIff = do
  st <- get
@@ -245,8 +258,9 @@ builtinIff = do
    (BlsqInt _ : BlsqBlock b : xs) -> runStack b xs
    _ -> BlsqError "Burlesque (if) Invalid arguments!" : st
 
--- | eval
--- Block -> Eval
+-- | > e!
+--
+-- > Block -> Eval
 builtinEval :: BlsqState
 builtinEval = do
  st <- get
@@ -255,6 +269,9 @@ builtinEval = do
    (BlsqBlock b : xs) -> runStack b xs
    _ -> BlsqError "Burlesque (e!) Invalid arguments!" : st
 
+-- | > w!
+--
+-- > Block f, Block g -> while g do f
 builtinWhile :: BlsqState
 builtinWhile = do
  st <- get
