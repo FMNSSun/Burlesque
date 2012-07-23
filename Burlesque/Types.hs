@@ -15,6 +15,7 @@ data BlsqExp =  BlsqInt Int
               | BlsqSpecial String
               | BlsqBlock [BlsqExp]
               | BlsqError String
+              | BlsqNil
   deriving (Show,Eq,Read)
 
 type BlsqStack = [BlsqExp]

@@ -18,7 +18,8 @@ builtins = [
   ("ps", builtinParse),
   ("++", builtinSum),
   ("[~", builtinLast),
-  ("~]", builtinInit)
+  ("~]", builtinInit),
+  ("\\[", builtinConcat)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -115,7 +116,7 @@ builtinSum = do
          case sum' xs of
            BlsqInt b -> BlsqInt (a + b)
            q -> q
-       sum' _ = BlsqError "Burlesque: (++) Invalid element in block!" 
+       sum' _ = BlsqError "Burlesque: (++) Invalid element!" 
 
 -- | builtinLast
 -- Block -> Last element
@@ -139,3 +140,27 @@ builtinInit = do
   case st of
    (BlsqBlock a) : xs -> (BlsqBlock (init a)) : xs
    (BlsqStr a) : xs -> BlsqStr (init a) : xs
+   _ -> (BlsqError "Burlesque: (~]) Invalid arguments!") : st
+
+-- | builtinConcat
+-- Block -> Concatenates Blocks in Block or Strings in Block
+builtinConcat :: BlsqState
+builtinConcat = do
+ st <- get
+ put $
+  case st of
+   (BlsqBlock a) : xs -> (concat' a) : xs
+ where concat' [] = BlsqNil
+       concat' (BlsqBlock a : as) = 
+         case concat' as of
+           BlsqBlock b -> BlsqBlock $ a ++ b
+           BlsqError q -> BlsqError q
+           BlsqNil -> BlsqBlock $ a
+           _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting Block!" 
+       concat' (BlsqStr a : as) =
+         case concat' as of
+           BlsqStr b -> BlsqStr $ a ++ b
+           BlsqError q -> BlsqError q
+           BlsqNil -> BlsqStr $ a
+           _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting String!"
+       concat' _ = BlsqError "Burlesque: (\\[) Invalid element!"
