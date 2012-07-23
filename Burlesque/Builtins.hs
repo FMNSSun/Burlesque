@@ -150,6 +150,7 @@ builtinConcat = do
  put $
   case st of
    (BlsqBlock a) : xs -> (concat' a) : xs
+   _ -> (BlsqError "Burlesque: (\\[) Invalid arguments!") : st
  where concat' [] = BlsqNil
        concat' (BlsqBlock a : as) = 
          case concat' as of
