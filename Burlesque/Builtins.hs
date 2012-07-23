@@ -165,3 +165,13 @@ builtinConcat = do
            BlsqNil -> BlsqStr $ a
            _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting String!"
        concat' _ = BlsqError "Burlesque: (\\[) Invalid element!"
+
+builtinMap :: BlsqState
+builtinMap = do
+ st <- get
+ put $
+  case st of
+   (BlsqBlock a : BlsqBlock b : xs) -> (BlsqBlock . map' a b) : xs
+   _ -> BlsqError "Burlesque: (m[) Invalid arguments!"
+ where map' f [] = []
+       map' f (x:xs) = evalI f x
