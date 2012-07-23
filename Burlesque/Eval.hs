@@ -3,20 +3,19 @@ module Burlesque.Eval
  where
 
 import Burlesque.Types
-import Burlesque.Builtins
+import Burlesque.Parser
+
+import Data.Maybe
+import Data.List
 
 eval :: BlsqProg -> BlsqState
 eval (x:xs) = evalI x >> eval xs
 eval [] = return ()
 
-
-
 evalI v@(BlsqIdent i) = lookupBuiltin i
 evalI v = modify (v:)
 
-
-import Data.Maybe
-import Data.List
+run p x = execState (eval p) [x]
 
 builtins = [
   (".+", builtinAdd),
@@ -28,10 +27,15 @@ builtins = [
   ("++", builtinSum),
   ("[~", builtinLast),
   ("~]", builtinInit),
-  ("\\[", builtinConcat)
+  ("\\[", builtinConcat),
+  ("m[", builtinMap),
+  ("\\/", builtinSwap),
+  ("^^", builtinDup)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
+
+putResult = put
 
 -- | builtinAdd
 -- 
@@ -41,7 +45,7 @@ lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
 builtinAdd :: BlsqState
 builtinAdd = do
  st <- get
- put $
+ putResult $
   case st of
     ((BlsqInt b):(BlsqInt a):xs) -> (BlsqInt (a + b)) : xs
     ((BlsqStr b):(BlsqStr a):xs) -> (BlsqStr (a ++ b)) : xs
@@ -56,7 +60,7 @@ builtinAdd = do
 builtinSub :: BlsqState
 builtinSub = do
  st <- get
- put $
+ putResult $
   case st of
     ((BlsqInt b):(BlsqInt a):xs) -> (BlsqInt (a - b)) : xs
     ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ drop a b) : xs
@@ -71,7 +75,7 @@ builtinSub = do
 builtinReverse :: BlsqState
 builtinReverse = do
  st <- get
- put $
+ putResult $
   case st of
    (BlsqStr a) : xs -> (BlsqStr $ reverse a) : xs
    (BlsqInt a) : xs -> (BlsqInt . read . reverse . show $ a) : xs
@@ -83,7 +87,7 @@ builtinReverse = do
 builtinLines :: BlsqState
 builtinLines = do
  st <- get
- put $
+ putResult $
   case st of
    (BlsqStr a) : xs -> (BlsqBlock . map BlsqStr . lines $ a) : xs
    (BlsqInt a) : xs -> (BlsqInt . length . show $ a) : xs
@@ -95,7 +99,7 @@ builtinLines = do
 builtinReadInt :: BlsqState
 builtinReadInt = do
  st <- get
- put $
+ putResult $
   case st of
    (BlsqStr a) : xs -> (BlsqInt . read $ a) : xs
    (BlsqInt a) : xs -> (BlsqInt a) : xs
@@ -106,7 +110,7 @@ builtinReadInt = do
 builtinParse :: BlsqState
 builtinParse = do
  st <- get
- put $
+ putResult $
   case st of
    (BlsqStr a) : xs -> (BlsqBlock (runParserWithString parseBlsq a)) : xs
    _ -> (BlsqError "Burlesque: (ps) Invalid arguments!") : st
@@ -116,7 +120,7 @@ builtinParse = do
 builtinSum :: BlsqState
 builtinSum = do
  st <- get
- put $
+ putResult $
   case st of
    (BlsqBlock a) : xs -> (sum' a) : xs
    _ -> (BlsqError "Burlesque: (++) Invalid arguments!") : st
@@ -133,7 +137,7 @@ builtinSum = do
 builtinLast :: BlsqState
 builtinLast = do
  st <- get
- put $
+ putResult $
   case st of
    (BlsqBlock a) : xs -> last a : xs
    (BlsqStr a) : xs -> BlsqChar (last a) : xs
@@ -145,7 +149,7 @@ builtinLast = do
 builtinInit :: BlsqState
 builtinInit = do
  st <- get
- put $
+ putResult $
   case st of
    (BlsqBlock a) : xs -> (BlsqBlock (init a)) : xs
    (BlsqStr a) : xs -> BlsqStr (init a) : xs
@@ -156,7 +160,7 @@ builtinInit = do
 builtinConcat :: BlsqState
 builtinConcat = do
  st <- get
- put $
+ putResult $
   case st of
    (BlsqBlock a) : xs -> (concat' a) : xs
    _ -> (BlsqError "Burlesque: (\\[) Invalid arguments!") : st
@@ -175,12 +179,34 @@ builtinConcat = do
            _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting String!"
        concat' _ = BlsqError "Burlesque: (\\[) Invalid element!"
 
+-- | builtinMap
+-- Block Block -> Map
 builtinMap :: BlsqState
 builtinMap = do
  st <- get
- put $
+ putResult $
   case st of
-   (BlsqBlock a : BlsqBlock b : xs) -> (BlsqBlock . map' a b) : xs
-   _ -> BlsqError "Burlesque: (m[) Invalid arguments!"
+   (BlsqBlock a : BlsqBlock b : xs) -> (BlsqBlock $ map' a b) : xs
+   _ -> BlsqError "Burlesque: (m[) Invalid arguments!" : st
  where map' f [] = []
-       map' f (x:xs) = evalI f x
+       map' f (x:xs) = (run f x) ++ (map' f xs)
+
+-- | builtinSwap
+-- StackManip
+builtinSwap :: BlsqState
+builtinSwap = do
+ st <- get
+ putResult $
+  case st of
+   (a : b : xs) -> b : a : xs
+   _ -> BlsqError "Burlesque: (\\/) Stack size error!" : st
+
+-- | builtinDup
+-- StackManip
+builtinDup :: BlsqState
+builtinDup = do
+ st <- get
+ putResult $
+  case st of
+   (a : xs) -> (a : a : xs)
+   _ -> BlsqError "Burlesque: (^^) Stack size error!" : st
