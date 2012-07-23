@@ -29,6 +29,9 @@ runStack p xs = execState (eval p) xs
 builtins = [
   (".+", builtinAdd),
   (".-", builtinSub),
+  (".>", builtinGreater),
+  (".<", builtinSmaller),
+  ("==", builtinEqual),
   ("<-", builtinReverse),
   ("ln", builtinLines),
   ("ri", builtinReadInt),
@@ -286,3 +289,37 @@ builtinWhile = do
                         (BlsqInt a : ys) -> while' f g $ runStack f xs
                         (_ : ys) -> BlsqError "Burlesque (w!) Invalid!" : ys
                         _ -> BlsqError "Burlesque (w!) Stack size error!" : xs
+
+-- | > (.>)
+--
+-- > Int a , Int b -> a > b 
+builtinGreater :: BlsqState
+builtinGreater = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt b : BlsqInt a : xs) -> (BlsqInt $ if a > b then 1 else 0) : xs
+   _ -> BlsqError "Burlesque (.>) Invalid arguments!" : st
+
+-- | > (.<)
+--
+-- > Int a , Int b -> a < b 
+builtinSmaller :: BlsqState
+builtinSmaller = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt b : BlsqInt a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
+   _ -> BlsqError "Burlesque (.<) Invalid arguments!" : st
+
+-- | > (==)
+--
+-- > Any a , Any b -> a == b 
+builtinEqual :: BlsqState
+builtinEqual = do
+ st <- get
+ putResult $
+  case st of
+   (b : a : xs) -> (BlsqInt $ if a == b then 1 else 0) : xs
+   _ -> BlsqError "Burlesque (==) Invalid arguments!" : st
+
