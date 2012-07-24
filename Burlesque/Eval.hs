@@ -47,6 +47,9 @@ builtins = [
   ("++", builtinSum),
   ("[~", builtinLast),
   ("~]", builtinInit),
+  ("[-", builtinTail),
+  ("-]", builtinHead),
+  ("[+", builtinAppend),
   ("\\[", builtinConcat),
   ("m[", builtinMap),
   ("\\/", builtinSwap),
@@ -236,6 +239,45 @@ builtinInit = do
    (BlsqBlock a) : xs -> (BlsqBlock (init a)) : xs
    (BlsqStr a) : xs -> BlsqStr (init a) : xs
    _ -> (BlsqError "Burlesque: (~]) Invalid arguments!") : st
+
+-- | > [-
+--
+-- > Block -> All except first element
+-- > Str -> All except first character
+builtinTail :: BlsqState
+builtinTail = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a) : xs -> (BlsqBlock (tail a)) : xs
+   (BlsqStr a) : xs -> BlsqStr (tail a) : xs
+   _ -> (BlsqError "Burlesque: ([-) Invalid arguments!") : st
+
+-- | > -]
+--
+-- > Block -> First element
+-- > Str -> First character
+builtinHead :: BlsqState
+builtinHead = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a) : xs -> head a : xs
+   (BlsqStr a) : xs -> BlsqChar (head a) : xs
+   _ -> (BlsqError "Burlesque: (-]) Invalid arguments!") : st
+
+-- | > [+
+--
+-- > Block Any -> Append element
+-- > Str Char -> Append char
+builtinAppend :: BlsqState
+builtinAppend = do
+ st <- get
+ putResult $
+  case st of
+   (b : BlsqBlock a : xs) -> BlsqBlock (a ++ [b]) : xs
+   (BlsqChar b : BlsqStr a : xs) -> BlsqStr (a ++ [b]) : xs
+   _ -> (BlsqError "Burlesque: ([+) Invalid arguments!") : st
 
 -- | > \[
 --
