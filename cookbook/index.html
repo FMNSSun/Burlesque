@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd" xml:lang="en"><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link href="style.css" rel="stylesheet" type="text/css">
+    <title>Burlesque - Cookbook</title>
+  </head>
+  <body>
+<h1>Burlesque - The one and only cookbook</h1>
+<p>
+ Welcome to the Burlesque cookbook! It's a good thing that you've decided to learn
+ this neat language. You will see that maybe despite what everyone else says that
+ Burlesque is a really clever and cool language. Don't let them stop you to learn Burlesque!
+ It's very much appreciated if you try to make other people learn Burlesque and maybe someday we
+ can replace other languages! If this is your first programming language you're learning then
+ your freaking insane, but that's a good thing. A word from the author!
+<pre>
+ It seems that not everybody even knows the word 'Burlesque' so I thought why not make a programming language
+ and name it 'Burlesque', it'll be fun. For those offended by that word: It's part of our/a culture, get over it!
+ Anyhow... Burlesque is programming language with no I/O capabilities. Some interpreters push STDIN at the start
+ of a program and print out the remaining elements of the stack once the program has terminated. I hope this
+ language will be very satiric, ironic, cool, neat, nasty, insane and above all useful. Whenever you are
+ coding in a language and think "This language sucks..." please think about Burlesque as an alternative. Thank you.
+</pre>
+</p>
+<h2>Understanding Burlesque</h2>
+<h3>Understanding the syntax</h3>
+<p>
+ The syntax of Burlesque is very easy. The following example
+ shows the basic syntax for values. (From left to right: Int, Double, Character, String, Block)
+</p>
+<pre>
+<span class="int">123</span> <span class="dbl">3.14159</span> <span class="chr">'A</span> <span class="str">"ABC"</span> <span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span> <span class="int">5</span><span class="blck">}</span>
+</pre>
+<p>
+ An identifier (you can call it command if you like) is everything else with a length of only two characters. Also
+ keep in mind that spaces are optional.
+</p>
+<pre>
+<span class="id">ps</span> <span class="id">++</span>
+</pre>
+<h3>Understanding the stack</h3>
+<p>
+ Burlesque uses a stack "behind the scene". A stack is a data structure much like a pile (or stack) of books.
+ You can put (push) a book on the pile and you can take away (pop) a book from the top. Every value is automatically
+ pushed in the corresponding order.
+</p>
+<pre>
+<span class="int">1</span> <span class="int">2</span> <span class="int">3</span>
+</pre>
+<p>
+ This code results in a stack of 
+<pre>
+3 -- top
+2
+1 -- bottom
+</pre>
+ There are commands which support manipulating the stack directly. These are <b>^^</b> for duplicating the
+ element on the top, <b>\/</b> for swapping the two top most elemnts and <b>vv</b> for removing an element from the top.
+<pre>
+<span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="id">^^</span>
+</pre>
+ Results in a stack of
+<pre>
+3 -- top
+3
+2
+1 -- bottom
+</pre>
+<pre>
+<span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="id">vv</span>
+</pre>
+ Results in a stack of
+<pre>
+2 -- top
+1 -- bottom
+</pre>
+and ...
+<pre>
+<span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="id">\/</span>
+</pre>
+ Results in a stock of
+<pre>
+2 -- top
+3
+1 -- bottom
+</pre>
+</p>
+<h3>Understanding Blocks</h3>
+<p>
+ A Block is a list of values. It is also possible for a Block to contain other Blocks as well. 
+ Keep in mind that a Burlesque program is just a list of value: It's a Block. A command
+ is actually also just a value (but specially treated by the interpreter). Therefore, a
+ Block can contain commands too.
+</p>
+<h3>Understanding Commands</h3>
+<p>
+ A command that takes two values (takes two arguments) usually pops those, does its thing, and pushes the result back.
+ So doing <b>1 1 2 .+ .+</b> results in the following stacks [1],[1,1],[1,1,2],[1,3] and results finally in [4].
+ What a command actually does depends on which arguments you feed it. <b>.+</b> on two integers performs an addition
+ but if you feed it other stuff it'll do other stuff!
+</p>
+<h2>Arithmetic</h2>
+<p>
+ You can use Burlesque to do arithmetic for you! It supports addition <b>.+</b>, subtraction <b>.-</b>, multiplication <b>.*</b>
+ division <b>./</b> and more. Keep in mind that arithmetic is only defined if applied to two values of the same type. Let's
+ calculate (((1 + 2) * 3) -1) / 2! 
+<pre>
+<span class="int">1</span> <span class="int">2</span> <span class="id">.+</span> <span class="int">3</span> <span class="id">.*</span> <span class="int">1</span> <span class="id">.-</span> <span class="int">2</span> <span class="id">./</span>
+</pre>
+ First we push 1 and 2, add them together, push 3, multiply the previous result with 3, push 1, subtract 1 from the previous result, push 2, divide the previous result by 2. Pretty easy, isn't it?
+</p>
+  </body>
+</html>

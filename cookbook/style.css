@@ -1,0 +1,10 @@
+html , body { background-color: #FFFFFF; }
+span.id { color: #0000FF; }
+span.int { color: #FFA500; }
+span.dbl { color: #FF4500; }
+span.blck { color: #010101; font-weight: bold; }
+span.err { color: #FF0000; }
+span.str { color: #008000; }
+span.chr { color: #800000; }
+pre { border-top: solid 3px black; border-bottom: solid 1px black; 
+      background-color: #FAFBFC; padding: 5px; }

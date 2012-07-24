@@ -17,6 +17,8 @@ runProgramNoStdin :: String -> String
 runProgramNoStdin p =
  unlines . map toDisplay $ execState (eval (runParserWithString parseBlsq p)) []
 
+printHTML p = putStrLn $ intercalate " " $ map toHTML $ runParserWithString parseBlsq p
+
 main = do
  args <- getArgs
  case args of
