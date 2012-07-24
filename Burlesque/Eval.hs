@@ -1,5 +1,5 @@
 module Burlesque.Eval
-  (eval, run, runStack)
+  (eval, run, runStack, builtins)
  where
 
 import Burlesque.Types

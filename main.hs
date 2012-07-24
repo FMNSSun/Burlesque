@@ -5,7 +5,9 @@ import Burlesque.Display
 
 import System.Environment
 import System.IO
-import System.Console.Readline
+import System.Console.Haskeline
+import System.Console.Haskeline.Completion
+import Data.List
 
 runProgram :: String -> String -> String
 runProgram p stdin =
@@ -18,23 +20,30 @@ runProgramNoStdin p =
 main = do
  args <- getArgs
  case args of
-   ["--file",file] -> do prog <- readFile file
-                         interact $ runProgram prog
-   ["--file-no-stdin",file] -> do prog <- readFile file
-                                  putStr $ runProgramNoStdin prog
+   ["--file",file] -> do 
+     prog <- readFile file
+     interact $ runProgram prog
+   ["--file-no-stdin",file] -> do 
+     prog <- readFile file
+     putStr $ runProgramNoStdin prog
    ["--no-stdin",prog] -> putStr $ runProgramNoStdin prog
-   ["--shell"] -> do hSetBuffering stdin LineBuffering
-                     hSetBuffering stdout NoBuffering
-                     burlesqueShell
+   ["--shell"] -> runInputT settings burlesqueShell
    [prog] -> interact $ runProgram prog
    _ -> error "Invalid usage"
+ where settings :: Settings IO
+       settings = Settings { 
+                   complete = completeWord Nothing " \t" $ return . search,
+                   historyFile = Nothing,
+                   autoAddHistory = True
+                  }
+       search s = map simpleCompletion . filter (s `isPrefixOf`) $ map fst builtins
+ 
 
 
 burlesqueShell = do
- line <- readline "blsq ) "
+ line <- getInputLine "blsq ) "
  case line of 
-   Nothing     -> putStrLn "* Abort..."
-   Just "exit!" -> putStrLn "* Exit!"
-   Just q -> do addHistory q
-                putStrLn $ runProgramNoStdin q
+   Nothing     -> outputStrLn "* Abort..." >> return ()
+   Just "exit!" -> outputStrLn "* Exit!" >> return()
+   Just q -> do outputStrLn $ runProgramNoStdin q
                 burlesqueShell
