@@ -4,6 +4,7 @@ import Burlesque.Eval
 import Burlesque.Display
 
 import System.Environment
+import System.IO
 
 runProgram :: String -> String -> String
 runProgram p stdin =
@@ -21,5 +22,15 @@ main = do
    ["--file-no-stdin",file] -> do prog <- readFile file
                                   putStr $ runProgramNoStdin prog
    ["--no-stdin",prog] -> putStr $ runProgramNoStdin prog
+   ["--shell"] -> do hSetBuffering stdin LineBuffering
+                     hSetBuffering stdout NoBuffering
+                     burlesqueShell
    [prog] -> interact $ runProgram prog
    _ -> error "Invalid usage"
+
+
+burlesqueShell = do
+ putStr "blsq ) "
+ prog <- getLine
+ putStrLn $ runProgramNoStdin prog
+ burlesqueShell
