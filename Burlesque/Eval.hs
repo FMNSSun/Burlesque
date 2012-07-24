@@ -136,6 +136,7 @@ builtinDiv = do
 -- | > **
 --
 -- > Int Int -> math pow
+-- > Double Double -> math pow
 -- > Block Block -> Merge blocks
 -- > Str Str -> Merge strings
 -- > Char -> ord
@@ -145,6 +146,7 @@ builtinPow = do
  putResult $
   case st of
     (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a ^ b) : xs
+    (BlsqDouble b : BlsqDouble a : xs) -> BlsqDouble (a ** b) : xs
     (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (merge' a b) : xs
     (BlsqStr b : BlsqStr a : xs) -> BlsqStr (merge' a b) : xs
     (BlsqChar a : xs) -> BlsqInt (toInteger . ord $ a) : xs

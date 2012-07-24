@@ -19,6 +19,7 @@ parseDouble :: Parser BlsqExp
 parseDouble = do n1 <- many1 digit
                  char '.'
                  n2 <- many1 digit
+                 optional spaces
                  return $ BlsqDouble (read (n1 ++ "." ++ n2))
 
 parseNumber :: Parser BlsqExp
@@ -59,7 +60,7 @@ parseString = do s <- char '"'
 
 parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseBlsq'
- where parseBlsq' = parseBlock <|> parseString <|> parseSep <|> try parseDouble <|> parseNumber <|> parseChar <|> parseIdent
+ where parseBlsq' = parseBlock <|> parseString <|> parseSep <|> (try parseDouble) <|> parseNumber <|> parseChar <|> parseIdent
 
 runParserWithString p input = 
   case parse p "" input of
