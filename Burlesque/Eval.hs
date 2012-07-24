@@ -7,6 +7,7 @@ import Burlesque.Parser
 
 import Data.Maybe
 import Data.List
+import Data.Char
 
 import Debug.Trace
 
@@ -33,6 +34,7 @@ builtins = [
   (".*", builtinMul),
   (".>", builtinGreater),
   (".<", builtinSmaller),
+  ("**", builtinPow),
   ("==", builtinEqual),
   ("<-", builtinReverse),
   ("ln", builtinLines),
@@ -114,6 +116,28 @@ builtinDiv = do
   case st of
     (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a `div` b) : xs
     _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
+
+-- | > **
+--
+-- > Int Int -> math pow
+-- > Block Block -> Merge blocks
+-- > Str Str -> Merge strings
+-- > Char -> ord
+builtinPow :: BlsqState
+builtinPow = do
+ st <- get
+ putResult $
+  case st of
+    (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a ^ b) : xs
+    (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (merge' a b) : xs
+    (BlsqStr b : BlsqStr a : xs) -> BlsqStr (merge' a b) : xs
+    (BlsqChar a : xs) -> BlsqInt (ord a) : xs
+ where merge' (x:xs) [] = x:xs
+       merge' [] (y:ys) = y:ys
+       merge' [] [] = []
+       merge' (x:xs) (y:ys) = x : y : merge' xs ys
+
+  
 
 -- | > <-
 --
