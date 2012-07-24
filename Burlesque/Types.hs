@@ -8,7 +8,7 @@ module Burlesque.Types
 
 import Control.Monad.State
 
-data BlsqExp =  BlsqInt Int
+data BlsqExp =  BlsqInt Integer
               | BlsqDouble Double
               | BlsqChar Char
               | BlsqStr String

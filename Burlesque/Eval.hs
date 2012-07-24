@@ -76,7 +76,7 @@ builtinAdd = do
   case st of
     ((BlsqInt b):(BlsqInt a):xs) -> (BlsqInt (a + b)) : xs
     ((BlsqStr b):(BlsqStr a):xs) -> (BlsqStr (a ++ b)) : xs
-    ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ take a b) : xs
+    ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ genericTake a b) : xs
     (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (a ++ b) : xs
     _ -> (BlsqError "Burlesque: (.+) Invalid arguments!") : st
 
@@ -91,9 +91,9 @@ builtinSub = do
  putResult $
   case st of
     ((BlsqInt b):(BlsqInt a):xs) -> (BlsqInt (a - b)) : xs
-    ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ drop a b) : xs
+    ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ genericDrop a b) : xs
     ((BlsqStr b):(BlsqStr a):xs) -> if b `isSuffixOf` a
-                                     then (BlsqStr $ take (length a - length b) a) : xs
+                                     then (BlsqStr $ genericTake (genericLength a - length b) a) : xs
                                      else (BlsqStr a) : xs
     _ -> (BlsqError "Burlesque: (.-) Invalid arguments!") : st
 
@@ -109,9 +109,9 @@ builtinMul = do
  putResult $
   case st of
     (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a * b) : xs
-    (BlsqInt b : BlsqStr a : xs) -> BlsqBlock (replicate b (BlsqStr a)) : xs
-    (BlsqInt b : BlsqChar a : xs) -> BlsqStr (replicate b a) : xs
-    (BlsqInt b : BlsqBlock a : xs) -> BlsqBlock (replicate b (BlsqBlock a)) : xs
+    (BlsqInt b : BlsqStr a : xs) -> BlsqBlock (genericReplicate b (BlsqStr a)) : xs
+    (BlsqInt b : BlsqChar a : xs) -> BlsqStr (genericReplicate b a) : xs
+    (BlsqInt b : BlsqBlock a : xs) -> BlsqBlock (genericReplicate b (BlsqBlock a)) : xs
     _ -> (BlsqError "Burlesque: (.*) Invalid arguments!") : st
 
 -- | > ./
@@ -139,7 +139,7 @@ builtinPow = do
     (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a ^ b) : xs
     (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (merge' a b) : xs
     (BlsqStr b : BlsqStr a : xs) -> BlsqStr (merge' a b) : xs
-    (BlsqChar a : xs) -> BlsqInt (ord a) : xs
+    (BlsqChar a : xs) -> BlsqInt (toInteger . ord $ a) : xs
  where merge' (x:xs) [] = x:xs
        merge' [] (y:ys) = y:ys
        merge' [] [] = []
@@ -172,7 +172,7 @@ builtinLines = do
  putResult $
   case st of
    (BlsqStr a) : xs -> (BlsqBlock . map BlsqStr . lines $ a) : xs
-   (BlsqInt a) : xs -> (BlsqInt . length . show $ a) : xs
+   (BlsqInt a) : xs -> (BlsqInt . genericLength . show $ a) : xs
    _ -> (BlsqError "Burlesque: (ln) Invalid arguments!") : st
 
 -- | > ri
