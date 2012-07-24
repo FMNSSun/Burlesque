@@ -27,6 +27,8 @@ run p = runStack p []
 runStack :: BlsqProg -> BlsqStack -> BlsqStack
 runStack p xs = execState (eval p) xs
 
+toInt p = (fromIntegral p) :: Int
+
 builtins = [
   (".+", builtinAdd),
   (".-", builtinSub),

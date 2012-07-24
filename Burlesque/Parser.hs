@@ -1,5 +1,6 @@
 module Burlesque.Parser
   (parseNumber,
+   parseDouble,
    parseChar,
    parseIdent,
    parseBlsq,
@@ -13,6 +14,12 @@ import Text.ParserCombinators.Parsec.Expr
 import Text.ParserCombinators.Parsec.Token
 
 import Burlesque.Types
+
+parseDouble :: Parser BlsqExp
+parseDouble = do n1 <- many1 digit
+                 char '.'
+                 n2 <- many1 digit
+                 return $ BlsqDouble (read (n1 ++ "." ++ n2))
 
 parseNumber :: Parser BlsqExp
 parseNumber = do num <- many1 digit
@@ -52,7 +59,7 @@ parseString = do s <- char '"'
 
 parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseBlsq'
- where parseBlsq' = parseBlock <|> parseString <|> parseSep <|> parseNumber <|> parseChar <|> parseIdent
+ where parseBlsq' = parseBlock <|> parseString <|> parseSep <|> try parseDouble <|> parseNumber <|> parseChar <|> parseIdent
 
 runParserWithString p input = 
   case parse p "" input of

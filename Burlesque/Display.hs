@@ -17,4 +17,5 @@ instance Display BlsqExp where
   toDisplay (BlsqError s) = "ERROR: " ++ s
   toDisplay (BlsqIdent s) = s
   toDisplay (BlsqChar c) = show c
+  toDisplay (BlsqDouble d) = show d
   toDisplay q = show q
