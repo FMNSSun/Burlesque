@@ -37,6 +37,7 @@ builtins = [
   (".>", builtinGreater),
   (".<", builtinSmaller),
   ("**", builtinPow),
+  ("r_", builtinRound),
   ("==", builtinEqual),
   ("<-", builtinReverse),
   ("ln", builtinLines),
@@ -450,3 +451,14 @@ builtinEqual = do
    (b : a : xs) -> (BlsqInt $ if a == b then 1 else 0) : xs
    _ -> BlsqError "Burlesque (==) Invalid arguments!" : st
 
+-- | > (r_)
+--
+-- > Double a, Int b -> Round a to b decimal places
+builtinRound :: BlsqState
+builtinRound = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt b : BlsqDouble a : xs) -> (BlsqDouble $ round' a b) : xs
+   _ -> BlsqError "Burlesque (r_) Invalid arguments!" : st
+ where round' n s = let factor = fromIntegral (10^s) in fromIntegral (round (n * factor)) / factor
