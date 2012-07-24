@@ -41,6 +41,7 @@ builtins = [
   ("ri", builtinReadInt),
   ("ps", builtinParse),
   ("if", builtinIff),
+  ("ie", builtinIfElse),
   ("e!", builtinEval),
   ("w!", builtinWhile),
   ("++", builtinSum),
@@ -318,6 +319,18 @@ builtinIff = do
    (BlsqInt 0 : BlsqBlock b : xs) -> xs
    (BlsqInt _ : BlsqBlock b : xs) -> runStack b xs
    _ -> BlsqError "Burlesque (if) Invalid arguments!" : st
+
+-- | > ie
+--
+-- > Block a Block b Int -> If then a else b
+builtinIfElse:: BlsqState
+builtinIfElse = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt 0 : BlsqBlock b : BlsqBlock a : xs) -> runStack b xs
+   (BlsqInt _ : BlsqBlock b : BlsqBlock a : xs) -> runStack a xs
+   _ -> BlsqError "Burlesque (ie Invalid arguments!" : st
 
 -- | > e!
 --
