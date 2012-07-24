@@ -61,6 +61,7 @@ putResult = put
 -- 
 -- > Int Int -> Regular integer addition
 -- > Str Str -> String concatenation
+-- > Block Block -> Block concatenation
 -- > Int Str -> Take first n characters of a string
 builtinAdd :: BlsqState
 builtinAdd = do
@@ -70,6 +71,7 @@ builtinAdd = do
     ((BlsqInt b):(BlsqInt a):xs) -> (BlsqInt (a + b)) : xs
     ((BlsqStr b):(BlsqStr a):xs) -> (BlsqStr (a ++ b)) : xs
     ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ take a b) : xs
+    (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (a ++ b) : xs
     _ -> (BlsqError "Burlesque: (.+) Invalid arguments!") : st
 
 -- | > .-

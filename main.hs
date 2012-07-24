@@ -5,6 +5,7 @@ import Burlesque.Display
 
 import System.Environment
 import System.IO
+import System.Console.Readline
 
 runProgram :: String -> String -> String
 runProgram p stdin =
@@ -30,7 +31,10 @@ main = do
 
 
 burlesqueShell = do
- putStr "blsq ) "
- prog <- getLine
- putStrLn $ runProgramNoStdin prog
- burlesqueShell
+ line <- readline "blsq ) "
+ case line of 
+   Nothing     -> putStrLn "* Abort..."
+   Just "exit!" -> putStrLn "* Exit!"
+   Just q -> do addHistory q
+                putStrLn $ runProgramNoStdin q
+                burlesqueShell
