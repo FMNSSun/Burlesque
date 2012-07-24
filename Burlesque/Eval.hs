@@ -66,6 +66,7 @@ putResult = put
 -- | > .+
 -- 
 -- > Int Int -> Regular integer addition
+-- > Double Double -> Addition
 -- > Str Str -> String concatenation
 -- > Block Block -> Block concatenation
 -- > Int Str -> Take first n characters of a string
@@ -75,6 +76,7 @@ builtinAdd = do
  putResult $
   case st of
     ((BlsqInt b):(BlsqInt a):xs) -> (BlsqInt (a + b)) : xs
+    ((BlsqDouble b):(BlsqDouble a):xs) -> (BlsqDouble (a + b)) : xs
     ((BlsqStr b):(BlsqStr a):xs) -> (BlsqStr (a ++ b)) : xs
     ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ genericTake a b) : xs
     (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (a ++ b) : xs
@@ -83,6 +85,7 @@ builtinAdd = do
 -- | > .-
 --
 -- > Int Int -> Regular integer subtraction
+-- > Double Double -> Subtraction
 -- > Int Str -> Drop first n characters of a string
 -- > Str Str -> Opposite of string concatenation
 builtinSub :: BlsqState
@@ -91,6 +94,7 @@ builtinSub = do
  putResult $
   case st of
     ((BlsqInt b):(BlsqInt a):xs) -> (BlsqInt (a - b)) : xs
+    ((BlsqDouble b):(BlsqDouble a):xs) -> (BlsqDouble (a - b)) : xs
     ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ genericDrop a b) : xs
     ((BlsqStr b):(BlsqStr a):xs) -> if b `isSuffixOf` a
                                      then (BlsqStr $ genericTake (genericLength a - length b) a) : xs
@@ -100,6 +104,7 @@ builtinSub = do
 -- | > .*
 --
 -- > Int Int -> Regular integer multiplication
+-- > Double Double -> Multiplication
 -- > Str Int -> List containing n copies of Str
 -- > Char Int -> A string containing n copies of Char
 -- > Block Int -> A Block containing n copies of Block
@@ -109,6 +114,7 @@ builtinMul = do
  putResult $
   case st of
     (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a * b) : xs
+    ((BlsqDouble b):(BlsqDouble a):xs) -> (BlsqDouble (a * b)) : xs
     (BlsqInt b : BlsqStr a : xs) -> BlsqBlock (genericReplicate b (BlsqStr a)) : xs
     (BlsqInt b : BlsqChar a : xs) -> BlsqStr (genericReplicate b a) : xs
     (BlsqInt b : BlsqBlock a : xs) -> BlsqBlock (genericReplicate b (BlsqBlock a)) : xs
@@ -117,12 +123,14 @@ builtinMul = do
 -- | > ./
 --
 -- > Int Int -> Regular integer multiplication
+-- > Double Double -> Division
 builtinDiv :: BlsqState
 builtinDiv = do
  st <- get
  putResult $
   case st of
     (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a `div` b) : xs
+    ((BlsqDouble b):(BlsqDouble a):xs) -> (BlsqDouble (a / b)) : xs
     _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
 
 -- | > **
@@ -406,23 +414,27 @@ builtinWhile = do
 -- | > (.>)
 --
 -- > Int a , Int b -> a > b 
+-- > Double a, Double b -> a > b
 builtinGreater :: BlsqState
 builtinGreater = do
  st <- get
  putResult $
   case st of
    (BlsqInt b : BlsqInt a : xs) -> (BlsqInt $ if a > b then 1 else 0) : xs
+   (BlsqDouble b : BlsqDouble a : xs) -> (BlsqInt $ if a > b then 1 else 0) : xs
    _ -> BlsqError "Burlesque (.>) Invalid arguments!" : st
 
 -- | > (.<)
 --
 -- > Int a , Int b -> a < b 
+-- > Double a, Double b -> a < b
 builtinSmaller :: BlsqState
 builtinSmaller = do
  st <- get
  putResult $
   case st of
    (BlsqInt b : BlsqInt a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
+   (BlsqDouble b : BlsqDouble a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
    _ -> BlsqError "Burlesque (.<) Invalid arguments!" : st
 
 -- | > (==)
