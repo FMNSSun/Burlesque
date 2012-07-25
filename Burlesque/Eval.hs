@@ -282,6 +282,7 @@ builtinParse = do
 -- | > ++
 --
 -- > Block -> Sum of all (Int) elements
+-- > Int , Int -> Concatenate digits
 builtinSum :: BlsqState
 builtinSum = do
  st <- get

@@ -25,6 +25,15 @@ main = do
    ["--file",file] -> do 
      prog <- readFile file
      interact $ runProgram prog
+   ["--compile",file] -> do
+     prog <- readFile file
+     putStrLn "import Burlesque.Types"
+     putStrLn "import Burlesque.Eval"
+     putStrLn "import Burlesque.Display"
+     putStrLn $ "program = " ++ (show $ runParserWithString parseBlsq prog)
+     putStrLn $ "runProgram stdin = "
+     putStrLn $ "  unlines . map toDisplay $ execState (eval program) [BlsqStr stdin]"
+     putStrLn $ "main = interact $ runProgram"
    ["--file-no-stdin",file] -> do 
      prog <- readFile file
      putStr $ runProgramNoStdin prog
