@@ -363,6 +363,7 @@ builtinAppend = do
 -- | > \[
 --
 -- > Block -> Concatenates Blocks in Block or Strings in Block
+--            or char's in blocks
 builtinConcat :: BlsqState
 builtinConcat = do
  st <- get
@@ -383,6 +384,13 @@ builtinConcat = do
            BlsqError q -> BlsqError q
            BlsqNil -> BlsqStr $ a
            _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting String!"
+       concat' (BlsqChar a : as) =
+         case concat' as of
+           BlsqChar b -> BlsqStr $ a : [b]
+           BlsqError q -> BlsqError q
+           BlsqNil -> BlsqStr $ [a]
+           BlsqStr b -> BlsqStr $ a : b
+           _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting Character!"
        concat' _ = BlsqError "Burlesque: (\\[) Invalid element!"
 
 -- | > m[
