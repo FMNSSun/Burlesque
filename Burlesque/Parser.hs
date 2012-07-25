@@ -64,5 +64,5 @@ parseBlsq = many parseBlsq'
 
 runParserWithString p input = 
   case parse p "" input of
-    Left err -> error (show err)
+    Left err -> [BlsqError $ show err]
     Right q -> q
