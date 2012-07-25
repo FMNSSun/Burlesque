@@ -422,6 +422,7 @@ builtinWhile = do
  putResult $
   case st of
    (BlsqBlock b : BlsqBlock a : xs) -> while' a b xs
+   (BlsqBlock a : xs) -> while' a [] xs
    _ -> BlsqError "Burlesque (w!) Invalid arguments!" : st
  where while' f g xs = case runStack g xs of
                         (BlsqInt 0 : ys) -> xs
