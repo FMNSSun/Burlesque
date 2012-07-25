@@ -14,6 +14,7 @@ import Text.ParserCombinators.Parsec.Expr
 import Text.ParserCombinators.Parsec.Token
 
 import Burlesque.Types
+import Debug.Trace
 
 parseDouble :: Parser BlsqExp
 parseDouble = do n1 <- many1 digit
@@ -23,9 +24,12 @@ parseDouble = do n1 <- many1 digit
                  return $ BlsqDouble (read (n1 ++ "." ++ n2))
 
 parseNumber :: Parser BlsqExp
-parseNumber = do num <- many1 digit
+parseNumber = do s <- many $ char '-'
+                 num <- many1 digit
                  optional spaces
-                 return $ BlsqInt (read num)
+                 if not.null $ s then
+                   return $ BlsqInt (-1 * (read num))
+                 else return $ BlsqInt (read num)
 
 parseChar :: Parser BlsqExp
 parseChar = do char '\''
@@ -60,7 +64,7 @@ parseString = do s <- char '"'
 
 parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseBlsq'
- where parseBlsq' = parseBlock <|> parseString <|> parseSep <|> (try parseDouble) <|> parseNumber <|> parseChar <|> parseIdent
+ where parseBlsq' = parseBlock <|> parseString <|> parseSep <|> (try parseDouble) <|> (try parseNumber) <|> parseChar <|> parseIdent
 
 runParserWithString p input = 
   case parse p "" input of
