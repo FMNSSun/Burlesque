@@ -46,6 +46,7 @@ builtins = [
   ("if", builtinIff),
   ("ie", builtinIfElse),
   ("e!", builtinEval),
+  ("c!", builtinContinuation),
   ("w!", builtinWhile),
   ("++", builtinSum),
   ("[~", builtinLast),
@@ -398,6 +399,19 @@ builtinEval = do
   case st of
    (BlsqBlock b : xs) -> runStack b xs
    _ -> BlsqError "Burlesque (e!) Invalid arguments!" : st
+
+-- | > c!
+--
+-- > Block -> Continuation
+builtinContinuation :: BlsqState
+builtinContinuation = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock b : xs) -> case runStack b xs of
+                           (a:ys) -> a : xs
+                           _ -> st
+   _ -> BlsqError "Burlesque (c!) Invalid arguments!" : st
 
 -- | > w!
 --

@@ -169,6 +169,7 @@ and ...
 <pre>
 <span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span><span class="blck">}</span> <span class="id">[-</span>
 </pre>
+</p>
 <h3>Codeblocks</h3>
 <p>
  You can treat Blocks as code, but code in a Block does not get automatically evaluated. Luckily there is a command eval <b>e!</b>
@@ -190,6 +191,51 @@ and ...
 3 -- bottom
 </pre>
 </p>
+<h2>Control flow</h2>
+<h3>If</h3>
+<p>
+ If you only want to evaluate something based on a condition you can use the Iff <b>if</b> or IfElse <b>ie</b>.
+ Burlesque considers every Integer except 0 to be true. Commonly 1 is used for true and 0 for false. Let's
+ try something like 'if 9 > 6 then multiply by 2'. There are commands for comparision like x &gt; y <b>.&gt;</b>,
+ x &lt; y <b>.&lt;</b> and x = y <b>==</b>.
+<pre>
+<span class="int">9</span> <span class="id">^^</span> <span class="int">6</span> <span class="id">.&gt;</span> <span class="blck">{</span><span class="int">2</span> <span class="id">.*</span><span class="blck">}</span> <span class="id">\/</span> <span class="id">if</span>
+</pre>
+ Please note the stack manipulation commands. They are necessary to keep the elements in the right order on the stack. Now let's do
+ 'if 4 > 6 then multiply by 2 else multiply by 3'.
+<pre>
+<span class="int">4</span> <span class="id">^^</span> <span class="int">6</span> <span class="id">.&gt;</span> <span class="blck">{</span><span class="int">2</span> <span class="id">.*</span><span class="blck">}</span> <span class="id">\/</span> <span class="blck">{</span><span class="int">3</span> <span class="id">.*</span><span class="blck">}</span> <span class="id">\/</span> <span class="id">ie</span>
+</pre>
+</p>
+<h3>While</h3>
+<p>
+ Burlesque also lets you code loops. A while <b>w!</b> loop is repeated as long as a condition holds true. Let's
+ write something like 'i = 0; while i &gt; 10 { i++; push i }'. That is, we produce the numbers 0 to 10
+ with 10 at the top of the stack after the loop ends.
+<pre>
+<span class="int">0</span> <span class="blck">{</span><span class="id">^^</span> <span class="id">\/</span> <span class="int">1</span> <span class="id">.+</span><span class="blck">}</span> <span class="blck">{</span><span class="int">10</span> <span class="id">.&lt;</span><span class="blck">}</span> <span class="id">w!</span>
+</pre>
+ A command like <b>.&lt;</b> compares pops two values and pushes the result. Therefore you'd expect to loose
+ data while evaluating the while condition. Luckily, that is not the case. Evaluating the while condition does not
+ affect the global stack. It is a continuation!
+</p>
+<h3>Continuation</h3>
+<p>
+ A continuation means, that evaluating something does not affect the global stack. Continuations take a snapshot of the
+ current stack. An example makes this pretty clear.
+<pre>
+<span class="int">5</span> <span class="int">5</span> <span class="id">==</span>
+</pre>
+Leaves a 1 on the stack and destroyed the two 5. Now:
+<pre>
+<span class="int">5</span> <span class="int">5</span> <span class="blck">{</span><span class="id">==</span><span class="blck">}</span> <span class="id">c!</span>
+</pre>
+Results in a stack of
+<pre>
+1
+5
+5
+</pre>
 </p>
   </body>
 </html>
