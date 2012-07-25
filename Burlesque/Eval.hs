@@ -151,6 +151,7 @@ builtinPow = do
     (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (merge' a b) : xs
     (BlsqStr b : BlsqStr a : xs) -> BlsqStr (merge' a b) : xs
     (BlsqChar a : xs) -> BlsqInt (toInteger . ord $ a) : xs
+    _ -> (BlsqError "Burlesque: (**) Invalid arguments!") : st
  where merge' (x:xs) [] = x:xs
        merge' [] (y:ys) = y:ys
        merge' [] [] = []

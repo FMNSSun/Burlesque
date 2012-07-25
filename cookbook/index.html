@@ -100,6 +100,7 @@ and ...
  but if you feed it other stuff it'll do other stuff!
 </p>
 <h2>Arithmetic</h2>
+<h3>Basic arithmetic</h3>
 <p>
  You can use Burlesque to do arithmetic for you! It supports addition <b>.+</b>, subtraction <b>.-</b>, multiplication <b>.*</b>
  division <b>./</b> and more. Keep in mind that arithmetic is only defined if applied to two values of the same type. Let's
@@ -108,6 +109,87 @@ and ...
 <span class="int">1</span> <span class="int">2</span> <span class="id">.+</span> <span class="int">3</span> <span class="id">.*</span> <span class="int">1</span> <span class="id">.-</span> <span class="int">2</span> <span class="id">./</span>
 </pre>
  First we push 1 and 2, add them together, push 3, multiply the previous result with 3, push 1, subtract 1 from the previous result, push 2, divide the previous result by 2. Pretty easy, isn't it?
+</p>
+<h3>More arithmetic</h3>
+<p>
+ Burlesque supports numbers with decimal places too, of course. We call them Doubles. 
+<pre>
+<span class="dbl">3.14159</span> <span class="dbl">2.0</span> <span class="id">.*</span>
+</pre>
+ Calculates 3.14159 * 2.0. Keep in mind that you can't multiply an Int with a Double. Using this and the 'power' command <b>**</b> we can now
+ calculate the third root of 125.
+<pre>
+<span class="dbl">125.0</span> <span class="dbl">1.0</span> <span class="dbl">3.0</span> <span class="id">./</span> <span class="id">**</span>
+</pre>
+ It might surprise you that the result is not 5.0 but 4.99999999~. Sadly, Doubles do not have infinite precision so working
+ with Doubles is always limited to a certain precision with errors. We can workaround that by rounding the number to 6
+ decimal places using the round command <b>r_</b>.
+<pre>
+<span class="dbl">125.0</span> <span class="dbl">1.0</span> <span class="dbl">3.0</span> <span class="id">./</span> <span class="id">**</span> <span class="int">6</span> <span class="id">r_</span>
+</pre>
+</p>
+<h2>Strings</h2>
+<p>
+ Strings constist of characters... think of it as 'text'. You can add strings (concatenate) using <b>.+</b>.
+<pre>
+<span class="str">"Hello, "</span> <span class="str">"World!"</span> <span class="id">.+</span>
+</pre>
+ "Hello, World!". You can also do the exact opposite. It's not hard to guess which command you can use for this: It's <b>.-</b>.
+<pre>
+ <span class="str">"Hello, World!"</span> <span class="str">"World!"</span> <span class="id">.-</span>
+</pre>
+ Note: Most commands working on Strings as a list of characters also work with Blocks and vice versa.
+</p>
+<h2>Blocks</h2>
+<h3>Basic Block Stuff</h3>
+<p>
+ As previously mentioned a Block is a list of values (and a Block is therefore also Burlesque code). We can create
+ a Block with some numbers in it add calculate the sum <b>++</b> of all numbers in it.
+<pre>
+<span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span><span class="blck">}</span> <span class="id">++</span>
+</pre>
+ Let's have a look at some Block manipulation commands.<br/>
+ Reverse a Block:
+<pre>
+<span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span><span class="blck">}</span> <span class="id">&lt;-</span>
+</pre>
+ Last element of a Block:
+<pre>
+<span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span><span class="blck">}</span> <span class="id">[~</span>
+</pre>
+ First element of a Block:
+<pre>
+<span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span><span class="blck">}</span> <span class="id">-]</span>
+</pre>
+ All except last element of a Block:
+<pre>
+<span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span><span class="blck">}</span> <span class="id">~]</span>
+</pre>
+ All except first element of a Block:
+<pre>
+<span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="int">4</span><span class="blck">}</span> <span class="id">[-</span>
+</pre>
+<h3>Codeblocks</h3>
+<p>
+ You can treat Blocks as code, but code in a Block does not get automatically evaluated. Luckily there is a command eval <b>e!</b>
+ which does that. Note the difference:
+<pre>
+<span class="blck">{</span><span class="int">3</span> <span class="int">4</span> <span class="id">.+</span><span class="blck">}</span>
+</pre>
+ The above code results in the following stack:
+<pre>
+ {3 4 .+}
+</pre>
+ If you eval the code inside the Block:
+<pre>
+<span class="blck">{</span><span class="int">3</span> <span class="int">4</span> <span class="id">.+</span><span class="blck">}</span> <span class="id">e!</span>
+</pre>
+ The result will be 7. If you eval it without the <b>.+</b> the stack looks like:
+<pre>
+4 -- top
+3 -- bottom
+</pre>
+</p>
 </p>
   </body>
 </html>
