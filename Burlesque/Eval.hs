@@ -34,6 +34,8 @@ builtins = [
   (".-", builtinSub),
   ("./", builtinDiv),
   (".*", builtinMul),
+  ("+.", builtinIncrement),
+  ("-.", builtinDecrement),
   (".>", builtinGreater),
   (".<", builtinSmaller),
   ("**", builtinPow),
@@ -137,6 +139,42 @@ builtinDiv = do
     (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a `div` b) : xs
     ((BlsqDouble b):(BlsqDouble a):xs) -> (BlsqDouble (a / b)) : xs
     _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
+
+-- | > +.
+--
+-- Int -> Increment
+-- Char -> Next character
+-- String -> Duplicate last character
+-- Block -> Duplicate last element
+builtinIncrement :: BlsqState
+builtinIncrement = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : xs) -> BlsqInt (a+1) : xs
+   (BlsqChar a : xs) -> BlsqChar (chr $ ord a + 1) : xs
+   (BlsqStr a : xs) -> BlsqStr (a ++ [last a]) : xs
+   (BlsqBlock a : xs) -> BlsqBlock (a ++ [last a]) : xs
+   _ -> (BlsqError "Burlesque: (+.) Invalid arguments!") : st
+
+-- | > -.
+--
+-- Int -> Decrement
+-- Char -> Previous character
+-- String -> Duplicate first character
+-- Block -> Duplicate first element
+builtinDecrement :: BlsqState
+builtinDecrement = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : xs) -> BlsqInt (a-1) : xs
+   (BlsqChar a : xs) -> BlsqChar (chr $ ord a - 1) : xs
+   (BlsqStr a : xs) -> BlsqStr (head a : a) : xs
+   (BlsqBlock a : xs) -> BlsqBlock (head a : a) : xs
+   _ -> (BlsqError "Burlesque: (-.) Invalid arguments!") : st
+   
+   
 
 -- | > **
 --
