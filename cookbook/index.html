@@ -78,7 +78,7 @@ and ...
 <pre>
 <span class="int">1</span> <span class="int">2</span> <span class="int">3</span> <span class="id">\/</span>
 </pre>
- Results in a stock of
+ Results in a stack of
 <pre>
 2 -- top
 3
@@ -88,7 +88,7 @@ and ...
 <h3>Understanding Blocks</h3>
 <p>
  A Block is a list of values. It is also possible for a Block to contain other Blocks as well. 
- Keep in mind that a Burlesque program is just a list of value: It's a Block. A command
+ Keep in mind that a Burlesque program is just a list of values: It's a Block. A command
  is actually also just a value (but specially treated by the interpreter). Therefore, a
  Block can contain commands too.
 </p>
@@ -215,7 +215,7 @@ and ...
 <pre>
 <span class="int">0</span> <span class="blck">{</span><span class="id">^^</span> <span class="id">\/</span> <span class="int">1</span> <span class="id">.+</span><span class="blck">}</span> <span class="blck">{</span><span class="int">10</span> <span class="id">.&lt;</span><span class="blck">}</span> <span class="id">w!</span>
 </pre>
- A command like <b>.&lt;</b> compares pops two values and pushes the result. Therefore you'd expect to loose
+ A command like <b>.&lt;</b> pops two values, compares them and pushes the result. Therefore you'd expect to loose
  data while evaluating the while condition. Luckily, that is not the case. Evaluating the while condition does not
  affect the global stack. It is a continuation!
 </p>
