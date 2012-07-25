@@ -59,6 +59,7 @@ parseSep = do
 parseBlock :: Parser BlsqExp
 parseBlock = do
   s <- char '{'
+  optional spaces
   e <- parseBlsq
   t <- char '}'
   optional spaces
