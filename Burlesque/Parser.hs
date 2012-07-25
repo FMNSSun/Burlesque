@@ -17,11 +17,14 @@ import Burlesque.Types
 import Debug.Trace
 
 parseDouble :: Parser BlsqExp
-parseDouble = do n1 <- many1 digit
+parseDouble = do s <- many $ char '-'
+                 n1 <- many1 digit
                  char '.'
                  n2 <- many1 digit
                  optional spaces
-                 return $ BlsqDouble (read (n1 ++ "." ++ n2))
+                 if not.null $ s then 
+                    return $ BlsqDouble (-1 * (read (n1 ++ "." ++ n2)))
+                 else return $ BlsqDouble (read (n1 ++ "." ++ n2))
 
 parseNumber :: Parser BlsqExp
 parseNumber = do s <- many $ char '-'
