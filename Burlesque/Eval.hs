@@ -38,6 +38,10 @@ builtins = [
   ("-.", builtinDecrement),
   (".>", builtinGreater),
   (".<", builtinSmaller),
+  (">.", builtinMax),
+  ("<.", builtinMin),
+  (">]", builtinMaximum),
+  ("<]", builtinMinimum),
   ("**", builtinPow),
   ("r_", builtinRound),
   ("==", builtinEqual),
@@ -528,6 +532,53 @@ builtinSmaller = do
    (BlsqInt b : BlsqInt a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
    (BlsqDouble b : BlsqDouble a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (.<) Invalid arguments!" : st
+
+-- | > (>.)
+--
+-- > Any a, Any b -> Max(a,b)
+--
+builtinMax :: BlsqState
+builtinMax = do
+ st <- get
+ putResult $
+  case st of
+   (b : a : xs) -> (max a b) : xs
+   _ -> BlsqError "Burlesque: (>.) Stack size error!" : st
+
+-- | > (<.)
+--
+-- > Any a, Any b -> Min(a,b)
+builtinMin :: BlsqState
+builtinMin = do
+ st <- get
+ putResult $
+  case st of
+   (b : a : xs) -> (min a b) : xs
+   _ -> BlsqError "Burlesque: (<.) Stack size error!" : st
+
+-- | > (>])
+--
+-- > Block a-> Maximum(a)
+--
+builtinMaximum :: BlsqState
+builtinMaximum = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a : xs) -> (maximum a) : xs
+   _ -> BlsqError "Burlesque: (>]) Invalid arguments!" : st
+
+-- | > (<])
+--
+-- > Block a -> Minimum(a)
+builtinMinimum :: BlsqState
+builtinMinimum = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a : xs) -> (minimum a) : xs
+   _ -> BlsqError "Burlesque: (<]) Invalid arguments!" : st
+
 
 -- | > (==)
 --
