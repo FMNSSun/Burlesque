@@ -41,6 +41,8 @@ builtins = [
   ("==", builtinEqual),
   ("<-", builtinReverse),
   ("ln", builtinLines),
+  ("un", builtinUnlines),
+  ("wl", builtinWithLines),
   ("ri", builtinReadInt),
   ("ps", builtinParse),
   ("if", builtinIff),
@@ -55,6 +57,7 @@ builtins = [
   ("-]", builtinHead),
   ("[+", builtinAppend),
   ("\\[", builtinConcat),
+  ("[[", builtinIntersperse),
   ("m[", builtinMap),
   ("\\/", builtinSwap),
   ("^^", builtinDup),
@@ -187,6 +190,27 @@ builtinLines = do
    (BlsqStr a) : xs -> (BlsqBlock . map BlsqStr . lines $ a) : xs
    (BlsqInt a) : xs -> (BlsqInt . genericLength . show $ a) : xs
    _ -> (BlsqError "Burlesque: (ln) Invalid arguments!") : st
+
+-- | > un
+--
+-- ??
+builtinUnlines :: BlsqState
+builtinUnlines = do
+ modify (BlsqStr "\n" :)
+ builtinSwap
+ builtinIntersperse
+ builtinConcat
+
+-- | > [[
+--
+-- > Any, Block -> Intersperse
+builtinIntersperse :: BlsqState
+builtinIntersperse = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock b : a : xs) -> (BlsqBlock $ intersperse a b) : xs
+   _ -> (BlsqError "Burlesque: ([[) Invalid arguments!") : st
 
 -- | > ri
 --
@@ -332,6 +356,17 @@ builtinMap = do
  where map' f [] = []
        map' f (x:xs) = (runStack f [x]) ++ (map' f xs)
 
+-- | > wl
+--
+-- ??
+builtinWithLines :: BlsqState
+builtinWithLines = do
+ builtinSwap
+ builtinLines
+ builtinSwap
+ builtinMap
+ builtinUnlines
+
 -- | > \/
 --
 -- > StackManip -> Swap
@@ -375,7 +410,7 @@ builtinIff = do
   case st of
    (BlsqInt 0 : BlsqBlock b : xs) -> xs
    (BlsqInt _ : BlsqBlock b : xs) -> runStack b xs
-   _ -> BlsqError "Burlesque (if) Invalid arguments!" : st
+   _ -> BlsqError "Burlesque: (if) Invalid arguments!" : st
 
 -- | > ie
 --
@@ -387,7 +422,7 @@ builtinIfElse = do
   case st of
    (BlsqInt 0 : BlsqBlock b : BlsqBlock a : xs) -> runStack b xs
    (BlsqInt _ : BlsqBlock b : BlsqBlock a : xs) -> runStack a xs
-   _ -> BlsqError "Burlesque (ie Invalid arguments!" : st
+   _ -> BlsqError "Burlesque: (ie Invalid arguments!" : st
 
 -- | > e!
 --
@@ -398,7 +433,7 @@ builtinEval = do
  putResult $
   case st of
    (BlsqBlock b : xs) -> runStack b xs
-   _ -> BlsqError "Burlesque (e!) Invalid arguments!" : st
+   _ -> BlsqError "Burlesque: (e!) Invalid arguments!" : st
 
 -- | > c!
 --
@@ -411,7 +446,7 @@ builtinContinuation = do
    (BlsqBlock b : xs) -> case runStack b xs of
                            (a:ys) -> a : xs
                            _ -> st
-   _ -> BlsqError "Burlesque (c!) Invalid arguments!" : st
+   _ -> BlsqError "Burlesque: (c!) Invalid arguments!" : st
 
 -- | > w!
 --
@@ -423,12 +458,12 @@ builtinWhile = do
   case st of
    (BlsqBlock b : BlsqBlock a : xs) -> while' a b xs
    (BlsqBlock a : xs) -> while' a [] xs
-   _ -> BlsqError "Burlesque (w!) Invalid arguments!" : st
+   _ -> BlsqError "Burlesque: (w!) Invalid arguments!" : st
  where while' f g xs = case runStack g xs of
                         (BlsqInt 0 : ys) -> xs
                         (BlsqInt a : ys) -> while' f g $ runStack f xs
-                        (_ : ys) -> BlsqError "Burlesque (w!) Invalid!" : ys
-                        _ -> BlsqError "Burlesque (w!) Stack size error!" : xs
+                        (_ : ys) -> BlsqError "Burlesque: (w!) Invalid!" : ys
+                        _ -> BlsqError "Burlesque: (w!) Stack size error!" : xs
 
 -- | > (.>)
 --
@@ -441,7 +476,7 @@ builtinGreater = do
   case st of
    (BlsqInt b : BlsqInt a : xs) -> (BlsqInt $ if a > b then 1 else 0) : xs
    (BlsqDouble b : BlsqDouble a : xs) -> (BlsqInt $ if a > b then 1 else 0) : xs
-   _ -> BlsqError "Burlesque (.>) Invalid arguments!" : st
+   _ -> BlsqError "Burlesque: (.>) Invalid arguments!" : st
 
 -- | > (.<)
 --
@@ -454,7 +489,7 @@ builtinSmaller = do
   case st of
    (BlsqInt b : BlsqInt a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
    (BlsqDouble b : BlsqDouble a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
-   _ -> BlsqError "Burlesque (.<) Invalid arguments!" : st
+   _ -> BlsqError "Burlesque: (.<) Invalid arguments!" : st
 
 -- | > (==)
 --
@@ -465,7 +500,7 @@ builtinEqual = do
  putResult $
   case st of
    (b : a : xs) -> (BlsqInt $ if a == b then 1 else 0) : xs
-   _ -> BlsqError "Burlesque (==) Invalid arguments!" : st
+   _ -> BlsqError "Burlesque: (==) Invalid arguments!" : st
 
 -- | > (r_)
 --
@@ -476,5 +511,5 @@ builtinRound = do
  putResult $
   case st of
    (BlsqInt b : BlsqDouble a : xs) -> (BlsqDouble $ round' a b) : xs
-   _ -> BlsqError "Burlesque (r_) Invalid arguments!" : st
+   _ -> BlsqError "Burlesque: (r_) Invalid arguments!" : st
  where round' n s = let factor = fromIntegral (10^s) in fromIntegral (round (n * factor)) / factor
