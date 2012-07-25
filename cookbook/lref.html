@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd" xml:lang="en"><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link href="style.css" rel="stylesheet" type="text/css">
+    <title>Burlesque - Language reference</title>
+  </head>
+  <body>
+
+<h1>Builtin Types</h1>
+        <p>
+          The following builtin types exist:
+          <ul>
+           <li>Int - Integer</li>
+           <li>Double - Double</li>
+           <li>Str - String</li>
+           <li>Char - Character</li>
+           <li>Block - (Lists)</li>
+           <li>Ident - Identifier</li>
+           <li>Nil - Internal usage only</li>
+           <li>Error - Can not be written as a literal in code</li>
+          </ul>
+        </p>
+        
+        <h1 id="builtins">Builtins</h1>
+
+<!-- -->
+<table class="fancy">
+<thead>
+<tr><td>Name</td><td>Ident</td><td>Args</td><td>Description</td></tr>
+</thead>
+<tbody>
+<tr><td>Add</td><td>.+</td><td>Int a, Int b</td><td>Regular integer addition (a + b)</td></tr>
+<tr><td></td><td>.+</td><td>Double a, Double b</td><td>Addition (a + b)</td></tr>
+<tr><td></td><td>.+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr>
+<tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
+<tr><td>Append</td><td>[+</td><td>Block  a, Any b</td><td>Append b to a</td></tr>
+<tr><td></td><td>[+</td><td>Str a,Char b</td><tD>Append b to a</td></tr>
+<tr><td>Concat</td><td>\[</td><td>Block (Block) a <br/> Block (String) a</td><td>Concat list of lists</td></tr> 
+<tr><td>Continuation</td><td>c!</td><td>Block a</td><td>Continuation with a</td></tr>
+<tr><td>Div</td><td>./</td><td>Int a, Int b</td><td>Regular integer division (a / b)</td></tr>
+<tr><td></td><td>./</td><td>Double a, Double b</td><td>Division (a / b)</td></tr>
+<tr><td>Dup</td><td>^^</td><td></td><td>Duplicate top most element on the stack</td></tr>
+<tr><td>Equal</td><td>==</td><td>Any a, Any b</td><td>Comparision (a == b)</td></tr>
+<tr><td>Eval</td><td>e!</td><td>Block a</td><td>Eval a block</td></tr>
+<tr><td>Last</td><td>[~</td><td>Block a</td><td>Last element of the block</td></tr>
+<tr><td>Lines</td><td>ln</td><td>Str a</td><td>Splits a string into lines</td></tr>
+<tr><td></td><td>ln</td><td>Int a</td><td>Number of digits in an integer</td></tr>
+<tr><td>Greater</td><td>.&gt;</td><td>Int a, Int b</td><td>Comparision (a &gt; b)</td></tr>
+<tr><td></td><td>.&gt;</td><td>Double a, Double b</td><td>Comparision (a &gt; b)</td></tr>
+<tr><td>Head</td><td>-]</td><td>Block a</td><td>First element</td></tr>
+<tr><td></td><td>-]</td><td>Str a</td><td>First character</td></tr>
+<tr><td>IfElse</td><td>ie</td><td>Block a, Block b, Int c</td><td>If c then a else b</td></tr>
+<tr><td>Iff</td><td>if</td><td>Block b, Int a</td><td>If a then execute b, else pop a and pop b</td></tr>
+<tr><td>Init</td><td>~]</td><td>Block a</td><td>All except the last element</td></tr>
+<tr><td></td><td>~]</td><td>Str a</td><td>All except the last character</td></tr>
+<tr><td>Intersperse</td><td>[[</td><td>Any a, Block b</td><td>Inserts a between every two element in b</td></tr>
+<tr><td>Map</td><td>m[</td><td>Block ls, Block f</td><td>Apply f to every element in ls and collect the result in a block</td></tr>
+<tr><td>Mul</td><td>.*</td><td>Int a, Int b</td><td>Regular integer multiplication (a * b)</td></tr>
+<tr><td></td><td>.*</td><td>Double a, Double b</td><td>Multiplication (a * b)</td></tr>
+<tr><td></td><td>.*</td><td>Str a, Int n</td><td>Returns a block containing n copies of a</td></tr>
+<tr><td></td><td>.*</td><td>Char a, Int n</td><td>Returns a string containing n copies of a</td></tr>
+<tr><td></td><td>.*</td><td>Block a, Int n</td><td>Returns a block containing n copies of a</td></tr>
+<tr><td>Parse</td><td>ps</td><td>Str a</td><td>Parses the string as a Burlesque expression and returns a Block</td></tr>
+<tr><td>Pop</td><td>vv</td><td></td><td>Remove top most element from the stack</td></tr>
+<tr><td>Pow</td><td>**</td><td>Int a, Int b</td><td>Regular integer power (a ^ b)</td></tr>
+<tr><td></td><td>**</td><td>Double a, Double b</td><td>Double power (a ** b)</td></tr>
+<tr><td></td><td>**</td><td>Block a, Block b</td><td>Merge blocks</td></tr>
+<tr><td></td><td>**</td><td>Str a, Str b</td><td>Merge strings</td></tr>
+<tr><td></td><td>**</td><td>Char a</tD><td>ordinal a. (ord a). </td></tr>
+<tr><td>ReadInt</td><td>ri</td><td>Int a</td><td>Identity for integers</td></tr>
+<tr><td></td><td>ri</td><td>Str a</td><td>Tries to convert a string to an integer</td></tr>
+<tr><td>Reverse</td><td>&lt;-</td><td>Int a</td><td>Reverses the digits of the integer</td></tr>
+<tr><td></td><td>&lt;-</td><td>Str a</td><td>Reverses the string</td></tr>
+<tr><td></td><td>&lt;-</td><td>Block a</td><td>Reverses the block</td></tr>
+<tr><td>Round</td><td>r_</td><td>Double a, Int b</td><tD>Round a to b decimal places</td></tr>
+<tr><td>Smaller</td><td>.&lt;</td><td>Int a, Int b</td><td>Comparision (a &lt; b)</td></tr>
+<tr><td></td><td>.&lt;</td><td>Double a, Double b</td><td>Comparision (a &lt; b)</td></tr>
+<tr><td>Sub</td><td>.-</td><td>Int a, Int b</td><td>Regular integer subtraction (a - b)</td></tr>
+<tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
+<tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr>
+<tr><td>Sum</td><td>++</td><td>Block (Int) a</td><td>Sum of all elements in a block.</td></tr>
+<tr><td>Swap</td><td>\/</td><td></td><td>Swap elements on top of the stack.</td></tr>
+<tr><td>Tail</td><td>[-</td><td>Block a</td><td>All except first element.</td></tr>
+<tr><td></td><td>[-</td><td>Str a</td><td>All except first character</td></tr>
+<tr><td>Unlines</td><td>un</td><td>n/a</td><td>Defined as "\n" \/ [[ \[</td></tR>
+<tr><td>While</td><td>w!</td><td>Block f, Block p</td><td>While p execute f. (p is expected to leave an Int on top of the stack)
+                                                          <br/>Executing p does not affect the global stack.</td></tr>
+<tr><td></td><td>w!</td><td>Block f</td><td>Same effect as {f}{}w!</td></tr>
+<tr><td>WithLines</td><td>wl</td><td>n/a</td><td>Defined as \/ ln \/ m[ un</td></tr>
+</tbody>
+</table>
+<!-- -->
+
+      <h1>Syntax</h1>
+<pre class="code">
+Double :: { digit }+ , "." , { digit }+
+Int :: { digit }+
+Char :: "'" , anyChar
+String :: "\"" , { anyChar }* , "\""
+Block :: "{" , { Expression }* , "}"
+Identifier :: noneOf "1234567890{},' \"" , noneOf "1234567890{},' \""
+Expression :: { Block | Int | Char | String | Identifier }*
+</pre>
+ </body>
+</html>

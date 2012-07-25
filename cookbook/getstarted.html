@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd" xml:lang="en"><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link href="style.css" rel="stylesheet" type="text/css">
+    <title>Burlesque - Getting Started</title>
+  </head>
+  <body>
+<h1>Getting Started</h1>
+<h2>Download the interpreter</h2>
+<p>
+ First things first. Download the interpreter source code from <a href="http://github.com/FMNSSun/Burlesque">here</a>.
+</p>
+<h2>Compile the interpreter</h2>
+<p>
+ To compile the interpreter you need <a href="http://haskell.org">GHC and the Haskell Platform</a>.
+ Then just type "ghc --make main.hs -o burlesque && chmod +x ./burlesque".
+</p>
+<h2>Getting comfortable with the Burlesque shell</h2>
+<p>
+ Start the interpreter with "./burlesque --shell" and you're ready!
+<pre>
+blsq ) 5 5 .+
+10
+
+blsq ) 
+</pre>
+</p>
+<h2>Running programs</h2>
+<p>
+ You can use "./burlesque --file path" to execute a file including reading from stdin. 
+ (Use --file--no-stdin if you don't want that.)
+ You can also just pass a program to it './burlesque --no-stdin "5 3 .-"'. 
+</p>
+<h2>Where to go from here?</h2>
+<p>
+ Now you're ready to read the <a href="tutorial.html">tutorial</a>.
+</p>
+  </body>
+</html>

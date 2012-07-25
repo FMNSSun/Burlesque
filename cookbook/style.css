@@ -8,3 +8,23 @@ span.str { color: #008000; }
 span.chr { color: #800000; }
 pre { border-top: solid 3px black; border-bottom: solid 1px black; 
       background-color: #FAFBFC; padding: 5px; }
+table.fancy {
+  border-collapse: collapse;
+  min-width: 100%;
+}
+
+
+table.fancy td {
+  border-bottom: solid 1px #FF9900;
+  padding: 5px;
+}
+
+table.fancy thead td {
+  font-weight: bold;
+  border-bottom: solid 4px #FFFFFF;
+}
+
+table.fancy tr:hover {
+  background-color: #FF9900;
+  color: #000000;
+}
