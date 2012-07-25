@@ -35,7 +35,7 @@
 <tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
 <tr><td>Append</td><td>[+</td><td>Block  a, Any b</td><td>Append b to a</td></tr>
 <tr><td></td><td>[+</td><td>Str a,Char b</td><tD>Append b to a</td></tr>
-<tr><td>Concat</td><td>\[</td><td>Block (Block) a <br/> Block (String) a</td><td>Concat list of lists</td></tr> 
+<tr><td>Concat</td><td></td><td>a</td><td>Defined as {.+}r[</td></tr> 
 <tr><td>Continuation</td><td>c!</td><td>Block a</td><td>Continuation with a</td></tr>
 <tr><td>Div</td><td>./</td><td>Int a, Int b</td><td>Regular integer division (a / b)</td></tr>
 <tr><td></td><td>./</td><td>Double a, Double b</td><td>Division (a / b)</td></tr>
@@ -83,6 +83,7 @@
 <tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr>
 <tr><td>Sum</td><td>++</td><td>Block (Int) a</td><td>Sum of all elements in a block.</td></tr>
+<tr><td></td><td>++</td><td>Int a,Int b</td><td>Concatenate digits.</td></tr>
 <tr><td>Swap</td><td>\/</td><td></td><td>Swap elements on top of the stack.</td></tr>
 <tr><td>Tail</td><td>[-</td><td>Block a</td><td>All except first element.</td></tr>
 <tr><td></td><td>[-</td><td>Str a</td><td>All except first character</td></tr>

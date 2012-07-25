@@ -65,6 +65,7 @@ builtins = [
   ("\\[", builtinConcat),
   ("[[", builtinIntersperse),
   ("m[", builtinMap),
+  ("r[", builtinReduce),
   ("\\/", builtinSwap),
   ("^^", builtinDup),
   ("vv", builtinPop)
@@ -287,6 +288,7 @@ builtinSum = do
  putResult $
   case st of
    (BlsqBlock a) : xs -> (sum' a) : xs
+   (BlsqInt b : BlsqInt a : xs) -> (BlsqInt . read $ (show (abs a)) ++ (show (abs b))) : xs
    _ -> (BlsqError "Burlesque: (++) Invalid arguments!") : st
  where sum' [] = BlsqInt 0
        sum' (BlsqInt a : xs) = 
@@ -362,36 +364,15 @@ builtinAppend = do
 
 -- | > \[
 --
--- > Block -> Concatenates Blocks in Block or Strings in Block
---            or char's in blocks
+-- > Block -> Concatenates
 builtinConcat :: BlsqState
 builtinConcat = do
  st <- get
- putResult $
-  case st of
-   (BlsqBlock a) : xs -> (concat' a) : xs
-   _ -> (BlsqError "Burlesque: (\\[) Invalid arguments!") : st
- where concat' [] = BlsqNil
-       concat' (BlsqBlock a : as) = 
-         case concat' as of
-           BlsqBlock b -> BlsqBlock $ a ++ b
-           BlsqError q -> BlsqError q
-           BlsqNil -> BlsqBlock $ a
-           _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting Block!" 
-       concat' (BlsqStr a : as) =
-         case concat' as of
-           BlsqStr b -> BlsqStr $ a ++ b
-           BlsqError q -> BlsqError q
-           BlsqNil -> BlsqStr $ a
-           _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting String!"
-       concat' (BlsqChar a : as) =
-         case concat' as of
-           BlsqChar b -> BlsqStr $ a : [b]
-           BlsqError q -> BlsqError q
-           BlsqNil -> BlsqStr $ [a]
-           BlsqStr b -> BlsqStr $ a : b
-           _ -> BlsqError "Burlesque: (\\[) Invalid element! Expecting Character!"
-       concat' _ = BlsqError "Burlesque: (\\[) Invalid element!"
+ case st of
+  (BlsqBlock a) : xs -> do
+     modify ((BlsqBlock $ [BlsqIdent ".+"]) :)
+     builtinReduce
+  _ -> putResult $ (BlsqError "Burlesque: (\\[) Invalid arguments!") : st
 
 -- | > m[
 --
@@ -403,8 +384,22 @@ builtinMap = do
   case st of
    (BlsqBlock a : BlsqBlock b : xs) -> (BlsqBlock $ map' a b) : xs
    _ -> BlsqError "Burlesque: (m[) Invalid arguments!" : st
- where map' f [] = []
+ where map' _ [] = []
        map' f (x:xs) = (runStack f [x]) ++ (map' f xs)
+
+builtinReduce :: BlsqState
+builtinReduce = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock f : BlsqBlock ls : xs) -> (reduce' f ls) : xs
+   _ -> BlsqError "Burlesque: (r[) Invalid arguments!" : st
+ where reduce' f [] = BlsqError "Burlesque: (r[) Empty list!"
+       reduce' f (x:xs) = reduce'' f x xs
+       reduce'' f z [] = z
+       reduce'' f z (x:xs) = case runStack f [x,z] of
+                              (a : ys) -> reduce'' f a xs
+                              _ -> BlsqError "Burlesque: (r[) Stack size error!"
 
 -- | > wl
 --
