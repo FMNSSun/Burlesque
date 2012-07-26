@@ -3,6 +3,7 @@ module Burlesque.Display
  where
 
 import Burlesque.Types
+import Burlesque.Helpers
 
 import Data.List
 import Web.Encodings
@@ -15,6 +16,13 @@ toDisplay (BlsqError s) = "ERROR: " ++ s
 toDisplay (BlsqIdent s) = s
 toDisplay (BlsqChar c) = "'"++[c]
 toDisplay (BlsqDouble d) = show d
+toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNormal) = s
+toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNoSpaces) = noSpaces s
+toDisplay (BlsqPretty (BlsqBlock xs) BlsqFormatNormal) = 
+  "[" ++ (intercalate ", " $ map (\c -> toDisplay $ BlsqPretty c BlsqFormatNormal) xs) ++ "]"
+toDisplay (BlsqPretty f BlsqFormatNormal) = toDisplay f
+
+
 toDisplay q = show q
 
 toHTML a@(BlsqInt _) = "<span class=\"int\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
@@ -24,3 +32,4 @@ toHTML a@(BlsqError _) = "<span class=\"err\">" ++ (encodeHtml $ toDisplay a) ++
 toHTML a@(BlsqIdent _) = "<span class=\"id\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
 toHTML a@(BlsqChar _) = "<span class=\"chr\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
 toHTML a@(BlsqDouble _) = "<span class=\"dbl\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
+toHTML q = "<span class=\"raw\">" ++ (encodeHtml $ toDisplay q) ++ "</span>"

@@ -69,7 +69,8 @@ builtins = [
   ("\\/", builtinSwap),
   ("^^", builtinDup),
   ("vv", builtinPop),
-  ("XX", builtinExplode)
+  ("XX", builtinExplode),
+  ("sh", builtinPretty)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -628,3 +629,12 @@ builtinExplode = do
    (BlsqDouble a : xs) -> (BlsqBlock [BlsqInt . floor $ a, BlsqInt . ceiling $ a]) : xs
    (BlsqChar a : xs) -> (BlsqStr [a]) : xs
    _ -> BlsqError "Burlesque: (XX) Invalid arguments!" : st
+
+-- | > sh
+builtinPretty :: BlsqState
+builtinPretty = do
+ st <- get
+ putResult $
+  case st of
+   (a : xs) -> (BlsqPretty a BlsqFormatNormal) : xs
+   _ -> BlsqError "Burlesque: (sh) Invalid arguments!" : st

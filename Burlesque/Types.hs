@@ -3,6 +3,7 @@ module Burlesque.Types
    BlsqStack (..),
    BlsqState (..),
    BlsqProg (..),
+   BlsqPrettyFormat (..),
    module Control.Monad.State)
  where
 
@@ -17,7 +18,12 @@ data BlsqExp =  BlsqInt Integer
               | BlsqBlock [BlsqExp]
               | BlsqError String
               | BlsqNil
+              | BlsqPretty BlsqExp BlsqPrettyFormat
   deriving (Show,Eq,Read,Ord)
+
+data BlsqPrettyFormat =  BlsqFormatNormal
+                       | BlsqFormatNoSpaces
+  deriving (Show,Read,Eq,Ord)
 
 type BlsqStack = [BlsqExp]
 type BlsqState = State BlsqStack ()
