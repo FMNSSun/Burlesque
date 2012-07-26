@@ -37,7 +37,11 @@
 <tr><td></td><td>.+</td><td>Str a, Char b</td><td>Append char to string</td></tr>
 <tr><td>Append</td><td>[+</td><td>Block  a, Any b</td><td>Append b to a</td></tr>
 <tr><td></td><td>[+</td><td>Str a,Char b</td><tD>Append b to a</td></tr>
-<tr><td>Concat</td><td></td><td>a</td><td>Defined as {.+}r[</td></tr> 
+<tr><td>Concat</td><td></td><td>a</td><td>Defined as {.+}r[</td></tr>
+<tr><td>Contains</td><td>~[</td><td>Block a, Any b</td><td>Does a contain b?</td><tr>
+<tr><td></td><td>~[</td><td>Str a, Char b</td><td>Does a contain b?</td></tr>
+<tr><td></td><td>~[</td><td>Int a, Int b</td><td>Does a contain the digits of b?</td><tr>
+<tr><td></td><td>~[</td><td>Str a, Str b</td><td>Does a contain b?</td></tr>
 <tr><td>Continuation</td><td>c!</td><td>Block a</td><td>Continuation with a</td></tr>
 <tr><td>Decrement</td><td>-.</td><td>Int a</td><td>Decrement a--</td></tr>
 <tr><td></td><td>-.</td><td>Char a</td><td>Previous char (chr(ord(a)-1))</td></tr>
@@ -78,7 +82,7 @@
 <tr><td></td><td>**</td><td>Block a, Block b</td><td>Merge blocks</td></tr>
 <tr><td></td><td>**</td><td>Str a, Str b</td><td>Merge strings</td></tr>
 <tr><td></td><td>**</td><td>Char a</td><td>ordinal a. (ord a). </td></tr>
-<tr><td>Pretty</td><td>sh</td>Any a</td><td>Convert to pretty type (FormatNormal)</td></tr>
+<tr><td>Pretty</td><td>sh</td><td>Any a</td><td>Convert to pretty type (FormatNormal)</td></tr>
 <tr><td>ReadInt</td><td>ri</td><td>Int a</td><td>Identity for integers</td></tr>
 <tr><td></td><td>ri</td><td>Str a</td><td>Tries to convert a string to an integer</td></tr>
 <tr><td>Reverse</td><td>&lt;-</td><td>Int a</td><td>Reverses the digits of the integer</td></tr>

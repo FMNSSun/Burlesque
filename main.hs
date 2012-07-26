@@ -56,5 +56,5 @@ burlesqueShell = do
  case line of 
    Nothing     -> outputStrLn "* Abort..." >> return ()
    Just "exit!" -> outputStrLn "* Exit!" >> return()
-   Just q -> do outputStrLn $ runProgramNoStdin q
+   Just q -> do outputStr $ runProgramNoStdin q
                 burlesqueShell
