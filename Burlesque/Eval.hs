@@ -68,7 +68,8 @@ builtins = [
   ("r[", builtinReduce),
   ("\\/", builtinSwap),
   ("^^", builtinDup),
-  ("vv", builtinPop)
+  ("vv", builtinPop),
+  ("XX", builtinExplode)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -92,7 +93,9 @@ builtinAdd = do
     ((BlsqStr b):(BlsqStr a):xs) -> (BlsqStr (a ++ b)) : xs
     ((BlsqStr b):(BlsqInt a):xs) -> (BlsqStr $ genericTake a b) : xs
     (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (a ++ b) : xs
-    _ -> (BlsqError "Burlesque: (.+) Invalid arguments!") : st
+    (BlsqChar b : BlsqChar a : xs) -> (BlsqStr $ a:b:"") : xs
+    (BlsqChar b : BlsqStr a : xs) -> (BlsqStr $ a++[b]) : xs
+    _ -> (BlsqError $ "Burlesque: (.+) Invalid arguments!") : st
 
 -- | > .-
 --
@@ -381,10 +384,15 @@ builtinConcat = do
 builtinMap :: BlsqState
 builtinMap = do
  st <- get
- putResult $
-  case st of
-   (BlsqBlock a : BlsqBlock b : xs) -> (BlsqBlock $ map' a b) : xs
-   _ -> BlsqError "Burlesque: (m[) Invalid arguments!" : st
+ case st of
+   (BlsqBlock v : BlsqStr f : xs) -> do
+      builtinSwap
+      builtinExplode
+      builtinSwap
+      builtinMap
+      builtinConcat
+   (BlsqBlock a : BlsqBlock b : xs) -> putResult $ (BlsqBlock $ map' a b) : xs
+   _ -> putResult $ BlsqError "Burlesque: (m[) Invalid arguments!" : st
  where map' _ [] = []
        map' f (x:xs) = (runStack f [x]) ++ (map' f xs)
 
@@ -606,3 +614,17 @@ builtinRound = do
    (BlsqInt b : BlsqDouble a : xs) -> (BlsqDouble $ round' a b) : xs
    _ -> BlsqError "Burlesque: (r_) Invalid arguments!" : st
  where round' n s = let factor = fromIntegral (10^s) in fromIntegral (round (n * factor)) / factor
+
+-- | > (XX)
+--
+-- > Explode stuff
+builtinExplode :: BlsqState
+builtinExplode = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr a : xs) -> (BlsqBlock $ map (BlsqChar) a) : xs
+   (BlsqInt a : xs) -> (BlsqBlock $ map (\c -> BlsqInt . read $ [c]) (show (abs a))) : xs
+   (BlsqDouble a : xs) -> (BlsqBlock [BlsqInt . floor $ a, BlsqInt . ceiling $ a]) : xs
+   (BlsqChar a : xs) -> (BlsqStr [a]) : xs
+   _ -> BlsqError "Burlesque: (XX) Invalid arguments!" : st
