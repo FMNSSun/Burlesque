@@ -35,6 +35,7 @@
 <tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
 <tr><td></td><td>.+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr>
 <tr><td></td><td>.+</td><td>Str a, Char b</td><td>Append char to string</td></tr>
+<tr><td>And</td><td>&&</td><td>Int a, Int b</td><td>Bitwise and</td></tr>
 <tr><td>Append</td><td>[+</td><td>Block  a, Any b</td><td>Append b to a</td></tr>
 <tr><td></td><td>[+</td><td>Str a,Char b</td><tD>Append b to a</td></tr>
 <tr><td>Concat</td><td></td><td>a</td><td>Defined as {.+}r[</td></tr>
@@ -71,6 +72,8 @@
 <tr><td></td><td>ln</td><td>Int a</td><td>Number of digits in an integer</td></tr>
 <tr><td>Map</td><td>m[</td><td>Block ls, Block f</td><td>Apply f to every element in ls and collect the result in a block</td></tr>
 <tr><td></td><td>m[</td><td>Str ls, Block f</td><td>Defined as \/ XX \/ m[ \[</td></tr>
+<tr><td>Matches</td><td>String a, String regex</td><td>1 if regex matches, else 0</td></tr>
+<tr><td>MatchesList</td><td>String a, String regex</td><td>Returns a list of subexpression matches</td></tr>
 <tr><td>Max</td><td>&gt;.</td><td>Any a, Any b</td><td>Max(a,b)</td></tr>
 <tr><td>Maximum</td><td>&gt;]</td><td>Block a</td><td>Maximum(a)</td></tr>
 <tr><td>Min</td><td>&lt;.</td><td>Any a, Any b</td><td>Min(a,b)</td></tr>
@@ -80,6 +83,7 @@
 <tr><td></td><td>.*</td><td>Str a, Int n</td><td>Returns a block containing n copies of a</td></tr>
 <tr><td></td><td>.*</td><td>Char a, Int n</td><td>Returns a string containing n copies of a</td></tr>
 <tr><td></td><td>.*</td><td>Block a, Int n</td><td>Returns a block containing n copies of a</td></tr>
+<tr><td>Or</td><td>||</td><td>Int a, Int b</td><td>Bitwise or</td></tr>
 <tr><td>Parse</td><td>ps</td><td>Str a</td><td>Parses the string as a Burlesque expression and returns a Block</td></tr>
 <tr><td>Pop</td><td>vv</td><td></td><td>Remove top most element from the stack</td></tr>
 <tr><td>Pow</td><td>**</td><td>Int a, Int b</td><td>Regular integer power (a ^ b)</td></tr>
@@ -102,6 +106,7 @@
 <tr><td></td><td>r~</td><td>Str ls, Char old, Char new</td><td>Replaces old in ls with new</td></tr>
 <tr><td></td><td>r~</td><td>Str ls, Str old, Str new</td><td>Replaces old in ls with new</td></tr>
 <tr><td></td><td>r~</td><td>Int ls, Int old, Int new</td><td>Replaces old in ls with new (digitwise)</td></tr>
+<tr><td>ReplaceRegex</td><td>R~</td><td>Str s, Str repl, Str regex</td><td>Regex replace</td></tr>
 <tr><td>Round</td><td>r_</td><td>Double a, Int b</td><tD>Round a to b decimal places</td></tr>
 <tr><td>Smaller</td><td>.&lt;</td><td>Any a, Any b</td><td>Comparision (a &lt; b)</td></tr>
 <tr><td>Sub</td><td>.-</td><td>Int a, Int b</td><td>Regular integer subtraction (a - b)</td></tr>
@@ -122,7 +127,8 @@
 <tr><td>WithLines</td><td>wl</td><td>n/a</td><td>Defined as \/ ln \/ m[ un</td></tr>
 <tr><td>WithLinesPretty</td><td>WL</td><td>n/a</td><td>Defined as wl sh</td></tr>
 <tr><td>WithLinesParsePretty</td><td>wL</td><td>n/a</td><td>Defined as {ps*}WL (prepends ps to block)</td></tr>
-<tr><td>Explode</td><td>XX</td><td>Str a</td><td>Convert a to a block of characters</td></tr>
+<tr><td>Xor</td><td>$$</td><td>Int a, Int b</td><td>Bitwise xor</td></tr>
+<tr><td>Xplode</td><td>XX</td><td>Str a</td><td>Convert a to a block of characters</td></tr>
 <tr><td></td><td>XX</td><td>Int a</td><td>Convert a to a block of digits</td></tr>
 <tr><td></td><td>XX</td><td>Double a</td><td>Convert a to block containing ceiling a and floor a</td></tr>
 <tr><td></td><td>XX</td><td>Char a</td><td>Convert a to a string</td></tr>

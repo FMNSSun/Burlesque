@@ -10,6 +10,8 @@ import Burlesque.Display
 import Data.Maybe
 import Data.List
 import Data.Char
+import Data.Bits
+import Text.Regex
 
 import Debug.Trace
 
@@ -81,6 +83,7 @@ builtins = [
   ("~!", builtinPrefixOf),
   ("!~", builtinSuffixOf),
   ("r~", builtinReplace),
+  ("R~", builtinReplaceRegex),
   ("^p", builtinPushMany),
   ("p^", builtinPushManyReverse),
   ("=[", builtinGroup),
@@ -89,7 +92,12 @@ builtins = [
   ("ff", builtinFromFormat),
   ("Ff", builtinFormatFromFormat),
   ("SH", builtinPrettyFormatFromFormat),
-  ("Sh", builtinPrettyFromFormat)
+  ("Sh", builtinPrettyFromFormat),
+  ("~=", builtinMatches),
+  ("=~", builtinMatchesList),
+  ("||", builtinOr),
+  ("&&", builtinAnd),
+  ("$$", builtinXor)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -698,3 +706,62 @@ builtinPrettyFromFormat :: BlsqState
 builtinPrettyFromFormat = do
  builtinPretty
  builtinFromFormat
+
+-- | > ~=
+builtinMatches :: BlsqState
+builtinMatches = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr regex : BlsqStr str : xs) -> (case matchRegex (mkRegex regex) str of
+                                            Just q -> BlsqInt 1
+                                            _ -> BlsqInt 0) : xs
+   _ -> BlsqError "Burlesque: (~=) Invalid arguments!" : st
+
+-- | > =~
+builtinMatchesList :: BlsqState
+builtinMatchesList = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr regex : BlsqStr str : xs) -> (case matchRegex (mkRegex regex) str of
+                                            Just q -> BlsqBlock $ map BlsqStr q
+                                            _ -> BlsqBlock []) : xs
+   _ -> BlsqError "Burlesque: (~=) Invalid arguments!" : st
+
+-- | > R~
+builtinReplaceRegex :: BlsqState
+builtinReplaceRegex = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr regex : BlsqStr repl : BlsqStr str : xs) -> 
+           BlsqStr (subRegex (mkRegex regex) str repl) : xs
+   _ -> BlsqError "Burlesque: (~=) Invalid arguments!" : st
+
+-- | ||
+builtinOr :: BlsqState
+builtinOr = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : BlsqInt b : xs) -> (BlsqInt $ a .|. b) : xs
+   _ -> BlsqError "Burlesque: (||) Invalid arguments!": st
+
+-- | &&
+builtinAnd :: BlsqState
+builtinAnd = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : BlsqInt b : xs) -> (BlsqInt $ a .&. b) : xs
+   _ -> BlsqError "Burlesque: (&&) Invalid arguments!": st
+
+-- | $$
+builtinXor :: BlsqState
+builtinXor = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : BlsqInt b : xs) -> (BlsqInt $ a `xor` b) : xs
+   _ -> BlsqError "Burlesque: ($$) Invalid arguments!": st
