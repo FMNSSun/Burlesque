@@ -4,6 +4,7 @@ module Burlesque.Eval
 
 import Burlesque.Types
 import Burlesque.Parser
+import Burlesque.Helpers
 
 import Data.Maybe
 import Data.List
@@ -74,7 +75,8 @@ builtins = [
   ("~[", builtinContains),
   ("~~", builtinInfixOf),
   ("~!", builtinPrefixOf),
-  ("!~", builtinSuffixOf)
+  ("!~", builtinSuffixOf),
+  ("r~", builtinReplace)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -685,3 +687,15 @@ builtinSuffixOf = do
    (BlsqStr a : BlsqStr b : xs) -> BlsqInt (if a `isSuffixOf` b then 1 else 0) : xs
    (BlsqInt a : BlsqInt b : xs) -> BlsqInt (if (show . abs $ a) `isSuffixOf` (show . abs $ b) then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (!~) Invalid arguments!" : st
+
+builtinReplace :: BlsqState
+builtinReplace = do
+ st <- get
+ putResult $
+  case st of
+   (n : o : BlsqBlock ls : xs) -> (BlsqBlock $ replace [o] [n] ls) : xs
+   (BlsqChar n : BlsqChar o : BlsqStr ls : xs) -> (BlsqStr $ replace [o] [n] ls) : xs
+   (BlsqStr n : BlsqStr o : BlsqStr ls : xs) -> (BlsqStr $ replace o n ls) : xs
+   (BlsqInt n : BlsqInt o : BlsqInt ls : xs) -> 
+       (BlsqInt . read $ replace (show . abs $ o) (show . abs $ n) (show . abs $ ls)) : xs
+   _ -> BlsqError "Burlesque: (r~) Invalid arguments!" : st
