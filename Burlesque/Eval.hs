@@ -72,7 +72,9 @@ builtins = [
   ("XX", builtinExplode),
   ("sh", builtinPretty),
   ("~[", builtinContains),
-  ("~~", builtinInfixOf)
+  ("~~", builtinInfixOf),
+  ("~!", builtinPrefixOf),
+  ("!~", builtinSuffixOf)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -661,3 +663,25 @@ builtinInfixOf = do
   case st of
    (BlsqBlock a : BlsqBlock b : xs) -> BlsqInt (if a `isInfixOf` b then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (~~) Invalid arguments!" : st
+
+-- | > ~!
+builtinPrefixOf :: BlsqState
+builtinPrefixOf = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a : BlsqBlock b : xs) -> BlsqInt (if a `isPrefixOf` b then 1 else 0) : xs
+   (BlsqStr a : BlsqStr b : xs) -> BlsqInt (if a `isPrefixOf` b then 1 else 0) : xs
+   (BlsqInt a : BlsqInt b : xs) -> BlsqInt (if (show . abs $ a) `isPrefixOf` (show . abs $ b) then 1 else 0) : xs
+   _ -> BlsqError "Burlesque: (~!) Invalid arguments!" : st
+
+-- | > !~
+builtinSuffixOf :: BlsqState
+builtinSuffixOf = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a : BlsqBlock b : xs) -> BlsqInt (if a `isSuffixOf` b then 1 else 0) : xs
+   (BlsqStr a : BlsqStr b : xs) -> BlsqInt (if a `isSuffixOf` b then 1 else 0) : xs
+   (BlsqInt a : BlsqInt b : xs) -> BlsqInt (if (show . abs $ a) `isSuffixOf` (show . abs $ b) then 1 else 0) : xs
+   _ -> BlsqError "Burlesque: (!~) Invalid arguments!" : st
