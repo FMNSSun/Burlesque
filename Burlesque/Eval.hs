@@ -5,6 +5,7 @@ module Burlesque.Eval
 import Burlesque.Types
 import Burlesque.Parser
 import Burlesque.Helpers
+import Burlesque.Display
 
 import Data.Maybe
 import Data.List
@@ -50,6 +51,8 @@ builtins = [
   ("ln", builtinLines),
   ("un", builtinUnlines),
   ("wl", builtinWithLines),
+  ("WL", builtinWithLinesPretty),
+  ("wL", builtinWithLinesParsePretty),
   ("ri", builtinReadInt),
   ("ps", builtinParse),
   ("if", builtinIff),
@@ -61,8 +64,10 @@ builtins = [
   ("[~", builtinLast),
   ("~]", builtinInit),
   ("[-", builtinTail),
+  ("~-", builtinInitTail),
   ("-]", builtinHead),
   ("[+", builtinAppend),
+  ("+]", builtinPrepend),
   ("\\[", builtinConcat),
   ("[[", builtinIntersperse),
   ("m[", builtinMap),
@@ -71,12 +76,20 @@ builtins = [
   ("^^", builtinDup),
   ("vv", builtinPop),
   ("XX", builtinExplode),
-  ("sh", builtinPretty),
   ("~[", builtinContains),
   ("~~", builtinInfixOf),
   ("~!", builtinPrefixOf),
   ("!~", builtinSuffixOf),
-  ("r~", builtinReplace)
+  ("r~", builtinReplace),
+  ("^p", builtinPushMany),
+  ("p^", builtinPushManyReverse),
+  ("=[", builtinGroup),
+  ("sh", builtinPretty),
+  ("FF", builtinFormat),
+  ("ff", builtinFromFormat),
+  ("Ff", builtinFormatFromFormat),
+  ("SH", builtinPrettyFormatFromFormat),
+  ("Sh", builtinPrettyFromFormat)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -347,6 +360,12 @@ builtinTail = do
    (BlsqStr a) : xs -> BlsqStr (tail a) : xs
    _ -> (BlsqError "Burlesque: ([-) Invalid arguments!") : st
 
+-- | ~-
+builtinInitTail :: BlsqState
+builtinInitTail = do
+ builtinInit
+ builtinTail
+
 -- | > -]
 --
 -- > Block -> First element
@@ -372,6 +391,16 @@ builtinAppend = do
    (b : BlsqBlock a : xs) -> BlsqBlock (a ++ [b]) : xs
    (BlsqChar b : BlsqStr a : xs) -> BlsqStr (a ++ [b]) : xs
    _ -> (BlsqError "Burlesque: ([+) Invalid arguments!") : st
+
+-- | > +]
+builtinPrepend :: BlsqState
+builtinPrepend = do
+ st <- get
+ putResult $
+  case st of
+   (b : BlsqBlock a : xs) -> BlsqBlock (b : a) : xs
+   (BlsqChar b : BlsqStr a : xs) -> BlsqStr (b : a) : xs
+   _ -> (BlsqError "Burlesque: (+]) Invalid arguments!") : st
 
 -- | > \[
 --
@@ -427,6 +456,20 @@ builtinWithLines = do
  builtinSwap
  builtinMap
  builtinUnlines
+
+-- | > WL
+builtinWithLinesPretty :: BlsqState
+builtinWithLinesPretty = do
+ builtinWithLines
+ builtinPretty
+
+-- | > wL
+builtinWithLinesParsePretty :: BlsqState
+builtinWithLinesParsePretty = do
+ modify (BlsqIdent "ps" :)
+ builtinPrepend
+ builtinWithLinesPretty
+ 
 
 -- | > \/
 --
@@ -688,6 +731,7 @@ builtinSuffixOf = do
    (BlsqInt a : BlsqInt b : xs) -> BlsqInt (if (show . abs $ a) `isSuffixOf` (show . abs $ b) then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (!~) Invalid arguments!" : st
 
+-- | > r~
 builtinReplace :: BlsqState
 builtinReplace = do
  st <- get
@@ -699,3 +743,69 @@ builtinReplace = do
    (BlsqInt n : BlsqInt o : BlsqInt ls : xs) -> 
        (BlsqInt . read $ replace (show . abs $ o) (show . abs $ n) (show . abs $ ls)) : xs
    _ -> BlsqError "Burlesque: (r~) Invalid arguments!" : st
+
+-- | > ^p
+builtinPushMany :: BlsqState
+builtinPushMany = do
+ st <- get
+ case st of
+  (BlsqBlock ls : xs) -> do
+     builtinPop
+     mapM (\v -> modify (v:)) ls
+ return ()
+
+-- | > p^
+builtinPushManyReverse :: BlsqState
+builtinPushManyReverse = do
+ st <- get
+ case st of
+  (BlsqBlock ls : xs) -> do 
+     builtinPop
+     mapM (\v -> modify (v:)) (reverse ls)
+ return ()
+
+-- | > =[
+builtinGroup :: BlsqState
+builtinGroup = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock ls : xs) -> (BlsqBlock $ map (BlsqBlock) (group ls)) : xs
+   _ -> BlsqError "Burlesque: (=[) Invalid arguments!" : st
+
+-- | > FF
+builtinFormat :: BlsqState
+builtinFormat = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt 0 : BlsqPretty x _ : xs) -> (BlsqPretty x BlsqFormatNormal) : xs
+   (BlsqInt 1 : BlsqPretty x _ : xs) -> (BlsqPretty x BlsqFormatNoSpaces) : xs
+   (BlsqInt 2 : BlsqPretty x _ : xs) -> (BlsqPretty x BlsqFormatWithSpaces) : xs
+   _ -> BlsqError "Burlesque: (FF) Invalid arguments!" : st
+
+-- | > ff
+builtinFromFormat :: BlsqState
+builtinFromFormat = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqPretty x f : xs) -> (BlsqStr $ (toDisplay $ BlsqPretty x f)) : xs
+   _ -> BlsqError "Burlesque: (ff) Invalid arguments!" : st
+
+-- | > Ff
+builtinFormatFromFormat = do
+ builtinFormat
+ builtinFromFormat
+
+-- | > SH
+builtinPrettyFormatFromFormat = do
+ builtinSwap
+ builtinPretty
+ builtinSwap
+ builtinFormatFromFormat
+
+-- | > Sh
+builtinPrettyFromFormat = do
+ builtinPretty
+ builtinFromFormat

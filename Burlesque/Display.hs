@@ -16,13 +16,22 @@ toDisplay (BlsqError s) = "ERROR: " ++ s
 toDisplay (BlsqIdent s) = s
 toDisplay (BlsqChar c) = "'"++[c]
 toDisplay (BlsqDouble d) = show d
+
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNormal) = s
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNoSpaces) = noSpaces s
+
 toDisplay (BlsqPretty (BlsqBlock xs) BlsqFormatNormal) = 
   "[" ++ (intercalate ", " $ map prettify' xs) ++ "]"
  where prettify' a@(BlsqStr c) = toDisplay a
        prettify' c = toDisplay $ BlsqPretty c BlsqFormatNormal
-toDisplay (BlsqPretty f BlsqFormatNormal) = toDisplay f
+
+
+toDisplay (BlsqPretty (BlsqBlock xs) BlsqFormatWithSpaces) =
+ "[" ++ (intercalate " " $ map prettify' xs) ++ "]"
+ where prettify' a@(BlsqStr c) = toDisplay a
+       prettify' c = toDisplay $ BlsqPretty c BlsqFormatWithSpaces
+
+toDisplay (BlsqPretty f _) = toDisplay f
 
 
 toDisplay q = show q

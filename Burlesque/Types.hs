@@ -23,6 +23,7 @@ data BlsqExp =  BlsqInt Integer
 
 data BlsqPrettyFormat =  BlsqFormatNormal
                        | BlsqFormatNoSpaces
+                       | BlsqFormatWithSpaces
   deriving (Show,Read,Eq,Ord)
 
 type BlsqStack = [BlsqExp]

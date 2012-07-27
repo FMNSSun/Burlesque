@@ -50,9 +50,9 @@
 <tr><td>Dup</td><td>^^</td><td></td><td>Duplicate top most element on the stack</td></tr>
 <tr><td>Equal</td><td>==</td><td>Any a, Any b</td><td>Comparision (a == b)</td></tr>
 <tr><td>Eval</td><td>e!</td><td>Block a</td><td>Eval a block</td></tr>
-<tr><td>Last</td><td>[~</td><td>Block a</td><td>Last element of the block</td></tr>
-<tr><td>Lines</td><td>ln</td><td>Str a</td><td>Splits a string into lines</td></tr>
-<tr><td></td><td>ln</td><td>Int a</td><td>Number of digits in an integer</td></tr>
+<tr><td>Format</td><td>FF</td><td>Pretty a, Int b</td><td>Changes the format of a according to b</td></tr>
+<tr><td>FormatFromFormat</td><td>Ff</td><td>n/a</td><td>Defined as FF ff</td></tr>
+<tr><td>FromFormat</td><td>ff</td><td>Pretty a</td><td>Extracts the string out of the pretty</td></tr>
 <tr><td>Greater</td><td>.&gt;</td><td>Any a, Any b</td><td>Comparision (a &gt; b)</td></tr>
 <tr><td>Head</td><td>-]</td><td>Block a</td><td>First element</td></tr>
 <tr><td></td><td>-]</td><td>Str a</td><td>First character</td></tr>
@@ -63,7 +63,11 @@
 <tr><td>InfixOf</td><td>~~</td><td>Block a, Block b</td><td>Does a contain b (as a consecutive subsequence)?</td></tr>
 <tr><td>Init</td><td>~]</td><td>Block a</td><td>All except the last element</td></tr>
 <tr><td></td><td>~]</td><td>Str a</td><td>All except the last character</td></tr>
+<tr><td>InitTail</td><td>~-</td><td>n/a</td><td>Defined as ~][-</td></tr>
 <tr><td>Intersperse</td><td>[[</td><td>Any a, Block b</td><td>Inserts a between every two element in b</td></tr>
+<tr><td>Last</td><td>[~</td><td>Block a</td><td>Last element of the block</td></tr>
+<tr><td>Lines</td><td>ln</td><td>Str a</td><td>Splits a string into lines</td></tr>
+<tr><td></td><td>ln</td><td>Int a</td><td>Number of digits in an integer</td></tr>
 <tr><td>Map</td><td>m[</td><td>Block ls, Block f</td><td>Apply f to every element in ls and collect the result in a block</td></tr>
 <tr><td></td><td>m[</td><td>Str ls, Block f</td><td>Defined as \/ XX \/ m[ \[</td></tr>
 <tr><td>Max</td><td>&gt;.</td><td>Any a, Any b</td><td>Max(a,b)</td></tr>
@@ -86,6 +90,8 @@
 <tr><td></td><td>~!</td><td>Int a, Int b</td><td>Is b a prefix of a?</td></tr>
 <tr><td></td><td>~!</td><td>Str a, Str b</td><td>Is b a prefix of a?</td></tr>
 <tr><td>Pretty</td><td>sh</td><td>Any a</td><td>Convert to pretty type (FormatNormal)</td></tr>
+<tr><td>PrettyFormatFromFormat</td><td>SH</td><td>n/a</td><td>Defined as \/ sh \/ Ff</td></tr>
+<tr><td>PrettyFromFormat</td><td>Sh</td><td>n/a</td><td>Defined as sh ff</td></tr>
 <tr><td>ReadInt</td><td>ri</td><td>Int a</td><td>Identity for integers</td></tr>
 <tr><td></td><td>ri</td><td>Str a</td><td>Tries to convert a string to an integer</td></tr>
 <tr><td>Reverse</td><td>&lt;-</td><td>Int a</td><td>Reverses the digits of the integer</td></tr>
@@ -113,6 +119,8 @@
                                                           <br/>Executing p does not affect the global stack.</td></tr>
 <tr><td></td><td>w!</td><td>Block f</td><td>Same effect as {f}{}w!</td></tr>
 <tr><td>WithLines</td><td>wl</td><td>n/a</td><td>Defined as \/ ln \/ m[ un</td></tr>
+<tr><td>WithLinesPretty</td><td>WL</td><td>n/a</td><td>Defined as wl sh</td></tr>
+<tr><td>WithLinesParsePretty</td><td>wL</td><td>n/a</td><td>Defined as {ps*}WL (prepends ps to block)</td></tr>
 <tr><td>Explode</td><td>XX</td><td>Str a</td><td>Convert a to a block of characters</td></tr>
 <tr><td></td><td>XX</td><td>Int a</td><td>Convert a to a block of digits</td></tr>
 <tr><td></td><td>XX</td><td>Double a</td><td>Convert a to block containing ceiling a and floor a</td></tr>
