@@ -39,6 +39,7 @@ main = do
      putStr $ runProgramNoStdin prog
    ["--no-stdin",prog] -> putStr $ runProgramNoStdin prog
    ["--shell"] -> runInputT settings burlesqueShell
+   ["--version"] -> putStrLn "burlesque-rc1"
    [prog] -> interact $ runProgram prog
    _ -> error "Invalid usage"
  where settings :: Settings IO
