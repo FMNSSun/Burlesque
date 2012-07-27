@@ -33,6 +33,7 @@ toDisplay (BlsqPretty (BlsqBlock xs) BlsqFormatWithSpaces) =
 
 toDisplay (BlsqPretty f _) = toDisplay f
 
+toDisplay (BlsqSpecial q) = q
 
 toDisplay q = show q
 

@@ -20,6 +20,11 @@ eval :: BlsqProg -> BlsqState
 eval (x:xs) = evalI x >> eval xs
 eval [] = return ()
 
+evalI v@(BlsqSpecial ",") = do
+ st <- get
+ if length st == 1 then
+   do put []
+ else return ()
 evalI v@(BlsqIdent i) = lookupBuiltin i
 evalI v = modify (v:)
 
@@ -97,7 +102,14 @@ builtins = [
   ("=~", builtinMatchesList),
   ("||", builtinOr),
   ("&&", builtinAnd),
-  ("$$", builtinXor)
+  ("$$", builtinXor),
+  ("L[", builtinLength),
+  ("ab", builtinAbs),
+  ("sn", builtinSignum),
+  ("S[", builtinStripLeft),
+  ("[S", builtinStripRight),
+  ("P[", builtinPadLeft),
+  ("[P", builtinPadRight)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -765,3 +777,87 @@ builtinXor = do
   case st of
    (BlsqInt a : BlsqInt b : xs) -> (BlsqInt $ a `xor` b) : xs
    _ -> BlsqError "Burlesque: ($$) Invalid arguments!": st
+
+-- | L[
+builtinLength :: BlsqState
+builtinLength = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr a : xs) -> (BlsqInt $ genericLength a) : xs
+   (BlsqBlock a : xs) -> (BlsqInt $ genericLength a) : xs
+   (BlsqInt a : xs) -> (BlsqChar $  chr (fromInteger a)) : xs
+   (BlsqChar a : xs) -> (BlsqChar (if isUpper a then 'A' else 'a')) : xs
+   _ -> BlsqError "Burlesque: (L[) Invalid arguments!" : st
+
+-- | ab
+builtinAbs :: BlsqState
+builtinAbs = do
+ st <- get
+ putResult $ 
+  case st of
+   (BlsqInt a : xs) -> (BlsqInt $ abs a) : xs
+   (BlsqDouble a : xs) -> (BlsqDouble $ abs a) : xs
+   _ -> BlsqError "Burlesque: (ab) Invalid arguments!" : st
+
+-- | sn
+builtinSignum :: BlsqState
+builtinSignum = do
+ st <- get
+ putResult $ 
+  case st of
+   (BlsqInt a : xs) -> (BlsqInt $ signum a) : xs
+   (BlsqDouble a : xs) -> (BlsqDouble $ signum a) : xs
+   _ -> BlsqError "Burlesque: (sn) Invalid arguments!" : st
+
+-- | S[
+builtinStripLeft :: BlsqState
+builtinStripLeft = do
+ st <- get
+ putResult $
+  case st of
+   (a : BlsqBlock b : xs) -> (BlsqBlock $ dropWhile (==a) b) : xs
+   (BlsqChar a : BlsqStr b : xs) -> (BlsqStr $ dropWhile (==a) b) : xs
+   _ -> BlsqError "Burlesque: (S[) Invalid arguments!" : st
+
+-- | S[
+builtinStripRight :: BlsqState
+builtinStripRight = do
+ st <- get
+ putResult $
+  case st of
+   (a : BlsqBlock b : xs) -> (BlsqBlock .reverse $ dropWhile (==a) (reverse b)) : xs
+   (BlsqChar a : BlsqStr b : xs) -> (BlsqStr . reverse $ dropWhile (==a) (reverse b)) : xs
+   _ -> BlsqError "Burlesque: ([S) Invalid arguments!" : st
+
+-- | P[
+builtinPadLeft :: BlsqState
+builtinPadLeft = do
+ st <- get
+ putResult $
+  case st of
+   (a : BlsqInt b : BlsqBlock ls : xs) -> BlsqBlock  
+                                         (if genericLength ls >= b then
+                                            genericTake b ls
+                                          else (genericReplicate (b-(genericLength ls)) a) ++ ls) :xs
+   (BlsqChar a : BlsqInt b : BlsqStr ls : xs) -> BlsqStr 
+                                         (if genericLength ls >= b then
+                                            genericTake b ls
+                                          else (genericReplicate (b-(genericLength ls)) a) ++ ls) :xs
+   _ -> BlsqError "Burlesque: (P[) Invalid arguments!" : st
+
+-- | [P
+builtinPadRight :: BlsqState
+builtinPadRight = do
+ st <- get
+ putResult $
+  case st of
+   (a : BlsqInt b : BlsqBlock ls : xs) -> BlsqBlock 
+                                         (if genericLength ls >= b then
+                                            genericTake b ls
+                                          else ls ++ (genericReplicate (b-(genericLength ls)) a)) :xs
+   (BlsqChar a : BlsqInt b : BlsqStr ls : xs) -> BlsqStr 
+                                         (if genericLength ls >= b then
+                                            genericTake b ls
+                                          else ls ++ (genericReplicate (b-(genericLength ls)) a)) :xs
+   _ -> BlsqError "Burlesque: ([P) Invalid arguments!" : st
