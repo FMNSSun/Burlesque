@@ -9,6 +9,7 @@ import Burlesque.Display
 
 import Data.Maybe
 import Data.List
+import Data.List.Split
 import Data.Char
 import Data.Bits
 import Text.Regex
@@ -109,7 +110,12 @@ builtins = [
   ("S[", builtinStripLeft),
   ("[S", builtinStripRight),
   ("P[", builtinPadLeft),
-  ("[P", builtinPadRight)
+  ("[P", builtinPadRight),
+  (";;", builtinSplit),
+  ("UN", builtinUnion),
+  ("IN", builtinIntersection),
+  ("NB", builtinNub),
+  ("\\\\", builtinDiffLs)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -861,3 +867,58 @@ builtinPadRight = do
                                             genericTake b ls
                                           else ls ++ (genericReplicate (b-(genericLength ls)) a)) :xs
    _ -> BlsqError "Burlesque: ([P) Invalid arguments!" : st
+
+-- | ;;
+builtinSplit :: BlsqState
+builtinSplit = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a : BlsqBlock b : xs) -> BlsqBlock (map BlsqBlock (splitOn a b)) : xs
+   (BlsqStr a : BlsqStr b : xs) -> BlsqBlock (map BlsqStr (splitOn a b)) : xs
+   (BlsqInt a : BlsqInt b : xs) -> BlsqBlock (map (BlsqInt . read) (splitOn (show (abs a)) (show (abs b)))) : xs
+   _ -> BlsqError "Burlesque: (;;) Invalid arguments!" : st
+
+-- | UN
+builtinUnion :: BlsqState
+builtinUnion = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (union a b) : xs
+   (BlsqStr b : BlsqStr a : xs) -> BlsqStr (union a b) : xs
+   (BlsqInt b : BlsqInt a : xs) -> BlsqInt (read $ union (show (abs a)) (show (abs b))) : xs
+   _ -> BlsqError "Burlesque: (UN) Invalid arguments!" : st
+
+-- | IN
+builtinIntersection :: BlsqState
+builtinIntersection = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (intersect a b) : xs
+   (BlsqStr b : BlsqStr a : xs) -> BlsqStr (intersect a b) : xs
+   (BlsqInt b : BlsqInt a : xs) -> BlsqInt (read $ intersect (show (abs a)) (show (abs b))) : xs
+   _ -> BlsqError "Burlesque: (IN) Invalid arguments!" : st
+
+-- | NB
+builtinNub :: BlsqState
+builtinNub = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a : xs) -> BlsqBlock (nub a) : xs
+   (BlsqStr a : xs) -> BlsqStr (nub a) : xs
+   (BlsqInt a : xs) -> BlsqInt (read $ nub (show (abs a))) : xs
+   _ -> BlsqError "Burlesque: (NB) Invalid arguments!" : st
+
+-- | \\
+builtinDiffLs :: BlsqState
+builtinDiffLs = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (a \\ b) : xs
+   (BlsqStr b : BlsqStr a : xs) -> BlsqStr (a \\ b) : xs
+   (BlsqInt b : BlsqInt a : xs) -> BlsqInt (read $ (show (abs a)) \\ (show (abs b))) : xs
+   _ -> BlsqError "Burlesque: (\\\\) Invalid arguments!" : st
