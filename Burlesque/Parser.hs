@@ -14,6 +14,7 @@ import Text.ParserCombinators.Parsec.Expr
 import Text.ParserCombinators.Parsec.Token
 
 import Burlesque.Types
+import Burlesque.Helpers
 import Debug.Trace
 
 parseDouble :: Parser BlsqExp
@@ -71,7 +72,7 @@ parseString = do
   e <- many (noneOf "\"")
   t <- char '"'
   optional spaces
-  return $ BlsqStr e
+  return $ BlsqStr (unescape e)
 
 parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseBlsq'
