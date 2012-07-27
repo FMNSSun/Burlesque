@@ -71,7 +71,8 @@ builtins = [
   ("vv", builtinPop),
   ("XX", builtinExplode),
   ("sh", builtinPretty),
-  ("~[", builtinContains)
+  ("~[", builtinContains),
+  ("~~", builtinInfixOf)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -639,7 +640,7 @@ builtinPretty = do
    _ -> BlsqError "Burlesque: (sh) Invalid arguments!" : st
 
 -- | > ~[
--- | Block, Any -> Contains block any?
+-- > Block, Any -> Contains block any?
 builtinContains :: BlsqState
 builtinContains = do
  st <- get
@@ -650,3 +651,13 @@ builtinContains = do
    (BlsqInt a : BlsqInt ls : xs) -> BlsqInt (if (show $ abs a) `isInfixOf` (show $ abs ls) then 1 else 0) : xs
    (BlsqStr a : BlsqStr ls : xs) -> BlsqInt (if a `isInfixOf` ls then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (~[) Invalid arguments!" : st
+
+-- | > ~~
+-- > Block Block -> infixOf
+builtinInfixOf :: BlsqState
+builtinInfixOf = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a : BlsqBlock b : xs) -> BlsqInt (if a `isInfixOf` b then 1 else 0) : xs
+   _ -> BlsqError "Burlesque: (~~) Invalid arguments!" : st
