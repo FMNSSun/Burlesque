@@ -530,8 +530,7 @@ builtinGreater = do
  st <- get
  putResult $
   case st of
-   (BlsqInt b : BlsqInt a : xs) -> (BlsqInt $ if a > b then 1 else 0) : xs
-   (BlsqDouble b : BlsqDouble a : xs) -> (BlsqInt $ if a > b then 1 else 0) : xs
+   (b : a : xs) -> (BlsqInt $ if a > b then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (.>) Invalid arguments!" : st
 
 -- | > (.<)
@@ -543,8 +542,7 @@ builtinSmaller = do
  st <- get
  putResult $
   case st of
-   (BlsqInt b : BlsqInt a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
-   (BlsqDouble b : BlsqDouble a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
+   (b : a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (.<) Invalid arguments!" : st
 
 -- | > (>.)
