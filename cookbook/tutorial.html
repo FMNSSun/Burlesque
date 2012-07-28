@@ -225,6 +225,38 @@ Results in a stack of
 5
 </pre>
 </p>
+<h2>MapReduce</h2>
+<h3>Map</h3>
+<p>
+When it comes to blocks, the map <b>m[</b> command is very useful. It calls a Block for every element in a Block
+collecting each result in a new Block. 
+<pre>
+<span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span><span class="blck">}</span> <span class="blck">{</span><span class="id">+.</span><span class="blck">}</span> <span class="id">m[</span>
+</pre>
+This increments every Integer in the Block.
+</p>
+<h3>Reduce</h3>
+<p>
+Reduce <b>r[</b> is a little bit more complicated. But don't worry. Let's say you have a List {1 2 3}
+and want to do 1*2*3. Or a list {1 2 3} and want to do 1+2+3. That's were reduce can help you! The
+following example calculates 1*2*3:
+<pre>
+<span class="blck">{</span><span class="int">1</span> <span class="int">2</span> <span class="int">3</span><span class="blck">}</span> <span class="blck">{</span><span class="id">.*</span><span class="blck">}</span> <span class="id">r[</span>
+</pre>
+Using this and the range command <b>r@</b> we can calculate factorial (of 4 in this case):
+<pre>
+<span class="int">1</span> <span class="int">4</span> <span class="id">r@</span> <span class="blck">{</span><span class="id">.*</span><span class="blck">}</span> <span class="id">r[</span>
+</pre>
+</p>
+<h2>Concatenative?</h2>
+<p>
+ You can think of every Burlesque program as a chain of functions which take a Stack as input
+ and return a new stack. You can think of any value as a function too. (The function 3 takes the
+ stack as input and returns a new stack by pushing 3 to it). You can write every Burlesque program
+ in a style of 'data commands'. That means, all the data is at the front and all commands follow it.
+ There is no data between commands. The program <span class="int">1</span> <span class="int">2</span> <span class="id">.+</span> <span class="int">3</span> <span class="id">.*</span> <span class="int">1</span> <span class="id">.-</span> <span class="int">2</span> <span class="id">./</span> can also be written as <span class="int">2</span> <span class="int">1</span> <span class="int">3</span> <span class="int">2</span> <span class="int">1</span> <span class="id">.+</span> <span class="id">.*</span> <span class="id">\/</span> <span class="id">.-</span> <span class="id">\/</span> <span class="id">./</span> although usually this style is much more unreadable and
+more complicated than necessary.
+</p>
 <h2>Where to go from here?</h2>
 <p>
  Now you're ready to read the <a href="lref.html">language reference</a>.
