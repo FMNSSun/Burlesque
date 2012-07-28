@@ -52,6 +52,7 @@
 <tr><td>Div</td><td>./</td><td>Int a, Int b</td><td>Regular integer division (a / b)</td></tr>
 <tr><td></td><td>./</td><td>Double a, Double b</td><td>Division (a / b)</td></tr>
 <tr><td>Dup</td><td>^^</td><td></td><td>Duplicate top most element on the stack</td></tr>
+<tr><td>DupSwap</td><td>^/</td><td></td><td>Defined as ^^ \/</td></tr>
 <tr><td>Equal</td><td>==</td><td>Any a, Any b</td><td>Comparision (a == b)</td></tr>
 <tr><td>Eval</td><td>e!</td><td>Block a</td><td>Eval a block</td></tr>
 <tr><td>Format</td><td>FF</td><td>Pretty a, Int b</td><td>Changes the format of a according to b</td></tr>
@@ -97,6 +98,7 @@
 <tr><td>PadRight</td><td>[P</td><td>Str a, Char b, Int c<br/>Block a, Any b, Int c</td><td>Pad (right) a to length c with b</td></tr>
 <tr><td>Parse</td><td>ps</td><td>Str a</td><td>Parses the string as a Burlesque expression and returns a Block</td></tr>
 <tr><td>Pop</td><td>vv</td><td></td><td>Remove top most element from the stack</td></tr>
+<tr><td>PopSwap</td><td>v/</td><td></td><td>Defined as vv \/</td></tr>
 <tr><td>Pow</td><td>**</td><td>Int a, Int b</td><td>Regular integer power (a ^ b)</td></tr>
 <tr><td></td><td>**</td><td>Double a, Double b</td><td>Double power (a ** b)</td></tr>
 <tr><td></td><td>**</td><td>Block a, Block b</td><td>Merge blocks</td></tr>
@@ -149,6 +151,8 @@
 <tr><td>Sum</td><td>++</td><td>Block (Int) a</td><td>Sum of all elements in a block.</td></tr>
 <tr><td></td><td>++</td><td>Int a,Int b</td><td>Concatenate digits.</td></tr>
 <tr><td>Swap</td><td>\/</td><td></td><td>Swap elements on top of the stack.</td></tr>
+<tr><td>SwapDup</td><td>/^</td><td></td><td>Defined as \/ ^^ </td></tr>
+<tr><td>SwapPop</td><td>/v</td><td></td><td>Defined as \/ vv</td></tr>
 <tr><td>Tail</td><td>[-</td><td>Block a<br/>Int a</td><td>All except first element.</td></tr>
 <tr><td></td><td>[-</td><td>Str a</td><td>All except first character</td></tr>
 <tr><td>Union</td><td>UN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Union</td></tr>

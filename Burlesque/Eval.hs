@@ -973,7 +973,7 @@ builtinRange = do
    (BlsqBlock a : xs) -> BlsqBlock (map BlsqBlock (permutations a)) : xs
    _ -> BlsqError "Burlesque: (r@) Invalid arguments!" : st
 
--- | bx
+-- | > bx
 builtinBox :: BlsqState
 builtinBox = do
  st <- get
@@ -982,7 +982,7 @@ builtinBox = do
    (a : xs) -> (BlsqBlock [a]) : xs
    _ -> BlsqError "Burlesque: (bx) Invalid arguments!" : st
 
--- | ><
+-- | > ><
 builtinSort :: BlsqState
 builtinSort = do
  st <- get
@@ -993,3 +993,27 @@ builtinSort = do
    (BlsqInt a : xs) -> BlsqStr (read.sort.show.abs $ a) : xs
    (BlsqChar a : xs) -> BlsqInt (if isDigit a then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (><) Invalid arguments!" : st
+
+-- | > /v
+builtinSwapPop :: BlsqState
+builtinSwapPop = do
+ builtinSwap
+ builtinPop
+
+-- | > v/
+builtinPopSwap :: BlsqState
+builtinPopSwap = do
+ builtinPop
+ builtinSwap
+
+-- | > ^/
+builtinDupSwap :: BlsqState
+builtinDupSwap = do
+ builtinDup
+ builtinSwap
+
+-- | > /^
+builtinSwapDup :: BlsqState
+builtinSwapDup = do
+ builtinSwap
+ builtinDup
