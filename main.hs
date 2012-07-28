@@ -39,9 +39,18 @@ main = do
      putStr $ runProgramNoStdin prog
    ["--no-stdin",prog] -> putStr $ runProgramNoStdin prog
    ["--shell"] -> runInputT settings burlesqueShell
-   ["--version"] -> putStrLn "burlesque-rc1"
-   [prog] -> interact $ runProgram prog
-   _ -> error "Invalid usage"
+   ["--version"] -> putStrLn "burlesque v1.0"
+   ["--stdin",prog] -> interact $ runProgram prog
+   _ -> do putStrLn $ "Invalid usage"
+           putStrLn "  --file <path>           Read code from file (incl. STDIN)"
+           putStrLn "  --file-no-stdin <path>  Read code from file (excl. STDIN)"
+           putStrLn "  --no-stdin <code>       Read code from argv (excl. STDIN)"
+           putStrLn "  --shell                 Start in shell mode"
+           putStrLn "  --version               Print version info"
+           putStrLn "  --compile <path>        Pseudo-compile file to haskell code"
+           putStrLn "  --stdin <code>          Read code from argv (incl. STDIN)"
+           putStrLn ""
+           putStrLn "\tBurlesque\tRoman Muentener, 2012"
  where settings :: Settings IO
        settings = Settings { 
                    complete = completeWord Nothing " \t" $ return . search,
