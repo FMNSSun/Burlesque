@@ -124,7 +124,9 @@ builtins = [
   ("/v", builtinSwapPop),
   ("v/", builtinPopSwap),
   ("^/", builtinDupSwap),
-  ("/^", builtinSwapDup)
+  ("/^", builtinSwapDup),
+  ("r&", builtinAndLs),
+  ("r|", builtinOrLs)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -1017,3 +1019,15 @@ builtinSwapDup :: BlsqState
 builtinSwapDup = do
  builtinSwap
  builtinDup
+
+-- | > r&
+builtinAndLs :: BlsqState
+builtinAndLs = do
+ modify(BlsqBlock [(BlsqIdent "&&")] :)
+ builtinReduce
+
+-- | > r|
+builtinOrLs :: BlsqState
+builtinOrLs = do
+ modify(BlsqBlock [(BlsqIdent "||")] :)
+ builtinReduce
