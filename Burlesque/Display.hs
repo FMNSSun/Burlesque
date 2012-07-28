@@ -31,6 +31,11 @@ toDisplay (BlsqPretty (BlsqBlock xs) BlsqFormatWithSpaces) =
  where prettify' a@(BlsqStr c) = toDisplay a
        prettify' c = toDisplay $ BlsqPretty c BlsqFormatWithSpaces
 
+toDisplay (BlsqPretty (BlsqBlock xs) BlsqFormatNoSpaces) =
+ "[" ++ (intercalate "," $ map prettify' xs) ++ "]"
+ where prettify' a@(BlsqStr c) = toDisplay a
+       prettify' c = toDisplay $ BlsqPretty c BlsqFormatNoSpaces
+
 toDisplay (BlsqPretty f _) = toDisplay f
 
 toDisplay (BlsqSpecial q) = q

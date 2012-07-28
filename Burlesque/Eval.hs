@@ -115,7 +115,8 @@ builtins = [
   ("UN", builtinUnion),
   ("IN", builtinIntersection),
   ("NB", builtinNub),
-  ("\\\\", builtinDiffLs)
+  ("\\\\", builtinDiffLs),
+  ("r@", builtinRange)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -922,3 +923,15 @@ builtinDiffLs = do
    (BlsqStr b : BlsqStr a : xs) -> BlsqStr (a \\ b) : xs
    (BlsqInt b : BlsqInt a : xs) -> BlsqInt (read $ (show (abs a)) \\ (show (abs b))) : xs
    _ -> BlsqError "Burlesque: (\\\\) Invalid arguments!" : st
+
+-- | r@
+builtinRange :: BlsqState
+builtinRange = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt b : BlsqInt a : xs) -> BlsqBlock (map BlsqInt [a..b]) : xs
+   (BlsqChar b : BlsqChar a : xs) -> BlsqBlock (map BlsqChar [a..b]) : xs
+   (BlsqDouble a : xs) -> BlsqDouble (sqrt a) : xs
+   (BlsqStr a : xs) -> BlsqBlock (map BlsqStr (permutations a)) : xs
+   _ -> BlsqError "Burlesque: (r@) Invalid arguments!" : st
