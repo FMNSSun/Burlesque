@@ -126,7 +126,11 @@ builtins = [
   ("^/", builtinDupSwap),
   ("/^", builtinSwapDup),
   ("r&", builtinAndLs),
-  ("r|", builtinOrLs)
+  ("r|", builtinOrLs),
+  ("ZZ", builtinToUpper),
+  ("zz", builtinToLower),
+  ("M[", builtinMapPretty),
+  ("??", builtinVersion)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -1031,3 +1035,33 @@ builtinOrLs :: BlsqState
 builtinOrLs = do
  modify(BlsqBlock [(BlsqIdent "||")] :)
  builtinReduce
+
+-- | > ZZ
+builtinToUpper :: BlsqState
+builtinToUpper = do
+ st <- get
+ putResult $
+  case st of 
+   (BlsqChar a : xs) -> BlsqChar (toUpper a) : xs
+   (BlsqStr a : xs) -> BlsqStr (map toUpper a) : xs
+   _ -> BlsqError "Burlesque: (ZZ) Invalid arguments!" : st
+
+-- | > zz
+builtinToLower :: BlsqState
+builtinToLower = do
+ st <- get
+ putResult $
+  case st of 
+   (BlsqChar a : xs) -> BlsqChar (toLower a) : xs
+   (BlsqStr a : xs) -> BlsqStr (map toLower a) : xs
+   _ -> BlsqError "Burlesque: (zz) Invalid arguments!" : st
+
+-- | > M[
+builtinMapPretty :: BlsqState
+builtinMapPretty = do
+ builtinMap
+ builtinPretty
+
+-- | ??
+builtinVersion :: BlsqState
+builtinVersion = modify (BlsqStr "Burlesque - 1.0" : )
