@@ -62,6 +62,8 @@ builtins = [
   ("WL", builtinWithLinesPretty),
   ("wL", builtinWithLinesParsePretty),
   ("ri", builtinReadInt),
+  ("rd", builtinReadDouble),
+  ("ra", builtinReadArray),
   ("ps", builtinParse),
   ("if", builtinIff),
   ("ie", builtinIfElse),
@@ -269,7 +271,29 @@ builtinReadInt = do
   case st of
    (BlsqStr a) : xs -> (BlsqInt . read $ a) : xs
    (BlsqInt a) : xs -> (BlsqInt a) : xs
+   (BlsqChar a) : xs -> BlsqInt (if isAlphaNum a then 1 else 0) : xs
    _ -> (BlsqError "Burlesque: (ri) Invalid arguments!") : st
+
+-- | > rd
+builtinReadDouble :: BlsqState
+builtinReadDouble = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr a) : xs -> (BlsqDouble . read $ a) : xs
+   (BlsqDouble a) : xs -> (BlsqDouble a) : xs
+   (BlsqChar a) : xs -> BlsqInt (if isAlpha a then 1 else 0) : xs
+   _ -> (BlsqError "Burlesque: (rd) Invalid arguments!") : st
+
+-- | > ra
+builtinReadArray :: BlsqState
+builtinReadArray = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr a) : xs -> (runParserWithString' parseData a) : xs
+   (BlsqChar a) : xs -> BlsqInt (if isSpace a then 1 else 0) :xs
+   _ -> (BlsqError "Burlesque: (ra) Invalid arguments!") : st
 
 -- | > ps
 builtinParse :: BlsqState

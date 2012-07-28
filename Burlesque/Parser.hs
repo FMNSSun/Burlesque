@@ -5,7 +5,11 @@ module Burlesque.Parser
    parseIdent,
    parseBlsq,
    parseBlock,
-   runParserWithString)
+   parseArray,
+   parseData,
+   parseChar',
+   runParserWithString,
+   runParserWithString')
  where
 
 import Text.ParserCombinators.Parsec
@@ -44,6 +48,14 @@ parseChar = do
   optional spaces
   return $ BlsqChar c
 
+parseChar' :: Parser BlsqExp
+parseChar' = do 
+  char '\''
+  c <- noneOf "'"
+  char '\''
+  optional spaces
+  return $ BlsqChar c
+
 parseIdent :: Parser BlsqExp
 parseIdent = do 
   a <- noneOf "1234567890{}',\" "
@@ -66,6 +78,19 @@ parseBlock = do
   optional spaces
   return $ BlsqBlock e
 
+parseArray :: Parser BlsqExp
+parseArray = do char '['
+                t <- parseArray'
+                return $ BlsqBlock t
+  where parseArray' :: Parser [BlsqExp]
+        parseArray' = do n <- parseData
+                         many $ oneOf ", \t"
+                         (do t <- parseArray'
+                             return (n : t))
+                          <|>
+                          do char ']'
+                             return [n]
+
 parseString :: Parser BlsqExp
 parseString = do 
   s <- char '"'
@@ -74,6 +99,9 @@ parseString = do
   optional spaces
   return $ BlsqStr (unescape e)
 
+parseData :: Parser BlsqExp
+parseData = parseString <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
+
 parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseBlsq'
  where parseBlsq' = parseBlock <|> parseString <|> parseSep <|> (try parseDouble) <|> (try parseNumber) <|> parseChar <|> parseIdent
@@ -81,4 +109,9 @@ parseBlsq = many parseBlsq'
 runParserWithString p input = 
   case parse p "" input of
     Left err -> [BlsqError $ show err]
+    Right q -> q
+
+runParserWithString' p input = 
+  case parse p "" input of
+    Left err -> BlsqError $ show err
     Right q -> q
