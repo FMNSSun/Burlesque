@@ -59,19 +59,19 @@
 <tr><td>FromFormat</td><td>ff</td><td>Pretty a</td><td>Extracts the string out of the pretty</td></tr>
 <tr><td>Greater</td><td>.&gt;</td><td>Any a, Any b</td><td>Comparision (a &gt; b)</td></tr>
 <tr><td>Group</td><td>=[</td><td>Block a</td><td>Group (equal consecutive) elements in a</td></tr>
-<tr><td>Head</td><td>-]</td><td>Block a</td><td>First element</td></tr>
+<tr><td>Head</td><td>-]</td><td>Block a<br/>Int a</td><td>First element</td></tr>
 <tr><td></td><td>-]</td><td>Str a</td><td>First character</td></tr>
 <tr><td>IfElse</td><td>ie</td><td>Block a, Block b, Int c</td><td>If c then a else b</td></tr>
 <tr><td>Iff</td><td>if</td><td>Block b, Int a</td><td>If a then execute b, else pop a and pop b</td></tr>
 <tr><td>Increment</td><td>+.</td><td>Int a</td><td>Increment (a++)</td></tr>
 <tr><td></td><td>+.</td><td>Char a</td><td>Next char (chr(ord(a)+1))</td></tr>
 <tr><td>InfixOf</td><td>~~</td><td>Block a, Block b</td><td>Does a contain b (as a consecutive subsequence)?</td></tr>
-<tr><td>Init</td><td>~]</td><td>Block a</td><td>All except the last element</td></tr>
+<tr><td>Init</td><td>~]</td><td>Block a<br/>Int a</td><td>All except the last element</td></tr>
 <tr><td></td><td>~]</td><td>Str a</td><td>All except the last character</td></tr>
 <tr><td>InitTail</td><td>~-</td><td>n/a</td><td>Defined as ~][-</td></tr>
 <tr><td>Intersection</td><td>IN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Intersection</td></tr>
 <tr><td>Intersperse</td><td>[[</td><td>Any a, Block b</td><td>Inserts a between every two element in b</td></tr>
-<tr><td>Last</td><td>[~</td><td>Block a</td><td>Last element of the block</td></tr>
+<tr><td>Last</td><td>[~</td><td>Block a<br/>Int a</td><td>Last element of the block</td></tr>
 <tr><td>Length</td><td>L[</td><td>Block a</td><td>Length of a</td></tr>
 <tr><td></td><td>L[</td><td>Str a</td><td>Length of a</td></tr>
 <tr><td></td><td>L[</td><td>Int a</td><td>Convert to char (chr a)</td></tr>
@@ -149,7 +149,7 @@
 <tr><td>Sum</td><td>++</td><td>Block (Int) a</td><td>Sum of all elements in a block.</td></tr>
 <tr><td></td><td>++</td><td>Int a,Int b</td><td>Concatenate digits.</td></tr>
 <tr><td>Swap</td><td>\/</td><td></td><td>Swap elements on top of the stack.</td></tr>
-<tr><td>Tail</td><td>[-</td><td>Block a</td><td>All except first element.</td></tr>
+<tr><td>Tail</td><td>[-</td><td>Block a<br/>Int a</td><td>All except first element.</td></tr>
 <tr><td></td><td>[-</td><td>Str a</td><td>All except first character</td></tr>
 <tr><td>Union</td><td>UN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Union</td></tr>
 <tr><td>Unlines</td><td>un</td><td>n/a</td><td>Defined as "\n" \/ [[ \[</td></tR>

@@ -120,7 +120,11 @@ builtins = [
   ("\\\\", builtinDiffLs),
   ("r@", builtinRange),
   ("bx", builtinBox),
-  ("><", builtinSort)
+  ("><", builtinSort),
+  ("/v", builtinSwapPop),
+  ("v/", builtinPopSwap),
+  ("^/", builtinDupSwap),
+  ("/^", builtinSwapDup)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -328,7 +332,9 @@ builtinLast = do
   case st of
    (BlsqBlock a) : xs -> last a : xs
    (BlsqStr a) : xs -> BlsqChar (last a) : xs
+   (BlsqInt a) : xs -> BlsqInt (read . ls . last . show . abs $ a) : xs
    _ -> (BlsqError "Burlesque: ([~) Invalid arguments!") : st
+ where ls a = [a]
 
 -- | > ~]
 builtinInit :: BlsqState
@@ -338,6 +344,7 @@ builtinInit = do
   case st of
    (BlsqBlock a) : xs -> (BlsqBlock (init a)) : xs
    (BlsqStr a) : xs -> BlsqStr (init a) : xs
+   (BlsqInt a) : xs -> BlsqInt (read . init . show . abs $ a) : xs
    _ -> (BlsqError "Burlesque: (~]) Invalid arguments!") : st
 
 -- | > [-
@@ -348,6 +355,7 @@ builtinTail = do
   case st of
    (BlsqBlock a) : xs -> (BlsqBlock (tail a)) : xs
    (BlsqStr a) : xs -> BlsqStr (tail a) : xs
+   (BlsqInt a) : xs -> BlsqInt (read . tail . show . abs $ a) : xs
    _ -> (BlsqError "Burlesque: ([-) Invalid arguments!") : st
 
 -- | ~-
@@ -364,7 +372,9 @@ builtinHead = do
   case st of
    (BlsqBlock a) : xs -> head a : xs
    (BlsqStr a) : xs -> BlsqChar (head a) : xs
+   (BlsqInt a) : xs -> BlsqInt (read . ls . head . show . abs $ a) : xs
    _ -> (BlsqError "Burlesque: (-]) Invalid arguments!") : st
+ where ls a = [a]
 
 -- | > [+
 builtinAppend :: BlsqState
