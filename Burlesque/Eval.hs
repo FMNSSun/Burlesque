@@ -116,7 +116,8 @@ builtins = [
   ("IN", builtinIntersection),
   ("NB", builtinNub),
   ("\\\\", builtinDiffLs),
-  ("r@", builtinRange)
+  ("r@", builtinRange),
+  ("bx", builtinBox)
  ]
 
 lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
@@ -936,3 +937,12 @@ builtinRange = do
    (BlsqStr a : xs) -> BlsqBlock (map BlsqStr (permutations a)) : xs
    (BlsqBlock a : xs) -> BlsqBlock (map BlsqBlock (permutations a)) : xs
    _ -> BlsqError "Burlesque: (r@) Invalid arguments!" : st
+
+-- | bx
+builtinBox :: BlsqState
+builtinBox = do
+ st <- get
+ putResult $
+  case st of
+   (a : xs) -> (BlsqBlock [a]) : xs
+   _ -> BlsqError "Burlesque: (bx) Invalid arguments!" : st
