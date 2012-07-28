@@ -934,4 +934,5 @@ builtinRange = do
    (BlsqChar b : BlsqChar a : xs) -> BlsqBlock (map BlsqChar [a..b]) : xs
    (BlsqDouble a : xs) -> BlsqDouble (sqrt a) : xs
    (BlsqStr a : xs) -> BlsqBlock (map BlsqStr (permutations a)) : xs
+   (BlsqBlock a : xs) -> BlsqBlock (map BlsqBlock (permutations a)) : xs
    _ -> BlsqError "Burlesque: (r@) Invalid arguments!" : st
