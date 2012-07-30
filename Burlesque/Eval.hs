@@ -21,6 +21,7 @@ eval :: BlsqProg -> BlsqState
 eval (x:xs) = evalI x >> eval xs
 eval [] = return ()
 
+evalI (BlsqQuoted q) = modify (q:)
 evalI v@(BlsqSpecial ",") = do
  st <- get
  if length st == 1 then

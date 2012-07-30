@@ -10,13 +10,14 @@
         <p>
           The following builtin types exist:
           <ul>
-           <li>Int - Integer</li>
+           <li>Int - Integer (UNBOUNDED!)</li>
            <li>Double - Double</li>
            <li>Str - String</li>
            <li>Char - Character</li>
            <li>Block - (Lists)</li>
            <li>Ident - Identifier</li>
            <li>Nil - Internal usage only</li>
+           <li>Quoted - Can be used to push identifiers on the stack</li>
            <li>Error - Can not be written as a literal in code</li>
           </ul>
         </p>
@@ -181,13 +182,16 @@
 
       <h1>Syntax</h1>
 <pre class="code">
+Special :: ","
 Double :: { digit }+ , "." , { digit }+
 Int :: { digit }+
 Char :: "'" , anyChar
 String :: "\"" , { anyChar }* , "\""
 Block :: "{" , { Expression }* , "}"
+Quoted :: "(", ExpressionSingle , ")"
 Identifier :: noneOf "1234567890{},' \"" , noneOf "1234567890{},' \""
-Expression :: { Block | Int | Char | String | Identifier }*
+ExpressionSingle :: { Block | Int | Char | String | Quoted | Identifier }
+Expression = { ExpressionSingle }*
 </pre>
  </body>
 </html>

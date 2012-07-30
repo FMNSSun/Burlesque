@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd" xml:lang="en"><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link href="style.css" rel="stylesheet" type="text/css">
+    <title>Burlesque - FAQ</title>
+  </head>
+  <body>
+<h1>FAQ</h1>
+<p>
+<b>Why is the language named Burlesque?</b><br/>
+Tough question. Like "Brainfuck" I wanted to name the language a little bit offensive but not
+as offensive as using the word "fuck" in it so I decided it to name <a href="http://en.wikipedia.org/wiki/Burlesque">Burlesque</a>.
+Also it seems that lots of people don't know the word Burlesque. That's not good, that's just not good.
+</p>
+<p>
+<b>Are there any undocumented features?</b><br/>
+Yes. The feature of the (special-)command <b>,</b> is not documented and this
+feature will never be documented. <b>,</b> is defined as pop if the stack
+only contais one element, in every other case its behaviour is not defined.
+</p>
+<p>
+<b>Undefined behaviour?</b><br/>
+Undefined behaviour is behaviour that was never defined. I give you an example:
+Converting the String "123a" to an Integer is NOT defined. Therefore an Interpreter
+is allowed to do what he wants. He could return 0, he could crash or he could shoot
+your dog. I prefer the crashing ;).
+</p>
+<p>
+<b>The interpreter crashed!</b><br/>
+First check that it is not a case of undefined behaviour. Else file a bug report on <a href="http://github.com/FMNSSun/Burlesque">github</a>.
+</p>
+<p>
+<b>I found a bug!</b><br/>
+File a bug report on <a href="http://github.com/FMNSSun/Burlesque">github</a>.
+</p>
+<p>
+<b>Could you implement feature X?</b><br/>
+File a bug report on <a href="http://github.com/FMNSSun/Burlesque">github</a>. Although
+I only implement features not breaking existing code. (Except code that relies on undefined behaviour. Such
+code can break and I don't care.)
+</p>
+<p>
+<b>I can't compile the interpreter!</b><br/>
+Check that you have a recent ghc and the haskell platform. Also you need to install some hackage packages.
+You need the following extra packages: haskeline, web-encodings.
+</p>
+<p>
+<b>License?</b><br/>
+Burlesque is available under the BSD3 license. 
+</p>
+<p>
+<b>Is this language cheat?</b><br/>
+What? Why would you think that? Of course not! It's real.
+</p>
+<p>
+<b>How can I help you?</b><br/>
+Check open issues on <a href="http://github.com/FMNSSun/Burlesque">github</a> and send me patches. Or add features and
+send me patches. Although there is no guarantee that I will use your patches.
+</p>
+<p>
+<b>I don't get how this language works :(</b><br/>
+Yes, it's not Java.
+</p>
+<p>
+<b>I wrote a very cool program in Burlesque</b><br/>
+Maybe you care to share?
+</p>
+<p>
+<b>I'm a teacher at some school and want to teach my students something about programming. Is Burlesque a good choice for that?</b><br/>
+Seriously? Sure, why the hell not.
+</p>
+<p>
+<b>Is Burlesque turing complete? Can you prove that?</b><br/>
+It is turing complete. There is an indirect proof by showing that <a href="http://esolangs.org/wiki/Underload">Underload</a> programs can be translated to Burlesque using the following translation table:
+<pre>
+ : &rarr; ^^
+ ( &rarr; {
+ ) &rarr; }
+ ^ &rarr; e!
+ ! &rarr; vv
+ * &rarr; .+
+ a &rarr; {}\/[+
+ ~ &rarr; \/
+ S &rarr; ? - Burlesque has no I/O.
+</pre>
+</p>
+<p>
+<b>How can I do I/O?</b><br/>
+You can't. Burlesque is designed to be a language without I/O capabilities.
+</p>
+<p>
+<b>How can I define my own functions/commands?</b><br/>
+You can't. Burlesque doesn't work the way you think!
+</p>
+<p>
+<b>Why is the Interpreter written in Haskell? Wtf is Haskell anyway. Never heard of it.</b><br/>
+Haskell is a great choice. Also I think of it as a little Haskell experiment ;)
+</p>
+<p>
+<b>Does it support OOP?</b><br/>
+No. Seriously, no! No way! Never! I'm pretty sure some people will come up with ideas on how to
+simulate OOP but that's just wrong. Simulating OOP in a language not suited for OOP is like
+riding a bike with turtles instead of wheels. <br/>
+<i>But my professor said OOP is like god (also Java is the only usable language)...?</i><br/>
+Aaargh :(!
+</p>
+<p>
+<b>Do you even know what you're talking about?</b><br/>
+Maybe. Do you?
+</p>
+<p>
+<b>I just got beaten by Burlesque in a golfing competition...</b><br/>
+Good, good... very good... 
+</p>
+  </body>
+</html>

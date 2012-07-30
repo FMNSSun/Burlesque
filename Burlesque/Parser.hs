@@ -8,6 +8,8 @@ module Burlesque.Parser
    parseArray,
    parseData,
    parseChar',
+   parseQuoted,
+   parseSingle,
    runParserWithString,
    runParserWithString')
  where
@@ -93,18 +95,31 @@ parseArray = do char '['
 
 parseString :: Parser BlsqExp
 parseString = do 
-  s <- char '"'
+  _ <- char '"'
   e <- many (noneOf "\"")
-  t <- char '"'
+  _ <- char '"'
   optional spaces
   return $ BlsqStr (unescape e)
+
+parseQuoted :: Parser BlsqExp
+parseQuoted = do
+  _ <- char '('
+  optional spaces
+  e <- parseSingle
+  optional spaces
+  _ <- char ')'
+  return $ BlsqQuoted e
 
 parseData :: Parser BlsqExp
 parseData = parseString <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
 
 parseBlsq :: Parser [BlsqExp]
-parseBlsq = many parseBlsq'
- where parseBlsq' = parseBlock <|> parseString <|> parseSep <|> (try parseDouble) <|> (try parseNumber) <|> parseChar <|> parseIdent
+parseBlsq = many parseSingle
+
+parseSingle :: Parser BlsqExp
+parseSingle = parseBlock <|> parseString <|> parseSep <|> 
+              (try parseDouble) <|> (try parseNumber) <|>
+              parseChar <|> parseQuoted <|> parseIdent
 
 runParserWithString p input = 
   case parse p "" input of

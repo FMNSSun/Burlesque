@@ -39,6 +39,7 @@ toDisplay (BlsqPretty (BlsqBlock xs) BlsqFormatNoSpaces) =
 toDisplay (BlsqPretty f _) = toDisplay f
 
 toDisplay (BlsqSpecial q) = q
+toDisplay (BlsqQuoted q) = "(" ++ toDisplay q ++ ")"
 
 toDisplay q = show q
 

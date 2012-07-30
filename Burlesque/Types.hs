@@ -19,6 +19,7 @@ data BlsqExp =  BlsqInt Integer
               | BlsqError String
               | BlsqNil
               | BlsqPretty BlsqExp BlsqPrettyFormat
+              | BlsqQuoted BlsqExp
   deriving (Show,Eq,Read,Ord)
 
 data BlsqPrettyFormat =  BlsqFormatNormal
