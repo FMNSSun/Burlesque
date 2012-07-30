@@ -134,7 +134,7 @@ builtins = [
   ("??", builtinVersion)
  ]
 
-lookupBuiltin b = fromMaybe (return ()) $ lookup b builtins
+lookupBuiltin b = fromMaybe (modify (BlsqError ("Unknown command: (" ++ b ++ ")!") :)) $ lookup b builtins
 
 putResult = put
 
