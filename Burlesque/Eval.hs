@@ -1058,7 +1058,7 @@ builtinSort = do
   case st of
    (BlsqBlock a : xs) -> BlsqBlock (sort a) : xs
    (BlsqStr a : xs) -> BlsqStr (sort a) : xs
-   (BlsqInt a : xs) -> BlsqStr (read.sort.show.abs $ a) : xs
+   (BlsqInt a : xs) -> BlsqInt (read.sort.show.abs $ a) : xs
    (BlsqChar a : xs) -> BlsqInt (if isDigit a then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (><) Invalid arguments!" : st
 
