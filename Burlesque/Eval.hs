@@ -42,6 +42,7 @@ toInt p = (fromIntegral p) :: Int
 
 builtins = [
   (".+", builtinAdd),
+  ("_+", builtinAddX),
   (".-", builtinSub),
   ("./", builtinDiv),
   (".*", builtinMul),
@@ -140,6 +141,7 @@ builtins = [
   ("[m", builtinMapDup),
   ("[M", builtinMapParse),
   ("wd", builtinWords),
+  ("f[", builtinFilter),
   ("??", builtinVersion)
  ]
 
@@ -160,7 +162,23 @@ builtinAdd = do
     (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (a ++ b) : xs
     (BlsqChar b : BlsqChar a : xs) -> (BlsqStr $ a:b:"") : xs
     (BlsqChar b : BlsqStr a : xs) -> (BlsqStr $ a++[b]) : xs
+    ((BlsqBlock b):(BlsqInt a):xs) -> (BlsqBlock $ genericTake a b) : xs
     _ -> (BlsqError $ "Burlesque: (.+) Invalid arguments!") : st
+
+-- | > _+
+builtinAddX :: BlsqState
+builtinAddX = do
+ st <- get
+ putResult $
+  case st of
+    ((BlsqInt b):(BlsqInt a):xs) -> (BlsqBlock [BlsqInt a, BlsqInt b]) : xs
+    ((BlsqDouble b):(BlsqDouble a):xs) -> (BlsqBlock [BlsqDouble a, BlsqDouble b]) : xs
+    ((BlsqStr b):(BlsqStr a):xs) -> (BlsqStr (a ++ b)) : xs
+    (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (a ++ b) : xs
+    (BlsqChar b : BlsqChar a : xs) -> (BlsqStr $ a:b:"") : xs
+    (BlsqChar b : BlsqStr a : xs) -> (BlsqStr $ a++[b]) : xs
+    (a : BlsqBlock b : xs) -> (BlsqBlock $ b++[a]) : xs
+    _ -> (BlsqError $ "Burlesque: (_+) Invalid arguments!") : st
 
 -- | > .-
 builtinSub :: BlsqState
@@ -174,6 +192,7 @@ builtinSub = do
     ((BlsqStr b):(BlsqStr a):xs) -> if b `isSuffixOf` a
                                      then (BlsqStr $ genericTake (genericLength a - length b) a) : xs
                                      else (BlsqStr a) : xs
+    ((BlsqBlock b):(BlsqInt a):xs) -> (BlsqBlock $ genericDrop a b) : xs
     _ -> (BlsqError "Burlesque: (.-) Invalid arguments!") : st
 
 -- | > .*
@@ -344,17 +363,11 @@ builtinUnparse = do
 builtinSum :: BlsqState
 builtinSum = do
  st <- get
- putResult $
-  case st of
-   (BlsqBlock a) : xs -> (sum' a) : xs
-   (BlsqInt b : BlsqInt a : xs) -> (BlsqInt . read $ (show (abs a)) ++ (show (abs b))) : xs
-   _ -> (BlsqError "Burlesque: (++) Invalid arguments!") : st
- where sum' [] = BlsqInt 0
-       sum' (BlsqInt a : xs) = 
-         case sum' xs of
-           BlsqInt b -> BlsqInt (a + b)
-           q -> q
-       sum' _ = BlsqError "Burlesque: (++) Invalid element!" 
+ case st of
+   (BlsqBlock a) : xs -> do modify (BlsqBlock [BlsqIdent ".+"] : )
+                            builtinReduce
+   (BlsqInt b : BlsqInt a : xs) -> putResult $ (BlsqInt . read $ (show (abs a)) ++ (show (abs b))) : xs
+   _ -> putResult $ (BlsqError "Burlesque: (++) Invalid arguments!") : st
 
 -- | > [~
 builtinLast :: BlsqState
@@ -437,7 +450,7 @@ builtinConcat = do
  st <- get
  case st of
   (BlsqBlock a) : xs -> do
-     modify ((BlsqBlock $ [BlsqIdent ".+"]) :)
+     modify ((BlsqBlock $ [BlsqIdent "_+"]) :)
      builtinReduce
   _ -> putResult $ (BlsqError "Burlesque: (\\[) Invalid arguments!") : st
 
@@ -456,6 +469,24 @@ builtinMap = do
    _ -> putResult $ BlsqError "Burlesque: (m[) Invalid arguments!" : st
  where map' _ [] = []
        map' f (x:xs) = (runStack f [x]) ++ (map' f xs)
+
+-- | > f[
+builtinFilter :: BlsqState
+builtinFilter = do
+ st <- get
+ case st of
+  (BlsqBlock v : BlsqStr f : xs) -> do
+      builtinSwap
+      builtinExplode
+      builtinSwap
+      builtinFilter
+      builtinConcat
+  (BlsqBlock f : BlsqBlock v : xs) -> do
+    putResult $ (BlsqBlock $ filter' f v) : xs
+ where filter' _ [] = []
+       filter' f (x:xs) = case runStack f [x] of
+                            (BlsqInt 1):ys -> x : filter' f xs
+                            _ -> filter' f xs
 
 -- | > r[
 builtinReduce :: BlsqState

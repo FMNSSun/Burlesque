@@ -37,6 +37,14 @@
 <tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
 <tr><td></td><td>.+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr>
 <tr><td></td><td>.+</td><td>Str a, Char b</td><td>Append char to string</td></tr>
+<tr><td></td><td>.+</td><td>Str a, Int b<br/>Block a, Int b</td><td>Take b characters from a</td></tr>
+<tr><td>AddX</td><td>_+</td><td>Int a, Int b</td><td>Returns a block with a and b</td></tr>
+<tr><td></td><td>_+</td><td>Double a, Double b</td><td>Returns a block with a and b</td></tr>
+<tr><td></td><td>_+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr>
+<tr><td></td><td>_+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
+<tr><td></td><td>_+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr>
+<tr><td></td><td>_+</td><td>Str a, Char b</td><td>Append char to string</td></tr>
+<tr><td></td><td>_+</td><TD>Block a, Any b</td><td>Append b to a</td></str>
 <tr><td>And</td><td>&&</td><td>Int a, Int b</td><td>Bitwise and</td></tr>
 <tr><td>AndLs</td><td>r&</td><td></td><td>Defined as {&&}r[</td></tr>
 <tr><td>Append</td><td>[+</td><td>Block  a, Any b<br/>Int a, Int b</td><td>Append b to a</td></tr>
@@ -157,10 +165,11 @@
 <tr><td>Sub</td><td>.-</td><td>Int a, Int b</td><td>Regular integer subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr>
+<tr><td></td><td>.-</td><td>Str a, Int b<br/>Block a, Int b</td><td>Drop b characters from a</td></tr>
 <tr><td>SuffixOf</td><td>!~</td><td>Block a, Block b</td><td>Is b a suffix of a?</td></tr>
 <tr><td></td><td>!~</td><td>Int a, Int b</td><td>Is b a suffix of a?</td></tr>
 <tr><td></td><td>!~</td><td>Str a, Str b</td><td>Is b a suffix of a?</td></tr>
-<tr><td>Sum</td><td>++</td><td>Block (Int) a</td><td>Sum of all elements in a block.</td></tr>
+<tr><td>Sum</td><td>++</td><td>Block a</td><td>Defined as {.+}r[</td></tr>
 <tr><td></td><td>++</td><td>Int a,Int b</td><td>Concatenate digits.</td></tr>
 <tr><td>Swap</td><td>\/</td><td></td><td>Swap elements on top of the stack.</td></tr>
 <tr><td>SwapDup</td><td>/^</td><td></td><td>Defined as \/ ^^ </td></tr>
