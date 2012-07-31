@@ -59,6 +59,7 @@ builtins = [
   ("<-", builtinReverse),
   ("ln", builtinLines),
   ("un", builtinUnlines),
+  ("uN", builtinUnlinesPretty),
   ("wl", builtinWithLines),
   ("WL", builtinWithLinesPretty),
   ("wL", builtinWithLinesParsePretty),
@@ -66,6 +67,7 @@ builtins = [
   ("rd", builtinReadDouble),
   ("ra", builtinReadArray),
   ("ps", builtinParse),
+  ("up", builtinUnparse),
   ("if", builtinIff),
   ("ie", builtinIfElse),
   ("e!", builtinEval),
@@ -76,10 +78,12 @@ builtins = [
   ("~]", builtinInit),
   ("[-", builtinTail),
   ("~-", builtinInitTail),
+  ("-~", builtinHeadTail),
   ("-]", builtinHead),
   ("[+", builtinAppend),
   ("+]", builtinPrepend),
   ("\\[", builtinConcat),
+  ("\\m", builtinConcatMap),
   ("[[", builtinIntersperse),
   ("m[", builtinMap),
   ("r[", builtinReduce),
@@ -131,6 +135,11 @@ builtins = [
   ("ZZ", builtinToUpper),
   ("zz", builtinToLower),
   ("M[", builtinMapPretty),
+  ("M]", builtinMapToPretty),
+  ("m]", builtinMapToPrettyFromFormat),
+  ("[m", builtinMapDup),
+  ("[M", builtinMapParse),
+  ("wd", builtinWords),
   ("??", builtinVersion)
  ]
 
@@ -265,6 +274,12 @@ builtinUnlines = do
  builtinIntersperse
  builtinConcat
 
+-- | > uN
+builtinUnlinesPretty :: BlsqState
+builtinUnlinesPretty = do
+ builtinUnlines
+ builtinPretty
+
 -- | > [[
 builtinIntersperse :: BlsqState
 builtinIntersperse = do
@@ -272,6 +287,7 @@ builtinIntersperse = do
  putResult $
   case st of
    (BlsqBlock b : a : xs) -> (BlsqBlock $ intersperse a b) : xs
+   (BlsqStr b : BlsqChar a : xs) -> (BlsqStr $ intersperse a b) : xs
    _ -> (BlsqError "Burlesque: ([[) Invalid arguments!") : st
 
 -- | > ri
@@ -314,6 +330,15 @@ builtinParse = do
   case st of
    (BlsqStr a) : xs -> (BlsqBlock (runParserWithString parseBlsq a)) : xs
    _ -> (BlsqError "Burlesque: (ps) Invalid arguments!") : st
+
+-- | > up
+builtinUnparse :: BlsqState
+builtinUnparse = do
+ st <- get
+ putResult $
+  case st of 
+   (a : xs) -> BlsqStr (toDisplay a) : xs
+   _ -> (BlsqError "Burlesque: (up) Invalid arguments!") : st
 
 -- | > ++
 builtinSum :: BlsqState
@@ -363,6 +388,7 @@ builtinTail = do
    (BlsqBlock a) : xs -> (BlsqBlock (tail a)) : xs
    (BlsqStr a) : xs -> BlsqStr (tail a) : xs
    (BlsqInt a) : xs -> BlsqInt (read . tail . show . abs $ a) : xs
+   (BlsqChar a) : xs -> BlsqStr [a] : xs
    _ -> (BlsqError "Burlesque: ([-) Invalid arguments!") : st
 
 -- | ~-
@@ -391,6 +417,7 @@ builtinAppend = do
   case st of
    (b : BlsqBlock a : xs) -> BlsqBlock (a ++ [b]) : xs
    (BlsqChar b : BlsqStr a : xs) -> BlsqStr (a ++ [b]) : xs
+   (BlsqInt b : BlsqInt a : xs) -> (BlsqInt . read $ (show . abs $ a) ++ (show . abs $ b)) : xs
    _ -> (BlsqError "Burlesque: ([+) Invalid arguments!") : st
 
 -- | > +]
@@ -401,6 +428,7 @@ builtinPrepend = do
   case st of
    (b : BlsqBlock a : xs) -> BlsqBlock (b : a) : xs
    (BlsqChar b : BlsqStr a : xs) -> BlsqStr (b : a) : xs
+   (BlsqInt b : BlsqInt a : xs) -> (BlsqInt . read $ (show . abs $ b) ++ (show . abs $ a)) : xs
    _ -> (BlsqError "Burlesque: (+]) Invalid arguments!") : st
 
 -- | > \[
@@ -633,6 +661,7 @@ builtinExplode = do
    (BlsqInt a : xs) -> (BlsqBlock $ map (\c -> BlsqInt . read $ [c]) (show (abs a))) : xs
    (BlsqDouble a : xs) -> (BlsqBlock [BlsqInt . floor $ a, BlsqInt . ceiling $ a]) : xs
    (BlsqChar a : xs) -> (BlsqStr [a]) : xs
+   (BlsqBlock a : xs) -> (BlsqBlock a) : xs
    _ -> BlsqError "Burlesque: (XX) Invalid arguments!" : st
 
 -- | > sh
@@ -727,6 +756,7 @@ builtinGroup = do
  putResult $
   case st of
    (BlsqBlock ls : xs) -> (BlsqBlock $ map (BlsqBlock) (group ls)) : xs
+   (BlsqStr ls : xs) -> (BlsqBlock $ map (BlsqStr) (group ls)) : xs
    _ -> BlsqError "Burlesque: (=[) Invalid arguments!" : st
 
 -- | > FF
@@ -1063,6 +1093,60 @@ builtinMapPretty = do
  builtinMap
  builtinPretty
 
+-- | > M]
+builtinMapToPretty :: BlsqState
+builtinMapToPretty = do
+ modify (BlsqBlock [BlsqIdent "sh"] : )
+ builtinMap
+
+-- | > m]
+builtinMapToPrettyFromFormat :: BlsqState
+builtinMapToPrettyFromFormat = do
+ modify (BlsqBlock [BlsqIdent "sh", BlsqIdent "ff"] : )
+ builtinMap
+
+-- | > [m
+builtinMapDup :: BlsqState
+builtinMapDup = do
+ modify (BlsqIdent "^^" :)
+ builtinPrepend
+ builtinMap
+
+-- | > [M
+builtinMapParse :: BlsqState
+builtinMapParse = do
+ modify (BlsqIdent "ps" :)
+ builtinPrepend
+ builtinMap
+
 -- | ??
 builtinVersion :: BlsqState
 builtinVersion = modify (BlsqStr "Burlesque - 1.0" : )
+
+-- | -~
+builtinHeadTail :: BlsqState
+builtinHeadTail = do
+ builtinHead
+ builtinTail
+
+-- | \m
+builtinConcatMap :: BlsqState
+builtinConcatMap = do
+ builtinMap
+ builtinConcat
+
+-- | wd
+builtinWords :: BlsqState
+builtinWords = do
+ st <- get
+ case st of
+  (BlsqStr _ : xs) -> do
+         modify (BlsqStr " " : )
+         builtinSplit
+  (BlsqBlock _ : xs) -> do
+         modify (BlsqChar ' ' : )
+         builtinSwap
+         builtinIntersperse
+         builtinConcat
+  _ -> do builtinSwap
+          builtinIntersperse

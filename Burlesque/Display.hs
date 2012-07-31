@@ -20,6 +20,8 @@ toDisplay (BlsqDouble d) = show d
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNormal) = s
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNoSpaces) = noSpaces s
 
+toDisplay (BlsqPretty (BlsqChar c) BlsqFormatNormal) = '\'':c:"'"
+
 toDisplay (BlsqPretty (BlsqBlock xs) BlsqFormatNormal) = 
   "[" ++ (intercalate ", " $ map prettify' xs) ++ "]"
  where prettify' a@(BlsqStr c) = toDisplay a
