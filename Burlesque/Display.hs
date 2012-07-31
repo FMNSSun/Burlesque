@@ -42,6 +42,7 @@ toDisplay (BlsqPretty f _) = toDisplay f
 
 toDisplay (BlsqSpecial q) = q
 toDisplay (BlsqQuoted q) = "(" ++ toDisplay q ++ ")"
+toDisplay (BlsqNil) = "_|_"
 
 toDisplay q = show q
 

@@ -142,6 +142,10 @@ builtins = [
   ("[M", builtinMapParse),
   ("wd", builtinWords),
   ("f[", builtinFilter),
+  ("z[", builtinZip),
+  ("Z[", builtinZipWith),
+  ("!!", builtinBlockAccess),
+  ("fi", builtinFindIndex),
   ("??", builtinVersion)
  ]
 
@@ -1152,7 +1156,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = modify (BlsqStr "Burlesque - 1.0" : )
+builtinVersion = modify (BlsqStr "Burlesque - 1.5" : )
 
 -- | -~
 builtinHeadTail :: BlsqState
@@ -1181,3 +1185,43 @@ builtinWords = do
          builtinConcat
   _ -> do builtinSwap
           builtinIntersperse
+
+-- | z[
+builtinZip :: BlsqState
+builtinZip = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock b : BlsqBlock a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [x,y]) $ zip a b) : xs
+   (BlsqStr b : BlsqStr a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [BlsqChar x,BlsqChar y]) $ zip a b) : xs
+   _ -> BlsqError "Burlesque: (z[) Invalid arguments!" : st
+
+-- | Z[
+builtinZipWith :: BlsqState 
+builtinZipWith = do
+ builtinZip
+ builtinMap
+
+-- | !!
+builtinBlockAccess :: BlsqState
+builtinBlockAccess = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : BlsqBlock b : xs) -> (b !! (toInt a)) : xs
+   (BlsqInt a : BlsqStr b : xs) -> BlsqChar (b !! (toInt a)) : xs
+   _ -> BlsqError "Burlesque: (!!) Invalid arguments!" : st
+
+-- | fi
+builtinFindIndex :: BlsqState
+builtinFindIndex = do
+  st <- get
+  case st of
+   (BlsqBlock p : BlsqBlock b : xs) -> putResult $ (BlsqInt $ findIndex' p b 0) : xs
+   (BlsqBlock p : BlsqStr b : xs) -> builtinSwap >> builtinExplode >> 
+                                     builtinSwap >> builtinFindIndex
+   _ -> putResult $ BlsqError "Burlesque: (fi) Invalid arguments!" : st
+ where findIndex' p [] _ = -1
+       findIndex' p (x:xs) i = case runStack p [x] of
+                                 (BlsqInt 1 : ys) -> i
+                                 _ -> findIndex' p xs (succ i)
