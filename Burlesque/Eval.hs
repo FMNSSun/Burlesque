@@ -154,6 +154,7 @@ builtins = [
   ("cb", builtinCombinationsUpTo),
   ("cy", builtinCycle),
   ("is", builtinIsError),
+  ("fc", builtinFactors),
   ("??", builtinVersion)
  ]
 
@@ -1173,7 +1174,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = modify (BlsqStr "Burlesque - 1.5.1" : )
+builtinVersion = modify (BlsqStr "Burlesque - 1.5.2" : )
 
 -- | -~
 builtinHeadTail :: BlsqState
@@ -1314,3 +1315,16 @@ builtinIsError = do
   case st of
    (BlsqError _ : xs) -> (BlsqInt 1) : xs
    _ -> (BlsqInt 0) : st
+
+-- | fc
+builtinFactors :: BlsqState
+builtinFactors = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : xs) -> (BlsqBlock $ map (BlsqInt) $ factors' a a) : xs
+   _ -> BlsqError "Burlesque: (fc) Invalid arguments!" : st
+ where factors' _ 0 = []
+       factors' a b
+         |a `rem` b == 0 = b : factors' a (b - 1)
+         |otherwise = factors' a (b - 1)
