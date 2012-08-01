@@ -156,6 +156,8 @@ builtins = [
   ("cy", builtinCycle),
   ("is", builtinIsError),
   ("fc", builtinFactors),
+  ("co", builtinChunksOf),
+  ("CO", builtinChunky),
   ("??", builtinVersion)
  ]
 
@@ -1336,3 +1338,27 @@ builtinFactors = do
        factors' a b
          |a `rem` b == 0 = b : factors' a (b - 1)
          |otherwise = factors' a (b - 1)
+
+-- | co
+builtinChunksOf :: BlsqState
+builtinChunksOf = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : BlsqBlock ls : xs) -> BlsqBlock (map BlsqBlock $ chunksOf' a ls) : xs
+   (BlsqInt a : BlsqStr ls : xs) -> BlsqBlock (map BlsqStr $ chunksOf' a ls) : xs
+   (BlsqInt a : BlsqInt ls : xs) -> BlsqBlock (map (BlsqInt . read) $ chunksOf' a (show . abs $ ls)) : xs
+   _ -> BlsqError "Burlesque: (co) Invalid arguments!" : st
+ where chunksOf' _ [] = []
+       chunksOf' n xs = genericTake n xs : chunksOf' n (genericDrop n xs)
+
+builtinChunky :: BlsqState
+builtinChunky = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : BlsqBlock ls : xs) -> BlsqBlock (map BlsqBlock $ chunky' a ls) : xs
+   (BlsqInt a : BlsqStr ls : xs) -> BlsqBlock (map BlsqStr $ chunky' a ls) : xs
+   (BlsqInt a : BlsqInt ls : xs) -> BlsqBlock (map (BlsqInt . read) $ chunky' a (show . abs $ ls)) : xs
+   _ -> BlsqError "Burlesque: (co) Invalid arguments!" : st
+ where chunky' n = takeWhile ((==n).genericLength) . map (genericTake n) . tails
