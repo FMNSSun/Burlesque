@@ -58,6 +58,9 @@
 <tr><td></td><td>~[</td><td>Int a, Int b</td><td>Does a contain the digits of b?</td><tr>
 <tr><td></td><td>~[</td><td>Str a, Str b</td><td>Does a contain b?</td></tr>
 <tr><td>Continuation</td><td>c!</td><td>Block a</td><td>Continuation with a</td></tr>
+<tr><td>Combinations</t><td>CB</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a of length n</td></tr>
+<tr><td>CombinationsUpTo</td><td>cb</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a up to length n</td></tr>
+<tr><td>Cycle</td><td>cy</td><td>Block a<br/>Str a</br></td><td>Repeat a infinite times</td></tr>
 <tr><td>Decrement</td><td>-.</td><td>Int a</td><td>Decrement a--</td></tr>
 <tr><td></td><td>-.</td><td>Char a</td><td>Previous char (chr(ord(a)-1))</td></tr>
 <tr><td>DiffLs</td><td>\\</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>List difference (a \\ b)</td></tr>
@@ -68,6 +71,8 @@
 <tr><td>Equal</td><td>==</td><td>Any a, Any b</td><td>Comparision (a == b)</td></tr>
 <tr><td>Eval</td><td>e!</td><td>Block a</td><td>Eval a block</td></tr>
 <tr><td>FindIndex</td><td>fi</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find index of element where f returns true.</td></tr>
+<tr><td>FindIndexEq</td><td>Fi</td><td>Block a, Any p<br/>Str a, Char p</td><td>Find index of an element equal to p</td></tr>
+<tr><td>FindElement</td><td>fe</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find an element where f is true and return it</td></tr>
 <tr><td>Format</td><td>FF</td><td>Pretty a, Int b</td><td>Changes the format of a according to b</td></tr>
 <tr><td>FormatFromFormat</td><td>Ff</td><td>n/a</td><td>Defined as FF ff</td></tr>
 <tr><td>FromFormat</td><td>ff</td><td>Pretty a</td><td>Extracts the string out of the pretty</td></tr>
@@ -76,6 +81,7 @@
 <tr><td>Head</td><td>-]</td><td>Block a<br/>Int a</td><td>First element</td></tr>
 <tr><td></td><td>-]</td><td>Str a</td><td>First character</td></tr>
 <tr><td>HeadTail</td><td>-][-</td><td></td><td>Defined as -][-</td></tr>
+<tr><td>IsError</t><td>is</td><td></td><td>Return 1 on error 0 else</td></tr>
 <tr><td>IfElse</td><td>ie</td><td>Block a, Block b, Int c</td><td>If c then a else b</td></tr>
 <tr><td>Iff</td><td>if</td><td>Block b, Int a</td><td>If a then execute b, else pop a and pop b</td></tr>
 <tr><td>Increment</td><td>+.</td><td>Int a</td><td>Increment (a++)</td></tr>
@@ -136,6 +142,7 @@
 <tr><td></td><td>r@</td><td>Double a</td><td>Square root</td></tr>
 <tr><td></td><td>r@</td><td>String a</td><td>All permutations of a</td></tr>
 <tr><td></td><td>r@</td><td>Block a</td><td>All permutations of a</td></tr>
+<tr><td>RangeInf</td><td>R@</td><td>Int a</td><td>A block containing natural numbers from a to Infinity</td></tr>
 <tr><td>ReadInt</td><td>ri</td><td>Int a</td><td>Identity for integers</td></tr>
 <tr><td></td><td>ri</td><td>Str a</td><td>Tries to convert a string to an integer</td></tr>
 <tr><td></td><td>ri</td><td>Char a</td><td>Is Alpha numeric?<td></tr>
@@ -200,7 +207,7 @@
 <tr><td></td><td>XX</td><td>Double a</td><td>Convert a to block containing ceiling a and floor a</td></tr>
 <tr><td></td><td>XX</td><td>Char a</td><td>Convert a to a string</td></tr>
 <tr><td></td><td>XX</td><td>Block a</td><td>Identity</td></tr>
-<tr><td>Zip</td><td>z[</td><td>Block a, Block b<br/>Str a,Str b</td></td><td>Zips</td></tr>
+<tr><td>Zip</td><td>z[</td><td>Block a, Block b<br/>Str a,Str b<br/>Block a, Str b<br/>Str a,Block b</td></td><td>Zips</td></tr>
 <tr><td>ZipWith</td><td>Z[</td><td></td><td>Defined as z[m[</td></tr>
 </tbody>
 </table>

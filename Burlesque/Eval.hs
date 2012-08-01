@@ -13,6 +13,7 @@ import Data.List.Split
 import Data.Char
 import Data.Bits
 import Text.Regex
+import Control.Monad
 
 import Debug.Trace
 
@@ -125,6 +126,7 @@ builtins = [
   ("NB", builtinNub),
   ("\\\\", builtinDiffLs),
   ("r@", builtinRange),
+  ("R@", builtinRangeInf),
   ("bx", builtinBox),
   ("><", builtinSort),
   ("/v", builtinSwapPop),
@@ -146,6 +148,12 @@ builtins = [
   ("Z[", builtinZipWith),
   ("!!", builtinBlockAccess),
   ("fi", builtinFindIndex),
+  ("Fi", builtinFindIndexEq),
+  ("fe", builtinFindElement),
+  ("CB", builtinCombinations),
+  ("cb", builtinCombinationsUpTo),
+  ("cy", builtinCycle),
+  ("is", builtinIsError),
   ("??", builtinVersion)
  ]
 
@@ -1045,6 +1053,15 @@ builtinRange = do
    (BlsqBlock a : xs) -> BlsqBlock (map BlsqBlock (permutations a)) : xs
    _ -> BlsqError "Burlesque: (r@) Invalid arguments!" : st
 
+-- | R@
+builtinRangeInf :: BlsqState
+builtinRangeInf = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : xs) -> BlsqBlock (map BlsqInt [a..]) : xs
+   _ -> BlsqError "Burlesque: (R@) Invalid arguments!" : st
+
 -- | > bx
 builtinBox :: BlsqState
 builtinBox = do
@@ -1156,7 +1173,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = modify (BlsqStr "Burlesque - 1.5" : )
+builtinVersion = modify (BlsqStr "Burlesque - 1.5.1" : )
 
 -- | -~
 builtinHeadTail :: BlsqState
@@ -1194,6 +1211,8 @@ builtinZip = do
   case st of
    (BlsqBlock b : BlsqBlock a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [x,y]) $ zip a b) : xs
    (BlsqStr b : BlsqStr a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [BlsqChar x,BlsqChar y]) $ zip a b) : xs
+   (BlsqStr b : BlsqBlock a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [x,BlsqChar y]) $ zip a b) : xs
+   (BlsqBlock b : BlsqStr a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [BlsqChar x,y]) $ zip a b) : xs
    _ -> BlsqError "Burlesque: (z[) Invalid arguments!" : st
 
 -- | Z[
@@ -1225,3 +1244,73 @@ builtinFindIndex = do
        findIndex' p (x:xs) i = case runStack p [x] of
                                  (BlsqInt 1 : ys) -> i
                                  _ -> findIndex' p xs (succ i)
+
+-- | Fi
+builtinFindIndexEq :: BlsqState
+builtinFindIndexEq = do
+  st <- get
+  case st of
+   (p : BlsqBlock b : xs) -> putResult $ (BlsqInt $ findIndex' p b 0) : xs
+   (BlsqChar p : BlsqStr b : xs) -> builtinSwap >> builtinExplode >> 
+                                     builtinSwap >> builtinFindIndexEq
+   _ -> putResult $ BlsqError "Burlesque: (fi) Invalid arguments!" : st
+ where findIndex' p [] _ = -1
+       findIndex' p (x:xs) i = case x == p of
+                                 True -> i
+                                 _ -> findIndex' p xs (succ i)
+
+-- | fe
+builtinFindElement :: BlsqState
+builtinFindElement = do
+  st <- get
+  case st of
+   (BlsqBlock p : BlsqBlock b : xs) -> putResult $ (findElement' p b) : xs
+   (BlsqBlock p : BlsqStr b : xs) -> builtinSwap >> builtinExplode >> 
+                                     builtinSwap >> builtinFindElement
+   _ -> putResult $ BlsqError "Burlesque: (fi) Invalid arguments!" : st
+ where findElement' p [] = BlsqError "Burlesque: (fe) Element not fund!"
+       findElement' p (x:xs) = case runStack p [x] of
+                                 (BlsqInt 1 : ys) -> x
+                                 _ -> findElement' p xs
+
+-- | CB
+builtinCombinations :: BlsqState
+builtinCombinations = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt n : BlsqBlock ls : xs) -> (BlsqBlock $ map (BlsqBlock) (replicateM (toInt n) ls)) : xs
+   (BlsqInt n : BlsqStr ls : xs) -> (BlsqBlock $ map (BlsqStr) (replicateM (toInt n) ls)) : xs
+   (BlsqInt n : BlsqInt ls : xs) -> (BlsqBlock $ map (BlsqInt . read) (replicateM (toInt n) (show.abs $ ls))) : xs
+   _ -> BlsqError "Burlesque: (CB) Invalid arguments!" : st
+
+-- | cb
+builtinCombinationsUpTo :: BlsqState
+builtinCombinationsUpTo  = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt n : BlsqBlock ls : xs) -> (BlsqBlock $ map (BlsqBlock) (combs (toInt n) ls)) : xs
+   (BlsqInt n : BlsqStr ls : xs) -> (BlsqBlock $ map (BlsqStr) (combs (toInt n) ls)) : xs
+   (BlsqInt n : BlsqInt ls : xs) -> (BlsqBlock $ map (BlsqInt . read) (combs (toInt n) (show.abs $ ls))) : xs
+   _ -> BlsqError "Burlesque: (cb) Invalid arguments!" : st
+ where combs n ls = enumFromTo 1 >=> flip replicateM ls $ n -- thanks to #haskell
+
+-- | cy
+builtinCycle :: BlsqState
+builtinCycle = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqBlock a : xs) -> (BlsqBlock (cycle a)) : xs
+   (BlsqStr a : xs) -> (BlsqStr (cycle a)) : xs
+   _ -> BlsqError "Burlesque: (cy) Invalid arguments!" : st
+
+-- | is
+builtinIsError :: BlsqState
+builtinIsError = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqError _ : xs) -> (BlsqInt 1) : xs
+   _ -> (BlsqInt 0) : st
