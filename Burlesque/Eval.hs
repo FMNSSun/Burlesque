@@ -73,6 +73,7 @@ builtins = [
   ("if", builtinIff),
   ("ie", builtinIfElse),
   ("e!", builtinEval),
+  ("E!", builtinEvalMany),
   ("c!", builtinContinuation),
   ("w!", builtinWhile),
   ("++", builtinSum),
@@ -594,6 +595,13 @@ builtinEval = do
   case st of
    (BlsqBlock b : xs) -> runStack b xs
    _ -> BlsqError "Burlesque: (e!) Invalid arguments!" : st
+
+-- | > E!
+builtinEvalMany :: BlsqState
+builtinEvalMany = do
+ builtinMul
+ builtinConcat
+ builtinEval
 
 -- | > c!
 builtinContinuation :: BlsqState
@@ -1174,7 +1182,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = modify (BlsqStr "Burlesque - 1.5.2" : )
+builtinVersion = modify (BlsqStr "Burlesque - 1.5.x" : )
 
 -- | -~
 builtinHeadTail :: BlsqState
