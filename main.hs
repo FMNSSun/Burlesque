@@ -39,7 +39,7 @@ main = do
      putStr $ runProgramNoStdin prog
    ["--no-stdin",prog] -> putStr $ runProgramNoStdin prog
    ["--shell"] -> runInputT settings burlesqueShell
-   ["--version"] -> putStrLn "burlesque v1.5.2"
+   ["--version"] -> putStrLn "burlesque v1.6"
    ["--stdin",prog] -> interact $ runProgram prog
    _ -> do putStrLn $ "Invalid usage"
            putStrLn "  --file <path>           Read code from file (incl. STDIN)"

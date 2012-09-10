@@ -1187,7 +1187,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = modify (BlsqStr "Burlesque - 1.5.x" : )
+builtinVersion = modify (BlsqStr "Burlesque - 1.6" : )
 
 -- | -~
 builtinHeadTail :: BlsqState
