@@ -158,6 +158,9 @@ builtins = [
   ("fc", builtinFactors),
   ("co", builtinChunksOf),
   ("CO", builtinChunky),
+  ("t[", builtinTrimLeft),
+  ("t]", builtinTrimRight),
+  ("tt", builtinTrimLeftRight),
   ("??", builtinVersion)
  ]
 
@@ -501,8 +504,8 @@ builtinFilter = do
     putResult $ (BlsqBlock $ filter' f v) : xs
  where filter' _ [] = []
        filter' f (x:xs) = case runStack f [x] of
-                            (BlsqInt 1):ys -> x : filter' f xs
-                            _ -> filter' f xs
+                            (BlsqInt 0):ys -> filter' f xs
+                            _ -> x : filter' f xs
 
 -- | > r[
 builtinReduce :: BlsqState
@@ -1352,6 +1355,7 @@ builtinChunksOf = do
  where chunksOf' _ [] = []
        chunksOf' n xs = genericTake n xs : chunksOf' n (genericDrop n xs)
 
+-- | CO
 builtinChunky :: BlsqState
 builtinChunky = do
  st <- get
@@ -1362,3 +1366,26 @@ builtinChunky = do
    (BlsqInt a : BlsqInt ls : xs) -> BlsqBlock (map (BlsqInt . read) $ chunky' a (show . abs $ ls)) : xs
    _ -> BlsqError "Burlesque: (co) Invalid arguments!" : st
  where chunky' n = takeWhile ((==n).genericLength) . map (genericTake n) . tails
+
+-- | t[
+builtinTrimLeft :: BlsqState
+builtinTrimLeft = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr a : xs) -> BlsqStr (dropWhile (`elem`"\t \n") a) : xs
+   _ -> BlsqChar '\n' : st
+
+-- | t]
+builtinTrimRight :: BlsqState
+builtinTrimRight = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr a : xs) -> BlsqStr (reverse (dropWhile (`elem`"\t \n") (reverse a))) : xs
+   _ -> BlsqChar '\'' : st
+
+builtinTrimLeftRight :: BlsqState
+builtinTrimLeftRight = do
+ builtinTrimLeft
+ builtinTrimRight
