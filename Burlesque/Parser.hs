@@ -108,6 +108,7 @@ parseQuoted = do
   e <- parseSingle
   optional spaces
   _ <- char ')'
+  optional spaces
   return $ BlsqQuoted e
 
 parseData :: Parser BlsqExp
