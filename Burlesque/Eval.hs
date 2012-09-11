@@ -161,6 +161,7 @@ builtins = [
   ("t[", builtinTrimLeft),
   ("t]", builtinTrimRight),
   ("tt", builtinTrimLeftRight),
+  
   ("??", builtinVersion)
  ]
 
@@ -1073,6 +1074,8 @@ builtinRangeInf = do
  st <- get
  putResult $
   case st of
+   (BlsqStr a : xs) -> BlsqBlock (map BlsqStr $ subsequences a) : xs
+   (BlsqBlock a : xs) -> BlsqBlock (map BlsqBlock $ subsequences a) : xs
    (BlsqInt a : xs) -> BlsqBlock (map BlsqInt [a..]) : xs
    _ -> BlsqError "Burlesque: (R@) Invalid arguments!" : st
 
