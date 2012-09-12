@@ -74,6 +74,7 @@
 <tr><td>Eval</td><td>e!</td><td>Block a</td><td>Eval a block</td></tr>
 <tr><td>EvalMany</td><td>E!</td><td></td><td>Defined as .*\[e!</td></tr>
 <tr><td>Factors</td><td>fc</td><td>Int a</td><td>Return a block with every number a is divisible by</td></tr>
+<tr><td></td><td>fc</td><td>Str a<br>Block a</td><td>Least common element</td></tr>
 <tr><td>FindIndex</td><td>fi</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find index of element where f returns true.</td></tr>
 <tr><td>FindIndexEq</td><td>Fi</td><td>Block a, Any p<br/>Str a, Char p</td><td>Find index of an element equal to p</td></tr>
 <tr><td>FindElement</td><td>fe</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find an element where f is true and return it</td></tr>
@@ -122,6 +123,8 @@
 <tr><td></td><td>.*</td><td>Char a, Int n</td><td>Returns a string containing n copies of a</td></tr>
 <tr><td></td><td>.*</td><td>Block a, Int n</td><td>Returns a block containing n copies of a</td></tr>
 <tr><td>Nub</td><td>NB</td><td>Block a<br/>Str a<br/>Int a</td><td>Remove duplicate elements</td></tr>
+<tr><td>Not</td><td>n!</td><td>Int a</td><td>Boolish not</td></tr>
+<tr><td></td><td>n!</td><td>Block a<br>Str a</td><td>Most common element</td></tr>
 <tr><td>Or</td><td>||</td><td>Int a, Int b</td><td>Bitwise or</td></tr>
 <tr><td>OrLs</td><td>r|</td><td></td><td>Defined as {||}r[</td></tr>
 <tr><td>PadLeft</td><td>P[</td><td>Str a, Char b, Int c<br/>Block a, Any b, Int c</td><td>Pad (left) a to length c with b</td></tr>
@@ -141,6 +144,8 @@
 <tr><td>PrettyFormatFromFormat</td><td>SH</td><td>n/a</td><td>Defined as \/ sh \/ Ff</td></tr>
 <tr><td>PrettyFromFormat</td><td>Sh</td><td>n/a</td><td>Defined as sh ff</td></tr>
 <tr><td>Prepend</td><td>+]</td><td>String a, Char b<br/>Block a,Any b<br/>Int a,Int b</td><td>Prepends b to a</td></tr>
+<tr><td>PushMany</td><td>^p</td><td>Str a<br>Block a</td><td>Push every element to the stack</td></tr>
+<tr><td>PushManyReverse</td><td>p^</td><td>n/a</td><td>Like ^p but in reverse order</td></tr>
 <tr><td>Range</td><td>r@</td><td>Int a, Int b</td><td>A block containing natural numbers from a to b (range a b)</td></tr>
 <tr><td></td><td>r@</td><td>Char a, Char b</td><td>Same, except for characters</td></tr>
 <tr><td></td><td>r@</td><td>Double a</td><td>Square root</td></tr>

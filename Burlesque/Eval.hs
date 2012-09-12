@@ -12,6 +12,7 @@ import Data.List
 import Data.List.Split
 import Data.Char
 import Data.Bits
+import Data.Ord
 import Text.Regex
 import Control.Monad
 
@@ -161,6 +162,7 @@ builtins = [
   ("t[", builtinTrimLeft),
   ("t]", builtinTrimRight),
   ("tt", builtinTrimLeftRight),
+  ("n!", builtinNot),
   
   ("??", builtinVersion)
  ]
@@ -1339,11 +1341,16 @@ builtinFactors = do
  putResult $
   case st of
    (BlsqInt a : xs) -> (BlsqBlock $ map (BlsqInt) $ factors' a a) : xs
+   (BlsqStr a : xs) -> (BlsqChar $ leastCommon a) : xs
+   (BlsqBlock a : xs) -> (leastCommon a) : xs
+
    _ -> BlsqError "Burlesque: (fc) Invalid arguments!" : st
  where factors' _ 0 = []
        factors' a b
          |a `rem` b == 0 = b : factors' a (b - 1)
          |otherwise = factors' a (b - 1)
+       leastCommon :: Ord a => [a] -> a
+       leastCommon = head . minimumBy (comparing length) . group . sort
 
 -- | co
 builtinChunksOf :: BlsqState
@@ -1392,3 +1399,17 @@ builtinTrimLeftRight :: BlsqState
 builtinTrimLeftRight = do
  builtinTrimLeft
  builtinTrimRight
+
+-- | n!
+builtinNot :: BlsqState
+builtinNot = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt 0 : xs) -> BlsqInt 1 : xs
+   (BlsqInt _ : xs) -> BlsqInt 0 : xs
+   (BlsqStr a : xs) -> (BlsqChar $ mostCommon a) : xs
+   (BlsqBlock a : xs) -> (mostCommon a) : xs
+ where mostCommon :: Ord a => [a] -> a
+       mostCommon = head . maximumBy (comparing length) . group . sort
+   
