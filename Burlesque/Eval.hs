@@ -199,6 +199,7 @@ builtinAddX = do
     (BlsqBlock b : BlsqBlock a : xs) -> BlsqBlock (a ++ b) : xs
     (BlsqChar b : BlsqChar a : xs) -> (BlsqStr $ a:b:"") : xs
     (BlsqChar b : BlsqStr a : xs) -> (BlsqStr $ a++[b]) : xs
+    (BlsqStr b : BlsqChar a : xs) -> (BlsqStr $ b++[a]) : xs
     (a : BlsqBlock b : xs) -> (BlsqBlock $ b++[a]) : xs
     _ -> (BlsqError $ "Burlesque: (_+) Invalid arguments!") : st
 
