@@ -200,6 +200,8 @@ builtinAddX = do
     (BlsqChar b : BlsqChar a : xs) -> (BlsqStr $ a:b:"") : xs
     (BlsqChar b : BlsqStr a : xs) -> (BlsqStr $ a++[b]) : xs
     (BlsqStr b : BlsqChar a : xs) -> (BlsqStr $ b++[a]) : xs
+    (BlsqInt b : BlsqStr a : xs) -> (BlsqStr $ a++ show b) : xs
+    (BlsqStr b : BlsqInt a : xs) -> (BlsqStr $ b++ show a) : xs
     (a : BlsqBlock b : xs) -> (BlsqBlock $ b++[a]) : xs
     _ -> (BlsqError $ "Burlesque: (_+) Invalid arguments!") : st
 
@@ -1193,7 +1195,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = modify (BlsqStr "Burlesque - 1.6.1" : )
+builtinVersion = modify (BlsqStr "Burlesque - 1.6.9" : )
 
 -- | -~
 builtinHeadTail :: BlsqState
