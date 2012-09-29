@@ -86,7 +86,10 @@ It is turing complete. There is an indirect proof by showing that <a href="http:
 </p>
 <p>
 <b>How can I do I/O?</b><br/>
-You can't. Burlesque is designed to be a language without I/O capabilities.
+You can't. Burlesque is designed to be a language without I/O capabilities. 
+The interpreter pushes stdin as a string to the stack at program start and prints out
+every element on the stack at program termination in the order they can be taken away from the stack. The language itself
+however does not know the concept of I/O.
 </p>
 <p>
 <b>How can I define my own functions/commands?</b><br/>

@@ -23,7 +23,6 @@
         </p>
         
         <h1 id="builtins">Builtins</h1>
-
 <!-- -->
 <table class="fancy">
 <thead>
@@ -37,7 +36,7 @@
 <tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
 <tr><td></td><td>.+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr>
 <tr><td></td><td>.+</td><td>Str a, Char b</td><td>Append char to string</td></tr>
-<tr><td></td><td>.+</td><td>Str a, Int b<br/>Block a, Int b</td><td>Take b characters from a</td></tr>
+<tr><td></td><td>.+</td><td>Int b, Str a<br/>Block a, Int b</td><td>Take b characters from a</td></tr>
 <tr><td>AddX</td><td>_+</td><td>Int a, Int b</td><td>Returns a block with a and b</td></tr>
 <tr><td></td><td>_+</td><td>Double a, Double b</td><td>Returns a block with a and b</td></tr>
 <tr><td></td><td>_+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr>
@@ -53,7 +52,7 @@
 <tr><td>BlockAccess</td><td>!!</td><td>Block a, Int n<br/>Str a, Int n</td><td>Return the nth element</td></tr>
 <tr><td>Box</td><td>bx</td><td>Any a</td><td>Put a in an empty block</td></tr>
 <tr><td>ChunksOf</td><td>co</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Split a into chunks of size n</td></tr>
-<tr><td>Chunky</td><td>CO</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Chunkey!</td></tr>
+<tr><td>Chunky</td><td>CO</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Create n-grams. "abc"2CO is {"ab" "bc"}</td></tr>
 <tr><td>Concat</td><td></td><td>a</td><td>Defined as {.+}r[</td></tr>
 <tr><td>ConcatMap</td><td>\m</td><td></td><td>Defined as m[\[</td></tr>
 <tr><td>Contains</td><td>~[</td><td>Block a, Any b</td><td>Does a contain b?</td><tr>
@@ -76,6 +75,7 @@
 <tr><td>EvalMany</td><td>E!</td><td></td><td>Defined as .*\[e!</td></tr>
 <tr><td>Factors</td><td>fc</td><td>Int a</td><td>Return a block with every number a is divisible by</td></tr>
 <tr><td></td><td>fc</td><td>Str a<br>Block a</td><td>Least common element</td></tr>
+<tr><td>Filter</td><td>f[</td><td>Block f, Str a<br>Block f, Block a</td><td>Filters a list according to the predicate f (must return 1 or 0)</td></tr>
 <tr><td>FindIndex</td><td>fi</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find index of element where f returns true.</td></tr>
 <tr><td>FindIndexEq</td><td>Fi</td><td>Block a, Any p<br/>Str a, Char p</td><td>Find index of an element equal to p</td></tr>
 <tr><td>FindElement</td><td>fe</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find an element where f is true and return it</td></tr>
@@ -126,10 +126,11 @@
 <tr><td>Nub</td><td>NB</td><td>Block a<br/>Str a<br/>Int a</td><td>Remove duplicate elements</td></tr>
 <tr><td>Not</td><td>n!</td><td>Int a</td><td>Boolish not</td></tr>
 <tr><td></td><td>n!</td><td>Block a<br>Str a</td><td>Most common element</td></tr>
+<tr class="vnext"><td>NotEqual</td><td>!=</td><td></td><td>Defined as == n!</td></tr>
 <tr><td>Or</td><td>||</td><td>Int a, Int b</td><td>Bitwise or</td></tr>
 <tr><td>OrLs</td><td>r|</td><td></td><td>Defined as {||}r[</td></tr>
-<tr><td>PadLeft</td><td>P[</td><td>Str a, Char b, Int c<br/>Block a, Any b, Int c</td><td>Pad (left) a to length c with b</td></tr>
-<tr><td>PadRight</td><td>[P</td><td>Str a, Char b, Int c<br/>Block a, Any b, Int c</td><td>Pad (right) a to length c with b</td></tr>
+<tr><td>PadLeft</td><td>P[</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (left) a to length c with b</td></tr>
+<tr><td>PadRight</td><td>[P</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (right) a to length c with b</td></tr>
 <tr><td>Parse</td><td>ps</td><td>Str a</td><td>Parses the string as a Burlesque expression and returns a Block</td></tr>
 <tr><td>Pop</td><td>vv</td><td></td><td>Remove top most element from the stack</td></tr>
 <tr><td>PopSwap</td><td>v/</td><td></td><td>Defined as vv \/</td></tr>
@@ -185,7 +186,7 @@
 <tr><td>Sub</td><td>.-</td><td>Int a, Int b</td><td>Regular integer subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr>
-<tr><td></td><td>.-</td><td>Str a, Int b<br/>Block a, Int b</td><td>Drop b characters from a</td></tr>
+<tr><td></td><td>.-</td><td>Int b, Str a<br/>Block a, Int b</td><td>Drop b characters from a</td></tr>
 <tr><td>SuffixOf</td><td>!~</td><td>Block a, Block b</td><td>Is b a suffix of a?</td></tr>
 <tr><td></td><td>!~</td><td>Int a, Int b</td><td>Is b a suffix of a?</td></tr>
 <tr><td></td><td>!~</td><td>Str a, Str b</td><td>Is b a suffix of a?</td></tr>
@@ -225,6 +226,7 @@
 <tr><td>ZipWith</td><td>Z[</td><td></td><td>Defined as z[m[</td></tr>
 </tbody>
 </table>
+<span style="color: #AA8888;">Since Burlesque 1.7</span>
 <!-- -->
 
       <h1>Syntax</h1>
@@ -240,5 +242,27 @@ Identifier :: noneOf "1234567890{},' \"" , noneOf "1234567890{},' \""
 ExpressionSingle :: { Block | Int | Char | String | Quoted | Identifier }
 Expression = { ExpressionSingle }*
 </pre>
+<h1>Format / Pretty</h1>
+<p>
+If you write a Burlesque program like <i>"Hello, world!"</i> you will see, that the
+output is also <i>"Hello, world!"</i> and not <i>Hello, world!</i>. Stuff is printed
+the same way you enter it in code unless you change it to the 'Pretty' type. The <b>sh</b> command
+for example does this. <i>"Hello, world!"sh</i> outputs <i>Hello, world!</i>. Keep in mind that
+<b>sh</b> changes the type to Pretty, so it's not a string anymore and you can not treat it as a string. A pretty
+value can have different formattings and currently the following exist:
+<ul>
+  <li>0 - normal format</li>
+  <li>1 - no spaces</li>
+  <li>2 - with spaces</li>
+</ul>
+<i>{1 2 3}sh1FF</i> is <i>[1,2,3]</i>. <i>{1 2 3}sh0FF</i> is <i>[1, 2, 3]</i>. <i>{1 2 3}sh2FF</i> is
+<i>[1 2 3]</i>.
+</p>
+<h1>Lazy</h1>
+<p>
+ Burlesque is a lazy programming language which means that it only evaluates stuff that is necessary to evaluate.
+ A good example for this is the RangeInf command. <i>1R@"ABCD"z[</i> generates an infinite list 1..Infinity
+ and zips it with "ABCD". However, its support for lazyness is limited and does not extend to every command.
+</p>
  </body>
 </html>

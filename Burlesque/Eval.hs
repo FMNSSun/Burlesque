@@ -59,6 +59,7 @@ builtins = [
   ("**", builtinPow),
   ("r_", builtinRound),
   ("==", builtinEqual),
+  ("!=", builtinNotEqual),
   ("<-", builtinReverse),
   ("ln", builtinLines),
   ("un", builtinUnlines),
@@ -703,6 +704,12 @@ builtinEqual = do
   case st of
    (b : a : xs) -> (BlsqInt $ if a == b then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (==) Invalid arguments!" : st
+
+-- | > (!=)
+builtinNotEqual :: BlsqState
+builtinNotEqual = do
+ builtinEqual
+ builtinNot
 
 -- | > (r_)
 builtinRound :: BlsqState
