@@ -154,6 +154,7 @@ builtins = [
   ("!!", builtinBlockAccess),
   ("fi", builtinFindIndex),
   ("Fi", builtinFindIndexEq),
+  ("fI", builtinFindIndices),
   ("fe", builtinFindElement),
   ("CB", builtinCombinations),
   ("cb", builtinCombinationsUpTo),
@@ -1448,4 +1449,18 @@ builtinNot = do
    (BlsqBlock a : xs) -> (mostCommon a) : xs
  where mostCommon :: Ord a => [a] -> a
        mostCommon = head . maximumBy (comparing length) . group . sort
-   
+
+
+-- | fI
+builtinFindIndices :: BlsqState
+builtinFindIndices = do
+  st <- get
+  case st of
+   (BlsqBlock p : BlsqBlock b : xs) -> putResult $ BlsqBlock (map BlsqInt $ findIndices' p b 0) : xs
+   (BlsqBlock p : BlsqStr b : xs) -> builtinSwap >> builtinExplode >> 
+                                     builtinSwap >> builtinFindIndices
+   _ -> putResult $ BlsqError "Burlesque: (fi) Invalid arguments!" : st
+ where findIndices' p [] _ = []
+       findIndices' p (x:xs) i = case runStack p [x] of
+                                 (BlsqInt 1 : ys) -> i : findIndices' p xs (succ i)
+                                 _ -> findIndices' p xs (succ i) 
