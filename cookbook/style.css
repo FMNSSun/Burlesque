@@ -28,3 +28,7 @@ table.fancy tr:hover {
   background-color: #FF9900;
   color: #000000;
 }
+
+table.fancy tr.vnext:hover {
+  background-color: #AA8888;
+}
