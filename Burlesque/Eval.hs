@@ -79,6 +79,8 @@ builtins = [
   ("c!", builtinContinuation),
   ("w!", builtinWhile),
   ("++", builtinSum),
+  ("pd", builtinProduct),
+  ("av", builtinAverage),
   ("[~", builtinLast),
   ("~]", builtinInit),
   ("[-", builtinTail),
@@ -394,6 +396,30 @@ builtinSum = do
                             builtinReduce
    (BlsqInt b : BlsqInt a : xs) -> putResult $ (BlsqInt . read $ (show (abs a)) ++ (show (abs b))) : xs
    _ -> putResult $ (BlsqError "Burlesque: (++) Invalid arguments!") : st
+
+builtinProduct :: BlsqState
+builtinProduct = do
+ st <- get
+ case st of
+   (BlsqBlock a) : xs -> do modify (BlsqBlock [BlsqIdent ".*"] : )
+                            builtinReduce
+   (BlsqInt _ : xs) -> do builtinPrettyFromFormat
+                          builtinReadDouble
+   (BlsqDouble a : xs) -> do putResult $ (BlsqInt . ceiling $ a) : xs
+   _ -> putResult $ (BlsqError "Burlesque: (pd) Invalid arguments!"): st
+
+builtinAverage :: BlsqState
+builtinAverage = do
+ st <- get
+ case st of
+  (BlsqBlock a) : xs -> do builtinDup
+                           builtinSum
+                           builtinSwap
+                           builtinLength
+                           builtinProduct
+                           builtinDiv
+  (BlsqDouble a : xs) -> do putResult $ (BlsqInt . floor $ a) : xs
+  _ -> putResult $ (BlsqError "Burlesque: (av) Invalid arguments!") : st
 
 -- | > [~
 builtinLast :: BlsqState

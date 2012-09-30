@@ -49,6 +49,8 @@
 <tr><td>AndLs</td><td>r&</td><td></td><td>Defined as {&&}r[</td></tr>
 <tr><td>Append</td><td>[+</td><td>Block  a, Any b<br/>Int a, Int b</td><td>Append b to a</td></tr>
 <tr><td></td><td>[+</td><td>Str a,Char b</td><td>Append b to a</td></tr>
+<tr class="vnext"><td>Average</td><td>av</td><td>Block a</td><td>Defined as ^^ ++ \/ L[ pd ./</td></tr>
+<tr class="vnext"><td></td><td>av</td><td>Double a</td><td>Floor a</td></tr>
 <tr><td>BlockAccess</td><td>!!</td><td>Block a, Int n<br/>Str a, Int n</td><td>Return the nth element</td></tr>
 <tr><td>Box</td><td>bx</td><td>Any a</td><td>Put a in an empty block</td></tr>
 <tr><td>ChunksOf</td><td>co</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Split a into chunks of size n</td></tr>
@@ -146,6 +148,9 @@
 <tr><td>PrettyFormatFromFormat</td><td>SH</td><td>n/a</td><td>Defined as \/ sh \/ Ff</td></tr>
 <tr><td>PrettyFromFormat</td><td>Sh</td><td>n/a</td><td>Defined as sh ff</td></tr>
 <tr><td>Prepend</td><td>+]</td><td>String a, Char b<br/>Block a,Any b<br/>Int a,Int b</td><td>Prepends b to a</td></tr>
+<tr class="vnext"><td>Product</td><td>pd</td><td>Block a</td><td>Defined as {.*}r[</td></tr>
+<tr class="vnext"><td></td><td>pd</td><td>Double a</td><td>Ceiling a</td></tr>
+<tr class="vnext"><td></td><td>pd</td><td>Int a</td><td>Convert to double</td></tr>
 <tr><td>PushMany</td><td>^p</td><td>Str a<br>Block a</td><td>Push every element to the stack</td></tr>
 <tr><td>PushManyReverse</td><td>p^</td><td>n/a</td><td>Like ^p but in reverse order</td></tr>
 <tr><td>Range</td><td>r@</td><td>Int a, Int b</td><td>A block containing natural numbers from a to b (range a b)</td></tr>
