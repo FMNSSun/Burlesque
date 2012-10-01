@@ -67,6 +67,7 @@
 <tr><td>Cycle</td><td>cy</td><td>Block a<br/>Str a</br></td><td>Repeat a infinite times</td></tr>
 <tr><td>Decrement</td><td>-.</td><td>Int a</td><td>Decrement a--</td></tr>
 <tr><td></td><td>-.</td><td>Char a</td><td>Previous char (chr(ord(a)-1))</td></tr>
+<tr><td></td><td>-.</td><td>Str a<br/>Block a</td><td>Append head of a to a</td></tr>
 <tr><td>DiffLs</td><td>\\</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>List difference (a \\ b)</td></tr>
 <tr><td>Div</td><td>./</td><td>Int a, Int b</td><td>Regular integer division (a / b)</td></tr>
 <tr><td></td><td>./</td><td>Double a, Double b</td><td>Division (a / b)</td></tr>
@@ -95,6 +96,7 @@
 <tr><td>Iff</td><td>if</td><td>Block b, Int a</td><td>If a then execute b, else pop a and pop b</td></tr>
 <tr><td>Increment</td><td>+.</td><td>Int a</td><td>Increment (a++)</td></tr>
 <tr><td></td><td>+.</td><td>Char a</td><td>Next char (chr(ord(a)+1))</td></tr>
+<tr><td></td><td>+.</td><td>Str a<br/>Block a</td><td>Append last of a to a</td></tr>
 <tr><td>InfixOf</td><td>~~</td><td>Block a, Block b</td><td>Does a contain b (as a consecutive subsequence)?</td></tr>
 <tr><td>Init</td><td>~]</td><td>Block a<br/>Int a</td><td>All except the last element</td></tr>
 <tr><td></td><td>~]</td><td>Str a</td><td>All except the last character</td></tr>
