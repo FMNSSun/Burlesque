@@ -1274,8 +1274,12 @@ builtinZip = do
 -- | Z[
 builtinZipWith :: BlsqState 
 builtinZipWith = do
- builtinZip
- builtinMap
+ st <- get
+ case st of
+   (BlsqBlock f : a : b : xs) -> do put $ a : b : BlsqBlock f : xs
+                                    builtinZip
+                                    builtinSwap
+                                    builtinMap
 
 -- | !!
 builtinBlockAccess :: BlsqState
