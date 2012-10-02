@@ -80,6 +80,7 @@ builtins = [
   ("w!", builtinWhile),
   ("++", builtinSum),
   ("pd", builtinProduct),
+  ("PD", builtinProductMany),
   ("av", builtinAverage),
   ("[~", builtinLast),
   ("~]", builtinInit),
@@ -408,6 +409,10 @@ builtinProduct = do
                           builtinReadDouble
    (BlsqDouble a : xs) -> do putResult $ (BlsqInt . ceiling $ a) : xs
    _ -> putResult $ (BlsqError "Burlesque: (pd) Invalid arguments!"): st
+
+builtinProductMany :: BlsqState
+builtinProductMany = do modify(BlsqBlock [BlsqIdent "pd"] :)
+                        builtinMap
 
 builtinAverage :: BlsqState
 builtinAverage = do
