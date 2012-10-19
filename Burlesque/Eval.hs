@@ -168,6 +168,8 @@ builtins = [
   ("t]", builtinTrimRight),
   ("tt", builtinTrimLeftRight),
   ("n!", builtinNot),
+  ("lg", builtinLog),
+  ("LG", builtinLog2),
   
   ("??", builtinVersion)
  ]
@@ -1473,3 +1475,19 @@ builtinFindIndices = do
        findIndices' p (x:xs) i = case runStack p [x] of
                                  (BlsqInt 1 : ys) -> i : findIndices' p xs (succ i)
                                  _ -> findIndices' p xs (succ i) 
+
+-- | lg
+builtinLog :: BlsqState
+builtinLog = do
+  st <- get
+  case st of
+   (BlsqInt a : xs) -> putResult $ BlsqDouble (log (fromIntegral a)) : xs
+   (BlsqDouble a : xs) -> putResult $ BlsqDouble (log a) : xs
+
+-- | LG
+builtinLog2 :: BlsqState
+builtinLog2 = do
+  builtinLog 
+  builtinSwap
+  builtinLog
+  builtinDiv
