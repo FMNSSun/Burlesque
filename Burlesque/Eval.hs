@@ -170,6 +170,12 @@ builtins = [
   ("n!", builtinNot),
   ("lg", builtinLog),
   ("LG", builtinLog2),
+  ("Ts", builtinSin),
+  ("TS", builtinAsin),
+  ("Tc", builtinCos),
+  ("TC", builtinAcos),
+  ("Tt", builtinTan), 
+  ("TT", builtinAtan),
   
   ("??", builtinVersion)
  ]
@@ -1491,3 +1497,51 @@ builtinLog2 = do
   builtinSwap
   builtinLog
   builtinDiv
+
+-- | Ts
+builtinSin :: BlsqState
+builtinSin = do
+  st <- get
+  case st of
+   (BlsqInt a : xs) -> putResult $ BlsqDouble (sin (fromIntegral a)) : xs
+   (BlsqDouble a : xs) -> putResult $ BlsqDouble (sin a) : xs
+
+-- | TS
+builtinAsin :: BlsqState
+builtinAsin = do
+  st <- get
+  case st of
+   (BlsqInt a : xs) -> putResult $ BlsqDouble (asin (fromIntegral a)) : xs
+   (BlsqDouble a : xs) -> putResult $ BlsqDouble (asin a) : xs
+
+-- | Tc
+builtinCos :: BlsqState
+builtinCos = do
+  st <- get
+  case st of
+   (BlsqInt a : xs) -> putResult $ BlsqDouble (cos (fromIntegral a)) : xs
+   (BlsqDouble a : xs) -> putResult $ BlsqDouble (cos a) : xs
+
+-- | TC
+builtinAcos :: BlsqState
+builtinAcos = do
+  st <- get
+  case st of
+   (BlsqInt a : xs) -> putResult $ BlsqDouble (acos (fromIntegral a)) : xs
+   (BlsqDouble a : xs) -> putResult $ BlsqDouble (acos a) : xs
+
+-- | Tt
+builtinTan :: BlsqState
+builtinTan = do
+  st <- get
+  case st of
+   (BlsqInt a : xs) -> putResult $ BlsqDouble (tan (fromIntegral a)) : xs
+   (BlsqDouble a : xs) -> putResult $ BlsqDouble (tan a) : xs
+
+-- | TT
+builtinAtan :: BlsqState
+builtinAtan = do
+  st <- get
+  case st of
+   (BlsqInt a : xs) -> putResult $ BlsqDouble (atan (fromIntegral a)) : xs
+   (BlsqDouble a : xs) -> putResult $ BlsqDouble (atan a) : xs
