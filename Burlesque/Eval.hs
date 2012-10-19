@@ -176,6 +176,7 @@ builtins = [
   ("TC", builtinAcos),
   ("Tt", builtinTan), 
   ("TT", builtinAtan),
+  ("WD", builtinWords2),
   
   ("??", builtinVersion)
  ]
@@ -1505,6 +1506,7 @@ builtinSin = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (sin (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (sin a) : xs
+   _ -> putResult $ BlsqError "Burlesque: (Ts) Invalid arguments!" : st
 
 -- | TS
 builtinAsin :: BlsqState
@@ -1513,6 +1515,7 @@ builtinAsin = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (asin (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (asin a) : xs
+   _ -> putResult $ BlsqError "Burlesque: (TS) Invalid arguments!" : st
 
 -- | Tc
 builtinCos :: BlsqState
@@ -1521,6 +1524,7 @@ builtinCos = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (cos (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (cos a) : xs
+   _ -> putResult $ BlsqError "Burlesque: (Tc) Invalid arguments!" : st
 
 -- | TC
 builtinAcos :: BlsqState
@@ -1529,6 +1533,7 @@ builtinAcos = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (acos (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (acos a) : xs
+   _ -> putResult $ BlsqError "Burlesque: (TC) Invalid arguments!" : st
 
 -- | Tt
 builtinTan :: BlsqState
@@ -1537,6 +1542,7 @@ builtinTan = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (tan (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (tan a) : xs
+   _ -> putResult $ BlsqError "Burlesque: (Tt) Invalid arguments!" : st
 
 -- | TT
 builtinAtan :: BlsqState
@@ -1545,3 +1551,12 @@ builtinAtan = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (atan (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (atan a) : xs
+   _ -> putResult $ BlsqError "Burlesque: (TT Invalid arguments!" : st
+
+-- | WD
+builtinWords2 :: BlsqState
+builtinWords2 = do
+  st <- get
+  case st of
+    (BlsqStr a : xs) -> putResult $ (BlsqBlock $ map BlsqStr (words a)) : xs
+    _ -> putResult $ BlsqError "Burlesque: (WD) Invalid arguments!" : st
