@@ -177,6 +177,9 @@ builtins = [
   ("Tt", builtinTan), 
   ("TT", builtinAtan),
   ("WD", builtinWords2),
+  ("ia", builtinInsertAt),
+  ("RA", builtinRemoveAt),
+  ("sa", builtinSetAt),
   
   ("??", builtinVersion)
  ]
@@ -1560,3 +1563,43 @@ builtinWords2 = do
   case st of
     (BlsqStr a : xs) -> putResult $ (BlsqBlock $ map BlsqStr (words a)) : xs
     _ -> putResult $ BlsqError "Burlesque: (WD) Invalid arguments!" : st
+
+-- | ia
+builtinInsertAt :: BlsqState
+builtinInsertAt = do
+  st <- get
+  case st of
+    (BlsqInt idx : e : BlsqBlock ls : xs) -> putResult $ (BlsqBlock (Burlesque.Helpers.insertAt idx e ls)) : xs
+    (BlsqInt idx : BlsqChar e : BlsqStr ls : xs) -> putResult $ (BlsqStr (Burlesque.Helpers.insertAt idx e ls)) : xs
+    _ -> putResult $ BlsqError "Burlesque: (ia) Invalid arguments!" : st
+
+-- | RA
+builtinRemoveAt :: BlsqState
+builtinRemoveAt = do
+  st <- get
+  case st of
+    (BlsqInt idx : BlsqBlock ls : xs) -> putResult $ (BlsqBlock (removeAt idx ls)) : xs
+    (BlsqInt idx : BlsqStr ls : xs) -> putResult $ (BlsqStr (removeAt idx ls)) : xs
+    (BlsqBlock ls : xs) -> do
+          builtinSetAt
+          builtinProduct
+          modify (BlsqDouble 2.0 : )
+          builtinDiv
+          builtinAverage
+          builtinBlockAccess
+    _ -> putResult $ BlsqError "Burlesque: (ra) Invalid arguments!" : st
+
+-- | sa
+builtinSetAt :: BlsqState
+builtinSetAt = do
+  st <- get
+  case st of
+    (BlsqInt idx : e : BlsqBlock ls : xs) -> putResult $ (BlsqBlock (setAt idx e ls)) : xs
+    (BlsqInt idx : BlsqChar e : BlsqStr ls : xs) -> putResult $ (BlsqStr (setAt idx e ls)) : xs
+    (BlsqBlock ls : xs) -> do 
+          builtinDup
+          builtinLength
+    (BlsqStr ls : xs) -> do
+          builtinDup
+          builtinLength
+    _ -> putResult $ BlsqError "Burlesque: (sa) Invalid arguments!" : st 

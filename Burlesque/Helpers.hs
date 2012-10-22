@@ -1,7 +1,10 @@
 module Burlesque.Helpers
   (replace,
    noSpaces,
-   unescape)
+   unescape,
+   insertAt,
+   removeAt,
+   setAt)
  where
 
 import Data.List
@@ -25,8 +28,8 @@ unescape ('\\':'\'':xs) = '\"' : unescape xs
 unescape (x:xs) = x : unescape xs
 unescape [] = []
 
-insertAt n e xs = let (a,b) = splitAt n xs in (a ++ [e]) ++ b
+insertAt n e xs = let (a,b) = splitAt (fromIntegral n) xs in (a ++ [e]) ++ b
 
-removeAt n xs = let (a,b) = splitAt n xs in a ++ (tail b)
+removeAt n xs = let (a,b) = splitAt (fromIntegral n) xs in a ++ (tail b)
 
-setAt n e xs = let (a,b) = splitAt n xs in a ++ (e : tail b)
+setAt n e xs = let (a,b) = splitAt (fromIntegral n) xs in a ++ (e : tail b)
