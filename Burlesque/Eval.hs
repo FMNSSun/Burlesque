@@ -1612,12 +1612,12 @@ builtinSortBy = do
   st <- get
   case st of
     (BlsqBlock f : BlsqBlock ls : xs) -> putResult $ BlsqBlock (
-                                         sortBy (\ a b -> case runStack f [a,b] of
+                                         sortBy (\ a b -> case runStack f [b,a] of
                                                                  (BlsqInt 1 : xs) -> GT
                                                                  (BlsqInt (-1) : xs) -> LT
                                                                  _ -> EQ) ls) : xs
     (BlsqBlock f : BlsqStr ls : xs) -> putResult $ BlsqStr (
-                                       sortBy (\ a b -> case runStack f [BlsqChar a,BlsqChar b] of
+                                       sortBy (\ a b -> case runStack f [BlsqChar b,BlsqChar a] of
                                                                  (BlsqInt 1 : xs) -> GT
                                                                  (BlsqInt (-1) : xs) -> LT
                                                                  _ -> EQ) ls) : xs
