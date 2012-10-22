@@ -182,6 +182,7 @@ builtins = [
   ("sa", builtinSetAt),
   ("sb", builtinSortBy),
   ("cm", builtinCompare),
+  ("CM", builtinCompare2),
   
   ("??", builtinVersion)
  ]
@@ -1633,3 +1634,18 @@ builtinCompare = do
                                            LT -> -1
                                            EQ -> 0) : xs
     _ -> putResult $ BlsqError "Burlesque: (cm) Invalid arguments!" : st
+
+-- | CM
+builtinCompare2 :: BlsqState
+builtinCompare2 = do
+  builtinDup
+  builtinBox
+  modify (BlsqIdent "\\/" :)
+  builtinAppend
+  builtinSwap
+  builtinAppend
+  modify (BlsqIdent "\\/" :)
+  builtinAppend
+  modify (BlsqIdent "cm" :)
+  builtinAppend
+  
