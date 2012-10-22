@@ -180,6 +180,8 @@ builtins = [
   ("ia", builtinInsertAt),
   ("RA", builtinRemoveAt),
   ("sa", builtinSetAt),
+  ("sb", builtinSortBy),
+  ("cm", builtinCompare),
   
   ("??", builtinVersion)
  ]
@@ -1603,3 +1605,31 @@ builtinSetAt = do
           builtinDup
           builtinLength
     _ -> putResult $ BlsqError "Burlesque: (sa) Invalid arguments!" : st 
+
+-- | sb
+builtinSortBy :: BlsqState
+builtinSortBy = do
+  st <- get
+  case st of
+    (BlsqBlock f : BlsqBlock ls : xs) -> putResult $ BlsqBlock (
+                                         sortBy (\ a b -> case runStack f [a,b] of
+                                                                 (BlsqInt 1 : xs) -> GT
+                                                                 (BlsqInt (-1) : xs) -> LT
+                                                                 _ -> EQ) ls) : xs
+    (BlsqBlock f : BlsqStr ls : xs) -> putResult $ BlsqStr (
+                                       sortBy (\ a b -> case runStack f [BlsqChar a,BlsqChar b] of
+                                                                 (BlsqInt 1 : xs) -> GT
+                                                                 (BlsqInt (-1) : xs) -> LT
+                                                                 _ -> EQ) ls) : xs
+    _ -> putResult $ BlsqError "Burlesque: (sb) Invalid arguments!" : st
+
+-- | cm
+builtinCompare :: BlsqState
+builtinCompare = do
+  st <- get
+  case st of
+    (b : a : xs) -> putResult $ BlsqInt (case compare a b of
+                                           GT -> 1
+                                           LT -> -1
+                                           EQ -> 0) : xs
+    _ -> putResult $ BlsqError "Burlesque: (cm) Invalid arguments!" : st

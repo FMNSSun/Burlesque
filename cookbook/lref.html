@@ -66,6 +66,7 @@
 <tr><td>Continuation</td><td>c!</td><td>Block a</td><td>Continuation with a</td></tr>
 <tr><td>Combinations</t><td>CB</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a of length n</td></tr>
 <tr><td>CombinationsUpTo</td><td>cb</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a up to length n</td></tr>
+<tr class="vnext"><td>Compare</td><td>cm</td><td>Any a, Any b</td><td>Compare a with b (1 for greater, 0 for equal, -1 else)</td></tr>
 <tr class="vnext"><td>Cos</td><td>Tc</td><td>Double a<br/>Int a</td><td>cosinus</td></tr>
 <tr><td>Cycle</td><td>cy</td><td>Block a<br/>Str a</br></td><td>Repeat a infinite times</td></tr>
 <tr><td>Decrement</td><td>-.</td><td>Int a</td><td>Decrement a--</td></tr>
@@ -103,6 +104,7 @@
 <tr><td>InfixOf</td><td>~~</td><td>Block a, Block b</td><td>Does a contain b (as a consecutive subsequence)?</td></tr>
 <tr><td>Init</td><td>~]</td><td>Block a<br/>Int a</td><td>All except the last element</td></tr>
 <tr><td></td><td>~]</td><td>Str a</td><td>All except the last character</td></tr>
+<tr><td></td><td>~]</td><td>Int a</td><td>All except last digit</td></tr>
 <tr><td>InitTail</td><td>~-</td><td>n/a</td><td>Defined as ~][-</td></tr>
 <tr><td>Intersection</td><td>IN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Intersection</td></tr>
 <tr><td>Intersperse</td><td>[[</td><td>Any a, Block b<br/>String a,Char b</td><td>Inserts a between every two element in b</td></tr>
@@ -197,6 +199,7 @@
 <tr><td>Smaller</td><td>.&lt;</td><td>Any a, Any b</td><td>Comparision (a &lt; b)</td></tr>
 <tr><td>Sort</td><td>&gt;&lt;</td><td>Str a<br/>Block a<br/>Int a</td><td>Sort a</td></tr>
 <tr><td></td><td>&gt;&lt;</td><td>Char a</td><td>Is digit?</td></tr>
+<tr class="vnext"><td>SortBy</td><td>sb</td><td>Block ls, Block f<br/>Str ls, Block f</td><td>SortBy f (f must return 0 (equal), 1 (greater) or -1 (smaller))</td></tr>
 <tr class="vnext"><td>Sin</td><td>Ts</td><td>Double a<br/>Int a</td><td>sinus</td></tr>
 <tr><td>Split</td><td>;;</td><td>String str, String b</td><td>Split string by b</td></tr>
 <tr><td></td><td>;;</td><td>Block ls, Block b</td><td>Split ls by b</td></tr>
@@ -218,6 +221,7 @@
 <tr><td>Tail</td><td>[-</td><td>Block a<br/>Int a</td><td>All except first element.</td></tr>
 <tr><td></td><td>[-</td><td>Str a</td><td>All except first character</td></tr>
 <tr><td></td><td>[-</td><td>Char a</td><td>Convert to string</td></tr>
+<tr><td></td><td>[-</td><td>Int a</td><td>All except first digit</td></tr>
 <tr><td>ToLower</td><td>zz</td><td>Str a<br/>Char a</td><td>to lower case</td></tr>
 <tr><td>ToUpper</td><td>ZZ</td><td>Str a<br/>Char a</td><td>to upper case</td></tr>
 <tr><td>TrimLeft</td><td>t[</td><td>Str a</td><td>Trim left</td></tr>
