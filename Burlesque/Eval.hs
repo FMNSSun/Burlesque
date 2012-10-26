@@ -48,6 +48,7 @@ builtins = [
   (".-", builtinSub),
   ("./", builtinDiv),
   (".*", builtinMul),
+  (".%", builtinMod),
   ("+.", builtinIncrement),
   ("-.", builtinDecrement),
   (".>", builtinGreater),
@@ -183,6 +184,7 @@ builtins = [
   ("sb", builtinSortBy),
   ("cm", builtinCompare),
   ("CM", builtinCompare2),
+  ("B!", builtinConvertBase),
   
   ("??", builtinVersion)
  ]
@@ -262,6 +264,15 @@ builtinDiv = do
     (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a `div` b) : xs
     ((BlsqDouble b):(BlsqDouble a):xs) -> (BlsqDouble (a / b)) : xs
     _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
+
+-- | .%
+builtinMod :: BlsqState
+builtinMod = do
+  st <- get
+  putResult $
+   case st of
+    (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a `mod`b) : xs
+    _ -> (BlsqError "Burlesque: (.%) Invalid arguments!") : st
 
 -- | > +.
 builtinIncrement :: BlsqState
@@ -1648,4 +1659,11 @@ builtinCompare2 = do
   builtinAppend
   modify (BlsqIdent "cm" :)
   builtinAppend
-  
+
+-- | B!
+builtinConvertBase :: BlsqState
+builtinConvertBase = do
+  st <- get
+  case st of
+    (BlsqInt bs : BlsqInt n : xs) -> putResult $ BlsqStr (toBase (fromIntegral bs) (fromIntegral n)) : xs
+    (BlsqInt bs : BlsqStr n : xs) -> putResult $ BlsqInt (toInteger (fromBase (fromIntegral bs) n)) : xs
