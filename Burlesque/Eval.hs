@@ -185,6 +185,8 @@ builtins = [
   ("cm", builtinCompare),
   ("CM", builtinCompare2),
   ("B!", builtinConvertBase),
+  ("g_", builtinGcd),
+  ("l_", builtinLcm),
   
   ("??", builtinVersion)
  ]
@@ -742,6 +744,8 @@ builtinMaximum = do
  putResult $
   case st of
    (BlsqBlock a : xs) -> (maximum a) : xs
+   (BlsqStr a : xs) -> BlsqChar (maximum a) : xs
+   (BlsqInt a : xs) -> BlsqInt (read . return . maximum . show $ a) : xs
    _ -> BlsqError "Burlesque: (>]) Invalid arguments!" : st
 
 -- | > (<])
@@ -751,6 +755,8 @@ builtinMinimum = do
  putResult $
   case st of
    (BlsqBlock a : xs) -> (minimum a) : xs
+   (BlsqStr a : xs) -> BlsqChar (minimum a) : xs
+   (BlsqInt a : xs) -> BlsqInt (read . return . minimum . show $ a) : xs
    _ -> BlsqError "Burlesque: (<]) Invalid arguments!" : st
 
 
@@ -896,6 +902,7 @@ builtinFormat = do
    (BlsqInt 0 : BlsqPretty x _ : xs) -> (BlsqPretty x BlsqFormatNormal) : xs
    (BlsqInt 1 : BlsqPretty x _ : xs) -> (BlsqPretty x BlsqFormatNoSpaces) : xs
    (BlsqInt 2 : BlsqPretty x _ : xs) -> (BlsqPretty x BlsqFormatWithSpaces) : xs
+   (BlsqInt 3 : BlsqPretty x _ : xs) -> (BlsqPretty x BlsqFormatRaw) : xs
    _ -> BlsqError "Burlesque: (FF) Invalid arguments!" : st
 
 -- | > ff
@@ -1395,6 +1402,7 @@ builtinCycle = do
   case st of
    (BlsqBlock a : xs) -> (BlsqBlock (cycle a)) : xs
    (BlsqStr a : xs) -> (BlsqStr (cycle a)) : xs
+   (BlsqInt a : xs) -> (BlsqStr (cycle . show . abs $ a)) : xs
    _ -> BlsqError "Burlesque: (cy) Invalid arguments!" : st
 
 -- | is
@@ -1667,3 +1675,20 @@ builtinConvertBase = do
   case st of
     (BlsqInt bs : BlsqInt n : xs) -> putResult $ BlsqStr (toBase (fromIntegral bs) (fromIntegral n)) : xs
     (BlsqInt bs : BlsqStr n : xs) -> putResult $ BlsqInt (toInteger (fromBase (fromIntegral bs) n)) : xs
+    _ -> putResult $ BlsqError "Burlesque: (B!) Invalid arguments!" : st
+
+-- | g_
+builtinGcd :: BlsqState
+builtinGcd = do
+  st <- get
+  case st of
+    (BlsqInt b : BlsqInt a : xs) -> putResult $ BlsqInt (gcd a b) : xs
+    _ -> putResult $ BlsqError "Burlesque: (g_) Invalid arguments!" : st
+
+-- | l_
+builtinLcm :: BlsqState
+builtinLcm = do
+  st <- get
+  case st of
+    (BlsqInt b : BlsqInt a : xs) -> putResult $ BlsqInt (lcm a b) : xs
+    _ -> putResult $ BlsqError "Burlesque: (l_) Invalid arguments!" : st

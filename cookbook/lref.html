@@ -73,6 +73,7 @@
 ^^bx(\/)[+\/[+(\/)[+(cm)[+</td></tr>
 <tr class="vnext"><td>Cos</td><td>Tc</td><td>Double a<br/>Int a</td><td>cosinus</td></tr>
 <tr><td>Cycle</td><td>cy</td><td>Block a<br/>Str a</br></td><td>Repeat a infinite times</td></tr>
+<tr class="vnext"><td></td><td>Int a</td><td>Convert to string and then cycle</td></tr>
 <tr><td>Decrement</td><td>-.</td><td>Int a</td><td>Decrement a--</td></tr>
 <tr><td></td><td>-.</td><td>Char a</td><td>Previous char (chr(ord(a)-1))</td></tr>
 <tr><td></td><td>-.</td><td>Str a<br/>Block a</td><td>Prepend head of a to a</td></tr>
@@ -94,6 +95,7 @@
 <tr><td>Format</td><td>FF</td><td>Pretty a, Int b</td><td>Changes the format of a according to b</td></tr>
 <tr><td>FormatFromFormat</td><td>Ff</td><td>n/a</td><td>Defined as FF ff</td></tr>
 <tr><td>FromFormat</td><td>ff</td><td>Pretty a</td><td>Extracts the string out of the pretty</td></tr>
+<tr class="vnext"><td>Gcd</td><td>g_</td><td>Int a, Int b</td><td>gcd(a,b)</td></tr>
 <tr><td>Greater</td><td>.&gt;</td><td>Any a, Any b</td><td>Comparision (a &gt; b)</td></tr>
 <tr><td>Group</td><td>=[</td><td>Block a</td><td>Group (equal consecutive) elements in a</td></tr>
 <tr><td>Head</td><td>-]</td><td>Block a<br/>Int a</td><td>First element</td></tr>
@@ -114,6 +116,7 @@
 <tr><td>Intersperse</td><td>[[</td><td>Any a, Block b<br/>String a,Char b</td><td>Inserts a between every two element in b</td></tr>
 <tr class="vnext"><td>InsertAt</td><td>ia</td><td>Str ls, Char e, Int idx<br/>Block ls, Any e, Int idx</td><td>Insert element e into ls at index idx</td></tr>
 <tr><td>Last</td><td>[~</td><td>Block a<br/>Int a</td><td>Last element of the block</td></tr>
+<tr class="vnext"><td>Lcm</td><td>l_</td><td>Int a, Int b</td><td>lcm(a,b)</td></tr>
 <tr><td>Length</td><td>L[</td><td>Block a</td><td>Length of a</td></tr>
 <tr><td></td><td>L[</td><td>Str a</td><td>Length of a</td></tr>
 <tr><td></td><td>L[</td><td>Int a</td><td>Convert to char (chr a)</td></tr>
@@ -133,8 +136,10 @@
 <tr><td>MatchesList</td><td>=~</td><td>String a, String regex</td><td>Returns a list of subexpression matches</td></tr>
 <tr><td>Max</td><td>&gt;.</td><td>Any a, Any b</td><td>Max(a,b)</td></tr>
 <tr><td>Maximum</td><td>&gt;]</td><td>Block a</td><td>Maximum(a)</td></tr>
+<tr class="vnext"><td>&gt;]</td><td>Str a<br/>Int a</td><td>Biggest character</td></tr>
 <tr><td>Min</td><td>&lt;.</td><td>Any a, Any b</td><td>Min(a,b)</td></tr>
 <tr><td>Minimum</td><td>&lt;]</td><td>Block a</td><td>Minimum(a)</td></tr>
+<tr class="vnext"><td></td><td>&lt;]</td><td>Str a<br/>Int a</td><td>Smalles character</td></tr>
 <tr class="vnext"><td>Modulo</td><td>.%</td><td>Int a, Int b</td><td>a `mod` b</td></tr>
 <tr><td>Mul</td><td>.*</td><td>Int a, Int b</td><td>Regular integer multiplication (a * b)</td></tr>
 <tr><td></td><td>.*</td><td>Double a, Double b</td><td>Multiplication (a * b)</td></tr>
