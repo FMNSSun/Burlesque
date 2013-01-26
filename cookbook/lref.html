@@ -74,7 +74,7 @@
 ^^bx(\/)[+\/[+(\/)[+(cm)[+</td></tr>
 <tr class="vnext"><td>Cos</td><td>Tc</td><td>Double a<br/>Int a</td><td>cosinus</td></tr>
 <tr><td>Cycle</td><td>cy</td><td>Block a<br/>Str a</br></td><td>Repeat a infinite times</td></tr>
-<tr class="vnext"><td></td><td>Int a</td><td>Convert to string and then cycle</td></tr>
+<tr class="vnext"><td></td><td>cy</td><td>Int a</td><td>Convert to string and then cycle</td></tr>
 <tr><td>Decrement</td><td>-.</td><td>Int a</td><td>Decrement a--</td></tr>
 <tr><td></td><td>-.</td><td>Char a</td><td>Previous char (chr(ord(a)-1))</td></tr>
 <tr><td></td><td>-.</td><td>Str a<br/>Block a</td><td>Prepend head of a to a</td></tr>
@@ -285,6 +285,7 @@ Identifier :: noneOf "1234567890{},' \"" , noneOf "1234567890{},' \""
 ExpressionSingle :: { Block | Int | Char | String | Quoted | Identifier }
 Expression = { ExpressionSingle }*
 Pretty :: "`" , { anyChar }*, "`"
+HackMode :: "#", { anyChar }*, "#"
 </pre>
 <h1>Format / Pretty</h1>
 <p>
@@ -307,6 +308,12 @@ value can have different formattings and currently the following exist:
  Burlesque is a lazy programming language which means that it only evaluates stuff that is necessary to evaluate.
  A good example for this is the RangeInf command. <i>1R@"ABCD"z[</i> generates an infinite list 1..Infinity
  and zips it with "ABCD". However, its support for lazyness is limited and does not extend to every command.
+</p>
+<h1>Hack mode</h1>
+<p>
+Hack mode allows you to use one byte instead of two bytes to refer to a command. 
+All commands are in a ordered list. In hackmode, they are accessed as builtins[ord(hack char)].
+See <a href="hackmode.txt">here</a>.
 </p>
  </body>
 </html>
