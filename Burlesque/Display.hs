@@ -58,5 +58,5 @@ toHTML a@(BlsqError _) = "<span class=\"err\">" ++ (encodeHtml $ toDisplay a) ++
 toHTML a@(BlsqIdent _) = "<span class=\"id\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
 toHTML a@(BlsqChar _) = "<span class=\"chr\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
 toHTML a@(BlsqDouble _) = "<span class=\"dbl\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
-toHTML a@(BlsqStr _) = "<span class=\"hack\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
+toHTML a@(BlsqHackMode _) = "<span class=\"hack\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
 toHTML q = "<span class=\"raw\">" ++ (encodeHtml $ toDisplay q) ++ "</span>"
