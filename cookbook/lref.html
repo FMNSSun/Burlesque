@@ -80,6 +80,8 @@
 <tr><td>DiffLs</td><td>\\</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>List difference (a \\ b)</td></tr>
 <tr><td>Div</td><td>./</td><td>Int a, Int b</td><td>Regular integer division (a / b)</td></tr>
 <tr><td></td><td>./</td><td>Double a, Double b</td><td>Division (a / b)</td></tr>
+<tr class="vnext"><td>DropWhile</td><td>dw</td><td>Block p<br/>Block ls</td><td>drop elements from ls as long as p holds true</td></tr>
+<tr class="vnext"><td></td><td>dw</td><td>Block p<br/>Str s</td><td>Defined as **dw\[</td></tr>
 <tr><td>Dup</td><td>^^</td><td></td><td>Duplicate top most element on the stack</td></tr>
 <tr><td>DupSwap</td><td>^/</td><td></td><td>Defined as ^^ \/</td></tr>
 <tr><td>Equal</td><td>==</td><td>Any a, Any b</td><td>Comparision (a == b)</td></tr>
@@ -136,7 +138,7 @@
 <tr><td>MatchesList</td><td>=~</td><td>String a, String regex</td><td>Returns a list of subexpression matches</td></tr>
 <tr><td>Max</td><td>&gt;.</td><td>Any a, Any b</td><td>Max(a,b)</td></tr>
 <tr><td>Maximum</td><td>&gt;]</td><td>Block a</td><td>Maximum(a)</td></tr>
-<tr class="vnext"><td>&gt;]</td><td>Str a<br/>Int a</td><td>Biggest character</td></tr>
+<tr class="vnext"><td></td><td>&gt;]</td><td>Str a<br/>Int a</td><td>Biggest character</td></tr>
 <tr><td>Min</td><td>&lt;.</td><td>Any a, Any b</td><td>Min(a,b)</td></tr>
 <tr><td>Minimum</td><td>&lt;]</td><td>Block a</td><td>Minimum(a)</td></tr>
 <tr class="vnext"><td></td><td>&lt;]</td><td>Str a<br/>Int a</td><td>Smalles character</td></tr>
@@ -169,6 +171,8 @@
 <tr><td>PrettyFormatFromFormat</td><td>SH</td><td>n/a</td><td>Defined as \/ sh \/ Ff</td></tr>
 <tr><td>PrettyFromFormat</td><td>Sh</td><td>n/a</td><td>Defined as sh ff</td></tr>
 <tr><td>Prepend</td><td>+]</td><td>String a, Char b<br/>Block a,Any b<br/>Int a,Int b</td><td>Prepends b to a</td></tr>
+<tr class="vnext"><td>PrimeFactors</td><td>fC</td><td>Int a</td><td>Prime factors of a</td></tr>
+<tr class="vnext"><td></td><td>fC</td><td>Double a</td><td>a * a (multiplies a with a)</td></tr>
 <tr class="vnext"><td>Product</td><td>pd</td><td>Block a</td><td>Defined as {.*}r[</td></tr>
 <tr class="vnext"><td></td><td>pd</td><td>Double a</td><td>Ceiling a</td></tr>
 <tr class="vnext"><td></td><td>pd</td><td>Int a</td><td>Convert to double</td></tr>
@@ -232,6 +236,8 @@
 <tr><td></td><td>[-</td><td>Str a</td><td>All except first character</td></tr>
 <tr><td></td><td>[-</td><td>Char a</td><td>Convert to string</td></tr>
 <tr><td></td><td>[-</td><td>Int a</td><td>All except first digit</td></tr>
+<tr class="vnext"><td>TakeWhile</td><td>tw</td><td>Block p<br/>Block ls</td><td>take elements from ls as long as p holds true</td></tr>
+<tr class="vnext"><td></td><td>tw</td><td>Block p<br/>Str s</td><td>Defined as **tw\[</td></tr>
 <tr><td>ToLower</td><td>zz</td><td>Str a<br/>Char a</td><td>to lower case</td></tr>
 <tr><td>ToUpper</td><td>ZZ</td><td>Str a<br/>Char a</td><td>to upper case</td></tr>
 <tr><td>TrimLeft</td><td>t[</td><td>Str a</td><td>Trim left</td></tr>

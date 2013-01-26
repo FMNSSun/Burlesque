@@ -6,7 +6,8 @@ module Burlesque.Helpers
    removeAt,
    setAt,
    toBase,
-   fromBase)
+   fromBase,
+   pfactor)
  where
 
 import Data.List
@@ -40,3 +41,9 @@ setAt n e xs = let (a,b) = splitAt (fromIntegral n) xs in a ++ (e : tail b)
 
 toBase bs n = map (\c -> (['0'..'9'] ++ ['a'..'z']) !! c) $ digits bs n
 fromBase bs n = unDigits bs $ map (\c -> fromMaybe 0 $ findIndex (==c) (['0'..'9'] ++ ['a'..'z'])) n
+
+pfactor 1 = []
+pfactor n = let divisors = dropWhile ((/= 0) . mod n) [2 .. ceiling $ sqrt $ fromIntegral n]
+           in let prime = if null divisors then n else head divisors
+              in (prime :) $ pfactor $ div n prime
+

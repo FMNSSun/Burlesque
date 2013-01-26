@@ -163,6 +163,7 @@ builtins = [
   ("cy", builtinCycle),
   ("is", builtinIsError),
   ("fc", builtinFactors),
+  ("fC", builtinPrimeFactors),
   ("co", builtinChunksOf),
   ("CO", builtinChunky),
   ("t[", builtinTrimLeft),
@@ -187,6 +188,8 @@ builtins = [
   ("B!", builtinConvertBase),
   ("g_", builtinGcd),
   ("l_", builtinLcm),
+  ("tw", builtinTakeWhile),
+  ("dw", builtinDropWhile),
   
   ("??", builtinVersion)
  ]
@@ -1414,6 +1417,16 @@ builtinIsError = do
    (BlsqError _ : xs) -> (BlsqInt 1) : xs
    _ -> (BlsqInt 0) : st
 
+-- | fC
+builtinPrimeFactors :: BlsqState
+builtinPrimeFactors = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt a : xs) -> (BlsqBlock . map BlsqInt $ pfactor a) : xs
+   (BlsqDouble a : xs) -> (BlsqDouble $ a * a) : xs
+   _ -> BlsqError "Burlesque: (fC) Invalid arguments" : st
+
 -- | fc
 builtinFactors :: BlsqState
 builtinFactors = do
@@ -1692,3 +1705,33 @@ builtinLcm = do
   case st of
     (BlsqInt b : BlsqInt a : xs) -> putResult $ BlsqInt (lcm a b) : xs
     _ -> putResult $ BlsqError "Burlesque: (l_) Invalid arguments!" : st
+	
+-- |tw
+builtinTakeWhile :: BlsqState
+builtinTakeWhile = do
+ st <- get
+ case st of
+   (BlsqBlock ls : BlsqBlock p : xs) -> putResult $ (BlsqBlock $ takeWhile' p ls) : xs
+   (BlsqStr ls : BlsqBlock p : xs) -> do builtinExplode
+                                         builtinTakeWhile
+                                         builtinConcat
+   _ -> putResult $ BlsqError "Burlesque: (tw) Invalid arguments!" : st
+ where takeWhile' _ [] = []
+       takeWhile' p (y:ys) = case runStack p [y] of
+                               (BlsqInt 0 : _) -> []
+                               _ -> y : takeWhile' p ys
+
+-- |dw
+builtinDropWhile :: BlsqState
+builtinDropWhile = do
+ st <- get
+ case st of
+   (BlsqBlock ls : BlsqBlock p : xs) -> putResult $ (BlsqBlock $ dropWhile' p ls) : xs
+   (BlsqStr ls : BlsqBlock p : xs) -> do builtinExplode
+                                         builtinDropWhile
+                                         builtinConcat
+   _ -> putResult $ BlsqError "Burlesque: (dw) Invalid arguments!" : st
+ where dropWhile' _ [] = []
+       dropWhile' p yss@(y:ys) = case runStack p [y] of
+                               (BlsqInt 0 : _) -> yss
+                               _ -> dropWhile' p ys
