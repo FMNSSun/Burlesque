@@ -20,6 +20,7 @@ data BlsqExp =  BlsqInt Integer
               | BlsqNil
               | BlsqPretty BlsqExp BlsqPrettyFormat
               | BlsqQuoted BlsqExp
+              | BlsqHackMode String
   deriving (Show,Eq,Read,Ord)
 
 data BlsqPrettyFormat =  BlsqFormatNormal

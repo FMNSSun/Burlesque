@@ -20,6 +20,10 @@ import Debug.Trace
 
 -- | > Evaluate a Burlesque program
 eval :: BlsqProg -> BlsqState
+eval (BlsqHackMode x : xs) = do
+ let m = map (\c -> BlsqIdent . fst $ builtins !! (ord c)) x
+ eval (m ++ xs)
+ 
 eval (x:xs) = evalI x >> eval xs
 eval [] = return ()
 
@@ -78,6 +82,7 @@ builtins = [
   ("e!", builtinEval),
   ("E!", builtinEvalMany),
   ("c!", builtinContinuation),
+  ("??", builtinVersion),
   ("w!", builtinWhile),
   ("++", builtinSum),
   ("pd", builtinProduct),

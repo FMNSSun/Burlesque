@@ -47,6 +47,8 @@ toDisplay (BlsqSpecial q) = q
 toDisplay (BlsqQuoted q) = "(" ++ toDisplay q ++ ")"
 toDisplay (BlsqNil) = "_|_"
 
+toDisplay (BlsqHackMode x) = "#" ++ x ++ "#"
+
 toDisplay q = show q
 
 toHTML a@(BlsqInt _) = "<span class=\"int\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
