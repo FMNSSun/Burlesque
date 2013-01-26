@@ -1036,6 +1036,7 @@ builtinStripLeft = do
   case st of
    (a : BlsqBlock b : xs) -> (BlsqBlock $ dropWhile (==a) b) : xs
    (BlsqChar a : BlsqStr b : xs) -> (BlsqStr $ dropWhile (==a) b) : xs
+   (BlsqInt a : xs) -> BlsqInt (a * a) : xs
    _ -> BlsqError "Burlesque: (S[) Invalid arguments!" : st
 
 -- | S[

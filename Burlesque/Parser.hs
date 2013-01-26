@@ -101,6 +101,14 @@ parseString = do
   optional spaces
   return $ BlsqStr (unescape e)
 
+parsePretty :: Parser BlsqExp
+parsePretty = do
+ _ <- char '`'
+ e <- many (noneOf "`")
+ _ <- char '`'
+ optional spaces
+ return $ BlsqPretty (BlsqStr e) BlsqFormatNormal
+
 parseQuoted :: Parser BlsqExp
 parseQuoted = do
   _ <- char '('
@@ -112,13 +120,13 @@ parseQuoted = do
   return $ BlsqQuoted e
 
 parseData :: Parser BlsqExp
-parseData = parseString <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
+parseData = parseString <|> parsePretty <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
 
 parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseSingle
 
 parseSingle :: Parser BlsqExp
-parseSingle = parseBlock <|> parseString <|> parseSep <|> 
+parseSingle = parseBlock <|> parseString <|> parsePretty <|> parseSep <|> 
               (try parseDouble) <|> (try parseNumber) <|>
               parseChar <|> parseQuoted <|> parseIdent
 

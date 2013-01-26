@@ -19,6 +19,7 @@
            <li>Nil - Internal usage only</li>
            <li>Quoted - Can be used to push identifiers on the stack</li>
            <li>Error - Can not be written as a literal in code</li>
+		   <li>Pretty - Pretty print stuff<li>
           </ul>
         </p>
         
@@ -219,6 +220,7 @@
 <tr><td></td><td>;;</td><td>Block ls, Block b</td><td>Split ls by b</td></tr>
 <tr><td></td><td>;;</td><td>Int ls, Int b</td><td>Split ls by b</td></tr>
 <tr><td>StripLeft</td><td>S[</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (left) b from a</td></tr>
+<tr class="vnext"><td></td><td>S[</td><td>Int a</td><td>a * a (multiplies a with a)</td></tr>
 <tr><td>StripRight</td><td>[S</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (right) b from a</td></tr>
 <tr><td>Sub</td><td>.-</td><td>Int a, Int b</td><td>Regular integer subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
@@ -282,6 +284,7 @@ Quoted :: "(", ExpressionSingle , ")"
 Identifier :: noneOf "1234567890{},' \"" , noneOf "1234567890{},' \""
 ExpressionSingle :: { Block | Int | Char | String | Quoted | Identifier }
 Expression = { ExpressionSingle }*
+Pretty :: "`" , { anyChar }*, "`"
 </pre>
 <h1>Format / Pretty</h1>
 <p>
