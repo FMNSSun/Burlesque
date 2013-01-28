@@ -203,6 +203,7 @@ builtins = [
   ("l_", builtinLcm),
   ("tw", builtinTakeWhile),
   ("dw", builtinDropWhile),
+  ("tp", builtinTranspose),
   
   ("??", builtinVersion)
  ]
@@ -1771,3 +1772,12 @@ builtinDropWhile = do
        dropWhile' p yss@(y:ys) = case runStack p [y] of
                                (BlsqInt 0 : _) -> yss
                                _ -> dropWhile' p ys
+
+-- | tp
+builtinTranspose :: BlsqState
+builtinTranspose = do 
+ st <- get
+ case st of
+  (BlsqBlock a : xs) -> putResult $ BlsqBlock (map BlsqBlock (transpose (map (toList') a))) : xs
+ where toList' (BlsqBlock a) = a
+       toList x = [x]
