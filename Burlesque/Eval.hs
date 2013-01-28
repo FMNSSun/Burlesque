@@ -51,6 +51,7 @@ toInt p = (fromIntegral p) :: Int
 -- If you change the order of this list you'll break existing
 -- programs making use of the hack mode. DO NOT CHANGE THE ORDER
 -- OF THIS LIST! JUST DO NOT!
+-- HackMode will not make it into an official version. Screw the order!
 builtins = [
   (".+", builtinAdd),
   ("_+", builtinAddX),
@@ -68,6 +69,7 @@ builtins = [
   ("<]", builtinMinimum),
   ("**", builtinPow),
   ("r_", builtinRound),
+  ("R_", builtinRound2),
   ("==", builtinEqual),
   ("!=", builtinNotEqual),
   ("<-", builtinReverse),
@@ -93,6 +95,7 @@ builtins = [
   ("pd", builtinProduct),
   ("PD", builtinProductMany),
   ("av", builtinAverage),
+  ("AV", builtinAverage2),
   ("[~", builtinLast),
   ("~]", builtinInit),
   ("[-", builtinTail),
@@ -468,6 +471,11 @@ builtinAverage = do
   (BlsqDouble a : xs) -> do putResult $ (BlsqInt . floor $ a) : xs
   _ -> putResult $ (BlsqError "Burlesque: (av) Invalid arguments!") : st
 
+builtinAverage2 :: BlsqState
+builtinAverage2 = do
+ builtinProductMany
+ builtinAverage
+
 -- | > [~
 builtinLast :: BlsqState
 builtinLast = do
@@ -797,6 +805,13 @@ builtinRound = do
    (BlsqInt b : BlsqDouble a : xs) -> (BlsqDouble $ round' a b) : xs
    _ -> BlsqError "Burlesque: (r_) Invalid arguments!" : st
  where round' n s = let factor = fromIntegral (10^s) in fromIntegral (round (n * factor)) / factor
+
+-- | R_
+builtinRound2 :: BlsqState
+builtinRound2 = do
+ modify (BlsqInt 0 :)
+ builtinRound
+ builtinProduct
 
 -- | > (XX)
 builtinExplode :: BlsqState
