@@ -128,13 +128,13 @@ parseQuoted = do
   return $ BlsqQuoted e
 
 parseData :: Parser BlsqExp
-parseData = parseString <|> parsePretty <|> parseHackMode <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
+parseData = parseString {- <|> parsePretty <|> parseHackMode -} <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
 
 parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseSingle
 
 parseSingle :: Parser BlsqExp
-parseSingle = parseBlock <|> parseString <|> parsePretty <|> parseHackMode <|> parseSep <|> 
+parseSingle = parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseNumber) <|>
               parseChar <|> parseQuoted <|> parseIdent
 

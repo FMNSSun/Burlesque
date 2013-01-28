@@ -284,8 +284,6 @@ Quoted :: "(", ExpressionSingle , ")"
 Identifier :: noneOf "1234567890{},' \"" , noneOf "1234567890{},' \""
 ExpressionSingle :: { Block | Int | Char | String | Quoted | Identifier }
 Expression = { ExpressionSingle }*
-Pretty :: "`" , { anyChar }*, "`"
-HackMode :: "#", { anyChar }*, "#"
 </pre>
 <h1>Format / Pretty</h1>
 <p>
@@ -313,7 +311,8 @@ value can have different formattings and currently the following exist:
 <p>
 Hack mode allows you to use one byte instead of two bytes to refer to a command. 
 All commands are in a ordered list. In hackmode, they are accessed as builtins[ord(hack char)].
-See <a href="hackmode.txt">here</a>.
+See <a href="hackmode.txt">here</a>. HackMode is not officially supported. You can enable it by
+hacking the code in parser.hs ;).
 </p>
  </body>
 </html>

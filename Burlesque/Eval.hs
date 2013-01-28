@@ -46,6 +46,11 @@ runStack p xs = execState (eval p) xs
 
 toInt p = (fromIntegral p) :: Int
 
+-- Very Important!
+-- The order of this list is relevant!
+-- If you change the order of this list you'll break existing
+-- programs making use of the hack mode. DO NOT CHANGE THE ORDER
+-- OF THIS LIST! JUST DO NOT!
 builtins = [
   (".+", builtinAdd),
   ("_+", builtinAddX),
