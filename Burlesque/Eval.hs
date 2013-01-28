@@ -1780,4 +1780,4 @@ builtinTranspose = do
  case st of
   (BlsqBlock a : xs) -> putResult $ BlsqBlock (map BlsqBlock (transpose (map (toList') a))) : xs
  where toList' (BlsqBlock a) = a
-       toList x = [x]
+       toList' x = [x]
