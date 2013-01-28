@@ -1722,6 +1722,11 @@ builtinGcd = do
   st <- get
   case st of
     (BlsqInt b : BlsqInt a : xs) -> putResult $ BlsqInt (gcd a b) : xs
+    (BlsqBlock ls : xs) -> do builtinDup
+                              builtinHead
+                              builtinSwap
+                              builtinTail
+                              builtinSwap
     _ -> putResult $ BlsqError "Burlesque: (g_) Invalid arguments!" : st
 
 -- | l_
@@ -1730,6 +1735,11 @@ builtinLcm = do
   st <- get
   case st of
     (BlsqInt b : BlsqInt a : xs) -> putResult $ BlsqInt (lcm a b) : xs
+    (BlsqBlock ls : xs) -> do builtinDup
+                              builtinInit
+                              builtinSwap
+                              builtinLast
+                              builtinSwap
     _ -> putResult $ BlsqError "Burlesque: (l_) Invalid arguments!" : st
 	
 -- |tw
