@@ -208,6 +208,20 @@ builtins = [
   ("FM", builtinFilterMap),
   ("r\\", builtinRangeConcat),
   ("SP", builtinSpecialInput),
+  ("hd", builtinHide),
+  ("HD", builtinHide2),
+  ("ld", builtinLoad),
+  ("LD", builtinLoad2),
+  ("st", builtinStore),
+  ("#a", builtinALoad),
+  ("#b", builtinBLoad),
+  ("#c", builtinCLoad),
+  ("`a", builtinAStore),
+  ("`b", builtinBStore),
+  ("`c", builtinCStore),
+  ("!a", builtinALoad2),
+  ("!b", builtinBLoad2),
+  ("!c", builtinCLoad2),
   
   ("??", builtinVersion)
  ]
@@ -1822,4 +1836,59 @@ builtinSpecialInput = do
   (BlsqBlock l : xs) -> do modify (BlsqBlock [ BlsqBlock [ BlsqIdent "Sh"], BlsqIdent "m[", BlsqIdent "wd" ] :)
                            builtinMap
                            builtinUnlines
-                        
+
+-- | hd
+-- Unlike high definition this is a gruesome hack. or feature. let's say feature.
+builtinHide :: BlsqState
+builtinHide = do
+ st <- get
+ case st of
+   (a : xs) -> do builtinPop
+                  modify (++[BlsqHiddenState a])
+   _ -> putResult $ BlsqError "Burlesque: (hd) Invalid arguments!" : st
+
+-- | HD
+-- also hackish.
+builtinHide2 :: BlsqState
+builtinHide2 = do
+ st <- get
+ case st of
+   (a : xs) -> do builtinPop
+                  modify (BlsqHiddenState a : )
+   _ -> putResult $ BlsqError "Burlesque: (hd) Invalid arguments!" : st
+   
+-- | ld
+-- very hackish
+builtinLoad :: BlsqState
+builtinLoad = do
+ st <- get
+ case st of
+   (BlsqInt a : xs) -> do builtinPop
+                          let hidden = st !! (toInt (length st - 1 - (toInt a)))
+                          case hidden of
+                            (BlsqHiddenState hstate) -> do modify(hstate :)
+                            _ -> do modify (BlsqError "Can't load non hidden state! Sorry." :)
+   _ -> putResult $ BlsqError "Burlesque: (ld) Invalid arguments!" : st
+
+-- | LD
+builtinLoad2 :: BlsqState
+builtinLoad2 = do builtinLoad
+                  builtinEval
+
+-- | st
+builtinStore :: BlsqState
+builtinStore = do
+ st <- get
+ case st of
+   (BlsqInt a : e : xs) -> do put $ setAt (toInt (length xs - 1 - (toInt a))) (BlsqHiddenState e) xs
+   _ -> putResult $ BlsqError "Burlesque: (ld) Invalid arguments!" : st
+
+builtinALoad = modify (BlsqInt 0 :) >> builtinLoad
+builtinBLoad = modify (BlsqInt 1 :) >> builtinLoad
+builtinCLoad = modify (BlsqInt 2 :) >> builtinLoad
+builtinALoad2 = modify (BlsqInt 0 :) >> builtinLoad2
+builtinBLoad2 = modify (BlsqInt 1 :) >> builtinLoad2
+builtinCLoad2 = modify (BlsqInt 2 :) >> builtinLoad2
+builtinAStore = modify (BlsqInt 0 :) >> builtinStore
+builtinBStore = modify (BlsqInt 1 :) >> builtinStore
+builtinCStore = modify (BlsqInt 2 :) >> builtinStore

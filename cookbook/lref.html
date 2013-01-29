@@ -59,7 +59,7 @@
 <tr><td>Box</td><td>bx</td><td>Any a</td><td>Put a in an empty block</td></tr>
 <tr><td>ChunksOf</td><td>co</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Split a into chunks of size n</td></tr>
 <tr><td>Chunky</td><td>CO</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Create n-grams. "abc"2CO is {"ab" "bc"}</td></tr>
-<tr><td>Concat</td><td></td><td>a</td><td>Defined as {_+}r[</td></tr>
+<tr><td>Concat</td><td>\[</td><td>a</td><td>Defined as {_+}r[</td></tr>
 <tr><td>ConcatMap</td><td>\m</td><td></td><td>Defined as m[\[</td></tr>
 <tr><td>Contains</td><td>~[</td><td>Block a, Any b</td><td>Does a contain b?</td><tr>
 <tr><td></td><td>~[</td><td>Str a, Char b</td><td>Does a contain b?</td></tr>
@@ -107,6 +107,8 @@
 <tr><td>Head</td><td>-]</td><td>Block a<br/>Int a</td><td>First element</td></tr>
 <tr><td></td><td>-]</td><td>Str a</td><td>First character</td></tr>
 <tr><td>HeadTail</td><td>-~</td><td></td><td>Defined as -][-</td></tr>
+<tr class="vnext"><td>Hide</td><td>hd</td><td></td><td>Hide element and move to the bottom of the stack</td></tr>
+<tr class="vnext"><td>Hide2</td><td>HD</td><td></td><td>Hide element but keep on top</td></tr>
 <tr><td>IsError</t><td>is</td><td></td><td>Return 1 on error 0 else</td></tr>
 <tr><td>IfElse</td><td>ie</td><td>Block a, Block b, Int c</td><td>If c then a else b</td></tr>
 <tr><td>Iff</td><td>if</td><td>Block b, Int a</td><td>If a then execute b, else pop a and pop b</td></tr>
@@ -130,6 +132,8 @@
 <tr><td></td><td>L[</td><td>Char a</td><td>Return case of a as 'A or 'a</td></tr>
 <tr><td>Lines</td><td>ln</td><td>Str a</td><td>Splits a string into lines</td></tr>
 <tr><td></td><td>ln</td><td>Int a</td><td>Number of digits in an integer</td></tr>
+<tr class="vnext"><td>Load</td><td>ld</td><td>Int n</td><td>Load the nth hidden element from the bottom of the stack (put on top)</td></tr>
+<tr class="vnext"><td>Load2</td><td>LD</td><td></td><td>Defined as lde!</td></tr>
 <tr class="vnext"><td>Log</td><td>lg</td><td>Double a<br/>Int a</td><td>log(a) (natural logarithm)</td></tr>
 <tr class="vnext"><td>Log2</td><td>LG</td><td></td><td>Defined as lg\/lg./</td></tr>
 <tr><td>Map</td><td>m[</td><td>Block ls, Block f</td><td>Apply f to every element in ls and collect the result in a block</td></tr>
@@ -324,5 +328,8 @@ All commands are in a ordered list. In hackmode, they are accessed as builtins[o
 See <a href="hackmode.txt">here</a>. HackMode is not officially supported. You can enable it by
 hacking the code in parser.hs ;).
 </p>
+<h1>Store load shortcuts</h1>
+These are: a -> 0, b -> 1, c -> 2. For Load: #*. For Load2: !*. For Store: `*. Replace * with the corresponding letter.
+Example: <i>5 6hd#a.+`a33#a.+</i>.Hides 6, loads it, adds it to 5, stores the  result, push 33, load 0, add => 44.
  </body>
 </html>

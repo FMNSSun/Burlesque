@@ -1,5 +1,5 @@
 module Burlesque.Display
-  (toDisplay, toHTML)
+  (toDisplay, toHTML, notHidden)
  where
 
 import Burlesque.Types
@@ -9,6 +9,13 @@ import Data.List
 import Web.Encodings
 import Numeric
 
+-- This is the ugliest hack in the history of programming.
+-- Nothing to see here: Move along.
+-- I SAID MOVE ALONG!
+notHidden (BlsqHiddenState _) = False
+notHidden _ = True
+
+toDisplay (BlsqHiddenState _) = ""
 
 toDisplay (BlsqInt i) = show i
 toDisplay (BlsqBlock xs) = "{" ++ (intercalate " " $ map toDisplay xs) ++ "}"
