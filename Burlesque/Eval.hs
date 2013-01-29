@@ -207,6 +207,7 @@ builtins = [
   ("tp", builtinTranspose),
   ("FM", builtinFilterMap),
   ("r\\", builtinRangeConcat),
+  ("SP", builtinSpecialInput),
   
   ("??", builtinVersion)
  ]
@@ -1809,3 +1810,16 @@ builtinFilterMap = do
 builtinRangeConcat :: BlsqState
 builtinRangeConcat = do builtinRange
                         builtinConcat
+
+-- | SP
+builtinSpecialInput :: BlsqState
+builtinSpecialInput = do 
+ st <- get
+ case st of
+  (BlsqStr s : xs) -> do builtinLines
+                         modify (BlsqBlock [] :)
+                         builtinMapParse
+  (BlsqBlock l : xs) -> do modify (BlsqBlock [ BlsqBlock [ BlsqIdent "Sh"], BlsqIdent "m[", BlsqIdent "wd" ] :)
+                           builtinMap
+                           builtinUnlines
+                        

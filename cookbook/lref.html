@@ -135,7 +135,7 @@
 <tr><td>Map</td><td>m[</td><td>Block ls, Block f</td><td>Apply f to every element in ls and collect the result in a block</td></tr>
 <tr><td></td><td>m[</td><td>Str ls, Block f</td><td>Defined as \/ XX \/ m[ \[</td></tr>
 <tr><td>MapDup</td><td>[m</td><td><td>Defined as (^^)+]m[</td></tr>
-<tr><td>MapParse</td><td>[m</td><td><td>Defined as (ps)+]m[</td></tr>
+<tr><td>MapParse</td><td>[M</td><td><td>Defined as (ps)+]m[</td></tr>
 <tr><td>MapPretty</td><td>M[</td><td></td><td>Defined as m[ sh</td></tr>
 <tr><td>MapToPretty</td><td>M]</td><td></td><td>Defined as {sh}m[</td></tr>
 <tr><td>MapToPrettyFromFormat</td><td>m]</td><td></td><td>Defined as {shff}m[</td></tr>
@@ -222,6 +222,8 @@
 <tr><td></td><td>&gt;&lt;</td><td>Char a</td><td>Is digit?</td></tr>
 <tr class="vnext"><td>SortBy</td><td>sb</td><td>Block ls, Block f<br/>Str ls, Block f</td><td>SortBy f (f must return 0 (equal), 1 (greater) or -1 (smaller))</td></tr>
 <tr class="vnext"><td>Sin</td><td>Ts</td><td>Double a<br/>Int a</td><td>sinus</td></tr>
+<tr class="vnext"><td>SpecialInput</td><td>SP</td><td>Str a</td><td>Can be used to read 2D-Input. Defined as ln{}[M</td></tr>
+<tr class="vnext"><td></td><td>SP</td><td>Block a</td><td>Can be used to write 2D-Output. Defined as {{Sh}m[wd}m[un</td></tr>
 <tr><td>Split</td><td>;;</td><td>String str, String b</td><td>Split string by b</td></tr>
 <tr><td></td><td>;;</td><td>Block ls, Block b</td><td>Split ls by b</td></tr>
 <tr><td></td><td>;;</td><td>Int ls, Int b</td><td>Split ls by b</td></tr>
