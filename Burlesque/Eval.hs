@@ -163,6 +163,7 @@ builtins = [
   ("[m", builtinMapDup),
   ("[M", builtinMapParse),
   ("wd", builtinWords),
+  ("wD", builtinWords3),
   ("f[", builtinFilter),
   ("z[", builtinZip),
   ("Z[", builtinZipWith),
@@ -204,6 +205,8 @@ builtins = [
   ("tw", builtinTakeWhile),
   ("dw", builtinDropWhile),
   ("tp", builtinTranspose),
+  ("FM", builtinFilterMap),
+  ("r\\", builtinRangeConcat),
   
   ("??", builtinVersion)
  ]
@@ -1616,7 +1619,7 @@ builtinAtan = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (atan (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (atan a) : xs
-   _ -> putResult $ BlsqError "Burlesque: (TT Invalid arguments!" : st
+   _ -> putResult $ BlsqError "Burlesque: (TT) Invalid arguments!" : st
 
 -- | WD
 builtinWords2 :: BlsqState
@@ -1625,6 +1628,12 @@ builtinWords2 = do
   case st of
     (BlsqStr a : xs) -> putResult $ (BlsqBlock $ map BlsqStr (words a)) : xs
     _ -> putResult $ BlsqError "Burlesque: (WD) Invalid arguments!" : st
+
+-- | wD
+builtinWords3 :: BlsqState
+builtinWords3 = do
+ builtinWords
+ builtinPretty
 
 -- | ia
 builtinInsertAt :: BlsqState
@@ -1779,5 +1788,24 @@ builtinTranspose = do
  st <- get
  case st of
   (BlsqBlock a : xs) -> putResult $ BlsqBlock (map BlsqBlock (transpose (map (toList') a))) : xs
+  _ -> putResult $  BlsqError "You should not transpose what you can't transpose. Yes this is an easteregg!" : st
  where toList' (BlsqBlock a) = a
        toList' x = [x]
+
+-- | FM
+builtinFilterMap :: BlsqState
+builtinFilterMap = do
+ st <- get
+ case st of
+  (BlsqBlock m : BlsqBlock f : xs) -> do builtinPop
+                                         builtinPop
+                                         modify (BlsqBlock f :)
+                                         builtinFilter
+                                         modify (BlsqBlock m :)
+                                         builtinMap
+  _ -> putResult $ BlsqError "Burlesque: (FM) Invalid arguments!" : st
+
+-- | r\
+builtinRangeConcat :: BlsqState
+builtinRangeConcat = do builtinRange
+                        builtinConcat

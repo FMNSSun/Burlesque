@@ -92,6 +92,7 @@
 <tr><td>Factors</td><td>fc</td><td>Int a</td><td>Return a block with every number a is divisible by</td></tr>
 <tr><td></td><td>fc</td><td>Str a<br>Block a</td><td>Least common element</td></tr>
 <tr><td>Filter</td><td>f[</td><td>Block f, Str a<br>Block f, Block a</td><td>Filters a list according to the predicate f (must return 1 or 0)</td></tr>
+<tr class="vnext"><td>FilterMap</td><td>FM</td><td>Block f, Block m</td><td>Behaves as f FILTER m MAP ({f}f[{m}m[). </td></tr>
 <tr><td>FindIndex</td><td>fi</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find index of element where f returns true.</td></tr>
 <tr><td>FindIndexEq</td><td>Fi</td><td>Block a, Any p<br/>Str a, Char p</td><td>Find index of an element equal to p</td></tr>
 <tr class="vnext"><td>FindIndices</td><td>fI</td><td>Block a, Block f<br/>Str a, Block f</td><td>Like FindIndex but does not stop on the first match but instead returns a list of indices.</td></tr>
@@ -190,6 +191,7 @@
 <tr><td></td><td>r@</td><td>Block a</td><td>All permutations of a</td></tr>
 <tr><td>RangeInf</td><td>R@</td><td>Int a</td><td>A block containing natural numbers from a to Infinity</td></tr>
 <tr><td></td><td>R@</td><td>Str a<br>Block a</td><td>All subsequences of a</td></tr>
+<tr class="vnext"><td>RangeConcat</td><td>r\</td><td></td><td>Defined as r@\[</td></tr>
 <tr><td>ReadInt</td><td>ri</td><td>Int a</td><td>Identity for integers</td></tr>
 <tr><td></td><td>ri</td><td>Str a</td><td>Tries to convert a string to an integer</td></tr>
 <tr><td></td><td>ri</td><td>Char a</td><td>Is Alpha numeric?<td></tr>
@@ -258,6 +260,7 @@
 <tr><td></td><td>wd</td><td>Block a</td><td>Defined as ' \/[[\[</td></tr>
 <tr><td></td><td>wd</td><td>a</td><td>Defined as \/]]</td></tr>
 <tr class="vnext"><td>Words2</td><td>WD</td><td>Str a</td><td>Splits a string into a list of words. (This also treats other whitespaces which the regular wd does not).</td></tr>
+<tr class="vnext"><td>Words3</td><td>wD</td><td></td><td>Defined as wdsh</td></tr>
 <tr><td>While</td><td>w!</td><td>Block f, Block p</td><td>While p execute f. (p is expected to leave an Int on top of the stack)
                                                           <br/>Executing p does not affect the global stack.</td></tr>
 <tr><td></td><td>w!</td><td>Block f</td><td>Same effect as {f}{}w!</td></tr>
