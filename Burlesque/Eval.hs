@@ -222,6 +222,7 @@ builtins = [
   ("!a", builtinALoad2),
   ("!b", builtinBLoad2),
   ("!c", builtinCLoad2),
+  ("sc", builtinSortByComparing),
   
   ("??", builtinVersion)
  ]
@@ -1892,3 +1893,9 @@ builtinCLoad2 = modify (BlsqInt 2 :) >> builtinLoad2
 builtinAStore = modify (BlsqInt 0 :) >> builtinStore
 builtinBStore = modify (BlsqInt 1 :) >> builtinStore
 builtinCStore = modify (BlsqInt 2 :) >> builtinStore
+
+-- | sc
+builtinSortByComparing :: BlsqState
+builtinSortByComparing = do
+ builtinCompare2
+ builtinSortBy
