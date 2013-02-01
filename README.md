@@ -1,7 +1,7 @@
 Burlesque
 =========
 
-It's part of our culture. Get over it!
+Burlesque is a concatenative, dynamic typed, lazy, probably esoteric programming language.
 
 1.7.0-rc2
 =========
