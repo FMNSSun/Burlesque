@@ -1584,6 +1584,7 @@ builtinNot = do
    (BlsqInt _ : xs) -> BlsqInt 0 : xs
    (BlsqStr a : xs) -> (BlsqChar $ mostCommon a) : xs
    (BlsqBlock a : xs) -> (mostCommon a) : xs
+   _ -> BlsqError "Burlsque: (n!) Invalid arguments!" : st
  where mostCommon :: Ord a => [a] -> a
        mostCommon = head . maximumBy (comparing length) . group . sort
 
