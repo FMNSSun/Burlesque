@@ -150,6 +150,7 @@ builtins = [
   ("R@", builtinRangeInf),
   ("bx", builtinBox),
   ("><", builtinSort),
+  ("<>", builtinSortReverse)<
   ("/v", builtinSwapPop),
   ("v/", builtinPopSwap),
   ("^/", builtinDupSwap),
@@ -2296,3 +2297,9 @@ builtinRangeFromZero = do
  modify (BlsqInt 0 :)
  builtinSwap
  builtinRange
+ 
+-- | <>
+builtinSortReverse :: BlsqState
+builtinSortReverse = do
+ builtinSort
+ builtinReverse
