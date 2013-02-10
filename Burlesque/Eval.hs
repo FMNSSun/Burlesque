@@ -248,6 +248,7 @@ builtins = [
   ("ro", builtinRangeFromOne),
   ("rz", builtinRangeFromZero),
   ("nu", builtinNull),
+  ("fl", builtinFilterLength),
   
   ("??", builtinVersion)
  ]
@@ -2322,3 +2323,9 @@ builtinNull :: BlsqState
 builtinNull = do
  builtinLength
  builtinNot
+ 
+-- | fl
+builtinFilterLength :: BlsqState
+builtinFilterLength = do
+ builtinFilter
+ builtinLength
