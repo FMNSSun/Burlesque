@@ -199,6 +199,7 @@ builtins = [
   ("sb", builtinSortBy),
   ("cm", builtinCompare),
   ("CM", builtinCompare2),
+  ("Cm", builtinCompare3),
   ("B!", builtinConvertBase),
   ("g_", builtinGcd),
   ("l_", builtinLcm),
@@ -1735,6 +1736,20 @@ builtinCompare2 = do
   modify (BlsqIdent "\\/" :)
   builtinAppend
   builtinSwap
+  builtinAppend
+  modify (BlsqIdent "\\/" :)
+  builtinAppend
+  modify (BlsqIdent "cm" :)
+  builtinAppend
+  
+-- | Cm
+builtinCompare3 :: BlsqState
+builtinCompare3 = do
+  builtinDup
+  modify (BlsqIdent "\\/" :)
+  builtinAppend
+  builtinSwap
+  builtinHead
   builtinAppend
   modify (BlsqIdent "\\/" :)
   builtinAppend
