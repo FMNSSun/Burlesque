@@ -239,6 +239,8 @@ builtins = [
   ("bc", builtinBoxCycle),
   ("rt", builtinRotate),
   ("RT", builtinRotate2),
+  ("d!", builtinDimArrayAccess),
+  ("D!", builtinDimArraySet),
   
   ("??", builtinVersion)
  ]
@@ -2218,3 +2220,29 @@ builtinRotate2 :: BlsqState
 builtinRotate2 = do
  builtinGcd
  builtinAppend
+ 
+-- |d!
+builtinDimArrayAccess :: BlsqState
+builtinDimArrayAccess = do
+ modify (BlsqIdent "!!" :)
+ builtinSwap
+ builtinIntersperse
+ modify (BlsqIdent "!!" :)
+ builtinAppend
+ builtinEval
+ 
+-- | D!
+builtinDimArraySet :: BlsqState
+builtinDimArraySet = do
+ --{0 1 1} -> ^^0!!^^1!!8 1sa1 sa0 sa
+ st <- get
+ case st of
+  (e : BlsqBlock adr : BlsqBlock arr : xs) -> do
+    let f = concatMap(\c -> [BlsqIdent "^^",c,BlsqIdent "!!"]) $ init adr
+    let f' = f++[e]
+    let g = concatMap(\c -> [c,BlsqIdent "sa"]) $ reverse adr
+    putResult $ BlsqBlock (f' ++ g) : BlsqBlock arr : xs
+    builtinEval
+  _ -> putResult $ BlsqError "Burlesque: (D!) Invalid arguments!" : st
+
+ 
