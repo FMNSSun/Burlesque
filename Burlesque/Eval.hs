@@ -636,13 +636,24 @@ builtinFilter = do
       builtinExplode
       builtinSwap
       builtinFilter
-      builtinConcat
+      st' <- get
+      case st' of
+        (BlsqBlock a : xs) -> case null a of
+                                True -> putResult $ BlsqStr "" : xs
+                                False -> do builtinConcat
+                                            boxString
+        _ -> return ()
   (BlsqBlock f : BlsqBlock v : xs) -> do
     putResult $ (BlsqBlock $ filter' f v) : xs
  where filter' _ [] = []
        filter' f (x:xs) = case runStack f [x] of
                             (BlsqInt 0):ys -> filter' f xs
                             _ -> x : filter' f xs
+       boxString = do
+         st <- get
+         case st of
+          (BlsqChar a : xs) -> putResult $ BlsqStr [a] : xs
+          _ -> return ()
 
 -- | > r[
 builtinReduce :: BlsqState
