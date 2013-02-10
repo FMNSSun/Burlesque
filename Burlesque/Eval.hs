@@ -127,6 +127,7 @@ builtins = [
   ("ff", builtinFromFormat),
   ("Ff", builtinFormatFromFormat),
   ("SH", builtinPrettyFormatFromFormat),
+  ("sH", builtinPrettyPretty),
   ("Sh", builtinPrettyFromFormat),
   ("~=", builtinMatches),
   ("=~", builtinMatchesList),
@@ -229,6 +230,10 @@ builtins = [
   ("?/", builtinCoerceDiv),
   ("?*", builtinCoerceMul),
   ("im", builtinImplode),
+  ("ms", builtinMapSum),
+  ("mp", builtinMapProduct),
+  ("sg", builtinSortGroup),
+  ("gs", builtinGroupSort),
   
   ("??", builtinVersion)
  ]
@@ -2133,3 +2138,33 @@ builtinImplode :: BlsqState
 builtinImplode = do 
  modify (BlsqBlock [BlsqIdent "++"] :)
  builtinReduce
+ 
+-- | ms
+builtinMapSum :: BlsqState
+builtinMapSum = do
+ builtinMap
+ builtinSum
+ 
+-- | ms
+builtinMapProduct :: BlsqState
+builtinMapProduct = do
+ builtinMap
+ builtinProduct
+
+-- | sg
+builtinSortGroup :: BlsqState
+builtinSortGroup = do
+ builtinSort
+ builtinGroup
+ 
+-- | gs
+builtinGroupSort :: BlsqState
+builtinGroupSort = do
+ builtinGroup
+ builtinSort
+ 
+-- | sH
+builtinPrettyPretty :: BlsqState
+builtinPrettyPretty = do
+ builtinPrettyFormatFromFormat
+ builtinPretty

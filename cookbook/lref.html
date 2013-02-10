@@ -135,6 +135,7 @@
 <tr class="vnext"><td></td><td>g_</td><td>Block a</td><td>Defined as ^^-]\/[-\/</td></tr>
 <tr><td>Greater</td><td>.&gt;</td><td>Any a, Any b</td><td>Comparision (a &gt; b)</td></tr>
 <tr><td>Group</td><td>=[</td><td>Block a</td><td>Group (equal consecutive) elements in a</td></tr>
+<tr class="vnext"><td>GroupSort</td><td>gs</td><td></td><td>Defined as =[&gt;&lt;</td></tr>
 <tr><td>Head</td><td>-]</td><td>Block a<br/>Int a</td><td>First element</td></tr>
 <tr><td></td><td>-]</td><td>Str a</td><td>First character</td></tr>
 <tr><td>HeadTail</td><td>-~</td><td></td><td>Defined as -][-</td></tr>
@@ -173,6 +174,8 @@
 <tr><td>MapDup</td><td>[m</td><td><td>Defined as (^^)+]m[</td></tr>
 <tr><td>MapParse</td><td>[M</td><td><td>Defined as (ps)+]m[</td></tr>
 <tr><td>MapPretty</td><td>M[</td><td></td><td>Defined as m[ sh</td></tr>
+<tr class="vnext"><td>MapProduct</td><td>mp</td><td></td><td>Defined as m[pd</td></tr>
+<tr class="vnext"><td>MapSum</td><td>ms</td><td></td><td>Defined as m[++</td></tr>
 <tr><td>MapToPretty</td><td>M]</td><td></td><td>Defined as {sh}m[</td></tr>
 <tr><td>MapToPrettyFromFormat</td><td>m]</td><td></td><td>Defined as {shff}m[</td></tr>
 <tr><td>Matches</td><td>~=</td><td>String a, String regex</td><td>1 if regex matches, else 0</td></tr>
@@ -210,6 +213,7 @@
 <tr><td></td><td>~!</td><td>Int a, Int b</td><td>Is b a prefix of a?</td></tr>
 <tr><td></td><td>~!</td><td>Str a, Str b</td><td>Is b a prefix of a?</td></tr>
 <tr><td>Pretty</td><td>sh</td><td>Any a</td><td>Convert to pretty type (FormatNormal)</td></tr>
+<tr class="vnext"><td>PrettyPretty</td><td>sH</td><td></td><td>Defined as SHsh</td></tr>
 <tr><td>PrettyFormatFromFormat</td><td>SH</td><td>n/a</td><td>Defined as \/ sh \/ Ff</td></tr>
 <tr><td>PrettyFromFormat</td><td>Sh</td><td>n/a</td><td>Defined as sh ff</td></tr>
 <tr><td>Prepend</td><td>+]</td><td>String a, Char b<br/>Block a,Any b<br/>Int a,Int b</td><td>Prepends b to a</td></tr>
@@ -259,6 +263,7 @@
 <tr><td></td><td>&gt;&lt;</td><td>Char a</td><td>Is digit?</td></tr>
 <tr class="vnext"><td>SortBy</td><td>sb</td><td>Block ls, Block f<br/>Str ls, Block f</td><td>SortBy f (f must return 0 (equal), 1 (greater) or -1 (smaller))</td></tr>
 <tr class="vnext"><td>SortByComparing</td><td>sc</td><td></td><td>Defined as CMsb<td></tr>
+<tr class="vnext"><td>SortGroup</td><td>sg</td><td></td><td>Defined as &gt;&lt;=[</td></tr>
 <tr class="vnext"><td>Sin</td><td>Ts</td><td>Double a<br/>Int a</td><td>sinus</td></tr>
 <tr class="vnext"><td>SpecialInput</td><td>SP</td><td>Str a</td><td>Can be used to read 2D-Input. Defined as ln{}[M</td></tr>
 <tr class="vnext"><td></td><td>SP</td><td>Block a</td><td>Can be used to write 2D-Output. Defined as {{Sh}m[wd}m[un</td></tr>
