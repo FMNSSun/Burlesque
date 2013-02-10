@@ -15,6 +15,7 @@ import Data.Bits
 import Data.Ord
 import Text.Regex
 import Control.Monad
+import System.Random
 
 import Debug.Trace
 
@@ -251,6 +252,8 @@ builtins = [
   ("fl", builtinFilterLength),
   ("to", builtinTypeOf),
   ("sr", builtinSplitRegex),
+  ("rn", builtinRandomInts),
+  ("RN", builtinRandomDoubles),
   
   ("??", builtinVersion)
  ]
@@ -2361,3 +2364,21 @@ builtinSplitRegex = do
   case st of
    (BlsqStr s : BlsqStr rgx : xs) -> BlsqBlock (map BlsqStr . splitRegex (mkRegex rgx) $ s) : xs
    _ -> BlsqError "Burlesque: (sr) Invalid arguments!" : st
+   
+-- | rn
+builtinRandomInts :: BlsqState
+builtinRandomInts = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt ho : BlsqInt lo : BlsqInt seed : xs) -> (BlsqBlock . map BlsqInt $ randomRs (lo,ho) (mkStdGen (toInt seed))) : xs
+   _ -> BlsqError "Burlesque: (rn) Invalid arguments!" : st
+   
+-- | RN
+builtinRandomDoubles :: BlsqState
+builtinRandomDoubles = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble lo : BlsqInt seed : xs) -> (BlsqBlock . map BlsqDouble $ randomRs (lo,ho) (mkStdGen (toInt seed))) : xs
+   _ -> BlsqError "Burlesque: (RN) Invalid arguments!" : st
