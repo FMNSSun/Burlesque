@@ -249,6 +249,7 @@ builtins = [
   ("rz", builtinRangeFromZero),
   ("nu", builtinNull),
   ("fl", builtinFilterLength),
+  ("to", builtinTypeOf),
   
   ("??", builtinVersion)
  ]
@@ -2329,3 +2330,24 @@ builtinFilterLength :: BlsqState
 builtinFilterLength = do
  builtinFilter
  builtinLength
+ 
+-- | to
+builtinTypeOf :: BlsqState
+builtinTypeOf = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt _ : xs) -> BlsqStr "Int" : xs
+   (BlsqDouble _ : xs) -> BlsqStr "Double" : xs
+   (BlsqStr _ : xs) -> BlsqStr "Str" : xs
+   (BlsqBlock _ : xs) -> BlsqStr "Block" : xs
+   (BlsqPretty _ _ : xs) -> BlsqStr "Pretty" : xs
+   (BlsqIdent _ : xs) -> BlsqStr "Ident" : xs
+   (BlsqNil : xs) -> BlsqStr "Nil" : xs
+   (BlsqHiddenState _ : xs) -> BlsqStr "HiddenState" : xs
+   (BlsqQuoted _ : xs) -> BlsqStr "Quoted" : xs
+   (BlsqSpecial _ : xs) -> BlsqStr "Special" : xs
+   (BlsqError _ : xs) -> BlsqStr "Error" : xs
+   (BlsqHackMode _ :xs) -> BlsqStr "HackMode" : xs
+   (BlsqChar _ : xs) -> BlsqStr "Char" : xs
+   _ -> BlsqStr "Dafuq? You found a type I don't know?" : st
