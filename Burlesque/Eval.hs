@@ -243,6 +243,7 @@ builtins = [
   ("d!", builtinDimArrayAccess),
   ("D!", builtinDimArraySet),
   ("Wl", builtinWithLinesString),
+  ("si", builtinSelectIndices),
   
   ("??", builtinVersion)
  ]
@@ -2261,3 +2262,21 @@ builtinWithLinesString = do
  modify(BlsqIdent "Sh": )
  builtinAppend
  builtinWithLinesPretty
+ 
+-- | si
+builtinSelectIndices :: BlsqState
+builtinSelectIndices = do
+ -- {1 0 3}{"ABCD"\/!!}m[
+ st <- get
+ case st of
+  (BlsqBlock adr : BlsqBlock ls : xs) -> do
+    let f = BlsqBlock [ BlsqBlock ls, BlsqIdent "\\/", BlsqIdent "!!" ]
+    putResult $ f : BlsqBlock adr : xs
+    builtinMap
+  (BlsqBlock adr : BlsqStr ls : xs) -> do
+    builtinSwap
+    builtinExplode
+    builtinSwap
+    builtinSelectIndices
+    builtinConcat
+  _ -> putResult $ BlsqError "Burlesque: (si) Invalid arguments!" : st
