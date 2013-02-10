@@ -3,7 +3,7 @@ Burlesque
 
 Burlesque is a concatenative, dynamic typed, lazy, probably esoteric programming language.
 
-1.7.0-rc2
+1.7.0-rc3
 =========
 
 Users of Burlesque are highly encouraged to have a look at v1.7.0-rc3 and test it, report bugs and give feedback.
