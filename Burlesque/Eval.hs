@@ -237,6 +237,8 @@ builtins = [
   ("gs", builtinGroupSort),
   ("cp", builtinCrossProduct),
   ("bc", builtinBoxCycle),
+  ("rt", builtinRotate),
+  ("RT", builtinRotate2),
   
   ("??", builtinVersion)
  ]
@@ -1792,6 +1794,11 @@ builtinGcd = do
                               builtinSwap
                               builtinTail
                               builtinSwap
+    (BlsqStr ls : xs) -> do builtinDup
+                            builtinHead
+                            builtinSwap
+                            builtinTail
+                            builtinSwap
     _ -> putResult $ BlsqError "Burlesque: (g_) Invalid arguments!" : st
 
 -- | l_
@@ -1805,6 +1812,11 @@ builtinLcm = do
                               builtinSwap
                               builtinLast
                               builtinSwap
+    (BlsqStr ls : xs) -> do builtinDup
+                            builtinInit
+                            builtinSwap
+                            builtinLast
+                            builtinSwap
     _ -> putResult $ BlsqError "Burlesque: (l_) Invalid arguments!" : st
 	
 -- |tw
@@ -2193,3 +2205,16 @@ builtinBoxCycle :: BlsqState
 builtinBoxCycle = do
  builtinBox
  builtinCycle
+ 
+-- | rt
+builtinRotate :: BlsqState
+builtinRotate = do
+ builtinLcm
+ builtinSwap
+ builtinPrepend
+ 
+-- | RT
+builtinRotate2 :: BlsqState
+builtinRotate2 = do
+ builtinGcd
+ builtinAppend
