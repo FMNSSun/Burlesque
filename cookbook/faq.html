@@ -25,14 +25,19 @@ only contais one element, in every other case its behaviour is not defined.
 <p>
 <b>What makes Burlesque 'Burlesque'?</b><br/>
 Burlesque's main advantage is it's rich builtins. Analyse the problem, choose which builtins you can use,
-chain those builtins together and you're done. 
+chain those builtins together and you're done. Burlesque's lazyness is also a very nice feature.
 </p>
 <pre>
 10 11 12
 50 33 22
 31 32 33
 </pre>
-<p>Need to add columns together? <i>SPtp{++}]mwD</i> is all it takes!
+<p>Need to add columns together? <i>SPtp{++}]mwD</i> is all it takes! 
+</p>
+<p>
+<b>Why is Burlesque lazy?</b><br/>
+That's actually a side-effect. Burlesque is implemented in Haskell which means it automatically inherits
+this feature from Haskell. I however intentionally kept this side-effect.
 </p>
 <p>
 <b>Undefined behaviour?</b><br/>

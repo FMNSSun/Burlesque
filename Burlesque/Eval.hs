@@ -254,6 +254,8 @@ builtins = [
   ("sr", builtinSplitRegex),
   ("rn", builtinRandomInts),
   ("RN", builtinRandomDoubles),
+  (">m", builtinMaximumBy),
+  ("<m", builtinMinimumBy),
   
   ("??", builtinVersion)
  ]
@@ -2382,3 +2384,18 @@ builtinRandomDoubles = do
   case st of
    (BlsqDouble ho : BlsqDouble lo : BlsqInt seed : xs) -> (BlsqBlock . map BlsqDouble $ randomRs (lo,ho) (mkStdGen (toInt seed))) : xs
    _ -> BlsqError "Burlesque: (RN) Invalid arguments!" : st
+   
+-- | <m
+builtinMinimumBy :: BlsqState
+builtinMinimumBy = do
+ builtinCompare3
+ builtinSortBy
+ builtinHead
+ 
+-- | >m
+builtinMaximumBy :: BlsqState
+builtinMaximumBy = do
+ builtinCompare3
+ builtinSortBy
+ builtinReverse
+ builtinHead
