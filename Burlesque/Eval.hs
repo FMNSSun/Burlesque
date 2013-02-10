@@ -90,7 +90,6 @@ builtins = [
   ("e!", builtinEval),
   ("E!", builtinEvalMany),
   ("c!", builtinContinuation),
-  ("??", builtinVersion),
   ("w!", builtinWhile),
   ("++", builtinSum),
   ("pd", builtinProduct),
@@ -1364,7 +1363,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = modify (BlsqStr "Burlesque - 1.7 testing" : )
+builtinVersion = modify (BlsqStr "Burlesque - 1.7 RC2" : )
 
 -- | -~
 builtinHeadTail :: BlsqState

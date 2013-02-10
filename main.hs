@@ -11,11 +11,11 @@ import Data.List
 
 runProgram :: String -> String -> String
 runProgram p stdin =
- unlines . map toDisplay $ execState (eval (runParserWithString parseBlsq p)) [BlsqStr stdin]
+ unlines . map toDisplay . filter notHidden $ execState (eval (runParserWithString parseBlsq p)) [BlsqStr stdin]
 
 runProgramNoStdin :: String -> String
 runProgramNoStdin p =
- unlines . map toDisplay $ execState (eval (runParserWithString parseBlsq p)) []
+ unlines . map toDisplay . filter notHidden $ execState (eval (runParserWithString parseBlsq p)) []
 
 printHTML p = putStrLn $ intercalate " " $ map toHTML $ runParserWithString parseBlsq p
 
