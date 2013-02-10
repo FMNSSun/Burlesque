@@ -168,6 +168,7 @@ builtins = [
   ("f[", builtinFilter),
   ("z[", builtinZip),
   ("Z[", builtinZipWith),
+  ("Z]", builtinZipWithPush),
   ("!!", builtinBlockAccess),
   ("fi", builtinFindIndex),
   ("Fi", builtinFindIndexEq),
@@ -235,6 +236,7 @@ builtins = [
   ("sg", builtinSortGroup),
   ("gs", builtinGroupSort),
   ("cp", builtinCrossProduct),
+  ("bc", builtinBoxCycle),
   
   ("??", builtinVersion)
  ]
@@ -1383,6 +1385,13 @@ builtinZipWith = do
                                     builtinZip
                                     builtinSwap
                                     builtinMap
+                                    
+-- | Z]
+builtinZipWithPush :: BlsqState
+builtinZipWithPush = do
+ modify (BlsqIdent "^p" :)
+ builtinPrepend
+ builtinZipWith
 
 -- | !!
 builtinBlockAccess :: BlsqState
@@ -2178,3 +2187,9 @@ builtinCrossProduct = do
    (BlsqBlock b : BlsqBlock a : xs) -> putResult $ BlsqBlock [BlsqBlock [x,y] | x <- a, y <- b] : xs
    (BlsqStr b : BlsqStr a : xs) -> putResult $ BlsqBlock [BlsqStr [x,y] | x <- a, y <- b] : xs
    _ -> putResult $ BlsqError "Burlesque: (cp) Invalid arguments!" : st
+   
+-- | bc
+builtinBoxCycle :: BlsqState
+builtinBoxCycle = do
+ builtinBox
+ builtinCycle

@@ -57,6 +57,7 @@
 <tr class="vnext"><td>Acos</td><td>TC</td><td>Double a<br/>Int a</td><td>acos</td></tr>
 <tr><td>BlockAccess</td><td>!!</td><td>Block a, Int n<br/>Str a, Int n</td><td>Return the nth element</td></tr>
 <tr><td>Box</td><td>bx</td><td>Any a</td><td>Put a in an empty block</td></tr>
+<tr class="vnext"><td>BoxCycle</td><td>bc</td><td></td><td>Defined as bxcy</td></tr>
 <tr><td>ChunksOf</td><td>co</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Split a into chunks of size n</td></tr>
 <tr><td>Chunky</td><td>CO</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Create n-grams. "abc"2CO is {"ab" "bc"}</td></tr>
 <tr class="vnext"><td>CoerceAdd</td><td>?+</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.+</td></tr>
@@ -320,7 +321,8 @@
 <tr><td></td><td>XX</td><td>Char a</td><td>Convert a to a string</td></tr>
 <tr><td></td><td>XX</td><td>Block a</td><td>Identity</td></tr>
 <tr><td>Zip</td><td>z[</td><td>Block a, Block b<br/>Str a,Str b<br/>Block a, Str b<br/>Str a,Block b</td></td><td>Zips</td></tr>
-<tr><td>ZipWith</td><td>Z[</td><td></td><td>Defined as z[m[</td></tr>
+<tr><td>ZipWith</td><td>Z[</td><td></td><td>Defined as z[\/m[</td></tr>
+<tr class="vnext"><td>ZipWithPush</td><td>Z]</td><td></td><td>Defined as {^p*}Z[. Prepends ^p./td></tr>
 </tbody>
 </table>
 <span style="color: #AA8888;">Since Burlesque 1.7</span>
