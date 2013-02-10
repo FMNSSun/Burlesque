@@ -9,16 +9,16 @@ import Burlesque.Display
 main = runCGI $ handleErrors cgiMain
 
 linkCSS
- = thelink ! [rel "stylesheet", thetype "text/css", href "style.css"] << noHtml
+ = thelink ! [rel "stylesheet", thetype "text/css", href "http://mroman.ch/burlesque/style.css"] << noHtml
 
 documentHtml content
  = (header << ((thetitle << "Burlesque Shell") +++ linkCSS)) +++ (body << content)
 
 page q p = do
- output . renderHtml $ documentHtml $ ((form ! [method "get",action "burlesque.cgi"])
+ output . renderHtml $ documentHtml $ (thediv ! [theclass "box"]) << (((form ! [method "get",action "burlesque.cgi"])
      << (   (input ! [thetype "text", name "q", value p])
         +++ (input ! [thetype "submit", value "Go!"])
-        )) +++ (h1 << "Result") +++ (pre << (primHtml q))
+        )) +++ (h1 << "Result") +++ (pre << (primHtml q)))
 
 cgiMain = do
   mn <- getInput "q"
