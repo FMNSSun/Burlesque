@@ -223,6 +223,10 @@ builtins = [
   ("!b", builtinBLoad2),
   ("!c", builtinCLoad2),
   ("sc", builtinSortByComparing),
+  ("?+", builtinCoerceAdd),
+  ("?-", builtinCoerceSub),
+  ("?/", builtinCoerceDiv),
+  ("?*", builtinCoerceMul),
   
   ("??", builtinVersion)
  ]
@@ -291,6 +295,7 @@ builtinMul = do
     (BlsqInt b : BlsqStr a : xs) -> BlsqBlock (genericReplicate b (BlsqStr a)) : xs
     (BlsqInt b : BlsqChar a : xs) -> BlsqStr (genericReplicate b a) : xs
     (BlsqInt b : BlsqBlock a : xs) -> BlsqBlock (genericReplicate b (BlsqBlock a)) : xs
+    (BlsqStr a : BlsqStr b : xs) -> BlsqStr (reverse $ a++b) : xs
     _ -> (BlsqError "Burlesque: (.*) Invalid arguments!") : st
 
 -- | > ./
@@ -301,6 +306,9 @@ builtinDiv = do
   case st of
     (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a `div` b) : xs
     ((BlsqDouble b):(BlsqDouble a):xs) -> (BlsqDouble (a / b)) : xs
+    (BlsqStr a : BlsqStr b : xs) -> case a `isPrefixOf` b of
+                                 True -> BlsqStr (drop (length a) b) : xs
+                                 False -> BlsqStr b : xs
     _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
 
 -- | .%
@@ -1899,3 +1907,207 @@ builtinSortByComparing :: BlsqState
 builtinSortByComparing = do
  builtinCompare2
  builtinSortBy
+
+-- | ?+
+builtinCoerceAdd :: BlsqState
+builtinCoerceAdd = do
+ st <- get
+ case st of
+   (BlsqInt a : BlsqDouble b : xs) -> do builtinProduct
+                                         builtinAdd
+   (BlsqDouble a : BlsqInt b : xs) -> do builtinSwap
+                                         builtinProduct
+                                         builtinSwap
+                                         builtinAdd
+   (BlsqStr a : BlsqInt b : xs) -> do builtinSwap
+                                      builtinPrettyFromFormat
+                                      builtinSwap
+                                      builtinAdd
+   (BlsqInt a : BlsqStr b : xs) -> do builtinPrettyFromFormat
+                                      builtinAdd
+   (BlsqStr a : BlsqDouble b : xs) -> do builtinSwap
+                                         builtinPrettyFromFormat
+                                         builtinSwap
+                                         builtinAdd
+   (BlsqDouble a : BlsqStr b : xs) -> do builtinPrettyFromFormat
+                                         builtinAdd
+   (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                        builtinBox
+                                        builtinCycle
+                                        builtinSwap
+                                        builtinCoerceAdd
+   (BlsqInt a : BlsqBlock b : xs) -> do builtinBox
+                                        builtinCycle
+                                        builtinCoerceAdd
+   (BlsqBlock a : BlsqDouble b : xs) -> do builtinSwap
+                                           builtinBox
+                                           builtinCycle
+                                           builtinSwap
+                                           builtinCoerceAdd
+   (BlsqDouble a : BlsqBlock b : xs) -> do builtinBox
+                                           builtinCycle
+                                           builtinCoerceAdd
+   (BlsqBlock a : BlsqStr b : xs) -> do builtinSwap
+                                        builtinBox
+                                        builtinCycle
+                                        builtinSwap
+                                        builtinCoerceAdd
+   (BlsqStr a : BlsqBlock b : xs) -> do builtinBox
+                                        builtinCycle
+                                        builtinCoerceAdd
+   (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "^p", BlsqIdent "?+" ] : )
+                                          builtinZipWith
+   _ -> builtinAdd
+
+-- | ?-
+builtinCoerceSub :: BlsqState
+builtinCoerceSub = do
+ st <- get
+ case st of
+   (BlsqInt a : BlsqDouble b : xs) -> do builtinProduct
+                                         builtinSub
+   (BlsqDouble a : BlsqInt b : xs) -> do builtinSwap
+                                         builtinProduct
+                                         builtinSwap
+                                         builtinSub
+   (BlsqStr a : BlsqInt b : xs) -> do builtinSwap
+                                      builtinPrettyFromFormat
+                                      builtinSwap
+                                      builtinSub
+   (BlsqInt a : BlsqStr b : xs) -> do builtinPrettyFromFormat
+                                      builtinSub
+   (BlsqStr a : BlsqDouble b : xs) -> do builtinSwap
+                                         builtinPrettyFromFormat
+                                         builtinSwap
+                                         builtinSub
+   (BlsqDouble a : BlsqStr b : xs) -> do builtinPrettyFromFormat
+                                         builtinSub
+   (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                        builtinBox
+                                        builtinCycle
+                                        builtinSwap
+                                        builtinCoerceSub
+   (BlsqInt a : BlsqBlock b : xs) -> do builtinBox
+                                        builtinCycle
+                                        builtinCoerceSub
+   (BlsqBlock a : BlsqDouble b : xs) -> do builtinSwap
+                                           builtinBox
+                                           builtinCycle
+                                           builtinSwap
+                                           builtinCoerceSub
+   (BlsqDouble a : BlsqBlock b : xs) -> do builtinBox
+                                           builtinCycle
+                                           builtinCoerceSub
+   (BlsqBlock a : BlsqStr b : xs) -> do builtinSwap
+                                        builtinBox
+                                        builtinCycle
+                                        builtinSwap
+                                        builtinCoerceSub
+   (BlsqStr a : BlsqBlock b : xs) -> do builtinBox
+                                        builtinCycle
+                                        builtinCoerceSub
+   (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "^p", BlsqIdent "?-" ] : )
+                                          builtinZipWith
+   _ -> builtinSub
+
+-- | ?/
+builtinCoerceDiv :: BlsqState
+builtinCoerceDiv = do
+ st <- get
+ case st of
+   (BlsqInt a : BlsqDouble b : xs) -> do builtinProduct
+                                         builtinDiv
+   (BlsqDouble a : BlsqInt b : xs) -> do builtinSwap
+                                         builtinProduct
+                                         builtinSwap
+                                         builtinDiv
+   (BlsqStr a : BlsqInt b : xs) -> do builtinSwap
+                                      builtinPrettyFromFormat
+                                      builtinSwap
+                                      builtinDiv
+   (BlsqInt a : BlsqStr b : xs) -> do builtinPrettyFromFormat
+                                      builtinDiv
+   (BlsqStr a : BlsqDouble b : xs) -> do builtinSwap
+                                         builtinPrettyFromFormat
+                                         builtinSwap
+                                         builtinDiv
+   (BlsqDouble a : BlsqStr b : xs) -> do builtinPrettyFromFormat
+                                         builtinDiv
+   (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                        builtinBox
+                                        builtinCycle
+                                        builtinSwap
+                                        builtinCoerceDiv
+   (BlsqInt a : BlsqBlock b : xs) -> do builtinBox
+                                        builtinCycle
+                                        builtinCoerceDiv
+   (BlsqBlock a : BlsqDouble b : xs) -> do builtinSwap
+                                           builtinBox
+                                           builtinCycle
+                                           builtinSwap
+                                           builtinCoerceDiv
+   (BlsqDouble a : BlsqBlock b : xs) -> do builtinBox
+                                           builtinCycle
+                                           builtinCoerceDiv
+   (BlsqBlock a : BlsqStr b : xs) -> do builtinSwap
+                                        builtinBox
+                                        builtinCycle
+                                        builtinSwap
+                                        builtinCoerceDiv
+   (BlsqStr a : BlsqBlock b : xs) -> do builtinBox
+                                        builtinCycle
+                                        builtinCoerceDiv
+   (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "^p", BlsqIdent "?/" ] : )
+                                          builtinZipWith
+   _ -> builtinDiv
+
+-- | ?*
+builtinCoerceMul :: BlsqState
+builtinCoerceMul = do
+ st <- get
+ case st of
+   (BlsqInt a : BlsqDouble b : xs) -> do builtinProduct
+                                         builtinMul
+   (BlsqDouble a : BlsqInt b : xs) -> do builtinSwap
+                                         builtinProduct
+                                         builtinSwap
+                                         builtinMul
+   (BlsqStr a : BlsqInt b : xs) -> do builtinSwap
+                                      builtinPrettyFromFormat
+                                      builtinSwap
+                                      builtinMul
+   (BlsqInt a : BlsqStr b : xs) -> do builtinPrettyFromFormat
+                                      builtinMul
+   (BlsqStr a : BlsqDouble b : xs) -> do builtinSwap
+                                         builtinPrettyFromFormat
+                                         builtinSwap
+                                         builtinMul
+   (BlsqDouble a : BlsqStr b : xs) -> do builtinPrettyFromFormat
+                                         builtinMul
+   (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                        builtinBox
+                                        builtinCycle
+                                        builtinSwap
+                                        builtinCoerceMul
+   (BlsqInt a : BlsqBlock b : xs) -> do builtinBox
+                                        builtinCycle
+                                        builtinCoerceMul
+   (BlsqBlock a : BlsqDouble b : xs) -> do builtinSwap
+                                           builtinBox
+                                           builtinCycle
+                                           builtinSwap
+                                           builtinCoerceMul
+   (BlsqDouble a : BlsqBlock b : xs) -> do builtinBox
+                                           builtinCycle
+                                           builtinCoerceMul
+   (BlsqBlock a : BlsqStr b : xs) -> do builtinSwap
+                                        builtinBox
+                                        builtinCycle
+                                        builtinSwap
+                                        builtinCoerceMul
+   (BlsqStr a : BlsqBlock b : xs) -> do builtinBox
+                                        builtinCycle
+                                        builtinCoerceMul
+   (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "^p", BlsqIdent "?*" ] : )
+                                          builtinZipWith
+   _ -> builtinMul
