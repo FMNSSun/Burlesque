@@ -228,6 +228,7 @@ builtins = [
   ("?-", builtinCoerceSub),
   ("?/", builtinCoerceDiv),
   ("?*", builtinCoerceMul),
+  ("im", builtinImplode),
   
   ("??", builtinVersion)
  ]
@@ -2126,3 +2127,9 @@ builtinCoerceMul = do
    (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "^p", BlsqIdent "?*" ] : )
                                           builtinZipWith
    _ -> builtinMul
+   
+-- | im
+builtinImplode :: BlsqState
+builtinImplode = do 
+ modify (BlsqBlock [BlsqIdent "++"] :)
+ builtinReduce
