@@ -28,4 +28,4 @@ cgiMain = do
 
 runProgramNoStdin :: String -> String
 runProgramNoStdin p =
- unlines . map toHTML $ execState (eval (runParserWithString parseBlsq p)) []
+ unlines . map toHTML . filter notHidden $ execState (eval (runParserWithString parseBlsq p)) []
