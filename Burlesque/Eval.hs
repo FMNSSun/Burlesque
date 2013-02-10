@@ -150,7 +150,7 @@ builtins = [
   ("R@", builtinRangeInf),
   ("bx", builtinBox),
   ("><", builtinSort),
-  ("<>", builtinSortReverse)<
+  ("<>", builtinSortReverse),
   ("/v", builtinSwapPop),
   ("v/", builtinPopSwap),
   ("^/", builtinDupSwap),
