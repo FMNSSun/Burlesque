@@ -162,6 +162,7 @@ builtins = [
   ("M]", builtinMapToPretty),
   ("m]", builtinMapToPrettyFromFormat),
   ("[m", builtinMapDup),
+  ("]m", builtinMapString),
   ("[M", builtinMapParse),
   ("wd", builtinWords),
   ("wD", builtinWords3),
@@ -241,6 +242,7 @@ builtins = [
   ("RT", builtinRotate2),
   ("d!", builtinDimArrayAccess),
   ("D!", builtinDimArraySet),
+  ("Wl", builtinWithLinesString),
   
   ("??", builtinVersion)
  ]
@@ -2245,4 +2247,17 @@ builtinDimArraySet = do
     builtinEval
   _ -> putResult $ BlsqError "Burlesque: (D!) Invalid arguments!" : st
 
+-- | ]m
+builtinMapString :: BlsqState
+builtinMapString = do
+ --{*Sh}m[
+ modify(BlsqIdent "Sh": )
+ builtinAppend
+ builtinMap
  
+-- | Wl
+builtinWithLinesString :: BlsqState
+builtinWithLinesString = do
+ modify(BlsqIdent "Sh": )
+ builtinAppend
+ builtinWithLinesPretty
