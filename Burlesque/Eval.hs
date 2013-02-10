@@ -250,6 +250,7 @@ builtins = [
   ("nu", builtinNull),
   ("fl", builtinFilterLength),
   ("to", builtinTypeOf),
+  ("sr", builtinSplitRegex),
   
   ("??", builtinVersion)
  ]
@@ -2351,3 +2352,12 @@ builtinTypeOf = do
    (BlsqHackMode _ :xs) -> BlsqStr "HackMode" : xs
    (BlsqChar _ : xs) -> BlsqStr "Char" : xs
    _ -> BlsqStr "Dafuq? You found a type I don't know?" : st
+   
+-- | sr
+builtinSplitRegex :: BlsqState
+builtinSplitRegex = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqStr s : BlsqStr rgx : xs) -> BlsqBlock (map BlsqStr . splitRegex (mkRegex rgx) $ s) : xs
+   _ -> BlsqError "Burlesque: (sr) Invalid arguments!" : st
