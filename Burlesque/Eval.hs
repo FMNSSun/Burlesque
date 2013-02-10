@@ -244,6 +244,8 @@ builtins = [
   ("D!", builtinDimArraySet),
   ("Wl", builtinWithLinesString),
   ("si", builtinSelectIndices),
+  ("ro", builtinRangeFromOne),
+  ("rz", builtinRangeFromZero),
   
   ("??", builtinVersion)
  ]
@@ -2280,3 +2282,17 @@ builtinSelectIndices = do
     builtinSelectIndices
     builtinConcat
   _ -> putResult $ BlsqError "Burlesque: (si) Invalid arguments!" : st
+  
+-- | ro
+builtinRangeFromOne :: BlsqState
+builtinRangeFromOne = do
+ modify (BlsqInt 1 :)
+ builtinSwap
+ builtinRange
+ 
+-- | rz
+builtinRangeFromZero :: BlsqState
+builtinRangeFromZero = do
+ modify (BlsqInt 0 :)
+ builtinSwap
+ builtinRange
