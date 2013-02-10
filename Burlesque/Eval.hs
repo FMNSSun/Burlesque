@@ -247,6 +247,7 @@ builtins = [
   ("si", builtinSelectIndices),
   ("ro", builtinRangeFromOne),
   ("rz", builtinRangeFromZero),
+  ("nu", builtinNull),
   
   ("??", builtinVersion)
  ]
@@ -2304,3 +2305,9 @@ builtinSortReverse :: BlsqState
 builtinSortReverse = do
  builtinSort
  builtinReverse
+ 
+-- | nu
+builtinNull :: BlsqState
+builtinNull = do
+ builtinLength
+ builtinNot
