@@ -234,6 +234,7 @@ builtins = [
   ("mp", builtinMapProduct),
   ("sg", builtinSortGroup),
   ("gs", builtinGroupSort),
+  ("cp", builtinCrossProduct),
   
   ("??", builtinVersion)
  ]
@@ -2168,3 +2169,12 @@ builtinPrettyPretty :: BlsqState
 builtinPrettyPretty = do
  builtinPrettyFormatFromFormat
  builtinPretty
+ 
+-- | cp
+builtinCrossProduct :: BlsqState
+builtinCrossProduct = do
+ st <- get
+ case st of
+   (BlsqBlock b : BlsqBlock a : xs) -> putResult $ BlsqBlock [BlsqBlock [x,y] | x <- a, y <- b] : xs
+   (BlsqStr b : BlsqStr a : xs) -> putResult $ BlsqBlock [BlsqStr [x,y] | x <- a, y <- b] : xs
+   _ -> putResult $ BlsqError "Burlesque: (cp) Invalid arguments!" : st
