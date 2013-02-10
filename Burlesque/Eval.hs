@@ -1916,6 +1916,7 @@ builtinSpecialInput = do
   (BlsqBlock l : xs) -> do modify (BlsqBlock [ BlsqBlock [ BlsqIdent "Sh"], BlsqIdent "m[", BlsqIdent "wd" ] :)
                            builtinMap
                            builtinUnlines
+  _ -> putResult $ BlsqError "Burlesque: (SP) Invalid arguments!" : st
 
 -- | hd
 -- Unlike high definition this is a gruesome hack. or feature. let's say feature.
