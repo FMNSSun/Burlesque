@@ -272,6 +272,7 @@ builtins = [
   ("pm", builtinPlusMinus),
   ("ch", builtinChoose),
   ("f~", builtinSimpleFormat),
+  ("rm", builtinRangeModulo),
   ("nc", builtinNormalDCumulative),
   ("nd", builtinNormalDDensity),
   ("Bc", builtinBinomialDCumulative),
@@ -2483,6 +2484,15 @@ builtinPi = do
 builtinE :: BlsqState
 builtinE = do
  modify (BlsqDouble (exp 1) : )
+ 
+-- | rm
+builtinRangeModulo :: BlsqState
+builtinRangeModulo = do
+ st <- get
+ putResult $ 
+  case st of
+   (BlsqBlock [BlsqInt lo, BlsqInt hi] : BlsqInt x : xs) -> BlsqInt (((x - lo) `mod` (succ (hi-lo))) + lo) : xs
+   _ -> BlsqError "Burlesque: (rm) Invalid arguments!" : st
  
 -- | nc
 builtinNormalDCumulative :: BlsqState
