@@ -268,6 +268,7 @@ builtins = [
   ("Bp", builtinBinomialDProbability),
   ("pc", builtinPoissonDCumulative),
   ("pp", builtinPoissonDProbability),
+  ("gr", builtinGrep),
   
   ("??", builtinVersion)
  ]
@@ -665,6 +666,7 @@ builtinFilter = do
         _ -> return ()
   (BlsqBlock f : BlsqBlock v : xs) -> do
     putResult $ (BlsqBlock $ filter' f v) : xs
+  _ -> putResult $ BlsqError "Burlesque: (f[) Invalid arguments!" : st
  where filter' _ [] = []
        filter' f (x:xs) = case runStack f [x] of
                             (BlsqInt 0):ys -> filter' f xs
@@ -2412,6 +2414,19 @@ builtinMaximumBy = do
  builtinSortBy
  builtinReverse
  builtinHead
+
+-- | > gr
+builtinGrep :: BlsqState
+builtinGrep = do
+ -- {~=}\/+]\/ln\/f[un
+ modify (BlsqBlock [BlsqIdent "~="] :)
+ builtinSwap
+ builtinPrepend
+ builtinSwap
+ builtinLines
+ builtinSwap
+ builtinFilter
+ builtinUnlines
  
 -- | nc
 builtinNormalDCumulative :: BlsqState
