@@ -627,6 +627,8 @@ builtinConcat :: BlsqState
 builtinConcat = do
  st <- get
  case st of
+  -- Special case for single char blocks
+  (BlsqBlock [BlsqChar a] : xs) -> do putResult $ BlsqStr [a] : xs
   (BlsqBlock a) : xs -> do
      modify ((BlsqBlock $ [BlsqIdent "_+"]) :)
      builtinReduce
