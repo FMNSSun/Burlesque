@@ -262,16 +262,18 @@ builtins = [
   ("RN", builtinRandomDoubles),
   (">m", builtinMaximumBy),
   ("<m", builtinMinimumBy),
+  ("gr", builtinGrep),
+  ("pm", builtinPlusMinus),
+  ("ch", builtinChoose),
+  ("f~", builtinSimpleFormat),
   ("nc", builtinNormalDCumulative),
   ("nd", builtinNormalDDensity),
   ("Bc", builtinBinomialDCumulative),
   ("Bp", builtinBinomialDProbability),
   ("pc", builtinPoissonDCumulative),
   ("pp", builtinPoissonDProbability),
-  ("gr", builtinGrep),
-  ("pm", builtinPlusMinus),
-  ("ch", builtinChoose),
-  ("f~", builtinSimpleFormat),
+  ("gc", builtinGeometricDCumulative),
+  ("gp", builtinGeometricDProbability),
   
   ("??", builtinVersion)
  ]
@@ -2512,3 +2514,21 @@ builtinPoissonDProbability = do
   case st of
    (BlsqInt ho : BlsqDouble lambda : xs) -> BlsqDouble (probability (poisson (lambda)) (toInt ho)) : xs
    _ -> BlsqError "Burlesque: (pp) Invalid arguments!" : st
+   
+-- | gc
+builtinGeometricDCumulative :: BlsqState
+builtinGeometricDCumulative = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble suc :xs) -> BlsqDouble (cumulative (poisson (suc)) ho) : xs
+   _ -> BlsqError "Burlesque: (gc) Invalid arguments!" : st
+   
+-- | gp
+builtinGeometricDProbability :: BlsqState
+builtinGeometricDProbability = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt ho : BlsqDouble suc : xs) -> BlsqDouble (probability (poisson (suc)) (toInt ho)) : xs
+   _ -> BlsqError "Burlesque: (gp) Invalid arguments!" : st
