@@ -267,6 +267,8 @@ builtins = [
   (">m", builtinMaximumBy),
   ("<m", builtinMinimumBy),
   ("gr", builtinGrep),
+  ("pi", builtinPi),
+  ("ee", builtinE),
   ("pm", builtinPlusMinus),
   ("ch", builtinChoose),
   ("f~", builtinSimpleFormat),
@@ -2471,6 +2473,16 @@ builtinSimpleFormat = do
  builtinMap
  builtinPow
  builtinConcat
+ 
+-- | pi
+builtinPi :: BlsqState
+builtinPi = do 
+ modify (BlsqDouble pi : )
+ 
+-- |  ee
+builtinE :: BlsqState
+builtinE = do
+ modify (BlsqDouble (exp 1) : )
  
 -- | nc
 builtinNormalDCumulative :: BlsqState
