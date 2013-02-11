@@ -22,6 +22,7 @@ import System.Random
 import Statistics.Distribution
 import Statistics.Distribution.Normal
 import Statistics.Distribution.Binomial
+import Statistics.Distribution.Poisson
 
 import Debug.Trace
 
@@ -265,6 +266,8 @@ builtins = [
   ("nd", builtinNormalDDensity),
   ("Bc", builtinBinomialDCumulative),
   ("Bp", builtinBinomialDProbability),
+  ("pc", builtinPoissonDCumulative),
+  ("pp", builtinPoissonDProbability),
   
   ("??", builtinVersion)
  ]
@@ -2445,3 +2448,21 @@ builtinBinomialDProbability = do
   case st of
    (BlsqInt ho : BlsqDouble p : BlsqInt n : xs) -> BlsqDouble (probability (binomial (toInt n) p) (toInt ho)) : xs
    _ -> BlsqError "Burlesque: (Bp) Invalid arguments!" : st
+   
+-- | pc
+builtinPoissonDCumulative :: BlsqState
+builtinPoissonDCumulative = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble lambda :xs) -> BlsqDouble (cumulative (poisson (lambda)) ho) : xs
+   _ -> BlsqError "Burlesque: (pc) Invalid arguments!" : st
+   
+-- | pp
+builtinPoissonDProbability :: BlsqState
+builtinPoissonDProbability = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt ho : BlsqDouble lambda : xs) -> BlsqDouble (probability (poisson (lambda)) (toInt ho)) : xs
+   _ -> BlsqError "Burlesque: (pp) Invalid arguments!" : st
