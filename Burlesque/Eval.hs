@@ -14,8 +14,14 @@ import Data.Char
 import Data.Bits
 import Data.Ord
 import Text.Regex
+
 import Control.Monad
+
 import System.Random
+
+import Statistics.Distribution
+import Statistics.Distribution.Normal
+import Statistics.Distribution.Binomial
 
 import Debug.Trace
 
@@ -255,6 +261,10 @@ builtins = [
   ("RN", builtinRandomDoubles),
   (">m", builtinMaximumBy),
   ("<m", builtinMinimumBy),
+  ("nc", builtinNormalDCumulative),
+  ("nd", builtinNormalDDensity),
+  ("Bc", builtinBinomialDCumulative),
+  ("Bp", builtinBinomialDProbability),
   
   ("??", builtinVersion)
  ]
@@ -2399,3 +2409,39 @@ builtinMaximumBy = do
  builtinSortBy
  builtinReverse
  builtinHead
+ 
+-- | nc
+builtinNormalDCumulative :: BlsqState
+builtinNormalDCumulative = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble std : BlsqDouble mn : xs) -> BlsqDouble (cumulative (normalDistr mn std) ho) : xs
+   _ -> BlsqError "Burlesque: (nc) Invalid arguments!" : st
+   
+-- | nd
+builtinNormalDDensity :: BlsqState
+builtinNormalDDensity = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble std : BlsqDouble mn : xs) -> BlsqDouble (density (normalDistr mn std) ho) : xs
+   _ -> BlsqError "Burlesque: (nd) Invalid arguments!" : st
+   
+-- | Bc
+builtinBinomialDCumulative :: BlsqState
+builtinBinomialDCumulative = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble p : BlsqInt n : xs) -> BlsqDouble (cumulative (binomial (toInt n) p) ho) : xs
+   _ -> BlsqError "Burlesque: (Bc) Invalid arguments!" : st
+   
+-- | Bp
+builtinBinomialDProbability :: BlsqState
+builtinBinomialDProbability = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt ho : BlsqDouble p : BlsqInt n : xs) -> BlsqDouble (probability (binomial (toInt n) p) (toInt ho)) : xs
+   _ -> BlsqError "Burlesque: (Bp) Invalid arguments!" : st

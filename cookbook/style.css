@@ -1,4 +1,10 @@
-html , body { background-color: #FFFFFF; }
+body { 
+  background-color: #FFFFFF; 
+  background-image: url('./bg.png');
+  background-repeat: repeat;
+  font-family: arial;
+  font-size: 11pt;
+}
 span.id { color: #0000FF; }
 span.int { color: #FFA500; }
 span.dbl { color: #FF4500; }
@@ -31,4 +37,54 @@ table.fancy tr:hover {
 
 table.fancy tr.vnext:hover {
   background-color: #AA8888;
+}
+
+div.container {
+  margin: auto;
+  margin-top: 5%;
+  width: 85%;
+  background-color: #FEFEFE;
+  padding: 7px;
+  -webkit-border-radius: 40px;
+  border-radius: 40px;
+
+  background-image: url('./bg2.png');
+  background-repeat: repeat;
+}
+
+div.header{
+  margin: auto;
+  margin-top: 5%;
+  width: 85%;
+  background-color: #FEFEFE;
+  padding: 15px;
+  -webkit-border-radius: 40px;
+  border-radius: 40px;
+  
+  background-image: url('./bg2.png');
+  background-repeat: repeat;
+}
+
+div.box{
+  margin: auto;
+  margin-top: 5%;
+  width: 85%;
+  background-color: #FEFEFE;
+  padding: 20px;
+  -webkit-border-radius: 40px;
+  border-radius: 40px;
+  
+  background-image: url('./bg2.png');
+  background-repeat: repeat;
+  
+  -webkit-box-shadow: 0px 0px 15px 15px rgba(00, 00, 00, 0.8);
+  box-shadow: 0px 0px 15px 15px rgba(00, 00, 00, 0.8);
+}
+
+div#news p {
+  background-color: #000000;
+  color: #FFFFFF;
+  padding: 15px;
+  -webkit-border-radius: 40px;
+  border-radius: 40px;
 }
