@@ -270,6 +270,7 @@ builtins = [
   ("pp", builtinPoissonDProbability),
   ("gr", builtinGrep),
   ("pm", builtinPlusMinus),
+  ("ch", builtinChoose),
   
   ("??", builtinVersion)
  ]
@@ -2436,6 +2437,13 @@ builtinPlusMinus :: BlsqState
 builtinPlusMinus = do
  builtinAdd
  builtinSub
+ 
+-- | ch
+builtinChoose :: BlsqState
+builtinChoose = do
+ builtinSwap
+ builtinNot
+ builtinBlockAccess
  
 -- | nc
 builtinNormalDCumulative :: BlsqState
