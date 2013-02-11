@@ -271,6 +271,7 @@ builtins = [
   ("gr", builtinGrep),
   ("pm", builtinPlusMinus),
   ("ch", builtinChoose),
+  ("f~", builtinSimpleFormat),
   
   ("??", builtinVersion)
  ]
@@ -2444,6 +2445,19 @@ builtinChoose = do
  builtinSwap
  builtinNot
  builtinBlockAccess
+ 
+-- | f~
+builtinSimpleFormat :: BlsqState
+builtinSimpleFormat = do
+ -- \/"~";;\/{Sh}m[**\[
+ builtinSwap
+ modify (BlsqStr "~" :)
+ builtinSplit
+ builtinSwap
+ modify (BlsqBlock [ BlsqIdent "Sh" ] : )
+ builtinMap
+ builtinPow
+ builtinConcat
  
 -- | nc
 builtinNormalDCumulative :: BlsqState
