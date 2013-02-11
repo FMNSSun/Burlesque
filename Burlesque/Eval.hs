@@ -269,6 +269,7 @@ builtins = [
   ("pc", builtinPoissonDCumulative),
   ("pp", builtinPoissonDProbability),
   ("gr", builtinGrep),
+  ("pm", builtinPlusMinus),
   
   ("??", builtinVersion)
  ]
@@ -2427,6 +2428,12 @@ builtinGrep = do
  builtinSwap
  builtinFilter
  builtinUnlines
+ 
+-- | pm
+builtinPlusMinus :: BlsqState
+builtinPlusMinus = do
+ builtinAdd
+ builtinSub
  
 -- | nc
 builtinNormalDCumulative :: BlsqState

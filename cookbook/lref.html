@@ -44,7 +44,7 @@
 <tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
 <tr><td></td><td>.+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr>
 <tr><td></td><td>.+</td><td>Str a, Char b</td><td>Append char to string</td></tr>
-<tr><td></td><td>.+</td><td>Str a, Int b<br/>Block a, Int b</td><td>Take b characters from a</td></tr>
+<tr><td></td><td>.+</td><td>Int b, Str a<br/>Int b, Block a</td><td>Take b characters from a</td></tr>
 <tr><td>AddX</td><td>_+</td><td>Int a, Int b</td><td>Returns a block with a and b</td></tr>
 <tr><td></td><td>_+</td><td>Double a, Double b</td><td>Returns a block with a and b</td></tr>
 <tr><td></td><td>_+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr>
@@ -232,6 +232,7 @@
 <tr><td></td><td>**</td><td>Block a, Block b</td><td>Merge blocks</td></tr>
 <tr><td></td><td>**</td><td>Str a, Str b</td><td>Merge strings</td></tr>
 <tr><td></td><td>**</td><td>Char a</td><td>ordinal a. (ord a). </td></tr>
+<tr class="vnext"><td>PlusMinus</td><td>pm</td><td></td><td>Defined as .+.-</td></tr>
 <tr><td>PrefixOf</td><td>~!</td><td>Block a, Block b</td><td>Is b a prefix of a?</td></tr>
 <tr><td></td><td>~!</td><td>Int a, Int b</td><td>Is b a prefix of a?</td></tr>
 <tr><td></td><td>~!</td><td>Str a, Str b</td><td>Is b a prefix of a?</td></tr>
