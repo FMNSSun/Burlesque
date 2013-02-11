@@ -25,6 +25,7 @@ import Statistics.Distribution.Binomial
 import Statistics.Distribution.Poisson
 import Statistics.Distribution.Geometric
 import Statistics.Distribution.Hypergeometric
+import Statistics.Distribution.ChiSquared
 
 import Debug.Trace
 
@@ -278,6 +279,9 @@ builtins = [
   ("gp", builtinGeometricDProbability),
   ("hc", builtinHypergeometricDCumulative),
   ("hp", builtinHypergeometricDProbability),
+  ("cc", builtinChiSquaredDCumulative),
+  ("cd", builtinChiSquaredDDensity),
+  
   
   ("??", builtinVersion)
  ]
@@ -2554,3 +2558,21 @@ builtinHypergeometricDProbability = do
   case st of
    (BlsqInt ho : BlsqInt k : BlsqInt l : BlsqInt m : xs) -> BlsqDouble (probability (hypergeometric (toInt m) (toInt l) (toInt k)) (toInt ho)) : xs
    _ -> BlsqError "Burlesque: (hp) Invalid arguments!" : st
+   
+-- | cc
+builtinChiSquaredDCumulative :: BlsqState
+builtinChiSquaredDCumulative = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqInt df : xs) -> BlsqDouble (cumulative (chiSquared (toInt df)) ho) : xs
+   _ -> BlsqError "Burlesque: (cc) Invalid arguments!" : st
+   
+-- | cd
+builtinChiSquaredDDensity :: BlsqState
+builtinChiSquaredDDensity = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqInt df : xs) -> BlsqDouble (density (chiSquared (toInt df)) ho) : xs
+   _ -> BlsqError "Burlesque: (cd) Invalid arguments!" : st
