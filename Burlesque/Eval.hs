@@ -23,6 +23,8 @@ import Statistics.Distribution
 import Statistics.Distribution.Normal
 import Statistics.Distribution.Binomial
 import Statistics.Distribution.Poisson
+import Statistics.Distribution.Geometric
+import Statistics.Distribution.Hypergeometric
 
 import Debug.Trace
 
@@ -274,6 +276,8 @@ builtins = [
   ("pp", builtinPoissonDProbability),
   ("gc", builtinGeometricDCumulative),
   ("gp", builtinGeometricDProbability),
+  ("hc", builtinHypergeometricDCumulative),
+  ("hp", builtinHypergeometricDProbability),
   
   ("??", builtinVersion)
  ]
@@ -2521,7 +2525,7 @@ builtinGeometricDCumulative = do
  st <- get
  putResult $
   case st of
-   (BlsqDouble ho : BlsqDouble suc :xs) -> BlsqDouble (cumulative (poisson (suc)) ho) : xs
+   (BlsqDouble ho : BlsqDouble suc :xs) -> BlsqDouble (cumulative (geometric (suc)) ho) : xs
    _ -> BlsqError "Burlesque: (gc) Invalid arguments!" : st
    
 -- | gp
@@ -2530,5 +2534,23 @@ builtinGeometricDProbability = do
  st <- get
  putResult $
   case st of
-   (BlsqInt ho : BlsqDouble suc : xs) -> BlsqDouble (probability (poisson (suc)) (toInt ho)) : xs
+   (BlsqInt ho : BlsqDouble suc : xs) -> BlsqDouble (probability (geometric (suc)) (toInt ho)) : xs
    _ -> BlsqError "Burlesque: (gp) Invalid arguments!" : st
+   
+-- | hc
+builtinHypergeometricDCumulative :: BlsqState
+builtinHypergeometricDCumulative = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqInt k : BlsqInt l : BlsqInt m : xs) -> BlsqDouble (cumulative (hypergeometric (toInt m) (toInt l) (toInt k)) ho) : xs
+   _ -> BlsqError "Burlesque: (hc) Invalid arguments!" : st
+   
+-- | hp
+builtinHypergeometricDProbability :: BlsqState
+builtinHypergeometricDProbability = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt ho : BlsqInt k : BlsqInt l : BlsqInt m : xs) -> BlsqDouble (probability (hypergeometric (toInt m) (toInt l) (toInt k)) (toInt ho)) : xs
+   _ -> BlsqError "Burlesque: (hp) Invalid arguments!" : st
