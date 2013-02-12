@@ -247,6 +247,7 @@ builtins = [
   ("?*", builtinCoerceMul),
   ("?^", builtinCoercePow),
   ("?s", builtinCoerceSqrt),
+  ("?!", builtinCoerceFactorial),
   ("im", builtinImplode),
   ("ms", builtinMapSum),
   ("mp", builtinMapProduct),
@@ -308,6 +309,7 @@ builtins = [
   ("SD", builtinStandardDeviation),
   ("x/", builtinXSwap),
   ("ct", builtinChiSquaredTest),
+  ("nr", builtinNCr),
   
   
   ("??", builtinVersion)
@@ -2283,6 +2285,18 @@ builtinCoerceSqrt = do
                             builtinMap
    _ -> builtinRange
    
+-- | ?!
+builtinCoerceFactorial :: BlsqState
+builtinCoerceFactorial = do
+ st <- get
+ case st of
+   (BlsqInt a : xs) -> do builtinRangeFromOne
+                          builtinProduct
+   (BlsqBlock a : xs) -> do modify (BlsqBlock [ BlsqIdent "?!" ] : )
+                            builtinMap
+   _ -> do builtinRangeFromOne
+           builtinProduct
+   
 -- | im
 builtinImplode :: BlsqState
 builtinImplode = do 
@@ -2860,3 +2874,12 @@ builtinChiSquaredTest = do
  builtinCoerceAdd
  builtinCoerceDiv
  builtinSum
+ 
+-- | nr
+builtinNCr :: BlsqState
+builtinNCr = do
+ st <- get
+ case st of
+   (BlsqInt k : BlsqInt n : xs) -> putResult $ BlsqInt (ncr n k) : xs
+   _ -> putResult $ BlsqError "Burlesque: (nr) Invalid arguments!" : st
+ where ncr n k = product [k+1..n] `div` product [1..n-k]

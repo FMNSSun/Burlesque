@@ -88,6 +88,8 @@
 <tr class="vnext"><td></td><td>?/</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?/</td></tr>
 <tr class="vnext"><td></td><td>?/</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?/</td></tr>
 <tr class="vnext"><td></td><td>?/</td><td>Block a, Block b</td><td>Defined as {^p?/}Z[</td></tr>
+<tr class="vnext"><td>CoerceFactorial</td><td>?!</td><td>Int a</td><td>Defined as ropd</td></tr>
+<tr class="vnext"><td></td><td>?!</td><td>Block a</td><td>Defined as {?!}m[</td></tr>
 <tr class="vnext"><td>CoerceMul</td><td>?*</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.*</td></tr>
 <tr class="vnext"><td></td><td>?*</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.*</td></tr>
 <tr class="vnext"><td></td><td>?*</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.*</td></tr>
@@ -241,6 +243,7 @@ Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
 <tr><td>Not</td><td>n!</td><td>Int a</td><td>Boolish not</td></tr>
 <tr><td></td><td>n!</td><td>Block a<br>Str a</td><td>Most common element</td></tr>
 <tr class="vnext"><td>NotEqual</td><td>!=</td><td></td><td>Defined as == n!</td></tr>
+<tr class="vnext"><td>nCr</td><td>nr</td><td>Int n, Int k</td><td>nCr(n,k)</td></tr>
 <tr><td>Or</td><td>||</td><td>Int a, Int b</td><td>Bitwise or</td></tr>
 <tr><td>OrLs</td><td>r|</td><td></td><td>Defined as {||}r[</td></tr>
 <tr><td>PadLeft</td><td>P[</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (left) a to length c with b</td></tr>
