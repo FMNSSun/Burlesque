@@ -1,0 +1,1 @@
+"Observed"vv{12 15 14 16 14 25}"Expected"vv{16 16 16 16 16 16}"ChiSquared-Test"vvct"df = 5 ; 5% -> quantile 0.95."vv5 0.95cq.<"Inform the user about the die!"vv{"The die is ok!""The die is probably not ok!"}chsh
