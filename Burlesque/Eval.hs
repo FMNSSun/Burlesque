@@ -245,6 +245,7 @@ builtins = [
   ("?-", builtinCoerceSub),
   ("?/", builtinCoerceDiv),
   ("?*", builtinCoerceMul),
+  ("?^", builtinCoercePow),
   ("im", builtinImplode),
   ("ms", builtinMapSum),
   ("mp", builtinMapProduct),
@@ -2233,6 +2234,37 @@ builtinCoerceMul = do
    (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "^p", BlsqIdent "?*" ] : )
                                           builtinZipWith
    _ -> builtinMul
+   
+-- | ?^
+builtinCoercePow :: BlsqState
+builtinCoercePow = do
+ st <- get
+ case st of
+   (BlsqInt a : BlsqDouble b : xs) -> do builtinProduct
+                                         builtinPow
+   (BlsqDouble a : BlsqInt b : xs) -> do builtinSwap
+                                         builtinProduct
+                                         builtinSwap
+                                         builtinPow
+   (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                        builtinBox
+                                        builtinCycle
+                                        builtinSwap
+                                        builtinCoercePow
+   (BlsqInt a : BlsqBlock b : xs) -> do builtinBox
+                                        builtinCycle
+                                        builtinCoercePow
+   (BlsqBlock a : BlsqDouble b : xs) -> do builtinSwap
+                                           builtinBox
+                                           builtinCycle
+                                           builtinSwap
+                                           builtinCoercePow
+   (BlsqDouble a : BlsqBlock b : xs) -> do builtinBox
+                                           builtinCycle
+                                           builtinCoercePow
+   (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "^p", BlsqIdent "?^" ] : )
+                                          builtinZipWith
+   _ -> builtinPow
    
 -- | im
 builtinImplode :: BlsqState

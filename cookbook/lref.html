@@ -78,28 +78,33 @@
 <tr class="vnext"><td></td><td>?+</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?+</td></tr>
 <tr class="vnext"><td></td><td>?+</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?+</td></tr>
 <tr class="vnext"><td></td><td>?+</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?+</td></tr>
-<tr class="vnext"><td></td><td>?+</td><td>Block a, Block b</td><td>Defined as {^p.+}Z[</td></tr>
+<tr class="vnext"><td></td><td>?+</td><td>Block a, Block b</td><td>Defined as {^p?+}Z[</td></tr>
 <tr class="vnext"><td>CoerceDiv</td><td>?/</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd./</td></tr>
 <tr class="vnext"><td></td><td>?/</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh./</td></tr>
 <tr class="vnext"><td></td><td>?/</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh./</td></tr>
 <tr class="vnext"><td></td><td>?/</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?/</td></tr>
 <tr class="vnext"><td></td><td>?/</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?/</td></tr>
 <tr class="vnext"><td></td><td>?/</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?/</td></tr>
-<tr class="vnext"><td></td><td>?/</td><td>Block a, Block b</td><td>Defined as {^p./}Z[</td></tr>
+<tr class="vnext"><td></td><td>?/</td><td>Block a, Block b</td><td>Defined as {^p?/}Z[</td></tr>
 <tr class="vnext"><td>CoerceMul</td><td>?*</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.*</td></tr>
 <tr class="vnext"><td></td><td>?*</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.*</td></tr>
 <tr class="vnext"><td></td><td>?*</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.*</td></tr>
 <tr class="vnext"><td></td><td>?*</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?*</td></tr>
 <tr class="vnext"><td></td><td>?*</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?*</td></tr>
 <tr class="vnext"><td></td><td>?*</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?*</td></tr>
-<tr class="vnext"><td></td><td>?*</td><td>Block a, Block b</td><td>Defined as {^p.*}Z[</td></tr>
+<tr class="vnext"><td></td><td>?*</td><td>Block a, Block b</td><td>Defined as {^p?*}Z[</td></tr>
+<tr class="vnext"><td>CoercePow</td><td>?^</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.*</td></tr>
+<tr class="vnext"><td></td><td>?^</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?*</td></tr>
+<tr class="vnext"><td></td><td>?^</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?*</td></tr>
+<tr class="vnext"><td></td><td>?^</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?*</td></tr>
+<tr class="vnext"><td></td><td>?^</td><td>Block a, Block b</td><td>Defined as {^p?^}Z[</td></tr>
 <tr class="vnext"><td>CoerceSub</td><td>?-</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.-</td></tr>
 <tr class="vnext"><td></td><td>?-</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.-</td></tr>
 <tr class="vnext"><td></td><td>?-</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.-</td></tr>
 <tr class="vnext"><td></td><td>?-</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?-</td></tr>
 <tr class="vnext"><td></td><td>?-</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?-</td></tr>
 <tr class="vnext"><td></td><td>?-</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?-</td></tr>
-<tr class="vnext"><td></td><td>?-</td><td>Block a, Block b</td><td>Defined as {^p.-}Z[</td></tr>
+<tr class="vnext"><td></td><td>?-</td><td>Block a, Block b</td><td>Defined as {^p?-}Z[</td></tr>
 <tr><td>Concat</td><td>\[</td><td>a</td><td>Defined as {_+}r[</td></tr>
 <tr><td>ConcatMap</td><td>\m</td><td></td><td>Defined as m[\[</td></tr>
 <tr><td>Contains</td><td>~[</td><td>Block a, Any b</td><td>Does a contain b?</td><tr>
