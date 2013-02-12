@@ -298,6 +298,7 @@ builtins = [
   ("eq", builtinExponentialDQuantile),
   ("nq", builtinNormalDQuantile),
   ("f:", builtinFrequencyList),
+  ("u[", builtinUnzip),
   
   
   ("??", builtinVersion)
@@ -2719,3 +2720,14 @@ builtinFrequencyList = do
     ] :)
  builtinMap
  builtinSortReverse
+ 
+-- | u[
+builtinUnzip :: BlsqState
+builtinUnzip = do
+ --^^{-]}m[\/{[~}m[
+ builtinDup
+ modify (BlsqBlock [ BlsqIdent "-]"] : )
+ builtinMap
+ builtinSwap
+ modify (BlsqBlock [ BlsqIdent "[~]" : )
+ builtinMap
