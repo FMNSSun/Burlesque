@@ -304,6 +304,7 @@ builtins = [
   ("u[", builtinUnzip),
   ("U[", builtinUngroup),
   ("vr", builtinVariance),
+  ("SD", builtinStandardDeviation),
   
   
   ("??", builtinVersion)
@@ -2818,3 +2819,9 @@ builtinVariance = do
  builtinLength
  builtinDecrement
  builtinCoerceDiv
+ 
+-- | SD
+builtinStandardDeviation :: BlsqState
+builtinStandardDeviation = do
+ builtinVariance
+ builtinCoerceSqrt
