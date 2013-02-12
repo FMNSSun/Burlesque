@@ -297,6 +297,7 @@ builtins = [
   ("uq", builtinUniformDQuantile),
   ("eq", builtinExponentialDQuantile),
   ("nq", builtinNormalDQuantile),
+  ("f:", builtinFrequencyList),
   
   
   ("??", builtinVersion)
@@ -2701,3 +2702,20 @@ builtinUniformDQuantile = do
   case st of
    (BlsqDouble ho : BlsqDouble high : BlsqDouble low : xs) -> BlsqDouble (quantile (uniformDistr low high) (ho)) : xs
    _ -> BlsqError "Burlesque: (uq) Invalid arguments!" : st
+   
+-- | f:
+builtinFrequencyList :: BlsqState
+builtinFrequencyList = do
+ -- sg{^^L[\/-]bx\/+]}m[<>
+ builtinSortGroup
+ modify( BlsqBlock [
+      BlsqIdent "^^",
+      BlsqIdent "L[",
+      BlsqIdent "\\/",
+      BlsqIdent "-]",
+      BlsqIdent "bx",
+      BlsqIdent "\\/",
+      BlsqIdent "+]"
+    ] :)
+ builtinMap
+ builtinSortReverse
