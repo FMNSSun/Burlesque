@@ -246,6 +246,7 @@ builtins = [
   ("?/", builtinCoerceDiv),
   ("?*", builtinCoerceMul),
   ("?^", builtinCoercePow),
+  ("?s", builtinCoerceSqrt),
   ("im", builtinImplode),
   ("ms", builtinMapSum),
   ("mp", builtinMapProduct),
@@ -302,6 +303,7 @@ builtins = [
   ("F:", builtinFrequencyListPercentage),
   ("u[", builtinUnzip),
   ("U[", builtinUngroup),
+  ("vr", builtinVariance),
   
   
   ("??", builtinVersion)
@@ -2266,6 +2268,17 @@ builtinCoercePow = do
                                           builtinZipWith
    _ -> builtinPow
    
+-- | ?s
+builtinCoerceSqrt :: BlsqState
+builtinCoerceSqrt = do
+ st <- get
+ case st of
+   (BlsqInt a : xs) -> do builtinProduct
+                          builtinRange
+   (BlsqBlock a : xs) -> do modify (BlsqBlock [ BlsqIdent "?s" ] : )
+                            builtinMap
+   _ -> builtinRange
+   
 -- | im
 builtinImplode :: BlsqState
 builtinImplode = do 
@@ -2786,3 +2799,22 @@ builtinUngroup = do
  --{p^.*}\m
  modify ( BlsqBlock [ BlsqIdent "p^" , BlsqIdent ".*" ] : )
  builtinConcatMap
+ 
+-- | vr
+builtinVariance :: BlsqState
+builtinVariance = do
+ -- ^^^^avbx(?-)[+m[2?^++\/L[-.?/
+ builtinDup
+ builtinDup
+ builtinAverage
+ builtinBox
+ modify (BlsqIdent "?-" : )
+ builtinAppend
+ builtinMap
+ modify (BlsqInt 2 : )
+ builtinCoercePow
+ builtinSum
+ builtinSwap
+ builtinLength
+ builtinDecrement
+ builtinCoerceDiv
