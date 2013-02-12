@@ -299,6 +299,7 @@ builtins = [
   ("nq", builtinNormalDQuantile),
   ("f:", builtinFrequencyList),
   ("u[", builtinUnzip),
+  ("U[", builtinUngroup),
   
   
   ("??", builtinVersion)
@@ -2731,3 +2732,10 @@ builtinUnzip = do
  builtinSwap
  modify (BlsqBlock [ BlsqIdent "[~" ] : )
  builtinMap
+ 
+-- | U[
+builtinUngroup :: BlsqState
+builtinUngroup = do
+ --{p^.*}\m
+ modify ( BlsqBlock [ BlsqIdent "p^" , BlsqIdent ".*" ] : )
+ builtinConcatMap
