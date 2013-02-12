@@ -299,12 +299,15 @@ builtins = [
   ("uq", builtinUniformDQuantile),
   ("eq", builtinExponentialDQuantile),
   ("nq", builtinNormalDQuantile),
+  ("cq", builtinChiSquaredDQuantile),
   ("f:", builtinFrequencyList),
   ("F:", builtinFrequencyListPercentage),
   ("u[", builtinUnzip),
   ("U[", builtinUngroup),
   ("vr", builtinVariance),
   ("SD", builtinStandardDeviation),
+  ("x/", builtinXSwap),
+  ("ct", builtinChiSquaredTest),
   
   
   ("??", builtinVersion)
@@ -2671,6 +2674,15 @@ builtinChiSquaredDDensity = do
    (BlsqDouble ho : BlsqInt df : xs) -> BlsqDouble (density (chiSquared (toInt df)) ho) : xs
    _ -> BlsqError "Burlesque: (cd) Invalid arguments!" : st
    
+-- | cq
+builtinChiSquaredDQuantile :: BlsqState
+builtinChiSquaredDQuantile = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqInt df : xs) -> BlsqDouble (quantile (chiSquared (toInt df)) ho) : xs
+   _ -> BlsqError "Burlesque: (cq) Invalid arguments!" : st
+   
 -- | ec
 builtinExponentialDCumulative :: BlsqState
 builtinExponentialDCumulative = do
@@ -2825,3 +2837,26 @@ builtinStandardDeviation :: BlsqState
 builtinStandardDeviation = do
  builtinVariance
  builtinCoerceSqrt
+ 
+-- | x/
+builtinXSwap :: BlsqState
+builtinXSwap = do
+ st <- get
+ case st of 
+  (c : b : a : xs) -> putResult $ a : c : b : xs
+  _ -> putResult $ BlsqError "Burlesque: (x/) Stack size error!" : st
+  
+-- | ct
+builtinChiSquaredTest :: BlsqState
+builtinChiSquaredTest = do
+ -- ^^x/?-2?^\/0.0?+?/++
+ builtinDup
+ builtinXSwap
+ builtinCoerceSub
+ modify (BlsqInt 2 : )
+ builtinCoercePow
+ builtinSwap
+ modify (BlsqDouble 0.0 :)
+ builtinCoerceAdd
+ builtinCoerceDiv
+ builtinSum
