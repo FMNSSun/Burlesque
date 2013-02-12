@@ -293,6 +293,10 @@ builtins = [
   ("Sd", builtinStudentTDDensity),
   ("uc", builtinUniformDCumulative),
   ("ud", builtinUniformDDensity),
+  ("Sq", builtinStudentTDQuantile),
+  ("uq", builtinUniformDQuantile),
+  ("eq", builtinExponentialDQuantile),
+  ("nq", builtinNormalDQuantile),
   
   
   ("??", builtinVersion)
@@ -2509,6 +2513,15 @@ builtinNormalDCumulative = do
    (BlsqDouble ho : BlsqDouble std : BlsqDouble mn : xs) -> BlsqDouble (cumulative (normalDistr mn std) ho) : xs
    _ -> BlsqError "Burlesque: (nc) Invalid arguments!" : st
    
+-- | nq
+builtinNormalDQuantile :: BlsqState
+builtinNormalDQuantile = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble std : BlsqDouble mn : xs) -> BlsqDouble (quantile (normalDistr mn std) ho) : xs
+   _ -> BlsqError "Burlesque: (nq) Invalid arguments!" : st
+   
 -- | nd
 builtinNormalDDensity :: BlsqState
 builtinNormalDDensity = do
@@ -2626,6 +2639,15 @@ builtinExponentialDDensity = do
    (BlsqDouble ho : BlsqDouble lambda : xs) -> BlsqDouble (density (exponential (lambda)) (ho)) : xs
    _ -> BlsqError "Burlesque: (ed) Invalid arguments!" : st
    
+-- | eq
+builtinExponentialDQuantile :: BlsqState
+builtinExponentialDQuantile = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble lambda : xs) -> BlsqDouble (quantile (exponential (lambda)) (ho)) : xs
+   _ -> BlsqError "Burlesque: (eq) Invalid arguments!" : st
+   
 -- | Sc
 builtinStudentTDCumulative :: BlsqState
 builtinStudentTDCumulative = do
@@ -2644,6 +2666,15 @@ builtinStudentTDDensity = do
    (BlsqDouble ho : BlsqDouble lambda : xs) -> BlsqDouble (density (studentT (lambda)) (ho)) : xs
    _ -> BlsqError "Burlesque: (Sd) Invalid arguments!" : st
    
+-- | Sq
+builtinStudentTDQuantile :: BlsqState
+builtinStudentTDQuantile = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble lambda : xs) -> BlsqDouble (quantile (studentT (lambda)) (ho)) : xs
+   _ -> BlsqError "Burlesque: (Sq) Invalid arguments!" : st
+   
 -- | uc
 builtinUniformDCumulative :: BlsqState
 builtinUniformDCumulative = do
@@ -2661,3 +2692,12 @@ builtinUniformDDensity = do
   case st of
    (BlsqDouble ho : BlsqDouble high : BlsqDouble low : xs) -> BlsqDouble (density (uniformDistr low high) (ho)) : xs
    _ -> BlsqError "Burlesque: (ud) Invalid arguments!" : st
+   
+-- | uq
+builtinUniformDQuantile :: BlsqState
+builtinUniformDQuantile = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble high : BlsqDouble low : xs) -> BlsqDouble (quantile (uniformDistr low high) (ho)) : xs
+   _ -> BlsqError "Burlesque: (uq) Invalid arguments!" : st

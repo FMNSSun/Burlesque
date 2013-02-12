@@ -138,6 +138,7 @@
 <tr><td>EvalMany</td><td>E!</td><td></td><td>Defined as .*\[e!</td></tr>
 <tr class="vnext"><td>ExponentialDCumulative</td><td>ec</td><td>Double lambda, Double c</td><td>exponential distribution cumulative</td></tr>
 <tr class="vnext"><td>ExponentialDDensity</td><td>ed</td><td>Double lambda, Double c</td><td>exponential distribution density</td></tr>
+<tr class="vnext"><td>ExponentialDQuantile</td><td>eq</td><td>Double lambda, Double c</td><td>exponential distribution quantile</td></tr>
 <tr><td>Factors</td><td>fc</td><td>Int a</td><td>Return a block with every number a is divisible by</td></tr>
 <tr><td></td><td>fc</td><td>Str a<br>Block a</td><td>Least common element</td></tr>
 <tr><td>Filter</td><td>f[</td><td>Block f, Str a<br>Block f, Block a</td><td>Filters a list according to the predicate f (must return 1 or 0)</td></tr>
@@ -224,6 +225,7 @@
 <tr class="vnext"><td>Null</td><td>nu</td><td></td><td>Defined as L[n!</td></tr>
 <tr class="vnext"><td>NormalDCumulative</td><td>nc</td><td>Double mean, Double std, Double c</td><td>normal distribution cumulative</td></tr>
 <tr class="vnext"><td>NormalDDensity</td><td>nd</td><td>Double mean, Double std, Double c</td><td>normal distribution density</td></tr>
+<tr class="vnext"><td>NormalDQuantile</td><td>nq</td><td>Double mean, Double std, Double c</td><td>normal distribution quantile</td></tr>
 <tr><td>Not</td><td>n!</td><td>Int a</td><td>Boolish not</td></tr>
 <tr><td></td><td>n!</td><td>Block a<br>Str a</td><td>Most common element</td></tr>
 <tr class="vnext"><td>NotEqual</td><td>!=</td><td></td><td>Defined as == n!</td></tr>
@@ -316,6 +318,7 @@
 <tr class="vnext"><td>SplitRegex</td><td>sr</td><td>Str regex, Str s</td><td>Split s by regex </td></tr>
 <tr class="vnext"><td>StudentTDCumulative</td><td>Sc</td><td>Double param, Double c</td><td>StudentT distribution cumulative</td></tr>
 <tr class="vnext"><td>StudentTDDensity</td><td>Sd</td><td>Double param, Double c</td><td>StudentT distribution density</td></tr>
+<tr class="vnext"><td>StudentTDQuantile</td><td>Sq</td><td>Double param, Double c</td><td>StudentT distribution quantile</td></tr>
 <tr><td>StripLeft</td><td>S[</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (left) b from a</td></tr>
 <tr class="vnext"><td></td><td>S[</td><td>Int a</td><td>a * a (multiplies a with a)</td></tr>
 <tr><td>StripRight</td><td>[S</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (right) b from a</td></tr>
@@ -347,6 +350,7 @@
 <tr><td>Union</td><td>UN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Union</td></tr>
 <tr class="vnext"><td>UniformDCumulative</td><td>uc</td><td>Double low, Double high, Double c</td><td>uniform distribution cumulative</td></tr>
 <tr class="vnext"><td>UniformDDensity</td><td>ud</td><td>Double low, Double high, Double c</td><td>uniform distribution density</td></tr>
+<tr class="vnext"><td>UniformDQuantile</td><td>uq</td><td>Double low, Double high, Double c</td><td>uniform distribution quantile</td></tr>
 <tr><td>Unlines</td><td>un</td><td>n/a</td><td>Defined as "\n" \/ [[ \[</td></tr>
 <tr><td>UnlinesPretty</td><td>uN</td><td></td><td>Defined as unsh</td></tr>
 <tr><td>Version</td><td>??</td><td></td><td>Version string</td></tr>
