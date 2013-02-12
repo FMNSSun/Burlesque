@@ -2724,10 +2724,10 @@ builtinFrequencyList = do
 -- | u[
 builtinUnzip :: BlsqState
 builtinUnzip = do
- --^^{-]}m[\/{[~}m[
+ -- ^^{-]}m[\/{[~}m[
  builtinDup
  modify (BlsqBlock [ BlsqIdent "-]"] : )
  builtinMap
  builtinSwap
- modify (BlsqBlock [ BlsqIdent "[~]" : )
+ modify (BlsqBlock [ BlsqIdent "[~" ] : )
  builtinMap
