@@ -298,6 +298,7 @@ builtins = [
   ("eq", builtinExponentialDQuantile),
   ("nq", builtinNormalDQuantile),
   ("f:", builtinFrequencyList),
+  ("F:", builtinFrequencyListPercentage),
   ("u[", builtinUnzip),
   ("U[", builtinUngroup),
   
@@ -2721,6 +2722,20 @@ builtinFrequencyList = do
     ] :)
  builtinMap
  builtinSortReverse
+ 
+-- | F:
+builtinFrequencyListPercentage :: BlsqState
+builtinFrequencyListPercentage = do
+ -- f:u[\/PD^^++?/\/z[
+ builtinFrequencyList
+ builtinUnzip
+ builtinSwap
+ builtinProductMany
+ builtinDup
+ builtinSum
+ builtinCoerceDiv
+ builtinSwap
+ builtinZip
  
 -- | u[
 builtinUnzip :: BlsqState
