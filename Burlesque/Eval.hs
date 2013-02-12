@@ -28,6 +28,7 @@ import Statistics.Distribution.Hypergeometric
 import Statistics.Distribution.ChiSquared
 import Statistics.Distribution.Exponential
 import Statistics.Distribution.StudentT
+import Statistics.Distribution.Uniform
 
 import Debug.Trace
 
@@ -290,6 +291,8 @@ builtins = [
   ("ed", builtinExponentialDDensity),
   ("Sc", builtinStudentTDCumulative),
   ("Sd", builtinStudentTDDensity),
+  ("uc", builtinUniformDCumulative),
+  ("ud", builtinUniformDDensity),
   
   
   ("??", builtinVersion)
@@ -2640,3 +2643,21 @@ builtinStudentTDDensity = do
   case st of
    (BlsqDouble ho : BlsqDouble lambda : xs) -> BlsqDouble (density (studentT (lambda)) (ho)) : xs
    _ -> BlsqError "Burlesque: (Sd) Invalid arguments!" : st
+   
+-- | uc
+builtinUniformDCumulative :: BlsqState
+builtinUniformDCumulative = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble high : BlsqDouble low :xs) -> BlsqDouble (cumulative (uniformDistr low high) ho) : xs
+   _ -> BlsqError "Burlesque: (uc) Invalid arguments!" : st
+   
+-- | ud
+builtinUniformDDensity :: BlsqState
+builtinUniformDDensity = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqDouble ho : BlsqDouble high : BlsqDouble low : xs) -> BlsqDouble (density (uniformDistr low high) (ho)) : xs
+   _ -> BlsqError "Burlesque: (ud) Invalid arguments!" : st
