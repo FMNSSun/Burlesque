@@ -93,6 +93,8 @@ builtins = [
   ("wl", builtinWithLines),
   ("WL", builtinWithLinesPretty),
   ("wL", builtinWithLinesParsePretty),
+  ("ww", builtinWithWords),
+  ("WW", builtinWithWordsPretty),
   ("ri", builtinReadInt),
   ("rd", builtinReadDouble),
   ("ra", builtinReadArray),
@@ -744,6 +746,21 @@ builtinWithLines = do
  builtinSwap
  builtinMap
  builtinUnlines
+ 
+-- | > ww
+builtinWithWords :: BlsqState
+builtinWithWords = do
+ builtinSwap
+ builtinWords2
+ builtinSwap
+ builtinMap
+ builtinWords
+ 
+-- | > WW
+builtinWithWordsPretty :: BlsqState
+builtinWithWordsPretty = do
+ builtinWithWords
+ builtinPretty
 
 -- | > WL
 builtinWithLinesPretty :: BlsqState
