@@ -330,6 +330,7 @@ builtins = [
   ("gw", builtinGroupWithLength),
   ("gl", builtinGroupLength),
   ("gn", builtinGroupNub),
+  ("mo", builtinMultiplesOf),
   
   
   ("??", builtinVersion)
@@ -3090,3 +3091,12 @@ builtinGroupNub = do
  builtinGroup
  modify (BlsqBlock [BlsqIdent "-]"] :)
  builtinMap
+ 
+-- | mo
+builtinMultiplesOf :: BlsqState
+builtinMultiplesOf = do
+ -- 1R@\/?*
+ modify (BlsqInt 1 :)
+ builtinRangeInf
+ builtinSwap
+ builtinCoerceMul
