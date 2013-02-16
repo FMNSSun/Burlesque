@@ -318,6 +318,9 @@ builtins = [
   ("ad", builtinAllDigit),
   ("an", builtinAllAlphaNum),
   ("aa", builtinAllAlpha),
+  ("w[", builtinFilterWords),
+  ("W[", builtinFilterLines),
+  
   
   
   ("??", builtinVersion)
@@ -2962,3 +2965,23 @@ builtinAllAlpha :: BlsqState
 builtinAllAlpha = do
  modify (BlsqBlock [BlsqIdent "rd"] :)
  builtinAll
+ 
+-- | w[
+builtinFilterWords :: BlsqState
+builtinFilterWords = do 
+ -- \/WD\/f[wd
+ builtinSwap
+ builtinWords2
+ builtinSwap
+ builtinFilter
+ builtinWords
+ 
+-- | W[
+builtinFilterLines :: BlsqState
+builtinFilterLines = do
+ -- \/ln\/f[un
+ builtinSwap
+ builtinLines
+ builtinSwap
+ builtinFilter
+ builtinUnlines
