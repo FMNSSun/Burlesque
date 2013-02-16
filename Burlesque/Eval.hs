@@ -312,6 +312,7 @@ builtins = [
   ("x/", builtinXSwap),
   ("ct", builtinChiSquaredTest),
   ("nr", builtinNCr),
+  ("zi", builtinZipIndices),
   
   
   ("??", builtinVersion)
@@ -2900,3 +2901,12 @@ builtinNCr = do
    (BlsqInt k : BlsqInt n : xs) -> putResult $ BlsqInt (ncr n k) : xs
    _ -> putResult $ BlsqError "Burlesque: (nr) Invalid arguments!" : st
  where ncr n k = product [k+1..n] `div` product [1..n-k]
+ 
+-- | zi
+builtinZipIndices :: BlsqState
+builtinZipIndices = do
+ -- 0R@\/z[
+ modify (BlsqInt 0 :)
+ builtinRangeInf
+ builtinSwap
+ builtinZip
