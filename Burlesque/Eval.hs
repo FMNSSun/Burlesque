@@ -324,6 +324,7 @@ builtins = [
   ("SO", builtinSortedReverse),
   ("ic", builtinIntercalate),
   ("=s", builtinSortEqual),
+  ("pt", builtinPartition),
   
   
   ("??", builtinVersion)
@@ -3016,3 +3017,25 @@ builtinSortEqual = do
  builtinSwap
  builtinSort
  builtinEqual
+ 
+-- | pt
+builtinPartition :: BlsqState
+builtinPartition = do
+ st <- get
+ case st of
+  (BlsqBlock p : BlsqStr s : xs) -> do
+    builtinSwap
+    builtinExplode
+    builtinSwap
+    builtinPartition
+    modify (BlsqBlock [BlsqIdent "\\["] :)
+    builtinMap
+  (BlsqBlock p : BlsqBlock s : xs) -> do
+    builtinFilter
+    builtinBox
+    modify (BlsqBlock s :)
+    modify (BlsqBlock (p ++ [BlsqIdent "n!"]) :)
+    builtinFilter
+    builtinBox
+    builtinAdd
+    
