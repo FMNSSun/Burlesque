@@ -313,6 +313,11 @@ builtins = [
   ("ct", builtinChiSquaredTest),
   ("nr", builtinNCr),
   ("zi", builtinZipIndices),
+  ("al", builtinAll),
+  ("ay", builtinAny),
+  ("ad", builtinAllDigit),
+  ("an", builtinAllAlphaNum),
+  ("aa", builtinAllAlpha),
   
   
   ("??", builtinVersion)
@@ -477,10 +482,13 @@ builtinLines = do
 -- | > un
 builtinUnlines :: BlsqState
 builtinUnlines = do
- modify (BlsqStr "\n" :)
- builtinSwap
- builtinIntersperse
- builtinConcat
+ st <- get
+ case st of
+  (BlsqBlock [] : xs) -> putResult $ BlsqStr "" : xs
+  _ -> do modify (BlsqStr "\n" :)
+          builtinSwap
+          builtinIntersperse
+          builtinConcat
 
 -- | > uN
 builtinUnlinesPretty :: BlsqState
@@ -671,11 +679,18 @@ builtinConcat :: BlsqState
 builtinConcat = do
  st <- get
  case st of
+  -- Special case for empty block
+  (BlsqBlock [] : xs) -> do putResult $ BlsqBlock [] : xs
   -- Special case for single char blocks
   (BlsqBlock [BlsqChar a] : xs) -> do putResult $ BlsqStr [a] : xs
   (BlsqBlock a) : xs -> do
      modify ((BlsqBlock $ [BlsqIdent "_+"]) :)
      builtinReduce
+     st' <- get
+     case st' of 
+      (BlsqStr _ : xs) -> return ()
+      (BlsqBlock _ : xs) -> return ()
+      (a : xs) -> putResult $ BlsqBlock [a] : xs
   _ -> putResult $ (BlsqError "Burlesque: (\\[) Invalid arguments!") : st
 
 -- | > m[
@@ -1376,15 +1391,21 @@ builtinSwapDup = do
 
 -- | > r&
 builtinAndLs :: BlsqState
-builtinAndLs = do
- modify(BlsqBlock [(BlsqIdent "&&")] :)
- builtinReduce
+builtinAndLs = do 
+ st <- get
+ case st of 
+   (BlsqBlock [] : xs) -> putResult $ BlsqInt 0 : xs
+   _ -> do modify(BlsqBlock [(BlsqIdent "&&")] :)
+           builtinReduce
 
 -- | > r|
 builtinOrLs :: BlsqState
 builtinOrLs = do
- modify(BlsqBlock [(BlsqIdent "||")] :)
- builtinReduce
+ st <- get
+ case st of 
+   (BlsqBlock [] : xs) -> putResult $ BlsqInt 0 : xs
+   _ -> do modify(BlsqBlock [(BlsqIdent "||")] :)
+           builtinReduce
 
 -- | > ZZ
 builtinToUpper :: BlsqState
@@ -1462,7 +1483,8 @@ builtinWords = do
   (BlsqStr _ : xs) -> do
          modify (BlsqStr " " : )
          builtinSplit
-  (BlsqBlock _ : xs) -> do
+  (BlsqBlock [] : xs) -> putResult $ BlsqStr "" : xs
+  (BlsqBlock a : xs) -> do
          modify (BlsqChar ' ' : )
          builtinSwap
          builtinIntersperse
@@ -2910,3 +2932,33 @@ builtinZipIndices = do
  builtinRangeInf
  builtinSwap
  builtinZip
+ 
+-- | al
+builtinAll :: BlsqState
+builtinAll = do
+ builtinMap
+ builtinAndLs
+ 
+-- | ay
+builtinAny :: BlsqState
+builtinAny = do
+ builtinMap
+ builtinOrLs
+ 
+-- | ad
+builtinAllDigit :: BlsqState
+builtinAllDigit = do
+ modify (BlsqBlock [BlsqIdent "><"] :)
+ builtinAll
+ 
+-- | an
+builtinAllAlphaNum :: BlsqState
+builtinAllAlphaNum = do
+ modify (BlsqBlock [BlsqIdent "ri"] :)
+ builtinAll
+
+-- | aa
+builtinAllAlpha :: BlsqState
+builtinAllAlpha = do
+ modify (BlsqBlock [BlsqIdent "rd"] :)
+ builtinAll
