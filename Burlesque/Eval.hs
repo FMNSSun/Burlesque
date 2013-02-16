@@ -327,6 +327,9 @@ builtins = [
   ("pt", builtinPartition),
   ("es", builtinEmptyBlockToStr),
   ("s=", builtinStrEqIgnoreCase),
+  ("gw", builtinGroupWithLength),
+  ("gl", builtinGroupLength),
+  ("gn", builtinGroupNub),
   
   
   ("??", builtinVersion)
@@ -3057,3 +3060,33 @@ builtinStrEqIgnoreCase = do
  builtinToLower
  builtinSwap
  builtinEqual
+ 
+-- | gw
+builtinGroupWithLength :: BlsqState
+builtinGroupWithLength = do
+ -- =[{^^L[\/-]bx\/+]}m[
+ builtinGroup
+ modify( BlsqBlock [
+      BlsqIdent "^^",
+      BlsqIdent "L[",
+      BlsqIdent "\\/",
+      BlsqIdent "-]",
+      BlsqIdent "bx",
+      BlsqIdent "\\/",
+      BlsqIdent "+]"
+    ] :)
+ builtinMap
+ 
+-- | gl
+builtinGroupLength :: BlsqState
+builtinGroupLength = do
+ builtinGroup
+ builtinLength
+ 
+-- | gn
+builtinGroupNub :: BlsqState
+builtinGroupNub = do
+ -- =[{-]}m[
+ builtinGroup
+ modify (BlsqBlock [BlsqIdent "-]"] :)
+ builtinMap
