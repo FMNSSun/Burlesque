@@ -840,6 +840,8 @@ builtinIff = do
   case st of
    (BlsqInt 0 : BlsqBlock b : xs) -> xs
    (BlsqInt _ : BlsqBlock b : xs) -> runStack b xs
+   (BlsqBlock b : BlsqInt 0 : xs) -> xs
+   (BlsqBlock b : BlsqInt _ : xs) -> runStack b xs
    _ -> BlsqError "Burlesque: (if) Invalid arguments!" : st
 
 -- | > ie
