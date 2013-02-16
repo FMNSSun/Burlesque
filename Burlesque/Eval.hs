@@ -325,6 +325,7 @@ builtins = [
   ("ic", builtinIntercalate),
   ("=s", builtinSortEqual),
   ("pt", builtinPartition),
+  ("es", builtinEmptyBlockToStr),
   
   
   ("??", builtinVersion)
@@ -3028,7 +3029,7 @@ builtinPartition = do
     builtinExplode
     builtinSwap
     builtinPartition
-    modify (BlsqBlock [BlsqIdent "\\["] :)
+    modify (BlsqBlock [BlsqIdent "\\[",BlsqIdent "es"] :)
     builtinMap
   (BlsqBlock p : BlsqBlock s : xs) -> do
     builtinFilter
@@ -3038,4 +3039,11 @@ builtinPartition = do
     builtinFilter
     builtinBox
     builtinAdd
-    
+
+-- | es
+builtinEmptyBlockToStr :: BlsqState
+builtinEmptyBlockToStr = do
+ st <- get
+ case st of
+  (BlsqBlock [] : xs) -> putResult $ BlsqStr "" : xs
+  _ -> return ()
