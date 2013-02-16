@@ -250,6 +250,8 @@ builtins = [
   ("?^", builtinCoercePow),
   ("?s", builtinCoerceSqrt),
   ("?!", builtinCoerceFactorial),
+  ("?i", builtinCoerceInc),
+  ("?d", builtinCoerceDec),
   ("im", builtinImplode),
   ("ms", builtinMapSum),
   ("mp", builtinMapProduct),
@@ -2371,6 +2373,28 @@ builtinCoerceFactorial = do
                             builtinMap
    _ -> do builtinRangeFromOne
            builtinProduct
+           
+-- | ?i
+builtinCoerceInc :: BlsqState
+builtinCoerceInc = do
+ st <- get
+ case st of
+   (BlsqDouble a : xs) -> do modify (BlsqDouble 1.0 : )
+                             builtinCoerceAdd
+   (BlsqBlock a : xs) -> do modify (BlsqBlock [ BlsqIdent "?i" ] : )
+                            builtinMap
+   _ -> builtinIncrement
+   
+-- | ?d
+builtinCoerceDec :: BlsqState
+builtinCoerceDec = do
+ st <- get
+ case st of
+   (BlsqDouble a : xs) -> do modify (BlsqDouble 1.0 : )
+                             builtinCoerceSub
+   (BlsqBlock a : xs) -> do modify (BlsqBlock [ BlsqIdent "?d" ] : )
+                            builtinMap
+   _ -> builtinDecrement
    
 -- | im
 builtinImplode :: BlsqState
