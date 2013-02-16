@@ -322,6 +322,7 @@ builtins = [
   ("W[", builtinFilterLines),
   ("so", builtinSorted),
   ("SO", builtinSortedReverse),
+  ("ic", builtinIntercalate),
   
   
   ("??", builtinVersion)
@@ -3000,3 +3001,9 @@ builtinSortedReverse = do
  builtinDup
  builtinSortReverse
  builtinEqual
+ 
+-- | ic
+builtinIntercalate :: BlsqState
+builtinIntercalate = do
+ builtinIntersperse
+ builtinConcat
