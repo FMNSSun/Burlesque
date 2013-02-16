@@ -331,6 +331,8 @@ builtins = [
   ("gl", builtinGroupLength),
   ("gn", builtinGroupNub),
   ("mo", builtinMultiplesOf),
+  (">=", builtinGeq),
+  ("<=", builtinLeq),
   
   
   ("??", builtinVersion)
@@ -913,6 +915,24 @@ builtinSmaller = do
   case st of
    (b : a : xs) -> (BlsqInt $ if a < b then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (.<) Invalid arguments!" : st
+   
+-- | > (>=)
+builtinGeq :: BlsqState
+builtinGeq = do
+ st <- get
+ putResult $
+  case st of
+   (b : a : xs) -> (BlsqInt $ if a >= b then 1 else 0) : xs
+   _ -> BlsqError "Burlesque: (>=) Invalid arguments!" : st
+
+-- | > (<=)
+builtinLeq :: BlsqState
+builtinLeq = do
+ st <- get
+ putResult $
+  case st of
+   (b : a : xs) -> (BlsqInt $ if a <= b then 1 else 0) : xs
+   _ -> BlsqError "Burlesque: (<=) Invalid arguments!" : st
 
 -- | > (>.)
 builtinMax :: BlsqState
