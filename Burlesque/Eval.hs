@@ -320,7 +320,8 @@ builtins = [
   ("aa", builtinAllAlpha),
   ("w[", builtinFilterWords),
   ("W[", builtinFilterLines),
-  
+  ("so", builtinSorted),
+  ("SO", builtinSortedReverse),
   
   
   ("??", builtinVersion)
@@ -2985,3 +2986,17 @@ builtinFilterLines = do
  builtinSwap
  builtinFilter
  builtinUnlines
+ 
+-- | so
+builtinSorted :: BlsqState
+builtinSorted = do
+ builtinDup
+ builtinSort
+ builtinEqual
+ 
+-- | SO
+builtinSortedReverse :: BlsqState
+builtinSortedReverse = do
+ builtinDup
+ builtinSortReverse
+ builtinEqual
