@@ -323,6 +323,7 @@ builtins = [
   ("so", builtinSorted),
   ("SO", builtinSortedReverse),
   ("ic", builtinIntercalate),
+  ("=s", builtinSortEqual),
   
   
   ("??", builtinVersion)
@@ -3007,3 +3008,11 @@ builtinIntercalate :: BlsqState
 builtinIntercalate = do
  builtinIntersperse
  builtinConcat
+ 
+-- | =s
+builtinSortEqual :: BlsqState
+builtinSortEqual = do
+ builtinSort
+ builtinSwap
+ builtinSort
+ builtinEqual
