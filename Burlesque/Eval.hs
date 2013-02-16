@@ -326,6 +326,7 @@ builtins = [
   ("=s", builtinSortEqual),
   ("pt", builtinPartition),
   ("es", builtinEmptyBlockToStr),
+  ("s=", builtinStrEqIgnoreCase),
   
   
   ("??", builtinVersion)
@@ -3047,3 +3048,12 @@ builtinEmptyBlockToStr = do
  case st of
   (BlsqBlock [] : xs) -> putResult $ BlsqStr "" : xs
   _ -> return ()
+  
+-- | s=
+builtinStrEqIgnoreCase :: BlsqState
+builtinStrEqIgnoreCase = do
+ builtinToLower
+ builtinSwap
+ builtinToLower
+ builtinSwap
+ builtinEqual
