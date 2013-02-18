@@ -335,6 +335,7 @@ builtins = [
   ("mo", builtinMultiplesOf),
   (">=", builtinGeq),
   ("<=", builtinLeq),
+  ("mm", builtinMmult),
   
   
   ("??", builtinVersion)
@@ -3146,3 +3147,24 @@ builtinMultiplesOf = do
  builtinRangeInf
  builtinSwap
  builtinCoerceMul
+ 
+
+-- | mm
+builtinMmult :: BlsqState
+builtinMmult = do
+ builtinTranspose
+ st <- get
+ case st of
+  (BlsqBlock b : BlsqBlock a : xs) -> do
+    putResult $ (BlsqBlock . map BlsqBlock $ [ [ qsum $ qmul ar bc | bc <- b ] | ar <- a ]) : xs
+ where qmul a b = head $ 
+        execState
+         (do modify (a :)
+             modify (b :)
+             modify (BlsqBlock [ BlsqIdent "?*" ] :)
+             builtinZipWithPush) []
+       qsum ls = head $
+        execState
+         (do modify (ls :)
+             builtinSum) []
+         
