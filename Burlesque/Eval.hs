@@ -34,6 +34,10 @@ import Debug.Trace
 
 -- | > Evaluate a Burlesque program
 eval :: BlsqProg -> BlsqState
+eval (BlsqSpecial ")" : i : xs) = do
+ modify (BlsqBlock [ i ] : )
+ builtinMap
+ eval xs
 eval (BlsqHackMode x : xs) = do
  let m = map (\c -> BlsqIdent . fst $ builtins !! (ord c)) x
  eval (m ++ xs)
@@ -228,6 +232,7 @@ builtins = [
   ("FM", builtinFilterMap),
   ("r\\", builtinRangeConcat),
   ("SP", builtinSpecialInput),
+  ("sp", builtinSpecialInputPretty),
   ("hd", builtinHide),
   ("HD", builtinHide2),
   ("ld", builtinLoad),
@@ -339,6 +344,10 @@ builtins = [
   ("ss", builtinStrStr),
   ("en", builtinEveryNth),
   ("pe", builtinParseEval),
+  ("sl", builtinSelectLines),
+  ("sw", builtinSelectWords),
+  ("di", builtinDeleteIndices),
+  ("tl", builtinTrimLines),
   
   
   ("??", builtinVersion)
@@ -3216,3 +3225,46 @@ builtinParseEval :: BlsqState
 builtinParseEval = do
  builtinParse
  builtinEval
+ 
+-- | sl
+builtinSelectLines :: BlsqState
+builtinSelectLines = do
+ builtinSwap
+ builtinLines
+ builtinSwap
+ builtinSelectIndices
+ builtinUnlines
+ 
+-- | sw
+builtinSelectWords :: BlsqState
+builtinSelectWords = do
+ builtinSwap
+ builtinWords2
+ builtinSwap
+ builtinSelectIndices
+ builtinWords
+ 
+-- | di
+builtinDeleteIndices :: BlsqState
+builtinDeleteIndices = do
+ -- (RA)\/[[(RA)[+e!
+ modify(BlsqIdent "RA" :)
+ builtinSwap
+ builtinIntersperse
+ modify(BlsqIdent "RA" :)
+ builtinAppend
+ builtinEval
+ 
+-- | tl
+builtinTrimLines :: BlsqState
+builtinTrimLines = do
+ builtinLines
+ modify (BlsqBlock [ BlsqIdent "tt" ] :)
+ builtinMap
+ builtinUnlines
+ 
+-- | sp
+builtinSpecialInputPretty :: BlsqState
+builtinSpecialInputPretty = do
+ builtinSpecialInput
+ builtinPretty
