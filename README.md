@@ -17,13 +17,12 @@ blsq ) 1234 100\/0 9rn.+10coSPsh
 8 4 1 7 1 6 7 3 6 8
 ```
 
-1.7.0-rc3
+1.7.0
 =========
 
-Users of Burlesque are highly encouraged to have a look at v1.7.0-rc3 and test it, report bugs and give feedback.
-Burlesque 1.7.0 is backwards compatible. If you experience any problems please report a bug.
+Users of Burlesque are highly encouraged to upgrade to 1.7.0.
 
-Current stable version: 1.6.9
+Current stable version: 1.7.0
 
 License
 =======
