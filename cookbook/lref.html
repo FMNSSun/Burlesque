@@ -365,6 +365,7 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td>StripLeft</td><td>S[</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (left) b from a</td></tr>
 <tr class="vnext"><td></td><td>S[</td><td>Int a</td><td>a * a (multiplies a with a)</td></tr>
 <tr><td>StripRight</td><td>[S</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (right) b from a</td></tr>
+<tr class="vnext"><td>StrStr</td><td>ss</td><td></td><td>Defined as ^^L[x/\/CO\/Fi . Returns the index of a substring in a string.<br/>like C's strstr</td></tr>
 <tr><td>Sub</td><td>.-</td><td>Int a, Int b</td><td>Regular integer subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr>

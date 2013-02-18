@@ -336,6 +336,7 @@ builtins = [
   (">=", builtinGeq),
   ("<=", builtinLeq),
   ("mm", builtinMmult),
+  ("ss", builtinStrStr),
   
   
   ("??", builtinVersion)
@@ -3167,4 +3168,15 @@ builtinMmult = do
         execState
          (do modify (ls :)
              builtinSum) []
-         
+
+-- | ss
+builtinStrStr :: BlsqState
+builtinStrStr = do
+ -- ^^L[x/\/CO\/Fi
+ builtinDup
+ builtinLength
+ builtinXSwap
+ builtinSwap
+ builtinChunky
+ builtinSwap
+ builtinFindIndexEq
