@@ -157,6 +157,7 @@
 <tr><td>Equal</td><td>==</td><td>Any a, Any b</td><td>Comparision (a == b)</td></tr>
 <tr><td>Eval</td><td>e!</td><td>Block a</td><td>Eval a block</td></tr>
 <tr><td>EvalMany</td><td>E!</td><td></td><td>Defined as .*\[e!</td></tr>
+<tr class="vnext"><td>EveryNth</td><td>en</td><td>Str a<br/>Block a<br/>Int a</td><td>Returns a block/str/int containing every nth element/char/digit</td></tr>
 <tr class="vnext"><td>ExponentialDCumulative</td><td>ec</td><td>Double lambda, Double c</td><td>exponential distribution cumulative</td></tr>
 <tr class="vnext"><td>ExponentialDDensity</td><td>ed</td><td>Double lambda, Double c</td><td>exponential distribution density</td></tr>
 <tr class="vnext"><td>ExponentialDQuantile</td><td>eq</td><td>Double lambda, Double c</td><td>exponential distribution quantile</td></tr>
@@ -270,6 +271,7 @@ Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
 <tr><td>PadLeft</td><td>P[</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (left) a to length c with b</td></tr>
 <tr><td>PadRight</td><td>[P</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (right) a to length c with b</td></tr>
 <tr><td>Parse</td><td>ps</td><td>Str a</td><td>Parses the string as a Burlesque expression and returns a Block</td></tr>
+<tr class="vnext"><td>ParseEval</td><td>pe</td><td></td><td>Defined as pse!</td></tr>
 <tr class="vnext"><td>Partition</td><td>pt</td><td>Block xs, Block p <br/>Str xs, Block p</td><td>Partitions a block (or str) into two blocks containing elements<br/>
 which satisfy p and not satisfying p. (Like doing two filter passes with p and with NOT p).</td></tr>
 <tr class="vnext"><td>PoissonDCumulative</td><td>pc</td><td>Double lambda, Double c</td><td>poisson distribution cumulative</td></tr>

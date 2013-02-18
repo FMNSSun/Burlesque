@@ -337,6 +337,8 @@ builtins = [
   ("<=", builtinLeq),
   ("mm", builtinMmult),
   ("ss", builtinStrStr),
+  ("en", builtinEveryNth),
+  ("pe", builtinParseEval),
   
   
   ("??", builtinVersion)
@@ -3180,3 +3182,37 @@ builtinStrStr = do
  builtinChunky
  builtinSwap
  builtinFindIndexEq
+ 
+-- | en
+builtinEveryNth :: BlsqState
+builtinEveryNth = do
+ st <- get
+ case st of
+   (BlsqInt n : BlsqBlock _ : xs) -> do 
+      -- co{[~}m[
+      builtinPop
+      builtinZipIndices
+      modify (BlsqBlock [ BlsqIdent "-]", BlsqIdent "?i", BlsqInt n, BlsqIdent ".%", BlsqIdent "n!" ] :)
+      builtinFilter
+      builtinUnzip
+      builtinSwapPop
+   (BlsqInt n : BlsqStr _ : xs) -> do
+      builtinPop
+      builtinZipIndices
+      modify (BlsqBlock [ BlsqIdent "-]", BlsqIdent "?i", BlsqInt n, BlsqIdent ".%", BlsqIdent "n!" ] :)
+      builtinFilter
+      builtinUnzip
+      builtinSwapPop
+      builtinConcat
+   (BlsqInt _ : BlsqInt _ : xs) -> do
+      builtinSwap
+      builtinExplode
+      builtinSwap
+      builtinEveryNth
+      builtinImplode
+      
+-- | pe
+builtinParseEval :: BlsqState
+builtinParseEval = do
+ builtinParse
+ builtinEval
