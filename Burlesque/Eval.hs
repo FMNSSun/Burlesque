@@ -1778,6 +1778,7 @@ builtinLog = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (log (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (log a) : xs
+   _ -> putResult $ BlsqError "Burlesque: (lg) Invalid arguments!" : st
 
 -- | LG
 builtinLog2 :: BlsqState
