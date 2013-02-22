@@ -23,12 +23,12 @@ toDisplay (BlsqStr s) = show s
 toDisplay (BlsqError s) = "ERROR: " ++ s
 toDisplay (BlsqIdent s) = s
 toDisplay (BlsqChar c) = "'"++[c]
-toDisplay (BlsqDouble d) = show d
+toDisplay (BlsqDouble d) = showFFloat Nothing (d) ""
 
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNormal) = s
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNoSpaces) = noSpaces s
 
-toDisplay (BlsqPretty (BlsqDouble a) _) = showFFloat Nothing (a) ""
+toDisplay (BlsqPretty (BlsqDouble a) _) = show a
 
 toDisplay (BlsqPretty (BlsqChar c) BlsqFormatNormal) = [c]
 
