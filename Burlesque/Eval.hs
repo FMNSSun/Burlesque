@@ -1026,10 +1026,12 @@ builtinNotEqual = do
 builtinRound :: BlsqState
 builtinRound = do
  st <- get
- putResult $
-  case st of
-   (BlsqInt b : BlsqDouble a : xs) -> (BlsqDouble $ round' a b) : xs
-   _ -> BlsqError "Burlesque: (r_) Invalid arguments!" : st
+ case st of
+   (BlsqInt b : BlsqDouble a : xs) -> putResult $ (BlsqDouble $ round' a b) : xs
+   (BlsqInt b : BlsqBlock a : xs) -> do builtinPop
+                                        modify (BlsqBlock [ BlsqInt b , BlsqIdent "r_" ] :)
+                                        builtinMap
+   _ -> putResult $ BlsqError "Burlesque: (r_) Invalid arguments!" : st
  where round' n s = let factor = fromIntegral (10^s) in fromIntegral (round (n * factor)) / factor
 
 -- | R_
