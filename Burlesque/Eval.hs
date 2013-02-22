@@ -348,6 +348,8 @@ builtins = [
   ("sw", builtinSelectWords),
   ("di", builtinDeleteIndices),
   ("tl", builtinTrimLines),
+  ("td", builtinToDouble),
+  ("ti", builtinToInt),
   
   
   ("??", builtinVersion)
@@ -591,6 +593,7 @@ builtinSum :: BlsqState
 builtinSum = do
  st <- get
  case st of
+   (BlsqBlock [] : xs) -> do putResult $ BlsqInt 0 : xs
    (BlsqBlock a) : xs -> do modify (BlsqBlock [BlsqIdent ".+"] : )
                             builtinReduce
    (BlsqInt b : BlsqInt a : xs) -> putResult $ (BlsqInt . read $ (show (abs a)) ++ (show (abs b))) : xs
@@ -600,6 +603,7 @@ builtinProduct :: BlsqState
 builtinProduct = do
  st <- get
  case st of
+   (BlsqBlock [] : xs) -> do putResult $ BlsqInt 1 : xs
    (BlsqBlock a) : xs -> do modify (BlsqBlock [BlsqIdent ".*"] : )
                             builtinReduce
    (BlsqInt _ : xs) -> do builtinPrettyFromFormat
@@ -3269,3 +3273,24 @@ builtinSpecialInputPretty :: BlsqState
 builtinSpecialInputPretty = do
  builtinSpecialInput
  builtinPretty
+ 
+-- | td
+builtinToDouble :: BlsqState
+builtinToDouble = do
+ st <- get
+ case st of
+   (BlsqDouble a : xs) -> return ()
+   (BlsqStr a : xs) -> builtinReadDouble
+   (BlsqInt a : xs) -> builtinProduct
+   _ -> putResult $ BlsqError "Burlesque: (td) Invalid arguments!" : st
+   
+-- | ti
+builtinToInt :: BlsqState
+builtinToInt = do
+ st <- get
+ case st of
+   (BlsqDouble a : xs) -> builtinProduct
+   (BlsqStr a : xs) -> builtinReadInt
+   (BlsqInt a : xs) -> return ()
+   (BlsqBlock a : xs) -> builtinImplode
+   _ -> putResult $ BlsqError "Burlesque: (td) Invalid arguments!" : st

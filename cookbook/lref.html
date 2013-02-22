@@ -295,7 +295,7 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td>Prepend</td><td>+]</td><td>String a, Char b<br/>Block a,Any b<br/>Int a,Int b</td><td>Prepends b to a</td></tr>
 <tr class="vnext"><td>PrimeFactors</td><td>fC</td><td>Int a</td><td>Prime factors of a</td></tr>
 <tr class="vnext"><td></td><td>fC</td><td>Double a</td><td>a * a (multiplies a with a)</td></tr>
-<tr class="vnext"><td>Product</td><td>pd</td><td>Block a</td><td>Defined as {.*}r[</td></tr>
+<tr class="vnext"><td>Product</td><td>pd</td><td>Block a</td><td>Defined as {.*}r[. Returns Int 1 on empty list.</td></tr>
 <tr class="vnext"><td></td><td>pd</td><td>Double a</td><td>Ceiling a</td></tr>
 <tr class="vnext"><td></td><td>pd</td><td>Int a</td><td>Convert to double</td></tr>
 <tr class="vnext"><td>ProductMany</td><td>PD</td><td></td><td>Defined as {pd}m[</td></tr>
@@ -379,7 +379,7 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td>SuffixOf</td><td>!~</td><td>Block a, Block b</td><td>Is b a suffix of a?</td></tr>
 <tr><td></td><td>!~</td><td>Int a, Int b</td><td>Is b a suffix of a?</td></tr>
 <tr><td></td><td>!~</td><td>Str a, Str b</td><td>Is b a suffix of a?</td></tr>
-<tr><td>Sum</td><td>++</td><td>Block a</td><td>Defined as {.+}r[</td></tr>
+<tr><td>Sum</td><td>++</td><td>Block a</td><td>Defined as {.+}r[. Returns Int 0 on empty list</td></tr>
 <tr><td></td><td>++</td><td>Int a,Int b</td><td>Concatenate digits.</td></tr>
 <tr><td>Swap</td><td>\/</td><td></td><td>Swap elements on top of the stack.</td></tr>
 <tr><td>SwapDup</td><td>/^</td><td></td><td>Defined as \/ ^^ </td></tr>
@@ -390,6 +390,8 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td></td><td>[-</td><td>Int a</td><td>All except first digit</td></tr>
 <tr class="vnext"><td>TakeWhile</td><td>tw</td><td>Block p<br/>Block ls</td><td>take elements from ls as long as p holds true</td></tr>
 <tr class="vnext"><td></td><td>tw</td><td>Block p<br/>Str s</td><td>Defined as **tw\[</td></tr>
+<tr class="vnext"><td>ToDouble</td><td>td</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to double</td></tr>
+<tr class="vnext"><td>ToInt</td><td>ti</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to int</td></tr>
 <tr><td>ToLower</td><td>zz</td><td>Str a<br/>Char a</td><td>to lower case</td></tr>
 <tr><td>ToUpper</td><td>ZZ</td><td>Str a<br/>Char a</td><td>to upper case</td></tr>
 <tr class="vnext"><td>Transpose</td><td>tp</td><td>Block a</td><td>Transpose block of blocks (Matrix transpose)</td></tr>
