@@ -40,6 +40,8 @@
 <tr><td>Abs</td><td>ab</td><td>Int a<br/>Double a</td><td>Abs a</td></tr>
 <tr><td>Add</td><td>.+</td><td>Int a, Int b</td><td>Regular integer addition (a + b)</td></tr>
 <tr><td></td><td>.+</td><td>Double a, Double b</td><td>Addition (a + b)</td></tr>
+<tr class="vnextn"><td></td><td>.+</td><td>Double a, Int b</td><td>(a + b)</td></tr>
+<tr class="vnextn"><td></td><td>.+</td><td>Int a, Double b</td><td>(a + b)</td></tr>
 <tr><td></td><td>.+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr>
 <tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
 <tr><td></td><td>.+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr>
@@ -149,6 +151,8 @@
 <tr class="vnext"><td>DimArraySet</td><td>D!</td><td>Block arr, Block adr, Any e</td><td>Sets the element in arr at position adr to e (see DimArrayAccess)</td></tr>
 <tr><td>Div</td><td>./</td><td>Int a, Int b</td><td>Regular integer division (a / b)</td></tr>
 <tr><td></td><td>./</td><td>Double a, Double b</td><td>Division (a / b)</td></tr>
+<tr class="vnextn"><td></td><td>./</td><td>Double a, Int b</td><td>(a / b)</td></tr>
+<tr class="vnextn"><td></td><td>./</td><td>Int a, Double b</td><td>(a / b)</td></tr>
 <tr class="vnext"><td></td><td>./</td><td>Str a,Str b</td><td>If a starts with b, remove b from a</td></tr>
 <tr class="vnext"><td>DropWhile</td><td>dw</td><td>Block p<br/>Block ls</td><td>drop elements from ls as long as p holds true</td></tr>
 <tr class="vnext"><td></td><td>dw</td><td>Block p<br/>Str s</td><td>Defined as **dw\[</td></tr>
@@ -256,6 +260,8 @@ Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
 <tr><td></td><td>.*</td><td>Str a, Int n</td><td>Returns a block containing n copies of a</td></tr>
 <tr><td></td><td>.*</td><td>Char a, Int n</td><td>Returns a string containing n copies of a</td></tr>
 <tr><td></td><td>.*</td><td>Block a, Int n</td><td>Returns a block containing n copies of a</td></tr>
+<tr class="vnextn"><td></td><td>.*</td><td>Double a, Int b</td><td>(a * b)</td></tr>
+<tr class="vnextn"><td></td><td>.*</td><td>Int a, Double b</td><td>(a * b)</td></tr>
 <tr class="vnext"><td>MultiplesOf</td><td>mo</td><td></td><td>Defined as 1R@\/?* (infinite block of multiples)</td></tr>
 <tr class="vnext"><td></td><td>.*</td><td>Str a,Str b</td><td>reverse b++a</td></tr>
 <tr><td>Nub</td><td>NB</td><td>Block a<br/>Str a<br/>Int a</td><td>Remove duplicate elements</td></tr>
@@ -376,6 +382,8 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr>
 <tr><td></td><td>.-</td><td>Int b, Str a<br/>Block a, Int b</td><td>Drop b characters from a</td></tr>
+<tr class="vnextn"><td></td><td>.-</td><td>Double a, Int b</td><td>(a - b)</td></tr>
+<tr class="vnextn"><td></td><td>.-</td><td>Int a, Double b</td><td>(a - b)</td></tr>
 <tr class="vnextn"><td>Substrings</td><td>su</td><td>Str s<br/>Int s<br/>Block s</td><td>all substrings of s sorted by length</td></tr>
 <tr><td>SuffixOf</td><td>!~</td><td>Block a, Block b</td><td>Is b a suffix of a?</td></tr>
 <tr><td></td><td>!~</td><td>Int a, Int b</td><td>Is b a suffix of a?</td></tr>

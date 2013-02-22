@@ -16,11 +16,12 @@ import Burlesque.Parser
 import Burlesque.Types
 import Burlesque.Eval hiding (run)
 import Burlesque.Display
+import Data.Time
 
 
 runProgramWrapper :: String -> IO String
 runProgramWrapper p = do
- readProcess "Burlesque.exe" ["--ircbot",p] "" >>= return . (" "++) . take 80 . head . lines . (++" ")
+ readProcess "blsqirci.exe" ["--ircbot",p] ""
  
 server = "irc.freenode.org"
 port   = 6667
@@ -89,21 +90,30 @@ listen h = forever $ do
 eval :: String -> Net ()
 eval     "!blsq_uptime"             = uptime >>= privmsg
 eval     "blsqbot please do quit"   = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
-eval x | "!blsq " `isPrefixOf` x = privmsg (drop 6 x)
+eval x | "!blsq " `isPrefixOf` x = blsqev (drop 6 x)
 eval     _                     = return () -- ignore everything else
- 
---
--- Send a privmsg to the current chan + server
---
+
 privmsg :: String -> Net ()
 privmsg s = do
+    write "PRIVMSG" (chan ++ " :" ++ s)
+ 
+--
+-- Evaluate Burlesque Program
+--
+blsqev :: String -> Net ()
+blsqev s = do
     ss <- foo s
-    io $ catch (putStrLn ("El resulto: " ++ ss)) (const $ return())
-    write "PRIVMSG" (chan ++ " :" ++ ss)
-    where foo p = do result <- io $ timeout (3*10^6) (runProgramWrapper p)
+    io $ catch (putStrLn ("El resulto: " ++ (show ss))) (const $ return())
+    write "PRIVMSG" (chan ++ " :" ++ (ss!!0))
+    write "PRIVMSG" (chan ++ " :" ++ (ss!!1))
+    where foo p = do start <- io $ getCurrentTime
+                     result <- io $ timeout (3*10^6) (runProgramWrapper p)
+                     stop <- io $ getCurrentTime
                      case result of
-                         Nothing -> return $ "Ain't nobody got time fo' that!"
-                         Just q -> return $ q
+                         Nothing -> return $ ["Ain't nobody got time fo' that!","Tightout!"]
+                         Just q -> case lines q of
+                                     [] -> return $ ["Ain't nobody got output fo' that!","Tightout!"]
+                                     x:_ -> return $ [" "++x, show $ diffUTCTime stop start]
  
 --
 -- Send a message out to the server we're currently connected to

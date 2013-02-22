@@ -374,6 +374,9 @@ builtinAdd = do
     (BlsqChar b : BlsqChar a : xs) -> (BlsqStr $ a:b:"") : xs
     (BlsqChar b : BlsqStr a : xs) -> (BlsqStr $ a++[b]) : xs
     ((BlsqBlock b):(BlsqInt a):xs) -> (BlsqBlock $ genericTake a b) : xs
+    
+    (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ (fromIntegral a) + b) : xs
+    (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ a + (fromIntegral b)) : xs
     _ -> (BlsqError $ "Burlesque: (.+) Invalid arguments!") : st
 
 -- | > _+
@@ -407,6 +410,9 @@ builtinSub = do
                                      then (BlsqStr $ genericTake (genericLength a - length b) a) : xs
                                      else (BlsqStr a) : xs
     ((BlsqBlock b):(BlsqInt a):xs) -> (BlsqBlock $ genericDrop a b) : xs
+    
+    (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ (fromIntegral a) - b) : xs
+    (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ a - (fromIntegral b)) : xs
     _ -> (BlsqError "Burlesque: (.-) Invalid arguments!") : st
 
 -- | > .*
@@ -421,6 +427,9 @@ builtinMul = do
     (BlsqInt b : BlsqChar a : xs) -> BlsqStr (genericReplicate b a) : xs
     (BlsqInt b : BlsqBlock a : xs) -> BlsqBlock (genericReplicate b (BlsqBlock a)) : xs
     (BlsqStr a : BlsqStr b : xs) -> BlsqStr (reverse $ a++b) : xs
+    
+    (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ (fromIntegral a) * b) : xs
+    (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ a * (fromIntegral b)) : xs
     _ -> (BlsqError "Burlesque: (.*) Invalid arguments!") : st
 
 -- | > ./
@@ -434,6 +443,9 @@ builtinDiv = do
     (BlsqStr a : BlsqStr b : xs) -> case a `isPrefixOf` b of
                                  True -> BlsqStr (drop (length a) b) : xs
                                  False -> BlsqStr b : xs
+                                 
+    (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ (fromIntegral a) / b) : xs
+    (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ a / (fromIntegral b)) : xs
     _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
 
 -- | .%
@@ -1516,7 +1528,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = modify (BlsqStr "Burlesque - 1.7.0" : )
+builtinVersion = modify (BlsqStr "Burlesque - 1.7.1 - rc1" : )
 
 -- | -~
 builtinHeadTail :: BlsqState
