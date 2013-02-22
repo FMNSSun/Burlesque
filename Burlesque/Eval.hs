@@ -350,6 +350,7 @@ builtins = [
   ("tl", builtinTrimLines),
   ("td", builtinToDouble),
   ("ti", builtinToInt),
+  ("su", builtinSubstrings),
   
   
   ("??", builtinVersion)
@@ -3294,3 +3295,12 @@ builtinToInt = do
    (BlsqInt a : xs) -> return ()
    (BlsqBlock a : xs) -> builtinImplode
    _ -> putResult $ BlsqError "Burlesque: (td) Invalid arguments!" : st
+   
+-- | su
+builtinSubstrings :: BlsqState
+builtinSubstrings = do
+ st <- get
+ case st of
+   (BlsqStr s : xs) -> putResult $ (BlsqBlock . map BlsqStr $ genSubstrings s) : xs
+   (BlsqBlock s : xs) -> putResult $ (BlsqBlock . map BlsqBlock  $ genSubstrings s) : xs
+   (BlsqInt s : xs) -> putResult $ (BlsqBlock . map (BlsqInt . read) $ genSubstrings (show . abs$s)) : xs

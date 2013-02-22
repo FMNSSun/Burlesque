@@ -7,13 +7,15 @@ module Burlesque.Helpers
    setAt,
    toBase,
    fromBase,
-   pfactor)
+   pfactor,
+   genSubstrings)
  where
 
 import Data.List
 import Data.List.Split
 import Data.Digits
 import Data.Maybe
+import Data.Ord
 
 replace o n xs = intercalate n . splitOn o $ xs
 
@@ -46,4 +48,10 @@ pfactor 1 = []
 pfactor n = let divisors = dropWhile ((/= 0) . mod n) [2 .. ceiling $ sqrt $ fromIntegral n]
            in let prime = if null divisors then n else head divisors
               in (prime :) $ pfactor $ div n prime
+              
+substrings s = tail . sort . nub . concatMap tails $ inits s
+
+sortedSubstrings xs = sortBy (comparing length) xs
+
+genSubstrings s = sortedSubstrings . substrings $ s
 
