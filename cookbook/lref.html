@@ -376,7 +376,7 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr>
 <tr><td></td><td>.-</td><td>Int b, Str a<br/>Block a, Int b</td><td>Drop b characters from a</td></tr>
-<tr class="vnext"><td>Substrings</td><td>su</td><td>Str s<br/>Int s<br/>Block s</td><td>all substrings of s sorted by length</td></tr>
+<tr class="vnextn"><td>Substrings</td><td>su</td><td>Str s<br/>Int s<br/>Block s</td><td>all substrings of s sorted by length</td></tr>
 <tr><td>SuffixOf</td><td>!~</td><td>Block a, Block b</td><td>Is b a suffix of a?</td></tr>
 <tr><td></td><td>!~</td><td>Int a, Int b</td><td>Is b a suffix of a?</td></tr>
 <tr><td></td><td>!~</td><td>Str a, Str b</td><td>Is b a suffix of a?</td></tr>
@@ -391,8 +391,8 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td></td><td>[-</td><td>Int a</td><td>All except first digit</td></tr>
 <tr class="vnext"><td>TakeWhile</td><td>tw</td><td>Block p<br/>Block ls</td><td>take elements from ls as long as p holds true</td></tr>
 <tr class="vnext"><td></td><td>tw</td><td>Block p<br/>Str s</td><td>Defined as **tw\[</td></tr>
-<tr class="vnext"><td>ToDouble</td><td>td</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to double</td></tr>
-<tr class="vnext"><td>ToInt</td><td>ti</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to int</td></tr>
+<tr class="vnextn"><td>ToDouble</td><td>td</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to double</td></tr>
+<tr class="vnextn"><td>ToInt</td><td>ti</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to int</td></tr>
 <tr><td>ToLower</td><td>zz</td><td>Str a<br/>Char a</td><td>to lower case</td></tr>
 <tr><td>ToUpper</td><td>ZZ</td><td>Str a<br/>Char a</td><td>to upper case</td></tr>
 <tr class="vnext"><td>Transpose</td><td>tp</td><td>Block a</td><td>Transpose block of blocks (Matrix transpose)</td></tr>
@@ -439,7 +439,8 @@ Defined as {p^.*}\m</td></tr>
 <tr class="vnext"><td>ZipWithPush</td><td>Z]</td><td></td><td>Defined as {^p*}Z[. Prepends ^p.</td></tr>
 </tbody>
 </table>
-<span style="color: #AA8888;">Since Burlesque 1.7</span>
+<span style="color: #AA8888;">Since Burlesque 1.7</span><br/>
+<span style="color: #88AA88;">Since Burlesque 1.7.1</span><br/>
 <!-- -->
 
       <h1>Syntax</h1>
