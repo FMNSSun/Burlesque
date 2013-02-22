@@ -1699,14 +1699,15 @@ builtinFactors = do
  st <- get
  putResult $
   case st of
-   (BlsqInt a : xs) -> (BlsqBlock $ map (BlsqInt) $ factors' a a) : xs
+   (BlsqInt a : xs) -> (BlsqBlock $ map (BlsqInt) . sort $ factors' a a) : xs
    (BlsqStr a : xs) -> (BlsqChar $ leastCommon a) : xs
    (BlsqBlock a : xs) -> (leastCommon a) : xs
 
    _ -> BlsqError "Burlesque: (fc) Invalid arguments!" : st
  where factors' _ 0 = []
        factors' a b
-         |a `rem` b == 0 = b : factors' a (b - 1)
+         |fromIntegral b < (sqrt $ fromIntegral a) = []
+         |a `rem` b == 0 = (a `div` b) : b : factors' a (b - 1)
          |otherwise = factors' a (b - 1)
        leastCommon :: Ord a => [a] -> a
        leastCommon = head . minimumBy (comparing length) . group . sort

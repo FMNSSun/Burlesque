@@ -28,7 +28,7 @@ toDisplay (BlsqDouble d) = show d
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNormal) = s
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNoSpaces) = noSpaces s
 
-toDisplay (BlsqPretty (BlsqDouble a) BlsqFormatNoSpaces) = showFFloat Nothing (a) ""
+toDisplay (BlsqPretty (BlsqDouble a) _) = showFFloat Nothing (a) ""
 
 toDisplay (BlsqPretty (BlsqChar c) BlsqFormatNormal) = [c]
 
