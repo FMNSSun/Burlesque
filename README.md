@@ -17,12 +17,12 @@ blsq ) 1234 100\/0 9rn.+10coSPsh
 8 4 1 7 1 6 7 3 6 8
 ```
 
-1.7.0
+1.7.1
 =========
 
-Users of Burlesque are highly encouraged to upgrade to 1.7.0.
+Users of Burlesque are highly encouraged to upgrade to 1.7.1.
 
-Current stable version: 1.7.0
+Current stable version: 1.7.1
 
 License
 =======
