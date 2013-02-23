@@ -375,6 +375,9 @@ builtinAdd = do
     (BlsqChar b : BlsqStr a : xs) -> (BlsqStr $ a++[b]) : xs
     ((BlsqBlock b):(BlsqInt a):xs) -> (BlsqBlock $ genericTake a b) : xs
     
+    ((BlsqInt a):(BlsqStr b):xs) -> (BlsqStr $ genericTake a b) : xs
+    ((BlsqInt a):(BlsqBlock b):xs) -> (BlsqBlock $ genericTake a b) : xs
+    
     (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ (fromIntegral a) + b) : xs
     (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ a + (fromIntegral b)) : xs
     _ -> (BlsqError $ "Burlesque: (.+) Invalid arguments!") : st
@@ -410,6 +413,9 @@ builtinSub = do
                                      then (BlsqStr $ genericTake (genericLength a - length b) a) : xs
                                      else (BlsqStr a) : xs
     ((BlsqBlock b):(BlsqInt a):xs) -> (BlsqBlock $ genericDrop a b) : xs
+    
+    ((BlsqInt a):(BlsqStr b):xs) -> (BlsqStr $ genericDrop a b) : xs
+    ((BlsqInt a):(BlsqBlock b):xs) -> (BlsqBlock $ genericDrop a b) : xs
     
     (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ (fromIntegral a) - b) : xs
     (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ a - (fromIntegral b)) : xs
@@ -452,10 +458,17 @@ builtinDiv = do
 builtinMod :: BlsqState
 builtinMod = do
   st <- get
-  putResult $
-   case st of
-    (BlsqInt b : BlsqInt a : xs) -> BlsqInt (a `mod`b) : xs
-    _ -> (BlsqError "Burlesque: (.%) Invalid arguments!") : st
+  case st of
+    (BlsqInt b : BlsqInt a : xs) -> putResult $ BlsqInt (a `mod`b) : xs
+    (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                         builtinBoxCycle
+                                         builtinSwap
+                                         builtinMod
+    (BlsqInt a : BlsqBlock b : xs) -> do builtinBoxCycle
+                                         builtinMod
+    (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent ".%" ] : )
+                                           builtinZipWithPush
+    _ -> putResult $ (BlsqError "Burlesque: (.%) Invalid arguments!") : st
 
 -- | > +.
 builtinIncrement :: BlsqState
@@ -555,42 +568,42 @@ builtinIntersperse = do
 builtinReadInt :: BlsqState
 builtinReadInt = do
  st <- get
- putResult $
-  case st of
-   (BlsqStr a) : xs -> (BlsqInt . read $ a) : xs
-   (BlsqInt a) : xs -> (BlsqInt a) : xs
-   (BlsqChar a) : xs -> BlsqInt (if isAlphaNum a then 1 else 0) : xs
-   _ -> (BlsqError "Burlesque: (ri) Invalid arguments!") : st
+ case st of
+   (BlsqStr a) : xs -> putResult $ (BlsqInt . read $ a) : xs
+   (BlsqInt a) : xs -> putResult $ (BlsqInt a) : xs
+   (BlsqChar a) : xs -> putResult $ BlsqInt (if isAlphaNum a then 1 else 0) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "ri" ] :) >> builtinMap
+   _ -> putResult $ (BlsqError "Burlesque: (ri) Invalid arguments!") : st
 
 -- | > rd
 builtinReadDouble :: BlsqState
 builtinReadDouble = do
  st <- get
- putResult $
-  case st of
-   (BlsqStr a) : xs -> (BlsqDouble . read $ a) : xs
-   (BlsqDouble a) : xs -> (BlsqDouble a) : xs
-   (BlsqChar a) : xs -> BlsqInt (if isAlpha a then 1 else 0) : xs
-   _ -> (BlsqError "Burlesque: (rd) Invalid arguments!") : st
+ case st of
+   (BlsqStr a) : xs -> putResult $ (BlsqDouble . read $ a) : xs
+   (BlsqDouble a) : xs -> putResult $ (BlsqDouble a) : xs
+   (BlsqChar a) : xs -> putResult $ BlsqInt (if isAlpha a then 1 else 0) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "rd" ] :) >> builtinMap
+   _ -> putResult $ (BlsqError "Burlesque: (rd) Invalid arguments!") : st
 
 -- | > ra
 builtinReadArray :: BlsqState
 builtinReadArray = do
  st <- get
- putResult $
-  case st of
-   (BlsqStr a) : xs -> (runParserWithString' parseData a) : xs
-   (BlsqChar a) : xs -> BlsqInt (if isSpace a then 1 else 0) :xs
-   _ -> (BlsqError "Burlesque: (ra) Invalid arguments!") : st
+ case st of
+   (BlsqStr a) : xs -> putResult $ (runParserWithString' parseData a) : xs
+   (BlsqChar a) : xs -> putResult $ BlsqInt (if isSpace a then 1 else 0) :xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "ra" ] :) >> builtinMap
+   _ -> putResult $ (BlsqError "Burlesque: (ra) Invalid arguments!") : st
 
 -- | > ps
 builtinParse :: BlsqState
 builtinParse = do
  st <- get
- putResult $
-  case st of
-   (BlsqStr a) : xs -> (BlsqBlock (runParserWithString parseBlsq a)) : xs
-   _ -> (BlsqError "Burlesque: (ps) Invalid arguments!") : st
+ case st of
+   (BlsqStr a) : xs -> putResult $ (BlsqBlock (runParserWithString parseBlsq a)) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "ps" ] :) >> builtinMap
+   _ -> putResult $ (BlsqError "Burlesque: (ps) Invalid arguments!") : st
 
 -- | > up
 builtinUnparse :: BlsqState
@@ -1226,28 +1239,49 @@ builtinReplaceRegex = do
 builtinOr :: BlsqState
 builtinOr = do
  st <- get
- putResult $
-  case st of
-   (BlsqInt a : BlsqInt b : xs) -> (BlsqInt $ a .|. b) : xs
-   _ -> BlsqError "Burlesque: (||) Invalid arguments!": st
+ case st of
+   (BlsqInt a : BlsqInt b : xs) -> putResult $ (BlsqInt $ a .|. b) : xs
+   (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                        builtinBoxCycle
+                                        builtinSwap
+                                        builtinOr
+   (BlsqInt a : BlsqBlock b : xs) -> do builtinBoxCycle
+                                        builtinOr
+   (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "||" ] : )
+                                          builtinZipWithPush
+   _ -> putResult $ BlsqError "Burlesque: (||) Invalid arguments!": st
 
 -- | &&
 builtinAnd :: BlsqState
 builtinAnd = do
  st <- get
- putResult $
-  case st of
-   (BlsqInt a : BlsqInt b : xs) -> (BlsqInt $ a .&. b) : xs
-   _ -> BlsqError "Burlesque: (&&) Invalid arguments!": st
+ case st of
+   (BlsqInt a : BlsqInt b : xs) -> putResult $ (BlsqInt $ a .&. b) : xs
+   (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                        builtinBoxCycle
+                                        builtinSwap
+                                        builtinAnd
+   (BlsqInt a : BlsqBlock b : xs) -> do builtinBoxCycle
+                                        builtinAnd
+   (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "&&" ] : )
+                                          builtinZipWithPush
+   _ -> putResult $ BlsqError "Burlesque: (&&) Invalid arguments!": st
 
 -- | $$
 builtinXor :: BlsqState
 builtinXor = do
  st <- get
- putResult $
-  case st of
-   (BlsqInt a : BlsqInt b : xs) -> (BlsqInt $ a `xor` b) : xs
-   _ -> BlsqError "Burlesque: ($$) Invalid arguments!": st
+ case st of
+   (BlsqInt a : BlsqInt b : xs) -> putResult $ (BlsqInt $ a `xor` b) : xs
+   (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                        builtinBoxCycle
+                                        builtinSwap
+                                        builtinXor
+   (BlsqInt a : BlsqBlock b : xs) -> do builtinBoxCycle
+                                        builtinXor
+   (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "$$" ] : )
+                                          builtinZipWithPush
+   _ -> putResult $ BlsqError "Burlesque: ($$) Invalid arguments!": st
 
 -- | L[
 builtinLength :: BlsqState
@@ -1480,21 +1514,21 @@ builtinOrLs = do
 builtinToUpper :: BlsqState
 builtinToUpper = do
  st <- get
- putResult $
-  case st of 
-   (BlsqChar a : xs) -> BlsqChar (toUpper a) : xs
-   (BlsqStr a : xs) -> BlsqStr (map toUpper a) : xs
-   _ -> BlsqError "Burlesque: (ZZ) Invalid arguments!" : st
+ case st of 
+   (BlsqChar a : xs) -> putResult $ BlsqChar (toUpper a) : xs
+   (BlsqStr a : xs) -> putResult $ BlsqStr (map toUpper a) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [BlsqIdent "ZZ"]:) >> builtinMap
+   _ -> putResult $ BlsqError "Burlesque: (ZZ) Invalid arguments!" : st
 
 -- | > zz
 builtinToLower :: BlsqState
 builtinToLower = do
  st <- get
- putResult $
-  case st of 
-   (BlsqChar a : xs) -> BlsqChar (toLower a) : xs
-   (BlsqStr a : xs) -> BlsqStr (map toLower a) : xs
-   _ -> BlsqError "Burlesque: (zz) Invalid arguments!" : st
+ case st of 
+   (BlsqChar a : xs) -> putResult $ BlsqChar (toLower a) : xs
+   (BlsqStr a : xs) -> putResult $ BlsqStr (map toLower a) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [BlsqIdent "zz"]:) >> builtinMap
+   _ -> putResult $ BlsqError "Burlesque: (zz) Invalid arguments!" : st
 
 -- | > M[
 builtinMapPretty :: BlsqState
@@ -1530,7 +1564,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = modify (BlsqStr "Burlesque - 1.7.1 - rc1" : )
+builtinVersion = modify (BlsqStr "Burlesque - 1.7.1" : )
 
 -- | -~
 builtinHeadTail :: BlsqState
@@ -1689,11 +1723,11 @@ builtinIsError = do
 builtinPrimeFactors :: BlsqState
 builtinPrimeFactors = do
  st <- get
- putResult $
-  case st of
-   (BlsqInt a : xs) -> (BlsqBlock . map BlsqInt $ pfactor a) : xs
-   (BlsqDouble a : xs) -> (BlsqDouble $ a * a) : xs
-   _ -> BlsqError "Burlesque: (fC) Invalid arguments" : st
+ case st of
+   (BlsqInt a : xs) -> putResult $ (BlsqBlock . map BlsqInt $ pfactor a) : xs
+   (BlsqDouble a : xs) -> putResult $ (BlsqDouble $ a * a) : xs
+   (BlsqBlock a :xs) -> do modify (BlsqBlock [ BlsqIdent "fC" ] :) >> builtinMap
+   _ -> putResult $ BlsqError "Burlesque: (fC) Invalid arguments" : st
 
 -- | fc
 builtinFactors :: BlsqState
@@ -1743,19 +1777,19 @@ builtinChunky = do
 builtinTrimLeft :: BlsqState
 builtinTrimLeft = do
  st <- get
- putResult $
-  case st of
-   (BlsqStr a : xs) -> BlsqStr (dropWhile (`elem`"\t \n") a) : xs
-   _ -> BlsqChar '\n' : st
+ case st of
+   (BlsqStr a : xs) -> putResult $ BlsqStr (dropWhile (`elem`"\t \n") a) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [BlsqIdent "t["]:) >> builtinMap
+   _ -> putResult $ BlsqChar '\n' : st
 
 -- | t]
 builtinTrimRight :: BlsqState
 builtinTrimRight = do
  st <- get
- putResult $
-  case st of
-   (BlsqStr a : xs) -> BlsqStr (reverse (dropWhile (`elem`"\t \n") (reverse a))) : xs
-   _ -> BlsqChar '\'' : st
+ case st of
+   (BlsqStr a : xs) -> putResult $ BlsqStr (reverse (dropWhile (`elem`"\t \n") (reverse a))) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [BlsqIdent "t]"]:) >> builtinMap
+   _ -> putResult $ BlsqChar '\'' : st
 
 builtinTrimLeftRight :: BlsqState
 builtinTrimLeftRight = do
@@ -1815,6 +1849,7 @@ builtinSin = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (sin (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (sin a) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "Ts" ] :) >> builtinMap
    _ -> putResult $ BlsqError "Burlesque: (Ts) Invalid arguments!" : st
 
 -- | TS
@@ -1824,6 +1859,7 @@ builtinAsin = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (asin (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (asin a) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "TS" ] :) >> builtinMap
    _ -> putResult $ BlsqError "Burlesque: (TS) Invalid arguments!" : st
 
 -- | Tc
@@ -1833,6 +1869,7 @@ builtinCos = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (cos (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (cos a) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "Tc" ] :) >> builtinMap
    _ -> putResult $ BlsqError "Burlesque: (Tc) Invalid arguments!" : st
 
 -- | TC
@@ -1842,6 +1879,7 @@ builtinAcos = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (acos (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (acos a) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "TC" ] :) >> builtinMap
    _ -> putResult $ BlsqError "Burlesque: (TC) Invalid arguments!" : st
 
 -- | Tt
@@ -1851,6 +1889,7 @@ builtinTan = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (tan (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (tan a) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "Tt" ] :) >> builtinMap
    _ -> putResult $ BlsqError "Burlesque: (Tt) Invalid arguments!" : st
 
 -- | TT
@@ -1860,6 +1899,7 @@ builtinAtan = do
   case st of
    (BlsqInt a : xs) -> putResult $ BlsqDouble (atan (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (atan a) : xs
+   (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "TT" ] :) >> builtinMap
    _ -> putResult $ BlsqError "Burlesque: (TT) Invalid arguments!" : st
 
 -- | WD
@@ -1979,6 +2019,20 @@ builtinConvertBase = do
   case st of
     (BlsqInt bs : BlsqInt n : xs) -> putResult $ BlsqStr (toBase (fromIntegral bs) (fromIntegral n)) : xs
     (BlsqInt bs : BlsqStr n : xs) -> putResult $ BlsqInt (toInteger (fromBase (fromIntegral bs) n)) : xs
+    (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                         builtinBoxCycle
+                                         builtinSwap
+                                         builtinConvertBase
+    (BlsqInt a : BlsqBlock b : xs) -> do builtinBoxCycle
+                                         builtinConvertBase
+    (BlsqBlock a : BlsqStr b : xs) -> do builtinSwap
+                                         builtinBoxCycle
+                                         builtinSwap
+                                         builtinConvertBase
+    (BlsqStr a : BlsqBlock b : xs) -> do builtinBoxCycle
+                                         builtinConvertBase
+    (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "B!" ] : )
+                                           builtinZipWithPush
     _ -> putResult $ BlsqError "Burlesque: (B!) Invalid arguments!" : st
 
 -- | g_
@@ -3014,6 +3068,14 @@ builtinNCr = do
  st <- get
  case st of
    (BlsqInt k : BlsqInt n : xs) -> putResult $ BlsqInt (ncr n k) : xs
+   (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
+                                        builtinBoxCycle
+                                        builtinSwap
+                                        builtinNCr
+   (BlsqInt a : BlsqBlock b : xs) -> do builtinBoxCycle
+                                        builtinNCr
+   (BlsqBlock a : BlsqBlock b : xs) -> do modify (BlsqBlock [ BlsqIdent "nr" ] : )
+                                          builtinZipWithPush
    _ -> putResult $ BlsqError "Burlesque: (nr) Invalid arguments!" : st
  where ncr n k = product [k+1..n] `div` product [1..n-k]
  

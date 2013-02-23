@@ -31,6 +31,9 @@
         </p>
         
         <h1 id="builtins">Builtins</h1>
+        deepmap means that the command automatically maps over blocks. deepzip means, that the command automatically zipsWith over blocks.
+        deepfilter means that the command automatically filters blocks. (strings usually too). deepzip2 means, that the command automatically
+        box cycles non block arguments if the other argument is a block and then deepzips.
 <!-- -->
 <table class="fancy">
 <thead>
@@ -46,7 +49,7 @@
 <tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
 <tr><td></td><td>.+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr>
 <tr><td></td><td>.+</td><td>Str a, Char b</td><td>Append char to string</td></tr>
-<tr><td></td><td>.+</td><td>Int b, Str a<br/>Int b, Block a</td><td>Take b characters from a</td></tr>
+<tr><td></td><td>.+</td><td>Int b, Str a<br/>Int b, Block a<br/><span style="color: #88AA88;">Str a,Int b<br/>Block a,Int b</span></td><td>Take b characters from a</td></tr>
 <tr><td>AddX</td><td>_+</td><td>Int a, Int b</td><td>Returns a block with a and b</td></tr>
 <tr><td></td><td>_+</td><td>Double a, Double b</td><td>Returns a block with a and b</td></tr>
 <tr><td></td><td>_+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr>
@@ -60,6 +63,7 @@
 <tr class="vnext"><td>AllAlphaNum</td><td>an</td><td></td><td>Defined as {ri}m[al</td></tr>
 <tr class="vnext"><td>AllDigit</td><td>ad</td><td></td><td>Defined as {&gt;&lt;}m[al</td></tr>
 <tr><td>And</td><td>&amp;&amp;</td><td>Int a, Int b</td><td>Bitwise and</td></tr>
+<tr class="vnextn"><td></td><td>&amp;&amp;</td><td>deepzip2 (int)</td><td></td></tr>
 <tr><td>AndLs</td><td>r&amp;</td><td></td><td>Defined as {&amp;&amp;}r[</td></tr>
 <tr class="vnext"><td>Any</td><td>ay</td><td></td><td>Defined as m[r|</td></tr>
 <tr><td>Append</td><td>[+</td><td>Block  a, Any b<br/>Int a, Int b</td><td>Append b to a</td></tr>
@@ -68,7 +72,11 @@
 <tr class="vnext"><td></td><td>av</td><td>Double a</td><td>Floor a</td></tr>
 <tr class="vnext"><td>Average2</td><td>AV</td><td></td><td>Defined as PDav</td></tr>
 <tr class="vnext"><td>Asin</td><td>TS</td><td>Double a<br/>Int a</td><td>asin</td></tr>
+<tr class="vnextn"><td></td><td>TS</td><td>deepmap</td><td></td></tr>
 <tr class="vnext"><td>Acos</td><td>TC</td><td>Double a<br/>Int a</td><td>acos</td></tr>
+<tr class="vnextn"><td></td><td>TC</td><td>deepmap</td><td></td></tr>
+<tr class="vnext"><td>Atan</td><td>TT</td><td>Double a<br/>Int a</td><td>atan</td></tr>
+<tr class="vnextn"><td></td><td>TT</td><td>deepmap</td><td></td></tr>
 <tr><td>BlockAccess</td><td>!!</td><td>Block a, Int n<br/>Str a, Int n</td><td>Return the nth element</td></tr>
 <tr><td>Box</td><td>bx</td><td>Any a</td><td>Put a in an empty block</td></tr>
 <tr class="vnext"><td>BoxCycle</td><td>bc</td><td></td><td>Defined as bxcy</td></tr>
@@ -130,6 +138,7 @@
 <tr><td></td><td>~[</td><td>Str a, Str b</td><td>Does a contain b?</td></tr>
 <tr><td>Continuation</td><td>c!</td><td>Block a</td><td>Continuation with a</td></tr>
 <tr class="vnext"><td>ConvertBase</td><td>B!</td><td>Int n, Int b</td><td>convert n to base b (result is a string)</td></tr>
+<tr class="vnextn"><td></td><td>B!</td><td>deepzip2 (int,string)</td><td></td></tr>
 <tr class="vnext"><td></td><td>B!</td><td>String n, Int b</td><td>Parse n as an number in base b (result is an int)</td></tr>
 <tr><td>Combinations</t><td>CB</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a of length n</td></tr>
 <tr><td>CombinationsUpTo</td><td>cb</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a up to length n</td></tr>
@@ -139,6 +148,7 @@
 <tr class="vnext"><td>Compare 3</td><td>Cm</td><td></td><td>Defined as
 ^^(\/)[+\/-][+(\/)[+(cm)[+</td></tr>
 <tr class="vnext"><td>Cos</td><td>Tc</td><td>Double a<br/>Int a</td><td>cosinus</td></tr>
+<tr class="vnextn"><td></td><td>Tc</td><td>deepmap</td><td></td></tr>
 <tr class="vnext"><td>CrossProduct</td><td>cp</td><td>Block a, Block b<br/>Str a, Str b</td><td>Crossproduct (a x b)</td></tr>
 <tr><td>Cycle</td><td>cy</td><td>Block a<br/>Str a</br></td><td>Repeat a infinite times</td></tr>
 <tr class="vnext"><td></td><td>cy</td><td>Int a</td><td>Convert to string and then cycle</td></tr>
@@ -255,6 +265,7 @@ Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
 <tr class="vnext"><td></td><td>&lt;]</td><td>Str a<br/>Int a</td><td>Smalles character</td></tr>
 <tr class="vnext"><td>MinimumBy</td><td>&lt;m</td><td></td><td>Defined as Cmsb-]</td></tr>
 <tr class="vnext"><td>Modulo</td><td>.%</td><td>Int a, Int b</td><td>a `mod` b</td></tr>
+<tr class="vnextn"><td></td><td>.%</td><td>deepzip (int)</td><td></td></tr>
 <tr><td>Mul</td><td>.*</td><td>Int a, Int b</td><td>Regular integer multiplication (a * b)</td></tr>
 <tr><td></td><td>.*</td><td>Double a, Double b</td><td>Multiplication (a * b)</td></tr>
 <tr><td></td><td>.*</td><td>Str a, Int n</td><td>Returns a block containing n copies of a</td></tr>
@@ -273,11 +284,14 @@ Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
 <tr><td></td><td>n!</td><td>Block a<br>Str a</td><td>Most common element</td></tr>
 <tr class="vnext"><td>NotEqual</td><td>!=</td><td></td><td>Defined as == n!</td></tr>
 <tr class="vnext"><td>nCr</td><td>nr</td><td>Int n, Int k</td><td>nCr(n,k)</td></tr>
+<tr class="vnextn"><td></td><td>nr</td><td>deepzip (int)</td><td></td></tr>
 <tr><td>Or</td><td>||</td><td>Int a, Int b</td><td>Bitwise or</td></tr>
+<tr class="vnextn"><td></td><td>||</td><td>deepzip2 (int)</td><td></td></tr>
 <tr><td>OrLs</td><td>r|</td><td></td><td>Defined as {||}r[</td></tr>
 <tr><td>PadLeft</td><td>P[</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (left) a to length c with b</td></tr>
 <tr><td>PadRight</td><td>[P</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (right) a to length c with b</td></tr>
 <tr><td>Parse</td><td>ps</td><td>Str a</td><td>Parses the string as a Burlesque expression and returns a Block</td></tr>
+<tr class="vnextn"><td></td><td>ps</td><td>deepmap</td><td></td></tr>
 <tr class="vnext"><td>ParseEval</td><td>pe</td><td></td><td>Defined as pse!</td></tr>
 <tr class="vnext"><td>Partition</td><td>pt</td><td>Block xs, Block p <br/>Str xs, Block p</td><td>Partitions a block (or str) into two blocks containing elements<br/>
 which satisfy p and not satisfying p. (Like doing two filter passes with p and with NOT p).</td></tr>
@@ -301,6 +315,7 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td>Prepend</td><td>+]</td><td>String a, Char b<br/>Block a,Any b<br/>Int a,Int b</td><td>Prepends b to a</td></tr>
 <tr class="vnext"><td>PrimeFactors</td><td>fC</td><td>Int a</td><td>Prime factors of a</td></tr>
 <tr class="vnext"><td></td><td>fC</td><td>Double a</td><td>a * a (multiplies a with a)</td></tr>
+<tr class="vnextn"><td></td><td>fC</td><td>deepmap</td><td></td></tr>
 <tr class="vnext"><td>Product</td><td>pd</td><td>Block a</td><td>Defined as {.*}r[. Returns Int 1 on empty list.</td></tr>
 <tr class="vnext"><td></td><td>pd</td><td>Double a</td><td>Ceiling a</td></tr>
 <tr class="vnext"><td></td><td>pd</td><td>Int a</td><td>Convert to double</td></tr>
@@ -323,11 +338,14 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td>ReadInt</td><td>ri</td><td>Int a</td><td>Identity for integers</td></tr>
 <tr><td></td><td>ri</td><td>Str a</td><td>Tries to convert a string to an integer</td></tr>
 <tr><td></td><td>ri</td><td>Char a</td><td>Is Alpha numeric?<td></tr>
+<tr class="vnextn"><td></td><td>ri</td><td>deepmap</td><td></td></tr>
 <tr><td>ReadDouble</td><td>rd</td><td>Double a</td><td>Identity for doubles</td></tr>
 <tr><td></td><td>rd</td><td>Str a</td><td>Tries to convert a string to an double</td></tr>
 <tr><td></td><td>rd</td><td>Char a</td><td>Is Alpha?<td></tr>
+<tr class="vnextn"><td></td><td>rd</td><td>deepmap</td><td></td></tr>
 <tr><td>ReadArray</td><td>ra</td><td>Str a</td><td>Tries to read an array in [,] notation</td></tr>
 <tr><td></td><td>ra</td><td>Char </td><td>Is space?<td></tr>
+<tr class="vnextn"><td></td><td>ra</td><td>deepmap</td><td></td></tr>
 <tr><td>Reduce</td><td>r[</td><td>Block ls, Block f</td><td>Reduce ls with f</td></tr>
 <tr class="vnext"><td>RemoveAt</td><td>RA</td><td>Block ls, Int idx<br/>Str ls, Int idx</td><td>Remove element at index idx from ls</td></tr>
 <tr class="vnext"><td></td><td>RA</td><td>Block ls<br/>Str ls</td><td>Defined as sapd2.0./av!!</td></tr>
@@ -363,6 +381,7 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr class="vnext"><td>SortByComparing</td><td>sc</td><td></td><td>Defined as CMsb<td></tr>
 <tr class="vnext"><td>SortGroup</td><td>sg</td><td></td><td>Defined as &gt;&lt;=[</td></tr>
 <tr class="vnext"><td>Sin</td><td>Ts</td><td>Double a<br/>Int a</td><td>sinus</td></tr>
+<tr class="vnextn"><td></td><td>Ts</td><td>deepmap</td><td></td></tr>
 <tr class="vnext"><td>SpecialInput</td><td>SP</td><td>Str a</td><td>Can be used to read 2D-Input. Defined as ln{}[M</td></tr>
 <tr class="vnext"><td>SpecialInputPretty</td><td>sp</td><td></td><td>Defined as SPsh</td></tr>
 <tr class="vnext"><td></td><td>SP</td><td>Block a</td><td>Can be used to write 2D-Output. Defined as {{Sh}m[wd}m[un</td></tr>
@@ -382,7 +401,7 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td>Sub</td><td>.-</td><td>Int a, Int b</td><td>Regular integer subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
 <tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr>
-<tr><td></td><td>.-</td><td>Int b, Str a<br/>Block a, Int b</td><td>Drop b characters from a</td></tr>
+<tr><td></td><td>.-</td><td>Int b, Str a<br/>Block a, Int b<br/><span style="color: #88AA88;">Str a,Int b<br/>Block a,Int b</span></td><td>Drop b characters from a</td></tr>
 <tr class="vnextn"><td></td><td>.-</td><td>Double a, Int b</td><td>(a - b)</td></tr>
 <tr class="vnextn"><td></td><td>.-</td><td>Int a, Double b</td><td>(a - b)</td></tr>
 <tr class="vnextn"><td>Substrings</td><td>su</td><td>Str s<br/>Int s<br/>Block s</td><td>all substrings of s sorted by length</td></tr>
@@ -400,13 +419,19 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td></td><td>[-</td><td>Int a</td><td>All except first digit</td></tr>
 <tr class="vnext"><td>TakeWhile</td><td>tw</td><td>Block p<br/>Block ls</td><td>take elements from ls as long as p holds true</td></tr>
 <tr class="vnext"><td></td><td>tw</td><td>Block p<br/>Str s</td><td>Defined as **tw\[</td></tr>
+<tr class="vnext"><td>Tan</td><td>Tt</td><td>Double a<br/>Int a</td><td>tangens</td></tr>
+<tr class="vnextn"><td></td><td>Tt</td><td>deepmap</td><td></td></tr>
 <tr class="vnextn"><td>ToDouble</td><td>td</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to double</td></tr>
 <tr class="vnextn"><td>ToInt</td><td>ti</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to int</td></tr>
 <tr><td>ToLower</td><td>zz</td><td>Str a<br/>Char a</td><td>to lower case</td></tr>
+<tr class="vnextn"><td></td><td>zz</td><td>deepmap</td><td></td></tr>
 <tr><td>ToUpper</td><td>ZZ</td><td>Str a<br/>Char a</td><td>to upper case</td></tr>
+<tr class="vnextn"><td></td><td>ZZ</td><td>deepmap</td><td></td></tr>
 <tr class="vnext"><td>Transpose</td><td>tp</td><td>Block a</td><td>Transpose block of blocks (Matrix transpose)</td></tr>
 <tr><td>TrimLeft</td><td>t[</td><td>Str a</td><td>Trim left</td></tr>
+<tr class="vnextn"><td></td><td>t[</td><td>deepmap</td><td></td></tr>
 <tr><td>TrimRight</td><td>t]</td><td>Str a</td><td>Trim right</td></tr>
+<tr class="vnextn"><td></td><td>t]</td><td>deepmap</td><td></td></tr>
 <tr><td>TrimLeftRight</td><td>tt</td><td>Str a</td><td>Defined as t[ t]</td></tr>
 <tr class="vnext"><td>TrimLines</td><td>tl</td><td></td><td>Defined as ln{tt}m[un</td></tr>
 <tr class="vnext"><td>TypeOf</td><td>to</td><td>Any a</td><td>Returns the type of a as Str</td></tr>
@@ -436,6 +461,7 @@ Defined as {p^.*}\m</td></tr>
 <tr class="vnext"><td>WithWords</td><td>ww</td><td>n/a</td><td>Defined as \/ WD \/ m[ wd</td></tr>
 <tr class="vnext"><td>WithWordsPretty</td><td>WW</td><td>n/a</td><td>Defined as wwsh</td></tr>
 <tr><td>Xor</td><td>$$</td><td>Int a, Int b</td><td>Bitwise xor</td></tr>
+<tr class="vnextn"><td></td><td>$$</td><td>deepzip2 (int)</td><td></td></tr>
 <tr><td>Xplode</td><td>XX</td><td>Str a</td><td>Convert a to a block of characters</td></tr>
 <tr><td></td><td>XX</td><td>Int a</td><td>Convert a to a block of digits</td></tr>
 <tr><td></td><td>XX</td><td>Double a</td><td>Convert a to block containing ceiling a and floor a</td></tr>
