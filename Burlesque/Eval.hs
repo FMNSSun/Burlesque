@@ -417,8 +417,8 @@ builtinSub = do
     ((BlsqInt a):(BlsqStr b):xs) -> (BlsqStr $ genericDrop a b) : xs
     ((BlsqInt a):(BlsqBlock b):xs) -> (BlsqBlock $ genericDrop a b) : xs
     
-    (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ (fromIntegral b) - a) : xs
-    (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ b - (fromIntegral a)) : xs
+    (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ b - (fromIntegral a)) : xs
+    (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ (fromIntegral b) - a) : xs
     _ -> (BlsqError "Burlesque: (.-) Invalid arguments!") : st
 
 -- | > .*
@@ -450,8 +450,8 @@ builtinDiv = do
                                  True -> BlsqStr (drop (length a) b) : xs
                                  False -> BlsqStr b : xs
                                  
-    (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ (fromIntegral b) / a) : xs
-    (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ b / (fromIntegral a)) : xs
+    (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ b / (fromIntegral a)) : xs
+    (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ (fromIntegral b) / a) : xs
     _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
 
 -- | .%
