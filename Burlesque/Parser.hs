@@ -67,7 +67,7 @@ parseIdent = do
 
 parseSep :: Parser BlsqExp
 parseSep = do
-  b <- oneOf ",)"
+  b <- oneOf ",)@:"
   optional spaces
   return $ BlsqSpecial [b]
 

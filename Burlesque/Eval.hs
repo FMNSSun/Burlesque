@@ -38,6 +38,24 @@ eval (BlsqSpecial ")" : i : xs) = do
  modify (BlsqBlock [ i ] : )
  builtinMap
  eval xs
+eval (BlsqIdent "#Q" : xs) = do
+ modify (BlsqBlock xs :)
+ eval xs
+eval (BlsqIdent "#q" : xs) = do
+ st <- get
+ case st of
+   (BlsqBlock nss : ss) -> builtinPop >> eval nss
+   _ -> eval xs
+eval (BlsqIdent "#j" : xs) = do
+ st <- get
+ case st of
+   (BlsqBlock nss : ss) -> builtinPop >> eval (nss++xs)
+   _ -> eval xs
+eval (BlsqIdent "#J" : xs) = do
+ st <- get
+ case st of
+   (BlsqBlock nss : ss) -> builtinPop >> eval (xs++nss)
+   _ -> eval xs
 eval (BlsqHackMode x : xs) = do
  let m = map (\c -> BlsqIdent . fst $ builtins !! (ord c)) x
  eval (m ++ xs)
@@ -351,6 +369,10 @@ builtins = [
   ("td", builtinToDouble),
   ("ti", builtinToInt),
   ("su", builtinSubstrings),
+  ("#s", builtinPushStack),
+  ("#S", builtinPopStack),
+  ("#r", builtinRotateStackLeft),
+  ("#R", builtinRotateStackRight),
   
   
   ("??", builtinVersion)
@@ -3381,3 +3403,37 @@ builtinSubstrings = do
    (BlsqStr s : xs) -> putResult $ (BlsqBlock . map BlsqStr $ genSubstrings s) : xs
    (BlsqBlock s : xs) -> putResult $ (BlsqBlock . map BlsqBlock  $ genSubstrings s) : xs
    (BlsqInt s : xs) -> putResult $ (BlsqBlock . map (BlsqInt . read) $ genSubstrings (show . abs$s)) : xs
+   
+
+  
+-- | #s
+builtinPushStack :: BlsqState
+builtinPushStack = do
+ st <- get
+ modify (BlsqBlock st : )
+ 
+-- | #S
+builtinPopStack :: BlsqState
+builtinPopStack = do
+ st <- get
+ case st of
+   (BlsqBlock x:xs) -> put $ x 
+   _ -> return ()
+
+-- | #r
+builtinRotateStackLeft :: BlsqState
+builtinRotateStackLeft = do
+ st <- get
+ case st of
+   [] -> return ()
+   [a] -> return ()
+   xs -> put $ tail xs ++ [head xs]
+
+-- | #R
+builtinRotateStackRight :: BlsqState
+builtinRotateStackRight = do
+ st <- get
+ case st of
+   [] -> return ()
+   [a] -> return ()
+   xs -> put $ last xs : init xs
