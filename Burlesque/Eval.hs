@@ -1757,7 +1757,7 @@ builtinFactors = do
  st <- get
  putResult $
   case st of
-   (BlsqInt a : xs) -> (BlsqBlock $ map (BlsqInt) . sort $ factors' a a) : xs
+   (BlsqInt a : xs) -> (BlsqBlock $ map (BlsqInt) . nub . sort $ factors' a a) : xs
    (BlsqStr a : xs) -> (BlsqChar $ leastCommon a) : xs
    (BlsqBlock a : xs) -> (leastCommon a) : xs
 
