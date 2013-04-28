@@ -14,9 +14,8 @@ import Data.Char
 import Data.Bits
 import Data.Ord
 import Text.Regex
-
+import Numeric
 import Control.Monad
-
 import System.Random
 
 import Statistics.Distribution
@@ -2778,6 +2777,7 @@ builtinRangeModulo = do
  putResult $ 
   case st of
    (BlsqBlock [BlsqInt lo, BlsqInt hi] : BlsqInt x : xs) -> BlsqInt (((x - lo) `mod` (succ (hi-lo))) + lo) : xs
+   (BlsqInt n : BlsqDouble d : xs) -> (BlsqStr $ showFFloat (Just (toInt n)) (d) "") : xs
    _ -> BlsqError "Burlesque: (rm) Invalid arguments!" : st
  
 -- | nc
@@ -3403,7 +3403,6 @@ builtinSubstrings = do
    (BlsqStr s : xs) -> putResult $ (BlsqBlock . map BlsqStr $ genSubstrings s) : xs
    (BlsqBlock s : xs) -> putResult $ (BlsqBlock . map BlsqBlock  $ genSubstrings s) : xs
    (BlsqInt s : xs) -> putResult $ (BlsqBlock . map (BlsqInt . read) $ genSubstrings (show . abs$s)) : xs
-   
 
   
 -- | #s
