@@ -1,485 +1,489 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd" xml:lang="en"><head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link href="style.css" rel="stylesheet" type="text/css">
-    <title>Burlesque - Language reference</title>
-  </head>
-  <body>
-   <div class="box">
-    <img src="./logo.png" style="height: 100px" />
-  </div>
-  <div class="box">
-    <a href="./index.html">Back to main page</a>
-  </div>
-  <div class="box">
-
-<h1>Builtin Types</h1>
-        <p>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemalocation="http://www.w3.org/MarkUp/SCHEMA/xhtml11.xsd" xml:lang="en"><head> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+	<link href="style.css" rel="stylesheet" type="text/css"> 
+    <title>Burlesque - Language reference</title> 
+  </head> 
+  <body> 
+   <div class="box"> 
+    <img src="./logo.png" style="height: 100px" /> 
+  </div> 
+  <div class="box"> 
+    <a href="./index.html">Back to main page</a> 
+  </div> 
+  <div class="box"> 
+ 
+<h1>Builtin Types</h1> 
+        <p> 
           The following builtin types exist:
-          <ul>
-           <li>Int - Integer (UNBOUNDED!)</li>
-           <li>Double - Double</li>
-           <li>Str - String</li>
-           <li>Char - Character</li>
-           <li>Block - (Lists)</li>
-           <li>Ident - Identifier</li>
-           <li>Nil - Internal usage only</li>
-           <li>Quoted - Can be used to push identifiers on the stack</li>
-           <li>Error - Can not be written as a literal in code</li>
-		   <li>Pretty - Pretty print stuff<li>
-          </ul>
-        </p>
+          <ul> 
+           <li>Int - Integer (UNBOUNDED!)</li> 
+           <li>Double - Double</li> 
+           <li>Str - String</li> 
+           <li>Char - Character</li> 
+           <li>Block - (Lists)</li> 
+           <li>Ident - Identifier</li> 
+           <li>Nil - Internal usage only</li> 
+           <li>Quoted - Can be used to push identifiers on the stack</li> 
+           <li>Error - Can not be written as a literal in code</li> 
+		   <li>Pretty - Pretty print stuff<li> 
+          </ul> 
+        </p> 
         
-        <h1 id="builtins">Builtins</h1>
+        <h1 id="builtins">Builtins</h1> 
         deepmap means that the command automatically maps over blocks. deepzip means, that the command automatically zipsWith over blocks.
         deepfilter means that the command automatically filters blocks. (strings usually too). deepzip2 means, that the command automatically
         box cycles non block arguments if the other argument is a block and then deepzips.
-<!-- -->
-<table class="fancy">
-<thead>
-<tr><td>Name</td><td>Ident</td><td>Args</td><td>Description</td></tr>
-</thead>
-<tbody>
-<tr><td>Abs</td><td>ab</td><td>Int a<br/>Double a</td><td>Abs a</td></tr>
-<tr><td>Add</td><td>.+</td><td>Int a, Int b</td><td>Regular integer addition (a + b)</td></tr>
-<tr><td></td><td>.+</td><td>Double a, Double b</td><td>Addition (a + b)</td></tr>
-<tr class="vnextn"><td></td><td>.+</td><td>Double a, Int b</td><td>(a + b)</td></tr>
-<tr class="vnextn"><td></td><td>.+</td><td>Int a, Double b</td><td>(a + b)</td></tr>
-<tr><td></td><td>.+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr>
-<tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
-<tr><td></td><td>.+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr>
-<tr><td></td><td>.+</td><td>Str a, Char b</td><td>Append char to string</td></tr>
-<tr><td></td><td>.+</td><td>Int b, Str a<br/>Int b, Block a<br/><span style="color: #88AA88;">Str a,Int b<br/>Block a,Int b</span></td><td>Take b characters from a</td></tr>
-<tr><td>AddX</td><td>_+</td><td>Int a, Int b</td><td>Returns a block with a and b</td></tr>
-<tr><td></td><td>_+</td><td>Double a, Double b</td><td>Returns a block with a and b</td></tr>
-<tr><td></td><td>_+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr>
-<tr><td></td><td>_+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr>
-<tr><td></td><td>_+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr>
-<tr><td></td><td>_+</td><td>Str a, Char b<br>Char a, Str b</td><td>Append char to string</td></tr>
-<tr><td></td><td>_+</td><td>Str a, Int b<br>Int a, Str b</td><td>Append int to string</td></tr>
-<tr><td></td><td>_+</td><TD>Block a, Any b</td><td>Append b to a</td></tr>
-<tr class="vnext"><td>All</td><td>al</td><td></td><td>Defined as m[r&amp;</td></tr>
-<tr class="vnext"><td>AllAlpha</td><td>aa</td><td></td><td>Defined as {rd}m[al</td></tr>
-<tr class="vnext"><td>AllAlphaNum</td><td>an</td><td></td><td>Defined as {ri}m[al</td></tr>
-<tr class="vnext"><td>AllDigit</td><td>ad</td><td></td><td>Defined as {&gt;&lt;}m[al</td></tr>
-<tr><td>And</td><td>&amp;&amp;</td><td>Int a, Int b</td><td>Bitwise and</td></tr>
-<tr class="vnextn"><td></td><td>&amp;&amp;</td><td>deepzip2 (int)</td><td></td></tr>
-<tr><td>AndLs</td><td>r&amp;</td><td></td><td>Defined as {&amp;&amp;}r[</td></tr>
-<tr class="vnext"><td>Any</td><td>ay</td><td></td><td>Defined as m[r|</td></tr>
-<tr><td>Append</td><td>[+</td><td>Block  a, Any b<br/>Int a, Int b</td><td>Append b to a</td></tr>
-<tr><td></td><td>[+</td><td>Str a,Char b</td><td>Append b to a</td></tr>
-<tr class="vnext"><td>Average</td><td>av</td><td>Block a</td><td>Defined as ^^ ++ \/ L[ pd ./</td></tr>
-<tr class="vnext"><td></td><td>av</td><td>Double a</td><td>Floor a</td></tr>
-<tr class="vnext"><td>Average2</td><td>AV</td><td></td><td>Defined as PDav</td></tr>
-<tr class="vnext"><td>Asin</td><td>TS</td><td>Double a<br/>Int a</td><td>asin</td></tr>
-<tr class="vnextn"><td></td><td>TS</td><td>deepmap</td><td></td></tr>
-<tr class="vnext"><td>Acos</td><td>TC</td><td>Double a<br/>Int a</td><td>acos</td></tr>
-<tr class="vnextn"><td></td><td>TC</td><td>deepmap</td><td></td></tr>
-<tr class="vnext"><td>Atan</td><td>TT</td><td>Double a<br/>Int a</td><td>atan</td></tr>
-<tr class="vnextn"><td></td><td>TT</td><td>deepmap</td><td></td></tr>
-<tr><td>BlockAccess</td><td>!!</td><td>Block a, Int n<br/>Str a, Int n</td><td>Return the nth element</td></tr>
-<tr><td>Box</td><td>bx</td><td>Any a</td><td>Put a in an empty block</td></tr>
-<tr class="vnext"><td>BoxCycle</td><td>bc</td><td></td><td>Defined as bxcy</td></tr>
-<tr class="vnext"><td>BinomialDCumulative</td><td>Bc</td><td>Int n, Double prb, Double c</td><td>binomial distribution cumulative</td></tr>
-<tr class="vnext"><td>BinomialDPropability</td><td>Bp</td><td>Int n, Double prb, Int nth</td><td>binomial distribution probability</td></tr>
-<tr class="vnext"><td>Choose</td><td>ch</td><td></td><td>Defined as \/n!!!</td></tr>
-<tr class="vnext"><td>ChiSquaredDCumulative</td><td>cc</td><td>Int df, Double c</td><td>chisquared distribution cumulative</td></tr>
-<tr class="vnext"><td>ChiSquaredDDensity</td><td>cd</td><td>Int df, Double c</td><td>chisquared distribution density</td></tr>
-<tr class="vnext"><td>ChiSquaredDQuantile</td><td>cq</td><td>Int df, Double c</td><td>chisquared distribution quantile</td></tr>
-<tr class="vnext"><td>ChiSquaredTest</td><td>ct</td><td></td><td>Defined as ^^x/?-2?^\/0.0?+?/++</td></tr>
-<tr><td>ChunksOf</td><td>co</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Split a into chunks of size n</td></tr>
-<tr><td>Chunky</td><td>CO</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Create n-grams. "abc"2CO is {"ab" "bc"}</td></tr>
-<tr class="vnext"><td>CoerceAdd</td><td>?+</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.+</td></tr>
-<tr class="vnext"><td></td><td>?+</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.+</td></tr>
-<tr class="vnext"><td></td><td>?+</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.+</td></tr>
-<tr class="vnext"><td></td><td>?+</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?+</td></tr>
-<tr class="vnext"><td></td><td>?+</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?+</td></tr>
-<tr class="vnext"><td></td><td>?+</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?+</td></tr>
-<tr class="vnext"><td></td><td>?+</td><td>Block a, Block b</td><td>Defined as {^p?+}Z[</td></tr>
-<tr class="vnext"><td>CoerceDiv</td><td>?/</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd./</td></tr>
-<tr class="vnext"><td></td><td>?/</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh./</td></tr>
-<tr class="vnext"><td></td><td>?/</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh./</td></tr>
-<tr class="vnext"><td></td><td>?/</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?/</td></tr>
-<tr class="vnext"><td></td><td>?/</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?/</td></tr>
-<tr class="vnext"><td></td><td>?/</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?/</td></tr>
-<tr class="vnext"><td></td><td>?/</td><td>Block a, Block b</td><td>Defined as {^p?/}Z[</td></tr>
-<tr class="vnext"><td>CoerceFactorial</td><td>?!</td><td>Int a</td><td>Defined as ropd</td></tr>
-<tr class="vnext"><td></td><td>?!</td><td>Block a</td><td>Defined as {?!}m[</td></tr>
-<tr class="vnext"><td>CoerceMul</td><td>?*</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.*</td></tr>
-<tr class="vnext"><td></td><td>?*</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.*</td></tr>
-<tr class="vnext"><td></td><td>?*</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.*</td></tr>
-<tr class="vnext"><td></td><td>?*</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?*</td></tr>
-<tr class="vnext"><td></td><td>?*</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?*</td></tr>
-<tr class="vnext"><td></td><td>?*</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?*</td></tr>
-<tr class="vnext"><td></td><td>?*</td><td>Block a, Block b</td><td>Defined as {^p?*}Z[</td></tr>
-<tr class="vnext"><td>CoercePow</td><td>?^</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.*</td></tr>
-<tr class="vnext"><td></td><td>?^</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?*</td></tr>
-<tr class="vnext"><td></td><td>?^</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?*</td></tr>
-<tr class="vnext"><td></td><td>?^</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?*</td></tr>
-<tr class="vnext"><td></td><td>?^</td><td>Block a, Block b</td><td>Defined as {^p?^}Z[</td></tr>
-<tr class="vnext"><td>CoerceSub</td><td>?-</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.-</td></tr>
-<tr class="vnext"><td></td><td>?-</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.-</td></tr>
-<tr class="vnext"><td></td><td>?-</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.-</td></tr>
-<tr class="vnext"><td></td><td>?-</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?-</td></tr>
-<tr class="vnext"><td></td><td>?-</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?-</td></tr>
-<tr class="vnext"><td></td><td>?-</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?-</td></tr>
-<tr class="vnext"><td></td><td>?-</td><td>Block a, Block b</td><td>Defined as {^p?-}Z[</td></tr>
-<tr class="vnext"><td>CoerceSqrt</td><td>?s</td><td>Int a</td><td>Defined as pdr@</td></tr>
-<tr class="vnext"><td></td><td>?s</td><td>Block a</td><td>Defined as {?s}m[</td></tr>
-<tr class="vnext"><td>CoerceInc</td><td>?i</td><td>Double a</td><td>Defined as 1.0?+</td></tr>
-<tr class="vnext"><td></td><td>?i</td><td>Block a</td><td>Defined as {?i}m[</td></tr>
-<tr class="vnext"><td>CoerceDec</td><td>?d</td><td>Double a</td><td>Defined as 1.0?-</td></tr>
-<tr class="vnext"><td></td><td>?d</td><td>Block a</td><td>Defined as {?d}m[</td></tr>
-<tr><td>Concat</td><td>\[</td><td>a</td><td>Defined as {_+}r[</td></tr>
-<tr><td>ConcatMap</td><td>\m</td><td></td><td>Defined as m[\[</td></tr>
-<tr><td>Contains</td><td>~[</td><td>Block a, Any b</td><td>Does a contain b?</td><tr>
-<tr><td></td><td>~[</td><td>Str a, Char b</td><td>Does a contain b?</td></tr>
-<tr><td></td><td>~[</td><td>Int a, Int b</td><td>Does a contain the digits of b?</td><tr>
-<tr><td></td><td>~[</td><td>Str a, Str b</td><td>Does a contain b?</td></tr>
-<tr><td>Continuation</td><td>c!</td><td>Block a</td><td>Continuation with a</td></tr>
-<tr class="vnext"><td>ConvertBase</td><td>B!</td><td>Int n, Int b</td><td>convert n to base b (result is a string)</td></tr>
-<tr class="vnextn"><td></td><td>B!</td><td>deepzip2 (int,string)</td><td></td></tr>
-<tr class="vnext"><td></td><td>B!</td><td>String n, Int b</td><td>Parse n as an number in base b (result is an int)</td></tr>
-<tr><td>Combinations</t><td>CB</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a of length n</td></tr>
-<tr><td>CombinationsUpTo</td><td>cb</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a up to length n</td></tr>
-<tr class="vnext"><td>Compare</td><td>cm</td><td>Any a, Any b</td><td>Compare a with b (1 for greater, 0 for equal, -1 else)</td></tr>
+<!-- --> 
+<table class="fancy"> 
+<thead> 
+<tr><td>Name</td><td>Ident</td><td>Args</td><td>Description</td></tr> 
+</thead> 
+<tbody> 
+<tr><td>Abs</td><td>ab</td><td>Int a<br/>Double a</td><td>Abs a</td></tr> 
+<tr><td>Add</td><td>.+</td><td>Int a, Int b</td><td>Regular integer addition (a + b)</td></tr> 
+<tr><td></td><td>.+</td><td>Double a, Double b</td><td>Addition (a + b)</td></tr> 
+<tr class="vnextn"><td></td><td>.+</td><td>Double a, Int b</td><td>(a + b)</td></tr> 
+<tr class="vnextn"><td></td><td>.+</td><td>Int a, Double b</td><td>(a + b)</td></tr> 
+<tr><td></td><td>.+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr> 
+<tr><td></td><td>.+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr> 
+<tr><td></td><td>.+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr> 
+<tr><td></td><td>.+</td><td>Str a, Char b</td><td>Append char to string</td></tr> 
+<tr><td></td><td>.+</td><td>Int b, Str a<br/>Int b, Block a<br/><span style="color: #88AA88;">Str a,Int b<br/>Block a,Int b</span></td><td>Take b characters from a</td></tr> 
+<tr><td>AddX</td><td>_+</td><td>Int a, Int b</td><td>Returns a block with a and b</td></tr> 
+<tr><td></td><td>_+</td><td>Double a, Double b</td><td>Returns a block with a and b</td></tr> 
+<tr><td></td><td>_+</td><td>Str a, Str b</td><td>String concatenation (a ++ b)</td></tr> 
+<tr><td></td><td>_+</td><td>Block a, Block b</td><td>Block concatenation (a ++ b)</td></tr> 
+<tr><td></td><td>_+</td><td>Char a, Char b</td><td>Append chars to form a string</td></tr> 
+<tr><td></td><td>_+</td><td>Str a, Char b<br>Char a, Str b</td><td>Append char to string</td></tr> 
+<tr><td></td><td>_+</td><td>Str a, Int b<br>Int a, Str b</td><td>Append int to string</td></tr> 
+<tr><td></td><td>_+</td><TD>Block a, Any b</td><td>Append b to a</td></tr> 
+<tr class="vnext"><td>All</td><td>al</td><td></td><td>Defined as m[r&amp;</td></tr> 
+<tr class="vnext"><td>AllAlpha</td><td>aa</td><td></td><td>Defined as {rd}m[al</td></tr> 
+<tr class="vnext"><td>AllAlphaNum</td><td>an</td><td></td><td>Defined as {ri}m[al</td></tr> 
+<tr class="vnext"><td>AllDigit</td><td>ad</td><td></td><td>Defined as {&gt;&lt;}m[al</td></tr> 
+<tr><td>And</td><td>&amp;&amp;</td><td>Int a, Int b</td><td>Bitwise and</td></tr> 
+<tr class="vnextn"><td></td><td>&amp;&amp;</td><td>deepzip2 (int)</td><td></td></tr> 
+<tr><td>AndLs</td><td>r&amp;</td><td></td><td>Defined as {&amp;&amp;}r[</td></tr> 
+<tr class="vnext"><td>Any</td><td>ay</td><td></td><td>Defined as m[r|</td></tr> 
+<tr><td>Append</td><td>[+</td><td>Block  a, Any b<br/>Int a, Int b</td><td>Append b to a</td></tr> 
+<tr><td></td><td>[+</td><td>Str a,Char b</td><td>Append b to a</td></tr> 
+<tr class="vnext"><td>Average</td><td>av</td><td>Block a</td><td>Defined as ^^ ++ \/ L[ pd ./</td></tr> 
+<tr class="vnext"><td></td><td>av</td><td>Double a</td><td>Floor a</td></tr> 
+<tr class="vnext"><td>Average2</td><td>AV</td><td></td><td>Defined as PDav</td></tr> 
+<tr class="vnext"><td>Asin</td><td>TS</td><td>Double a<br/>Int a</td><td>asin</td></tr> 
+<tr class="vnextn"><td></td><td>TS</td><td>deepmap</td><td></td></tr> 
+<tr class="vnext"><td>Acos</td><td>TC</td><td>Double a<br/>Int a</td><td>acos</td></tr> 
+<tr class="vnextn"><td></td><td>TC</td><td>deepmap</td><td></td></tr> 
+<tr class="vnext"><td>Atan</td><td>TT</td><td>Double a<br/>Int a</td><td>atan</td></tr> 
+<tr class="vnextn"><td></td><td>TT</td><td>deepmap</td><td></td></tr> 
+<tr><td>BlockAccess</td><td>!!</td><td>Block a, Int n<br/>Str a, Int n</td><td>Return the nth element</td></tr> 
+<tr><td>Box</td><td>bx</td><td>Any a</td><td>Put a in an empty block</td></tr> 
+<tr class="vnext"><td>BoxCycle</td><td>bc</td><td></td><td>Defined as bxcy</td></tr> 
+<tr class="vnext"><td>BinomialDCumulative</td><td>Bc</td><td>Int n, Double prb, Double c</td><td>binomial distribution cumulative</td></tr> 
+<tr class="vnext"><td>BinomialDPropability</td><td>Bp</td><td>Int n, Double prb, Int nth</td><td>binomial distribution probability</td></tr> 
+<tr class="vnextn"><td>Ceiling</td><td>cl</td><td></td><tD>Defined as pdpd</td></tr> 
+<tr class="vnext"><td>Choose</td><td>ch</td><td></td><td>Defined as \/n!!!</td></tr> 
+<tr class="vnext"><td>ChiSquaredDCumulative</td><td>cc</td><td>Int df, Double c</td><td>chisquared distribution cumulative</td></tr> 
+<tr class="vnext"><td>ChiSquaredDDensity</td><td>cd</td><td>Int df, Double c</td><td>chisquared distribution density</td></tr> 
+<tr class="vnext"><td>ChiSquaredDQuantile</td><td>cq</td><td>Int df, Double c</td><td>chisquared distribution quantile</td></tr> 
+<tr class="vnext"><td>ChiSquaredTest</td><td>ct</td><td></td><td>Defined as ^^x/?-2?^\/0.0?+?/++</td></tr> 
+<tr><td>ChunksOf</td><td>co</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Split a into chunks of size n</td></tr> 
+<tr><td>Chunky</td><td>CO</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Create n-grams. "abc"2CO is {"ab" "bc"}</td></tr> 
+<tr class="vnext"><td>CoerceAdd</td><td>?+</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.+</td></tr> 
+<tr class="vnext"><td></td><td>?+</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.+</td></tr> 
+<tr class="vnext"><td></td><td>?+</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.+</td></tr> 
+<tr class="vnext"><td></td><td>?+</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?+</td></tr> 
+<tr class="vnext"><td></td><td>?+</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?+</td></tr> 
+<tr class="vnext"><td></td><td>?+</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?+</td></tr> 
+<tr class="vnext"><td></td><td>?+</td><td>Block a, Block b</td><td>Defined as {^p?+}Z[</td></tr> 
+<tr class="vnext"><td>CoerceDiv</td><td>?/</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd./</td></tr> 
+<tr class="vnext"><td></td><td>?/</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh./</td></tr> 
+<tr class="vnext"><td></td><td>?/</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh./</td></tr> 
+<tr class="vnext"><td></td><td>?/</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?/</td></tr> 
+<tr class="vnext"><td></td><td>?/</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?/</td></tr> 
+<tr class="vnext"><td></td><td>?/</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?/</td></tr> 
+<tr class="vnext"><td></td><td>?/</td><td>Block a, Block b</td><td>Defined as {^p?/}Z[</td></tr> 
+<tr class="vnext"><td>CoerceFactorial</td><td>?!</td><td>Int a</td><td>Defined as ropd</td></tr> 
+<tr class="vnext"><td></td><td>?!</td><td>Block a</td><td>Defined as {?!}m[</td></tr> 
+<tr class="vnext"><td>CoerceMul</td><td>?*</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.*</td></tr> 
+<tr class="vnext"><td></td><td>?*</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.*</td></tr> 
+<tr class="vnext"><td></td><td>?*</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.*</td></tr> 
+<tr class="vnext"><td></td><td>?*</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?*</td></tr> 
+<tr class="vnext"><td></td><td>?*</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?*</td></tr> 
+<tr class="vnext"><td></td><td>?*</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?*</td></tr> 
+<tr class="vnext"><td></td><td>?*</td><td>Block a, Block b</td><td>Defined as {^p?*}Z[</td></tr> 
+<tr class="vnext"><td>CoercePow</td><td>?^</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.*</td></tr> 
+<tr class="vnext"><td></td><td>?^</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?*</td></tr> 
+<tr class="vnext"><td></td><td>?^</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?*</td></tr> 
+<tr class="vnext"><td></td><td>?^</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?*</td></tr> 
+<tr class="vnext"><td></td><td>?^</td><td>Block a, Block b</td><td>Defined as {^p?^}Z[</td></tr> 
+<tr class="vnext"><td>CoerceSub</td><td>?-</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.-</td></tr> 
+<tr class="vnext"><td></td><td>?-</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.-</td></tr> 
+<tr class="vnext"><td></td><td>?-</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.-</td></tr> 
+<tr class="vnext"><td></td><td>?-</td><td>Block a, Int b<br/>Int a, Block b</td><td>Defined as bxcy?-</td></tr> 
+<tr class="vnext"><td></td><td>?-</td><td>Block a, Double b<br/>Double a, Block b</td><td>Defined as bxcy?-</td></tr> 
+<tr class="vnext"><td></td><td>?-</td><td>Block a, Str b<br/>Str a, Block b</td><td>Defined as bxcy?-</td></tr> 
+<tr class="vnext"><td></td><td>?-</td><td>Block a, Block b</td><td>Defined as {^p?-}Z[</td></tr> 
+<tr class="vnext"><td>CoerceSqrt</td><td>?s</td><td>Int a</td><td>Defined as pdr@</td></tr> 
+<tr class="vnext"><td></td><td>?s</td><td>Block a</td><td>Defined as {?s}m[</td></tr> 
+<tr class="vnext"><td>CoerceInc</td><td>?i</td><td>Double a</td><td>Defined as 1.0?+</td></tr> 
+<tr class="vnext"><td></td><td>?i</td><td>Block a</td><td>Defined as {?i}m[</td></tr> 
+<tr class="vnext"><td>CoerceDec</td><td>?d</td><td>Double a</td><td>Defined as 1.0?-</td></tr> 
+<tr class="vnext"><td></td><td>?d</td><td>Block a</td><td>Defined as {?d}m[</td></tr> 
+<tr><td>Concat</td><td>\[</td><td>a</td><td>Defined as {_+}r[</td></tr> 
+<tr><td>ConcatMap</td><td>\m</td><td></td><td>Defined as m[\[</td></tr> 
+<tr><td>Contains</td><td>~[</td><td>Block a, Any b</td><td>Does a contain b?</td><tr> 
+<tr><td></td><td>~[</td><td>Str a, Char b</td><td>Does a contain b?</td></tr> 
+<tr><td></td><td>~[</td><td>Int a, Int b</td><td>Does a contain the digits of b?</td><tr> 
+<tr><td></td><td>~[</td><td>Str a, Str b</td><td>Does a contain b?</td></tr> 
+<tr><td>Continuation</td><td>c!</td><td>Block a</td><td>Continuation with a</td></tr> 
+<tr class="vnext"><td>ConvertBase</td><td>B!</td><td>Int n, Int b</td><td>convert n to base b (result is a string)</td></tr> 
+<tr class="vnextn"><td></td><td>B!</td><td>deepzip2 (int,string)</td><td></td></tr> 
+<tr class="vnext"><td></td><td>B!</td><td>String n, Int b</td><td>Parse n as an number in base b (result is an int)</td></tr> 
+<tr><td>Combinations</t><td>CB</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a of length n</td></tr> 
+<tr><td>CombinationsUpTo</td><td>cb</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a up to length n</td></tr> 
+<tr class="vnext"><td>Compare</td><td>cm</td><td>Any a, Any b</td><td>Compare a with b (1 for greater, 0 for equal, -1 else)</td></tr> 
 <tr class="vnext"><td>Compare 2</td><td>CM</td><td></td><td>Defined as
-^^bx(\/)[+\/[+(\/)[+(cm)[+ Can be used to construct a comparison function for sortBy. (L[)CMsb sorts by length.</td></tr>
-<tr class="vnext"><td>Compare 3</td><td>Cm</td><td></td><td>Defined as
-^^(\/)[+\/-][+(\/)[+(cm)[+</td></tr>
-<tr class="vnext"><td>Cos</td><td>Tc</td><td>Double a<br/>Int a</td><td>cosinus</td></tr>
-<tr class="vnextn"><td></td><td>Tc</td><td>deepmap</td><td></td></tr>
-<tr class="vnext"><td>CrossProduct</td><td>cp</td><td>Block a, Block b<br/>Str a, Str b</td><td>Crossproduct (a x b)</td></tr>
-<tr><td>Cycle</td><td>cy</td><td>Block a<br/>Str a</br></td><td>Repeat a infinite times</td></tr>
-<tr class="vnext"><td></td><td>cy</td><td>Int a</td><td>Convert to string and then cycle</td></tr>
-<tr><td>Decrement</td><td>-.</td><td>Int a</td><td>Decrement a--</td></tr>
-<tr><td></td><td>-.</td><td>Char a</td><td>Previous char (chr(ord(a)-1))</td></tr>
-<tr><td></td><td>-.</td><td>Str a<br/>Block a</td><td>Prepend head of a to a</td></tr>
-<tr class="vnext"><td>DeleteIndices</td><td>di</td><td></td><td>Defined as (RA)\/[[(RA)[+e!</td></tr>
-<tr><td>DiffLs</td><td>\\</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>List difference (a \\ b)</td></tr>
-<tr class="vnext"><td>DimArrayAccess</td><td>d!</td><td></td><td>Defined as (!!)\/[[(!!)[+e!</td></tr>
-<tr class="vnext"><td>DimArraySet</td><td>D!</td><td>Block arr, Block adr, Any e</td><td>Sets the element in arr at position adr to e (see DimArrayAccess)</td></tr>
-<tr><td>Div</td><td>./</td><td>Int a, Int b</td><td>Regular integer division (a / b)</td></tr>
-<tr><td></td><td>./</td><td>Double a, Double b</td><td>Division (a / b)</td></tr>
-<tr class="vnextn"><td></td><td>./</td><td>Double a, Int b</td><td>(a / b)</td></tr>
-<tr class="vnextn"><td></td><td>./</td><td>Int a, Double b</td><td>(a / b)</td></tr>
-<tr class="vnext"><td></td><td>./</td><td>Str a,Str b</td><td>If a starts with b, remove b from a</td></tr>
-<tr class="vnext"><td>DropWhile</td><td>dw</td><td>Block p<br/>Block ls</td><td>drop elements from ls as long as p holds true</td></tr>
-<tr class="vnext"><td></td><td>dw</td><td>Block p<br/>Str s</td><td>Defined as **dw\[</td></tr>
-<tr><td>Dup</td><td>^^</td><td></td><td>Duplicate top most element on the stack</td></tr>
-<tr><td>DupSwap</td><td>^/</td><td></td><td>Defined as ^^ \/</td></tr>
-<tr class="vnext"><td>EmptyBlockToStr</td><td>es<td></td></td><td>Converts an empty block to an empty string. Else it does nothing</td></tr>
-<tr><td>Equal</td><td>==</td><td>Any a, Any b</td><td>Comparision (a == b)</td></tr>
-<tr><td>Eval</td><td>e!</td><td>Block a</td><td>Eval a block</td></tr>
-<tr><td>EvalMany</td><td>E!</td><td></td><td>Defined as .*\[e!</td></tr>
-<tr class="vnext"><td>EveryNth</td><td>en</td><td>Str a<br/>Block a<br/>Int a</td><td>Returns a block/str/int containing every nth element/char/digit</td></tr>
-<tr class="vnext"><td>ExponentialDCumulative</td><td>ec</td><td>Double lambda, Double c</td><td>exponential distribution cumulative</td></tr>
-<tr class="vnext"><td>ExponentialDDensity</td><td>ed</td><td>Double lambda, Double c</td><td>exponential distribution density</td></tr>
-<tr class="vnext"><td>ExponentialDQuantile</td><td>eq</td><td>Double lambda, Double c</td><td>exponential distribution quantile</td></tr>
-<tr><td>Factors</td><td>fc</td><td>Int a</td><td>Return a block with every number a is divisible by</td></tr>
-<tr><td></td><td>fc</td><td>Str a<br>Block a</td><td>Least common element</td></tr>
-<tr><td>Filter</td><td>f[</td><td>Block f, Str a<br>Block f, Block a</td><td>Filters a list according to the predicate f (must return 1 or 0)</td></tr>
-<tr class="vnext"><td>FilterLength</td><td>fl</td><td></td><td>Defined as f[L[</td></tr>
-<tr class="vnext"><td>FilterLines</td><td>W[</td><td></td><td>Defined as \/ln\/f[un</td></tr>
-<tr class="vnext"><td>FilterMap</td><td>FM</td><td>Block f, Block m</td><td>Behaves as f FILTER m MAP ({f}f[{m}m[). </td></tr>
-<tr class="vnext"><td>FilterWords</td><td>w[</td><td></td><td>Defined as \/WD\/f[wd</td></tr>
-<tr><td>FindIndex</td><td>fi</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find index of element where f returns true.</td></tr>
-<tr><td>FindIndexEq</td><td>Fi</td><td>Block a, Any p<br/>Str a, Char p</td><td>Find index of an element equal to p</td></tr>
-<tr class="vnext"><td>FindIndices</td><td>fI</td><td>Block a, Block f<br/>Str a, Block f</td><td>Like FindIndex but does not stop on the first match but instead returns a list of indices.</td></tr>
-<tr><td>FindElement</td><td>fe</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find an element where f is true and return it</td></tr>
-<tr><td>Format</td><td>FF</td><td>Pretty a, Int b</td><td>Changes the format of a according to b</td></tr>
-<tr><td>FormatFromFormat</td><td>Ff</td><td>n/a</td><td>Defined as FF ff</td></tr>
-<tr class="vnext"><td>FrequencyList</td><td>f:</td><td></td><td>Returns a Block of Blocks with {count element}. Counts how many times each element occurs in a list.<br/>
-Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
+^^bx(\/)[+\/[+(\/)[+(cm)[+ Can be used to construct a comparison function for sortBy. (L[)CMsb sorts by length. <br/>
+It generates a block of the form {xx \/ xx \/ cm} where xx is the command passed as argument.</td></tr> 
+<tr class="vnext"><td>Compare 3</td><td>Cm</td><td></td><td>Defined as^^(\/)[+\/.+{\/cm}.+<br/>
+Esentially it behaves the same as Compare 2 but takes a block with <br/>
+multiple commands.</td></tr> 
+<tr class="vnext"><td>Cos</td><td>Tc</td><td>Double a<br/>Int a</td><td>cosinus</td></tr> 
+<tr class="vnextn"><td></td><td>Tc</td><td>deepmap</td><td></td></tr> 
+<tr class="vnext"><td>CrossProduct</td><td>cp</td><td>Block a, Block b<br/>Str a, Str b</td><td>Crossproduct (a x b)</td></tr> 
+<tr><td>Cycle</td><td>cy</td><td>Block a<br/>Str a</br></td><td>Repeat a infinite times</td></tr> 
+<tr class="vnext"><td></td><td>cy</td><td>Int a</td><td>Convert to string and then cycle</td></tr> 
+<tr><td>Decrement</td><td>-.</td><td>Int a</td><td>Decrement a--</td></tr> 
+<tr><td></td><td>-.</td><td>Char a</td><td>Previous char (chr(ord(a)-1))</td></tr> 
+<tr><td></td><td>-.</td><td>Str a<br/>Block a</td><td>Prepend head of a to a</td></tr> 
+<tr class="vnext"><td>DeleteIndices</td><td>di</td><td></td><td>Defined as (RA)\/[[(RA)[+e!</td></tr> 
+<tr><td>DiffLs</td><td>\\</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>List difference (a \\ b)</td></tr> 
+<tr class="vnext"><td>DimArrayAccess</td><td>d!</td><td></td><td>Defined as (!!)\/[[(!!)[+e!</td></tr> 
+<tr class="vnext"><td>DimArraySet</td><td>D!</td><td>Block arr, Block adr, Any e</td><td>Sets the element in arr at position adr to e (see DimArrayAccess)</td></tr> 
+<tr><td>Div</td><td>./</td><td>Int a, Int b</td><td>Regular integer division (a / b)</td></tr> 
+<tr><td></td><td>./</td><td>Double a, Double b</td><td>Division (a / b)</td></tr> 
+<tr class="vnextn"><td></td><td>./</td><td>Double a, Int b</td><td>(a / b)</td></tr> 
+<tr class="vnextn"><td></td><td>./</td><td>Int a, Double b</td><td>(a / b)</td></tr> 
+<tr class="vnext"><td></td><td>./</td><td>Str a,Str b</td><td>If a starts with b, remove b from a</td></tr> 
+<tr class="vnext"><td>DropWhile</td><td>dw</td><td>Block p<br/>Block ls</td><td>drop elements from ls as long as p holds true</td></tr> 
+<tr class="vnext"><td></td><td>dw</td><td>Block p<br/>Str s</td><td>Defined as **dw\[</td></tr> 
+<tr><td>Dup</td><td>^^</td><td></td><td>Duplicate top most element on the stack</td></tr> 
+<tr><td>DupSwap</td><td>^/</td><td></td><td>Defined as ^^ \/</td></tr> 
+<tr class="vnext"><td>EmptyBlockToStr</td><td>es<td></td></td><td>Converts an empty block to an empty string. Else it does nothing</td></tr> 
+<tr><td>Equal</td><td>==</td><td>Any a, Any b</td><td>Comparision (a == b)</td></tr> 
+<tr><td>Eval</td><td>e!</td><td>Block a</td><td>Eval a block</td></tr> 
+<tr><td>EvalMany</td><td>E!</td><td></td><td>Defined as .*\[e!</td></tr> 
+<tr class="vnext"><td>EveryNth</td><td>en</td><td>Str a, Int n<br/>Block a, Int n<br/>Int a, Int n</td><td>Returns a block/str/int containing every nth element/char/digit</td></tr> 
+<tr class="vnext"><td>ExponentialDCumulative</td><td>ec</td><td>Double lambda, Double c</td><td>exponential distribution cumulative</td></tr> 
+<tr class="vnext"><td>ExponentialDDensity</td><td>ed</td><td>Double lambda, Double c</td><td>exponential distribution density</td></tr> 
+<tr class="vnext"><td>ExponentialDQuantile</td><td>eq</td><td>Double lambda, Double c</td><td>exponential distribution quantile</td></tr> 
+<tr><td>Factors</td><td>fc</td><td>Int a</td><td>Return a block with every number a is divisible by<br/><span style="color: #88AA88;">Order of the block returned is smallest first.</span></td></tr> 
+<tr><td></td><td>fc</td><td>Str a<br>Block a</td><td>Least common element</td></tr> 
+<tr><td>Filter</td><td>f[</td><td>Block f, Str a<br>Block f, Block a</td><td>Filters a list according to the predicate f (must return 1 or 0)</td></tr> 
+<tr class="vnext"><td>FilterLength</td><td>fl</td><td></td><td>Defined as f[L[</td></tr> 
+<tr class="vnext"><td>FilterLines</td><td>W[</td><td></td><td>Defined as \/ln\/f[un</td></tr> 
+<tr class="vnext"><td>FilterMap</td><td>FM</td><td>Block f, Block m</td><td>Behaves as f FILTER m MAP ({f}f[{m}m[). </td></tr> 
+<tr class="vnext"><td>FilterWords</td><td>w[</td><td></td><td>Defined as \/WD\/f[wd</td></tr> 
+<tr><td>FindIndex</td><td>fi</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find index of element where f returns true.</td></tr> 
+<tr><td>FindIndexEq</td><td>Fi</td><td>Block a, Any p<br/>Str a, Char p</td><td>Find index of an element equal to p</td></tr> 
+<tr class="vnext"><td>FindIndices</td><td>fI</td><td>Block a, Block f<br/>Str a, Block f</td><td>Like FindIndex but does not stop on the first match but instead returns a list of indices.</td></tr> 
+<tr><td>FindElement</td><td>fe</td><td>Block a, Block f<br/>Str a, Block f</td><td>Find an element where f is true and return it</td></tr> 
+<tr class="vnextn"><td>Floor</td><td>fo</td><td></td><tD>Defined as avpd</td></tr> 
+<tr><td>Format</td><td>FF</td><td>Pretty a, Int b</td><td>Changes the format of a according to b</td></tr> 
+<tr><td>FormatFromFormat</td><td>Ff</td><td>n/a</td><td>Defined as FF ff</td></tr> 
+<tr class="vnext"><td>FrequencyList</td><td>f:</td><td></td><td>Returns a Block of Blocks with {count element}. Counts how many times each element occurs in a list.<br/> 
+Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr> 
 <tr class="vnext"><td>FrequencyListPercentage</td><td>F:</td><td></td><td>Defined as f:u[\/PD^^++?/\/z[</td></tr>.
-<tr><td>FromFormat</td><td>ff</td><td>Pretty a</td><td>Extracts the string out of the pretty</td></tr>
-<tr class="vnext"><td>Geq</td><td>&gt;=</td><td>Any a, Any b</td><td> a &gt;= b</td></tr>
-<tr class="vnext"><td>Gcd</td><td>g_</td><td>Int a, Int b</td><td>gcd(a,b)</td></tr>
-<tr class="vnext"><td></td><td>g_</td><td>Block a<br/>Str a</td><td>Defined as ^^-]\/[-\/</td></tr>
-<tr><td>Greater</td><td>.&gt;</td><td>Any a, Any b</td><td>Comparision (a &gt; b)</td></tr>
-<tr class="vnext"><td>Grep</td><td>gr</td><td></td><td>Defined as {~=}\/+]\/ln\/f[un</td></tr>
-<tr class="vnext"><td>GeometricDCumulative</td><td>gc</td><td>Double succrate, Double c</td><td><i>shifted</i> geometric distribution cumulative</td></tr>
-<tr class="vnext"><td>GeometricDPropability</td><td>gp</td><td>Double succrate, Int nth</td><td><i>shifted</i> geometric distribution probability</td></tr>
-<tr><td>Group</td><td>=[</td><td>Block a</td><td>Group (equal consecutive) elements in a</td></tr>
-<tr class="vnext"><td>GroupLength</td><td>gl</td><td></td><td>Defined as =[L[</td></tr>
-<tr class="vnext"><td>GroupNub</td><td>gn</td><td></td><td>Defined as =[{-]}m[</td></tr>
-<tr class="vnext"><td>GroupSort</td><td>gs</td><td></td><td>Defined as =[&gt;&lt;</td></tr>
-<tr class="vnext"><td>GroupWithLength</td><td>gw</td><td></td><td>Defined as =[{^^L[\/-]bx\/+]}m[</td></tr>
-<tr><td>Head</td><td>-]</td><td>Block a<br/>Int a</td><td>First element</td></tr>
-<tr><td></td><td>-]</td><td>Str a</td><td>First character</td></tr>
-<tr><td>HeadTail</td><td>-~</td><td></td><td>Defined as -][-</td></tr>
-<tr class="vnext"><td>Hide</td><td>hd</td><td></td><td>Hide element and move to the bottom of the stack</td></tr>
-<tr class="vnext"><td>Hide2</td><td>HD</td><td></td><td>Hide element but keep on top</td></tr>
-<tr class="vnext"><td>HyperGeometricDCumulative</td><td>hc</td><td>Int m, Int l, Int k, Double c</td><td><i>shifted</i> hypergeometric distribution cumulative<br/>k elements, l population, m elements of one kind</td></tr>
-<tr class="vnext"><td>HyperGeometricDPropability</td><td>hp</td><td>Int m, Int l, Int k, Int nth</td><td><i>shifted</i> hypergeometric distribution probability</td></tr>
-<tr><td>IsError</t><td>is</td><td></td><td>Return 1 on error 0 else</td></tr>
-<tr><td>IfElse</td><td>ie</td><td>Block a, Block b, Int c</td><td>If c then a else b</td></tr>
-<tr><td>Iff</td><td>if</td><td>Block b, Int a</td><td>If a then execute b, else pop a and pop b</td></tr>
-<tr class="vnext"><td></td><td>if</td><td>Int a, Block b</td><td>If a then execute b, else pop a and pop b</td></tr>
-<tr class="vnext"><td>Implode</td><td>im</td><td></td><td>Defined as {++}r[</td></tr>
-<tr><td>Increment</td><td>+.</td><td>Int a</td><td>Increment (a++)</td></tr>
-<tr><td></td><td>+.</td><td>Char a</td><td>Next char (chr(ord(a)+1))</td></tr>
-<tr><td></td><td>+.</td><td>Str a<br/>Block a</td><td>Append last of a to a</td></tr>
-<tr><td>InfixOf</td><td>~~</td><td>Block a, Block b</td><td>Does a contain b (as a consecutive subsequence)?</td></tr>
-<tr><td>Init</td><td>~]</td><td>Block a<br/>Int a</td><td>All except the last element</td></tr>
-<tr><td></td><td>~]</td><td>Str a</td><td>All except the last character</td></tr>
-<tr><td></td><td>~]</td><td>Int a</td><td>All except last digit</td></tr>
-<tr><td>InitTail</td><td>~-</td><td>n/a</td><td>Defined as ~][-</td></tr>
-<tr class="vnext"><td>Intercalate</td><td>ic</td><td></td><td>Defined as [[\[</td></tr>
-<tr><td>Intersection</td><td>IN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Intersection</td></tr>
-<tr><td>Intersperse</td><td>[[</td><td>Any a, Block b<br/>Char a,String b</td><td>Inserts a between every two element in b</td></tr>
-<tr class="vnext"><td>InsertAt</td><td>ia</td><td>Str ls, Char e, Int idx<br/>Block ls, Any e, Int idx</td><td>Insert element e into ls at index idx</td></tr>
-<tr><td>Last</td><td>[~</td><td>Block a<br/>Int a</td><td>Last element of the block</td></tr>
-<tr class="vnext"><td>Lcm</td><td>l_</td><td>Int a, Int b</td><td>lcm(a,b)</td></tr>
-<tr class="vnext"><td></td><td>l_</td><td>Block a<br/>Str a</td><td>Defined as ^^-]\/[-\/</td></tr>
-<tr><td>Length</td><td>L[</td><td>Block a</td><td>Length of a</td></tr>
-<tr><td></td><td>L[</td><td>Str a</td><td>Length of a</td></tr>
-<tr><td></td><td>L[</td><td>Int a</td><td>Convert to char (chr a)</td></tr>
-<tr><td></td><td>L[</td><td>Char a</td><td>Return case of a as 'A or 'a</td></tr>
-<tr class="vnext"><td>Leq</td><td>&lt;=</td><td>Any a, Any b</td><td> a &lt;= b</td></tr>
-<tr><td>Lines</td><td>ln</td><td>Str a</td><td>Splits a string into lines</td></tr>
-<tr><td></td><td>ln</td><td>Int a</td><td>Number of digits in an integer</td></tr>
-<tr class="vnext"><td>Load</td><td>ld</td><td>Int n</td><td>Load the nth hidden element from the bottom of the stack (put on top)</td></tr>
-<tr class="vnext"><td>Load2</td><td>LD</td><td></td><td>Defined as lde!</td></tr>
-<tr class="vnext"><td>Log</td><td>lg</td><td>Double a<br/>Int a</td><td>log(a) (natural logarithm)</td></tr>
-<tr class="vnext"><td>Log2</td><td>LG</td><td></td><td>Defined as lg\/lg./</td></tr>
-<tr><td>Map</td><td>m[</td><td>Block ls, Block f</td><td>Apply f to every element in ls and collect the result in a block</td></tr>
-<tr><td></td><td>m[</td><td>Str ls, Block f</td><td>Defined as \/ XX \/ m[ \[</td></tr>
-<tr><td>MapDup</td><td>[m</td><td><td>Defined as (^^)+]m[</td></tr>
-<tr><td>MapParse</td><td>[M</td><td><td>Defined as (ps)+]m[</td></tr>
-<tr><td>MapPretty</td><td>M[</td><td></td><td>Defined as m[ sh</td></tr>
-<tr class="vnext"><td>MapProduct</td><td>mp</td><td></td><td>Defined as m[pd</td></tr>
-<tr class="vnext"><td>MapString</td><td>]m</td><td></td><td>Defined as {*Sh}m[ (append Sh)</td></tr>
-<tr class="vnext"><td>MapSum</td><td>ms</td><td></td><td>Defined as m[++</td></tr>
-<tr><td>MapToPretty</td><td>M]</td><td></td><td>Defined as {sh}m[</td></tr>
-<tr><td>MapToPrettyFromFormat</td><td>m]</td><td></td><td>Defined as {shff}m[</td></tr>
-<tr><td>Matches</td><td>~=</td><td>String a, String regex</td><td>1 if regex matches, else 0</td></tr>
-<tr><td>MatchesList</td><td>=~</td><td>String a, String regex</td><td>Returns a list of subexpression matches</td></tr>
-<tr class="vnext"><td>MatrixMultiplication</td><td>mm</td><td>Block a,Block b</td><td>Matrix multiplication</td></tr>
-<tr><td>Max</td><td>&gt;.</td><td>Any a, Any b</td><td>Max(a,b)</td></tr>
-<tr><td>Maximum</td><td>&gt;]</td><td>Block a</td><td>Maximum(a)</td></tr>
-<tr class="vnext"><td></td><td>&gt;]</td><td>Str a<br/>Int a</td><td>Biggest character</td></tr>
-<tr class="vnext"><td>MaximumBy</td><td>&gt;m</td><td></td><td>Defined as Cmsb<--]</td></tr>
-<tr><td>Min</td><td>&lt;.</td><td>Any a, Any b</td><td>Min(a,b)</td></tr>
-<tr><td>Minimum</td><td>&lt;]</td><td>Block a</td><td>Minimum(a)</td></tr>
-<tr class="vnext"><td></td><td>&lt;]</td><td>Str a<br/>Int a</td><td>Smalles character</td></tr>
-<tr class="vnext"><td>MinimumBy</td><td>&lt;m</td><td></td><td>Defined as Cmsb-]</td></tr>
-<tr class="vnext"><td>Modulo</td><td>.%</td><td>Int a, Int b</td><td>a `mod` b</td></tr>
-<tr class="vnextn"><td></td><td>.%</td><td>deepzip (int)</td><td></td></tr>
-<tr><td>Mul</td><td>.*</td><td>Int a, Int b</td><td>Regular integer multiplication (a * b)</td></tr>
-<tr><td></td><td>.*</td><td>Double a, Double b</td><td>Multiplication (a * b)</td></tr>
-<tr><td></td><td>.*</td><td>Str a, Int n</td><td>Returns a block containing n copies of a</td></tr>
-<tr><td></td><td>.*</td><td>Char a, Int n</td><td>Returns a string containing n copies of a</td></tr>
-<tr><td></td><td>.*</td><td>Block a, Int n</td><td>Returns a block containing n copies of a</td></tr>
-<tr class="vnextn"><td></td><td>.*</td><td>Double a, Int b</td><td>(a * b)</td></tr>
-<tr class="vnextn"><td></td><td>.*</td><td>Int a, Double b</td><td>(a * b)</td></tr>
-<tr class="vnext"><td>MultiplesOf</td><td>mo</td><td></td><td>Defined as 1R@\/?* (infinite block of multiples)</td></tr>
-<tr class="vnext"><td></td><td>.*</td><td>Str a,Str b</td><td>reverse b++a</td></tr>
-<tr><td>Nub</td><td>NB</td><td>Block a<br/>Str a<br/>Int a</td><td>Remove duplicate elements</td></tr>
-<tr class="vnext"><td>Null</td><td>nu</td><td></td><td>Defined as L[n!</td></tr>
-<tr class="vnext"><td>NormalDCumulative</td><td>nc</td><td>Double mean, Double std, Double c</td><td>normal distribution cumulative</td></tr>
-<tr class="vnext"><td>NormalDDensity</td><td>nd</td><td>Double mean, Double std, Double c</td><td>normal distribution density</td></tr>
-<tr class="vnext"><td>NormalDQuantile</td><td>nq</td><td>Double mean, Double std, Double c</td><td>normal distribution quantile</td></tr>
-<tr><td>Not</td><td>n!</td><td>Int a</td><td>Boolish not</td></tr>
-<tr><td></td><td>n!</td><td>Block a<br>Str a</td><td>Most common element</td></tr>
-<tr class="vnext"><td>NotEqual</td><td>!=</td><td></td><td>Defined as == n!</td></tr>
-<tr class="vnext"><td>nCr</td><td>nr</td><td>Int n, Int k</td><td>nCr(n,k)</td></tr>
-<tr class="vnextn"><td></td><td>nr</td><td>deepzip (int)</td><td></td></tr>
-<tr><td>Or</td><td>||</td><td>Int a, Int b</td><td>Bitwise or</td></tr>
-<tr class="vnextn"><td></td><td>||</td><td>deepzip2 (int)</td><td></td></tr>
-<tr><td>OrLs</td><td>r|</td><td></td><td>Defined as {||}r[</td></tr>
-<tr><td>PadLeft</td><td>P[</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (left) a to length c with b</td></tr>
-<tr><td>PadRight</td><td>[P</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (right) a to length c with b</td></tr>
-<tr><td>Parse</td><td>ps</td><td>Str a</td><td>Parses the string as a Burlesque expression and returns a Block</td></tr>
-<tr class="vnextn"><td></td><td>ps</td><td>deepmap</td><td></td></tr>
-<tr class="vnext"><td>ParseEval</td><td>pe</td><td></td><td>Defined as pse!</td></tr>
-<tr class="vnext"><td>Partition</td><td>pt</td><td>Block xs, Block p <br/>Str xs, Block p</td><td>Partitions a block (or str) into two blocks containing elements<br/>
-which satisfy p and not satisfying p. (Like doing two filter passes with p and with NOT p).</td></tr>
-<tr class="vnext"><td>PoissonDCumulative</td><td>pc</td><td>Double lambda, Double c</td><td>poisson distribution cumulative</td></tr>
-<tr class="vnext"><td>PoissonDPropability</td><td>pp</td><td>Double lambda, Int nth</td><td>poisson distribution probability</td></tr>
-<tr><td>Pop</td><td>vv</td><td></td><td>Remove top most element from the stack</td></tr>
-<tr><td>PopSwap</td><td>v/</td><td></td><td>Defined as vv \/</td></tr>
-<tr><td>Pow</td><td>**</td><td>Int a, Int b</td><td>Regular integer power (a ^ b)</td></tr>
-<tr><td></td><td>**</td><td>Double a, Double b</td><td>Double power (a ** b)</td></tr>
-<tr><td></td><td>**</td><td>Block a, Block b</td><td>Merge blocks</td></tr>
-<tr><td></td><td>**</td><td>Str a, Str b</td><td>Merge strings</td></tr>
-<tr><td></td><td>**</td><td>Char a</td><td>ordinal a. (ord a). </td></tr>
-<tr class="vnext"><td>PlusMinus</td><td>pm</td><td></td><td>Defined as .+.-</td></tr>
-<tr><td>PrefixOf</td><td>~!</td><td>Block a, Block b</td><td>Is b a prefix of a?</td></tr>
-<tr><td></td><td>~!</td><td>Int a, Int b</td><td>Is b a prefix of a?</td></tr>
-<tr><td></td><td>~!</td><td>Str a, Str b</td><td>Is b a prefix of a?</td></tr>
-<tr><td>Pretty</td><td>sh</td><td>Any a</td><td>Convert to pretty type (FormatNormal)</td></tr>
-<tr class="vnext"><td>PrettyPretty</td><td>sH</td><td></td><td>Defined as SHsh</td></tr>
-<tr><td>PrettyFormatFromFormat</td><td>SH</td><td>n/a</td><td>Defined as \/ sh \/ Ff</td></tr>
-<tr><td>PrettyFromFormat</td><td>Sh</td><td>n/a</td><td>Defined as sh ff</td></tr>
-<tr><td>Prepend</td><td>+]</td><td>String a, Char b<br/>Block a,Any b<br/>Int a,Int b</td><td>Prepends b to a</td></tr>
-<tr class="vnext"><td>PrimeFactors</td><td>fC</td><td>Int a</td><td>Prime factors of a</td></tr>
-<tr class="vnext"><td></td><td>fC</td><td>Double a</td><td>a * a (multiplies a with a)</td></tr>
-<tr class="vnextn"><td></td><td>fC</td><td>deepmap</td><td></td></tr>
-<tr class="vnext"><td>Product</td><td>pd</td><td>Block a</td><td>Defined as {.*}r[. Returns Int 1 on empty list.</td></tr>
-<tr class="vnext"><td></td><td>pd</td><td>Double a</td><td>Ceiling a</td></tr>
-<tr class="vnext"><td></td><td>pd</td><td>Int a</td><td>Convert to double</td></tr>
-<tr class="vnext"><td>ProductMany</td><td>PD</td><td></td><td>Defined as {pd}m[</td></tr>
-<tr><td>PushMany</td><td>^p</td><td>Str a<br>Block a</td><td>Push every element to the stack</td></tr>
-<tr><td>PushManyReverse</td><td>p^</td><td>n/a</td><td>Like ^p but in reverse order</td></tr>
-<tr class="vnext"><td>RandomInts</td><td>rn</td><td>Int seed, Int low, Int high</td><td>Returns an infinite block of random (by seed) ints with range (low,high).</td></tr>
-<tr class="vnext"><td>RandomDoubles</td><td>RN</td><td>Int seed, Double low, Double high</td><td>Returns an infinite block of random (by seed) doubles with range (low,high).</td></tr>
-<tr><td>Range</td><td>r@</td><td>Int a, Int b</td><td>A block containing natural numbers from a to b (range a b)</td></tr>
-<tr><td></td><td>r@</td><td>Char a, Char b</td><td>Same, except for characters</td></tr>
-<tr><td></td><td>r@</td><td>Double a</td><td>Square root</td></tr>
-<tr><td></td><td>r@</td><td>String a</td><td>All permutations of a</td></tr>
-<tr><td></td><td>r@</td><td>Block a</td><td>All permutations of a</td></tr>
-<tr class="vnext"><td>RangeFromOne</td><td>ro</td><td></td><td>Defined as 1\/r@</td></tr>
-<tr class="vnext"><td>RangeFromZero</td><td>rz</td><td></td><td>Defined as 0\/r@</td></tr>
-<tr><td>RangeInf</td><td>R@</td><td>Int a</td><td>A block containing natural numbers from a to Infinity</td></tr>
-<tr><td></td><td>R@</td><td>Str a<br>Block a</td><td>All subsequences of a</td></tr>
-<tr class="vnext"><td>RangeConcat</td><td>r\</td><td></td><td>Defined as r@\[</td></tr>
-<tr class="vnext"><td>RangeModulo</td><td>rm</td><td>Int x, Block [Int lo, Int hi]</td><td>Bound x into range (lo,hi) using modulo<br/>(((x - lo) `mod` (succ (hi-lo))) + lo)</td></tr>
-<tr><td>ReadInt</td><td>ri</td><td>Int a</td><td>Identity for integers</td></tr>
-<tr><td></td><td>ri</td><td>Str a</td><td>Tries to convert a string to an integer</td></tr>
-<tr><td></td><td>ri</td><td>Char a</td><td>Is Alpha numeric?<td></tr>
-<tr class="vnextn"><td></td><td>ri</td><td>deepmap</td><td></td></tr>
-<tr><td>ReadDouble</td><td>rd</td><td>Double a</td><td>Identity for doubles</td></tr>
-<tr><td></td><td>rd</td><td>Str a</td><td>Tries to convert a string to an double</td></tr>
-<tr><td></td><td>rd</td><td>Char a</td><td>Is Alpha?<td></tr>
-<tr class="vnextn"><td></td><td>rd</td><td>deepmap</td><td></td></tr>
-<tr><td>ReadArray</td><td>ra</td><td>Str a</td><td>Tries to read an array in [,] notation</td></tr>
-<tr><td></td><td>ra</td><td>Char </td><td>Is space?<td></tr>
-<tr class="vnextn"><td></td><td>ra</td><td>deepmap</td><td></td></tr>
-<tr><td>Reduce</td><td>r[</td><td>Block ls, Block f</td><td>Reduce ls with f</td></tr>
-<tr class="vnext"><td>RemoveAt</td><td>RA</td><td>Block ls, Int idx<br/>Str ls, Int idx</td><td>Remove element at index idx from ls</td></tr>
-<tr class="vnext"><td></td><td>RA</td><td>Block ls<br/>Str ls</td><td>Defined as sapd2.0./av!!</td></tr>
-<tr><td>Reverse</td><td>&lt;-</td><td>Int a</td><td>Reverses the digits of the integer</td></tr>
-<tr><td></td><td>&lt;-</td><td>Str a</td><td>Reverses the string</td></tr>
-<tr><td></td><td>&lt;-</td><td>Block a</td><td>Reverses the block</td></tr>
-<tr><td></td><td>&lt;-</td><td>Char a</td><td>Invert case</td></tr>
-<tr><td>Replace</td><td>r~</td><td>Block ls, Any old, Any new</td><td>Replaces old in ls with new</td></tr>
-<tr><td></td><td>r~</td><td>Str ls, Char old, Char new</td><td>Replaces old in ls with new</td></tr>
-<tr><td></td><td>r~</td><td>Str ls, Str old, Str new</td><td>Replaces old in ls with new</td></tr>
-<tr><td></td><td>r~</td><td>Int ls, Int old, Int new</td><td>Replaces old in ls with new (digitwise)</td></tr>
-<tr><td>ReplaceRegex</td><td>R~</td><td>Str s, Str repl, Str regex</td><td>Regex replace</td></tr>
-<tr><td>Round</td><td>r_</td><td>Double a, Int b</td><tD>Round a to b decimal places</td></tr>
-<tr class="vnextn"><td></td><td>r_</td><td>Block a, Int b</td><tD>Defined as {b r_}m[</td></tr>
-<tr class="vnext"><td>Round2</td><td>r_</td><td></td><tD>Defined as 0r_pd</td></tr>
-<tr class="vnext"><td>Rotate</td><td>rt</td><td></td><td>Defined as l_\/+]</td></tr>
-<tr class="vnext"><td>Rotate2</td><td>RT</td><td></td><td>Defined as g_[+</td></tr>
-<tr class="vnext"><td>SelectIndices</td><td>si</td><td>Block ls, Block adr<br/>Str ls, Block adr</td><td>Select elements from ls by indices in adr. "ABCD"{1 0 3}si => "BAD"</td></tr>
-<tr class="vnext"><td>SelectLines</td><td>sl</td><td></td><td>Defined as \/ln\siun</td></tr>
-<tr class="vnext"><td>SelectWords</td><td>sw</td><td></td><td>Defined as \/WD\siwd</td></tr>
-<tr class="vnext"><td>SetAt</td><td>sa</td><td>Str ls, Char e, Int idx<br/>Block ls, Any e, Int idx</td><td>Set element in ls at index idx to e</td></tr>
-<tr class="vnext"><td></td><td>sa</td><td>Block ls<br/>Str ls</td><td>Defined as ^^L[</td></tr>
-<tr><td>Signum</td><td>sn</td><td>Int a<br/>Double a</td><td>Signum a</td></tr>
-<tr class="vnext"><td>SimpleFormat</td><td>f~</td><td></td><td>Defined as \/"~";;\/{Sh}m[**\[</td></tr>
-<tr><td>Smaller</td><td>.&lt;</td><td>Any a, Any b</td><td>Comparision (a &lt; b)</td></tr>
-<tr><td>Sort</td><td>&gt;&lt;</td><td>Str a<br/>Block a<br/>Int a</td><td>Sort a</td></tr>
-<tr><td></td><td>&gt;&lt;</td><td>Char a</td><td>Is digit?</td></tr>
-<tr class="vnext"><td>SortEqual</td><td>s=</td><td></td><td>Defined as &gt;&lt;==</td></tr>
-<tr class="vnext"><td>Sorted</td><td>so</td><td></td><td>Defined as ^^&gt;&lt;==</td></tr>
-<tr class="vnext"><td>SortedReverse</td><td>SO</td><td></td><td>Defined as ^^&lt;&gt;==</td></tr>
-<tr class="vnext"><td>SortReverse</td><td>&lt;&gt;</td><td></td><td>Defined as &gt;&lt;&lt-</td></tr>
-<tr class="vnext"><td>SortBy</td><td>sb</td><td>Block ls, Block f<br/>Str ls, Block f</td><td>SortBy f (f must return 0 (equal), 1 (greater) or -1 (smaller))</td></tr>
-<tr class="vnext"><td>SortByComparing</td><td>sc</td><td></td><td>Defined as CMsb<td></tr>
-<tr class="vnext"><td>SortGroup</td><td>sg</td><td></td><td>Defined as &gt;&lt;=[</td></tr>
-<tr class="vnext"><td>Sin</td><td>Ts</td><td>Double a<br/>Int a</td><td>sinus</td></tr>
-<tr class="vnextn"><td></td><td>Ts</td><td>deepmap</td><td></td></tr>
-<tr class="vnext"><td>SpecialInput</td><td>SP</td><td>Str a</td><td>Can be used to read 2D-Input. Defined as ln{}[M</td></tr>
-<tr class="vnext"><td>SpecialInputPretty</td><td>sp</td><td></td><td>Defined as SPsh</td></tr>
-<tr class="vnext"><td></td><td>SP</td><td>Block a</td><td>Can be used to write 2D-Output. Defined as {{Sh}m[wd}m[un</td></tr>
-<tr><td>Split</td><td>;;</td><td>String str, String b</td><td>Split string by b</td></tr>
-<tr><td></td><td>;;</td><td>Block ls, Block b</td><td>Split ls by b</td></tr>
-<tr><td></td><td>;;</td><td>Int ls, Int b</td><td>Split ls by b</td></tr>
-<tr class="vnext"><td>SplitRegex</td><td>sr</td><td>Str regex, Str s</td><td>Split s by regex </td></tr>
-<tr class="vnext"><td>StandardDeviation</td><td>SD</td><td></td><td>Obviously defined as vr?s</td></tr>
-<tr class="vnext"><td>StudentTDCumulative</td><td>Sc</td><td>Double param, Double c</td><td>StudentT distribution cumulative</td></tr>
-<tr class="vnext"><td>StudentTDDensity</td><td>Sd</td><td>Double param, Double c</td><td>StudentT distribution density</td></tr>
-<tr class="vnext"><td>StudentTDQuantile</td><td>Sq</td><td>Double param, Double c</td><td>StudentT distribution quantile</td></tr>
-<tr class="vnext"><td>StrEqIgnoreCase</td><td>s=</td><td></td><td>Defined as zz\/zz\/==</td></tr>
-<tr><td>StripLeft</td><td>S[</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (left) b from a</td></tr>
-<tr class="vnext"><td></td><td>S[</td><td>Int a</td><td>a * a (multiplies a with a)</td></tr>
-<tr><td>StripRight</td><td>[S</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (right) b from a</td></tr>
-<tr class="vnext"><td>StrStr</td><td>ss</td><td></td><td>Defined as ^^L[x/\/CO\/Fi . Returns the index of a substring in a string.<br/>like C's strstr</td></tr>
-<tr><td>Sub</td><td>.-</td><td>Int a, Int b</td><td>Regular integer subtraction (a - b)</td></tr>
-<tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr>
-<tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr>
-<tr><td></td><td>.-</td><td>Int b, Str a<br/>Block a, Int b<br/><span style="color: #88AA88;">Str a,Int b<br/>Block a,Int b</span></td><td>Drop b characters from a</td></tr>
-<tr class="vnextn"><td></td><td>.-</td><td>Double a, Int b</td><td>(a - b)</td></tr>
-<tr class="vnextn"><td></td><td>.-</td><td>Int a, Double b</td><td>(a - b)</td></tr>
-<tr class="vnextn"><td>Substrings</td><td>su</td><td>Str s<br/>Int s<br/>Block s</td><td>all substrings of s sorted by length</td></tr>
-<tr><td>SuffixOf</td><td>!~</td><td>Block a, Block b</td><td>Is b a suffix of a?</td></tr>
-<tr><td></td><td>!~</td><td>Int a, Int b</td><td>Is b a suffix of a?</td></tr>
-<tr><td></td><td>!~</td><td>Str a, Str b</td><td>Is b a suffix of a?</td></tr>
-<tr><td>Sum</td><td>++</td><td>Block a</td><td>Defined as {.+}r[. Returns Int 0 on empty list</td></tr>
-<tr><td></td><td>++</td><td>Int a,Int b</td><td>Concatenate digits.</td></tr>
-<tr><td>Swap</td><td>\/</td><td></td><td>Swap elements on top of the stack.</td></tr>
-<tr><td>SwapDup</td><td>/^</td><td></td><td>Defined as \/ ^^ </td></tr>
-<tr><td>SwapPop</td><td>/v</td><td></td><td>Defined as \/ vv</td></tr>
-<tr><td>Tail</td><td>[-</td><td>Block a<br/>Int a</td><td>All except first element.</td></tr>
-<tr><td></td><td>[-</td><td>Str a</td><td>All except first character</td></tr>
-<tr><td></td><td>[-</td><td>Char a</td><td>Convert to string</td></tr>
-<tr><td></td><td>[-</td><td>Int a</td><td>All except first digit</td></tr>
-<tr class="vnext"><td>TakeWhile</td><td>tw</td><td>Block p<br/>Block ls</td><td>take elements from ls as long as p holds true</td></tr>
-<tr class="vnext"><td></td><td>tw</td><td>Block p<br/>Str s</td><td>Defined as **tw\[</td></tr>
-<tr class="vnext"><td>Tan</td><td>Tt</td><td>Double a<br/>Int a</td><td>tangens</td></tr>
-<tr class="vnextn"><td></td><td>Tt</td><td>deepmap</td><td></td></tr>
-<tr class="vnextn"><td>ToDouble</td><td>td</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to double</td></tr>
-<tr class="vnextn"><td>ToInt</td><td>ti</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to int</td></tr>
-<tr><td>ToLower</td><td>zz</td><td>Str a<br/>Char a</td><td>to lower case</td></tr>
-<tr class="vnextn"><td></td><td>zz</td><td>deepmap</td><td></td></tr>
-<tr><td>ToUpper</td><td>ZZ</td><td>Str a<br/>Char a</td><td>to upper case</td></tr>
-<tr class="vnextn"><td></td><td>ZZ</td><td>deepmap</td><td></td></tr>
-<tr class="vnext"><td>Transpose</td><td>tp</td><td>Block a</td><td>Transpose block of blocks (Matrix transpose)</td></tr>
-<tr><td>TrimLeft</td><td>t[</td><td>Str a</td><td>Trim left</td></tr>
-<tr class="vnextn"><td></td><td>t[</td><td>deepmap</td><td></td></tr>
-<tr><td>TrimRight</td><td>t]</td><td>Str a</td><td>Trim right</td></tr>
-<tr class="vnextn"><td></td><td>t]</td><td>deepmap</td><td></td></tr>
-<tr><td>TrimLeftRight</td><td>tt</td><td>Str a</td><td>Defined as t[ t]</td></tr>
-<tr class="vnext"><td>TrimLines</td><td>tl</td><td></td><td>Defined as ln{tt}m[un</td></tr>
-<tr class="vnext"><td>TypeOf</td><td>to</td><td>Any a</td><td>Returns the type of a as Str</td></tr>
-<tr class="vnext"><td>Ungroup</td><td>U[<td></td></td><td>Ungroups. (Reverses what f: does, except for the order, because f: sorts).<br/>
-Defined as {p^.*}\m</td></tr>
-<tr><td>Union</td><td>UN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Union</td></tr>
-<tr class="vnext"><td>UniformDCumulative</td><td>uc</td><td>Double low, Double high, Double c</td><td>uniform distribution cumulative</td></tr>
-<tr class="vnext"><td>UniformDDensity</td><td>ud</td><td>Double low, Double high, Double c</td><td>uniform distribution density</td></tr>
-<tr class="vnext"><td>UniformDQuantile</td><td>uq</td><td>Double low, Double high, Double c</td><td>uniform distribution quantile</td></tr>
-<tr><td>Unlines</td><td>un</td><td>n/a</td><td>Defined as "\n" \/ [[ \[</td></tr>
-<tr><td>UnlinesPretty</td><td>uN</td><td></td><td>Defined as unsh</td></tr>
-<tr class="vnext"><td>Unzip</td><td>u[<td></td></td><td>Unzips. (Reverses what z[ does). Defined as ^^{-]}m[\/{[~}m[</td></tr>
-<tr class="vnext"><td>Variance</td><td>vr</td><td></td><td>Defined as ^^^^avbx(?-)[+m[2?^++\/L[-.?/</td></tr>
-<tr><td>Version</td><td>??</td><td></td><td>Version string</td></tr>
-<tr><td>Words</td><td>wd</td><td>Str a</td><td>Defined as " ";;</td></tr>
-<tr><td></td><td>wd</td><td>Block a</td><td>Defined as ' \/[[\[</td></tr>
-<tr><td></td><td>wd</td><td>a</td><td>Defined as \/]]</td></tr>
-<tr class="vnext"><td>Words2</td><td>WD</td><td>Str a</td><td>Splits a string into a list of words. (This also treats other whitespaces which the regular wd does not).</td></tr>
-<tr class="vnext"><td>Words3</td><td>wD</td><td></td><td>Defined as wdsh</td></tr>
+<tr><td>FromFormat</td><td>ff</td><td>Pretty a</td><td>Extracts the string out of the pretty</td></tr> 
+<tr class="vnext"><td>Geq</td><td>&gt;=</td><td>Any a, Any b</td><td> a &gt;= b</td></tr> 
+<tr class="vnext"><td>Gcd</td><td>g_</td><td>Int a, Int b</td><td>gcd(a,b)</td></tr> 
+<tr class="vnext"><td></td><td>g_</td><td>Block a<br/>Str a</td><td>Defined as ^^-]\/[-\/</td></tr> 
+<tr><td>Greater</td><td>.&gt;</td><td>Any a, Any b</td><td>Comparision (a &gt; b)</td></tr> 
+<tr class="vnext"><td>Grep</td><td>gr</td><td></td><td>Defined as {~=}\/+]\/ln\/f[un</td></tr> 
+<tr class="vnext"><td>GeometricDCumulative</td><td>gc</td><td>Double succrate, Double c</td><td><i>shifted</i> geometric distribution cumulative</td></tr> 
+<tr class="vnext"><td>GeometricDPropability</td><td>gp</td><td>Double succrate, Int nth</td><td><i>shifted</i> geometric distribution probability</td></tr> 
+<tr><td>Group</td><td>=[</td><td>Block a</td><td>Group (equal consecutive) elements in a</td></tr> 
+<tr class="vnext"><td>GroupLength</td><td>gl</td><td></td><td>Defined as =[L[</td></tr> 
+<tr class="vnext"><td>GroupNub</td><td>gn</td><td></td><td>Defined as =[{-]}m[</td></tr> 
+<tr class="vnext"><td>GroupSort</td><td>gs</td><td></td><td>Defined as =[&gt;&lt;</td></tr> 
+<tr class="vnext"><td>GroupWithLength</td><td>gw</td><td></td><td>Defined as =[{^^L[\/-]bx\/+]}m[</td></tr> 
+<tr><td>Head</td><td>-]</td><td>Block a<br/>Int a</td><td>First element</td></tr> 
+<tr><td></td><td>-]</td><td>Str a</td><td>First character</td></tr> 
+<tr><td>HeadTail</td><td>-~</td><td></td><td>Defined as -][-</td></tr> 
+<tr class="vnext"><td>Hide</td><td>hd</td><td></td><td>Hide element and move to the bottom of the stack</td></tr> 
+<tr class="vnext"><td>Hide2</td><td>HD</td><td></td><td>Hide element but keep on top</td></tr> 
+<tr class="vnext"><td>HyperGeometricDCumulative</td><td>hc</td><td>Int m, Int l, Int k, Double c</td><td><i>shifted</i> hypergeometric distribution cumulative<br/>k elements, l population, m elements of one kind</td></tr> 
+<tr class="vnext"><td>HyperGeometricDPropability</td><td>hp</td><td>Int m, Int l, Int k, Int nth</td><td><i>shifted</i> hypergeometric distribution probability</td></tr> 
+<tr><td>IsError</t><td>is</td><td></td><td>Return 1 on error 0 else</td></tr> 
+<tr><td>IfElse</td><td>ie</td><td>Block a, Block b, Int c</td><td>If c then a else b</td></tr> 
+<tr><td>Iff</td><td>if</td><td>Block b, Int a</td><td>If a then execute b, else pop a and pop b</td></tr> 
+<tr class="vnext"><td></td><td>if</td><td>Int a, Block b</td><td>If a then execute b, else pop a and pop b</td></tr> 
+<tr class="vnext"><td>Implode</td><td>im</td><td></td><td>Defined as {++}r[</td></tr> 
+<tr><td>Increment</td><td>+.</td><td>Int a</td><td>Increment (a++)</td></tr> 
+<tr><td></td><td>+.</td><td>Char a</td><td>Next char (chr(ord(a)+1))</td></tr> 
+<tr><td></td><td>+.</td><td>Str a<br/>Block a</td><td>Append last of a to a</td></tr> 
+<tr><td>InfixOf</td><td>~~</td><td>Block a, Block b</td><td>Does a contain b (as a consecutive subsequence)?</td></tr> 
+<tr><td>Init</td><td>~]</td><td>Block a<br/>Int a</td><td>All except the last element</td></tr> 
+<tr><td></td><td>~]</td><td>Str a</td><td>All except the last character</td></tr> 
+<tr><td></td><td>~]</td><td>Int a</td><td>All except last digit</td></tr> 
+<tr><td>InitTail</td><td>~-</td><td>n/a</td><td>Defined as ~][-</td></tr> 
+<tr class="vnext"><td>Intercalate</td><td>ic</td><td></td><td>Defined as [[\[</td></tr> 
+<tr><td>Intersection</td><td>IN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Intersection</td></tr> 
+<tr><td>Intersperse</td><td>[[</td><td>Any a, Block b<br/>Char a,String b</td><td>Inserts a between every two element in b</td></tr> 
+<tr class="vnext"><td>InsertAt</td><td>ia</td><td>Str ls, Char e, Int idx<br/>Block ls, Any e, Int idx</td><td>Insert element e into ls at index idx</td></tr> 
+<tr><td>Last</td><td>[~</td><td>Block a<br/>Int a</td><td>Last element of the block</td></tr> 
+<tr class="vnext"><td>Lcm</td><td>l_</td><td>Int a, Int b</td><td>lcm(a,b)</td></tr> 
+<tr class="vnext"><td></td><td>l_</td><td>Block a<br/>Str a</td><td>Defined as ^^-]\/[-\/</td></tr> 
+<tr><td>Length</td><td>L[</td><td>Block a</td><td>Length of a</td></tr> 
+<tr><td></td><td>L[</td><td>Str a</td><td>Length of a</td></tr> 
+<tr><td></td><td>L[</td><td>Int a</td><td>Convert to char (chr a)</td></tr> 
+<tr><td></td><td>L[</td><td>Char a</td><td>Return case of a as 'A or 'a</td></tr> 
+<tr class="vnext"><td>Leq</td><td>&lt;=</td><td>Any a, Any b</td><td> a &lt;= b</td></tr> 
+<tr><td>Lines</td><td>ln</td><td>Str a</td><td>Splits a string into lines</td></tr> 
+<tr><td></td><td>ln</td><td>Int a</td><td>Number of digits in an integer</td></tr> 
+<tr class="vnext"><td>Load</td><td>ld</td><td>Int n</td><td>Load the nth hidden element from the bottom of the stack (put on top)</td></tr> 
+<tr class="vnext"><td>Load2</td><td>LD</td><td></td><td>Defined as lde!</td></tr> 
+<tr class="vnext"><td>Log</td><td>lg</td><td>Double a<br/>Int a</td><td>log(a) (natural logarithm)</td></tr> 
+<tr class="vnext"><td>Log2</td><td>LG</td><td></td><td>Defined as lg\/lg./</td></tr> 
+<tr><td>Map</td><td>m[</td><td>Block ls, Block f</td><td>Apply f to every element in ls and collect the result in a block</td></tr> 
+<tr><td></td><td>m[</td><td>Str ls, Block f</td><td>Defined as \/ XX \/ m[ \[</td></tr> 
+<tr><td>MapDup</td><td>[m</td><td><td>Defined as (^^)+]m[</td></tr> 
+<tr><td>MapParse</td><td>[M</td><td><td>Defined as (ps)+]m[</td></tr> 
+<tr><td>MapPretty</td><td>M[</td><td></td><td>Defined as m[ sh</td></tr> 
+<tr class="vnext"><td>MapProduct</td><td>mp</td><td></td><td>Defined as m[pd</td></tr> 
+<tr class="vnext"><td>MapString</td><td>]m</td><td></td><td>Defined as {*Sh}m[ (append Sh)</td></tr> 
+<tr class="vnext"><td>MapSum</td><td>ms</td><td></td><td>Defined as m[++</td></tr> 
+<tr><td>MapToPretty</td><td>M]</td><td></td><td>Defined as {sh}m[</td></tr> 
+<tr><td>MapToPrettyFromFormat</td><td>m]</td><td></td><td>Defined as {shff}m[</td></tr> 
+<tr><td>Matches</td><td>~=</td><td>String a, String regex</td><td>1 if regex matches, else 0</td></tr> 
+<tr><td>MatchesList</td><td>=~</td><td>String a, String regex</td><td>Returns a list of subexpression matches</td></tr> 
+<tr class="vnext"><td>MatrixMultiplication</td><td>mm</td><td>Block a,Block b</td><td>Matrix multiplication</td></tr> 
+<tr><td>Max</td><td>&gt;.</td><td>Any a, Any b</td><td>Max(a,b)</td></tr> 
+<tr><td>Maximum</td><td>&gt;]</td><td>Block a</td><td>Maximum(a)</td></tr> 
+<tr class="vnext"><td></td><td>&gt;]</td><td>Str a<br/>Int a</td><td>Biggest character</td></tr> 
+<tr class="vnext"><td>MaximumBy</td><td>&gt;m</td><td></td><td>Defined as Cmsb<--]</td></tr> 
+<tr><td>Min</td><td>&lt;.</td><td>Any a, Any b</td><td>Min(a,b)</td></tr> 
+<tr><td>Minimum</td><td>&lt;]</td><td>Block a</td><td>Minimum(a)</td></tr> 
+<tr class="vnext"><td></td><td>&lt;]</td><td>Str a<br/>Int a</td><td>Smalles character</td></tr> 
+<tr class="vnext"><td>MinimumBy</td><td>&lt;m</td><td></td><td>Defined as Cmsb-]</td></tr> 
+<tr class="vnext"><td>Modulo</td><td>.%</td><td>Int a, Int b</td><td>a `mod` b</td></tr> 
+<tr class="vnextn"><td></td><td>.%</td><td>deepzip (int)</td><td></td></tr> 
+<tr><td>Mul</td><td>.*</td><td>Int a, Int b</td><td>Regular integer multiplication (a * b)</td></tr> 
+<tr><td></td><td>.*</td><td>Double a, Double b</td><td>Multiplication (a * b)</td></tr> 
+<tr><td></td><td>.*</td><td>Str a, Int n</td><td>Returns a block containing n copies of a</td></tr> 
+<tr><td></td><td>.*</td><td>Char a, Int n</td><td>Returns a string containing n copies of a</td></tr> 
+<tr><td></td><td>.*</td><td>Block a, Int n</td><td>Returns a block containing n copies of a</td></tr> 
+<tr class="vnextn"><td></td><td>.*</td><td>Double a, Int b</td><td>(a * b)</td></tr> 
+<tr class="vnextn"><td></td><td>.*</td><td>Int a, Double b</td><td>(a * b)</td></tr> 
+<tr class="vnext"><td>MultiplesOf</td><td>mo</td><td></td><td>Defined as 1R@\/?* (infinite block of multiples)</td></tr> 
+<tr class="vnext"><td></td><td>.*</td><td>Str a,Str b</td><td>reverse b++a</td></tr> 
+<tr><td>Nub</td><td>NB</td><td>Block a<br/>Str a<br/>Int a</td><td>Remove duplicate elements</td></tr> 
+<tr class="vnext"><td>Null</td><td>nu</td><td></td><td>Defined as L[n!</td></tr> 
+<tr class="vnext"><td>NormalDCumulative</td><td>nc</td><td>Double mean, Double std, Double c</td><td>normal distribution cumulative</td></tr> 
+<tr class="vnext"><td>NormalDDensity</td><td>nd</td><td>Double mean, Double std, Double c</td><td>normal distribution density</td></tr> 
+<tr class="vnext"><td>NormalDQuantile</td><td>nq</td><td>Double mean, Double std, Double c</td><td>normal distribution quantile</td></tr> 
+<tr><td>Not</td><td>n!</td><td>Int a</td><td>Boolish not</td></tr> 
+<tr><td></td><td>n!</td><td>Block a<br>Str a</td><td>Most common element</td></tr> 
+<tr class="vnext"><td>NotEqual</td><td>!=</td><td></td><td>Defined as == n!</td></tr> 
+<tr class="vnext"><td>nCr</td><td>nr</td><td>Int n, Int k</td><td>nCr(n,k)</td></tr> 
+<tr class="vnextn"><td></td><td>nr</td><td>deepzip (int)</td><td></td></tr> 
+<tr><td>Or</td><td>||</td><td>Int a, Int b</td><td>Bitwise or</td></tr> 
+<tr class="vnextn"><td></td><td>||</td><td>deepzip2 (int)</td><td></td></tr> 
+<tr><td>OrLs</td><td>r|</td><td></td><td>Defined as {||}r[</td></tr> 
+<tr><td>PadLeft</td><td>P[</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (left) a to length c with b</td></tr> 
+<tr><td>PadRight</td><td>[P</td><td>Str a, Int c, Char b<br/>Block a, Int c, Any b</td><td>Pad (right) a to length c with b</td></tr> 
+<tr><td>Parse</td><td>ps</td><td>Str a</td><td>Parses the string as a Burlesque expression and returns a Block</td></tr> 
+<tr class="vnextn"><td></td><td>ps</td><td>deepmap</td><td></td></tr> 
+<tr class="vnext"><td>ParseEval</td><td>pe</td><td></td><td>Defined as pse!</td></tr> 
+<tr class="vnext"><td>Partition</td><td>pt</td><td>Block xs, Block p <br/>Str xs, Block p</td><td>Partitions a block (or str) into two blocks containing elements<br/> 
+which satisfy p and not satisfying p. (Like doing two filter passes with p and with NOT p).</td></tr> 
+<tr class="vnext"><td>PoissonDCumulative</td><td>pc</td><td>Double lambda, Double c</td><td>poisson distribution cumulative</td></tr> 
+<tr class="vnext"><td>PoissonDPropability</td><td>pp</td><td>Double lambda, Int nth</td><td>poisson distribution probability</td></tr> 
+<tr><td>Pop</td><td>vv</td><td></td><td>Remove top most element from the stack</td></tr> 
+<tr><td>PopSwap</td><td>v/</td><td></td><td>Defined as vv \/</td></tr> 
+<tr><td>Pow</td><td>**</td><td>Int a, Int b</td><td>Regular integer power (a ^ b)</td></tr> 
+<tr><td></td><td>**</td><td>Double a, Double b</td><td>Double power (a ** b)</td></tr> 
+<tr><td></td><td>**</td><td>Block a, Block b</td><td>Merge blocks</td></tr> 
+<tr><td></td><td>**</td><td>Str a, Str b</td><td>Merge strings</td></tr> 
+<tr><td></td><td>**</td><td>Char a</td><td>ordinal a. (ord a). </td></tr> 
+<tr class="vnext"><td>PlusMinus</td><td>pm</td><td></td><td>Defined as .+.-</td></tr> 
+<tr><td>PrefixOf</td><td>~!</td><td>Block a, Block b</td><td>Is b a prefix of a?</td></tr> 
+<tr><td></td><td>~!</td><td>Int a, Int b</td><td>Is b a prefix of a?</td></tr> 
+<tr><td></td><td>~!</td><td>Str a, Str b</td><td>Is b a prefix of a?</td></tr> 
+<tr><td>Pretty</td><td>sh</td><td>Any a</td><td>Convert to pretty type (FormatNormal)</td></tr> 
+<tr class="vnext"><td>PrettyPretty</td><td>sH</td><td></td><td>Defined as SHsh</td></tr> 
+<tr><td>PrettyFormatFromFormat</td><td>SH</td><td>n/a</td><td>Defined as \/ sh \/ Ff</td></tr> 
+<tr><td>PrettyFromFormat</td><td>Sh</td><td>n/a</td><td>Defined as sh ff</td></tr> 
+<tr><td>Prepend</td><td>+]</td><td>String a, Char b<br/>Block a,Any b<br/>Int a,Int b</td><td>Prepends b to a</td></tr> 
+<tr class="vnext"><td>PrimeFactors</td><td>fC</td><td>Int a</td><td>Prime factorization of a (8 = 2 * 2 * 2)</td></tr> 
+<tr class="vnext"><td></td><td>fC</td><td>Double a</td><td>a * a (multiplies a with a)</td></tr> 
+<tr class="vnextn"><td></td><td>fC</td><td>deepmap</td><td></td></tr> 
+<tr class="vnext"><td>Product</td><td>pd</td><td>Block a</td><td>Defined as {.*}r[. Returns Int 1 on empty list.</td></tr> 
+<tr class="vnext"><td></td><td>pd</td><td>Double a</td><td>Ceiling a</td></tr> 
+<tr class="vnext"><td></td><td>pd</td><td>Int a</td><td>Convert to double</td></tr> 
+<tr class="vnext"><td>ProductMany</td><td>PD</td><td></td><td>Defined as {pd}m[</td></tr> 
+<tr><td>PushMany</td><td>^p</td><td>Str a<br>Block a</td><td>Push every element to the stack</td></tr> 
+<tr><td>PushManyReverse</td><td>p^</td><td>n/a</td><td>Like ^p but in reverse order</td></tr> 
+<tr class="vnext"><td>RandomInts</td><td>rn</td><td>Int seed, Int low, Int high</td><td>Returns an infinite block of random (by seed) ints with range (low,high).</td></tr> 
+<tr class="vnext"><td>RandomDoubles</td><td>RN</td><td>Int seed, Double low, Double high</td><td>Returns an infinite block of random (by seed) doubles with range (low,high).</td></tr> 
+<tr><td>Range</td><td>r@</td><td>Int a, Int b</td><td>A block containing natural numbers from a to b (range a b)</td></tr> 
+<tr><td></td><td>r@</td><td>Char a, Char b</td><td>Same, except for characters</td></tr> 
+<tr><td></td><td>r@</td><td>Double a</td><td>Square root</td></tr> 
+<tr><td></td><td>r@</td><td>String a</td><td>All permutations of a</td></tr> 
+<tr><td></td><td>r@</td><td>Block a</td><td>All permutations of a</td></tr> 
+<tr class="vnext"><td>RangeFromOne</td><td>ro</td><td></td><td>Defined as 1\/r@</td></tr> 
+<tr class="vnext"><td>RangeFromZero</td><td>rz</td><td></td><td>Defined as 0\/r@</td></tr> 
+<tr><td>RangeInf</td><td>R@</td><td>Int a</td><td>A block containing natural numbers from a to Infinity</td></tr> 
+<tr><td></td><td>R@</td><td>Str a<br>Block a</td><td>All subsequences of a</td></tr> 
+<tr class="vnext"><td>RangeConcat</td><td>r\</td><td></td><td>Defined as r@\[</td></tr> 
+<tr class="vnext"><td>RangeModulo</td><td>rm</td><td>Int x, Block [Int lo, Int hi]</td><td>Bound x into range (lo,hi) using modulo<br/>(((x - lo) `mod` (succ (hi-lo))) + lo)</td></tr> 
+<tr><td>ReadInt</td><td>ri</td><td>Int a</td><td>Identity for integers</td></tr> 
+<tr><td></td><td>ri</td><td>Str a</td><td>Tries to convert a string to an integer</td></tr> 
+<tr><td></td><td>ri</td><td>Char a</td><td>Is Alpha numeric?<td></tr> 
+<tr class="vnextn"><td></td><td>ri</td><td>deepmap</td><td></td></tr> 
+<tr><td>ReadDouble</td><td>rd</td><td>Double a</td><td>Identity for doubles</td></tr> 
+<tr><td></td><td>rd</td><td>Str a</td><td>Tries to convert a string to an double</td></tr> 
+<tr><td></td><td>rd</td><td>Char a</td><td>Is Alpha?<td></tr> 
+<tr class="vnextn"><td></td><td>rd</td><td>deepmap</td><td></td></tr> 
+<tr><td>ReadArray</td><td>ra</td><td>Str a</td><td>Tries to read an array in [,] notation</td></tr> 
+<tr><td></td><td>ra</td><td>Char </td><td>Is space?<td></tr> 
+<tr class="vnextn"><td></td><td>ra</td><td>deepmap</td><td></td></tr> 
+<tr><td>Reduce</td><td>r[</td><td>Block ls, Block f</td><td>Reduce ls with f</td></tr> 
+<tr class="vnext"><td>RemoveAt</td><td>RA</td><td>Block ls, Int idx<br/>Str ls, Int idx</td><td>Remove element at index idx from ls</td></tr> 
+<tr class="vnext"><td></td><td>RA</td><td>Block ls<br/>Str ls</td><td>Defined as sapd2.0./av!!</td></tr> 
+<tr><td>Reverse</td><td>&lt;-</td><td>Int a</td><td>Reverses the digits of the integer</td></tr> 
+<tr><td></td><td>&lt;-</td><td>Str a</td><td>Reverses the string</td></tr> 
+<tr><td></td><td>&lt;-</td><td>Block a</td><td>Reverses the block</td></tr> 
+<tr><td></td><td>&lt;-</td><td>Char a</td><td>Invert case</td></tr> 
+<tr><td>Replace</td><td>r~</td><td>Block ls, Any old, Any new</td><td>Replaces old in ls with new</td></tr> 
+<tr><td></td><td>r~</td><td>Str ls, Char old, Char new</td><td>Replaces old in ls with new</td></tr> 
+<tr><td></td><td>r~</td><td>Str ls, Str old, Str new</td><td>Replaces old in ls with new</td></tr> 
+<tr><td></td><td>r~</td><td>Int ls, Int old, Int new</td><td>Replaces old in ls with new (digitwise)</td></tr> 
+<tr><td>ReplaceRegex</td><td>R~</td><td>Str s, Str repl, Str regex</td><td>Regex replace</td></tr> 
+<tr><td>Round</td><td>r_</td><td>Double a, Int b</td><tD>Round a to b decimal places</td></tr> 
+<tr class="vnextn"><td></td><td>r_</td><td>Block a, Int b</td><tD>Defined as {b r_}m[</td></tr> 
+<tr class="vnext"><td>Round2</td><td>R_</td><td></td><tD>Defined as 0r_pd</td></tr> 
+<tr class="vnext"><td>Rotate</td><td>rt</td><td></td><td>Defined as l_\/+]</td></tr> 
+<tr class="vnext"><td>Rotate2</td><td>RT</td><td></td><td>Defined as g_[+</td></tr> 
+<tr class="vnext"><td>SelectIndices</td><td>si</td><td>Block ls, Block adr<br/>Str ls, Block adr</td><td>Select elements from ls by indices in adr. "ABCD"{1 0 3}si => "BAD"</td></tr> 
+<tr class="vnext"><td>SelectLines</td><td>sl</td><td></td><td>Defined as \/ln\siun</td></tr> 
+<tr class="vnext"><td>SelectWords</td><td>sw</td><td></td><td>Defined as \/WD\siwd</td></tr> 
+<tr class="vnext"><td>SetAt</td><td>sa</td><td>Str ls, Char e, Int idx<br/>Block ls, Any e, Int idx</td><td>Set element in ls at index idx to e</td></tr> 
+<tr class="vnext"><td></td><td>sa</td><td>Block ls<br/>Str ls</td><td>Defined as ^^L[</td></tr> 
+<tr><td>Signum</td><td>sn</td><td>Int a<br/>Double a</td><td>Signum a</td></tr> 
+<tr class="vnext"><td>SimpleFormat</td><td>f~</td><td></td><td>Defined as \/"~";;\/{Sh}m[**\[</td></tr> 
+<tr><td>Smaller</td><td>.&lt;</td><td>Any a, Any b</td><td>Comparision (a &lt; b)</td></tr> 
+<tr><td>Sort</td><td>&gt;&lt;</td><td>Str a<br/>Block a<br/>Int a</td><td>Sort a</td></tr> 
+<tr><td></td><td>&gt;&lt;</td><td>Char a</td><td>Is digit?</td></tr> 
+<tr class="vnext"><td>SortEqual</td><td>s=</td><td></td><td>Defined as &gt;&lt;==</td></tr> 
+<tr class="vnext"><td>Sorted</td><td>so</td><td></td><td>Defined as ^^&gt;&lt;==</td></tr> 
+<tr class="vnext"><td>SortedReverse</td><td>SO</td><td></td><td>Defined as ^^&lt;&gt;==</td></tr> 
+<tr class="vnext"><td>SortReverse</td><td>&lt;&gt;</td><td></td><td>Defined as &gt;&lt;&lt-</td></tr> 
+<tr class="vnext"><td>SortBy</td><td>sb</td><td>Block ls, Block f<br/>Str ls, Block f</td><td>SortBy f (f must return 0 (equal), 1 (greater) or -1 (smaller))</td></tr> 
+<tr class="vnext"><td>SortByComparing</td><td>sc</td><td></td><td>Defined as CMsb<td></tr> 
+<tr class="vnext"><td>SortGroup</td><td>sg</td><td></td><td>Defined as &gt;&lt;=[</td></tr> 
+<tr class="vnext"><td>Sin</td><td>Ts</td><td>Double a<br/>Int a</td><td>sinus</td></tr> 
+<tr class="vnextn"><td></td><td>Ts</td><td>deepmap</td><td></td></tr> 
+<tr class="vnext"><td>SpecialInput</td><td>SP</td><td>Str a</td><td>Can be used to read 2D-Input. Defined as ln{}[M</td></tr> 
+<tr class="vnext"><td>SpecialInputPretty</td><td>sp</td><td></td><td>Defined as SPsh</td></tr> 
+<tr class="vnext"><td></td><td>SP</td><td>Block a</td><td>Can be used to write 2D-Output. Defined as {{Sh}m[wd}m[un</td></tr> 
+<tr><td>Split</td><td>;;</td><td>String str, String b</td><td>Split string by b</td></tr> 
+<tr><td></td><td>;;</td><td>Block ls, Block b</td><td>Split ls by b</td></tr> 
+<tr><td></td><td>;;</td><td>Int ls, Int b</td><td>Split ls by b</td></tr> 
+<tr class="vnext"><td>SplitRegex</td><td>sr</td><td>Str regex, Str s</td><td>Split s by regex </td></tr> 
+<tr class="vnext"><td>StandardDeviation</td><td>SD</td><td></td><td>Obviously defined as vr?s</td></tr> 
+<tr class="vnext"><td>StudentTDCumulative</td><td>Sc</td><td>Double param, Double c</td><td>StudentT distribution cumulative</td></tr> 
+<tr class="vnext"><td>StudentTDDensity</td><td>Sd</td><td>Double param, Double c</td><td>StudentT distribution density</td></tr> 
+<tr class="vnext"><td>StudentTDQuantile</td><td>Sq</td><td>Double param, Double c</td><td>StudentT distribution quantile</td></tr> 
+<tr class="vnext"><td>StrEqIgnoreCase</td><td>s=</td><td></td><td>Defined as zz\/zz\/==</td></tr> 
+<tr><td>StripLeft</td><td>S[</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (left) b from a</td></tr> 
+<tr class="vnext"><td></td><td>S[</td><td>Int a</td><td>a * a (multiplies a with a)</td></tr> 
+<tr><td>StripRight</td><td>[S</td><td>Block a, Any b<br/>Str a, Char b</td><td>Strip (right) b from a</td></tr> 
+<tr class="vnext"><td>StrStr</td><td>ss</td><td></td><td>Defined as ^^L[x/\/CO\/Fi . Returns the index of a substring in a string.<br/>like C's strstr</td></tr> 
+<tr><td>Sub</td><td>.-</td><td>Int a, Int b</td><td>Regular integer subtraction (a - b)</td></tr> 
+<tr><td></td><td>.-</td><td>Double a, Double b</td><td>Subtraction (a - b)</td></tr> 
+<tr><td></td><td>.-</td><td>Str a, Str b</td><td>String de-concatenation. If a "endsWith" b, remove b from a.</td></tr> 
+<tr><td></td><td>.-</td><td>Int b, Str a<br/>Block a, Int b<br/><span style="color: #88AA88;">Str a,Int b<br/>Block a,Int b</span></td><td>Drop b characters from a</td></tr> 
+<tr class="vnextn"><td></td><td>.-</td><td>Double a, Int b</td><td>(a - b)</td></tr> 
+<tr class="vnextn"><td></td><td>.-</td><td>Int a, Double b</td><td>(a - b)</td></tr> 
+<tr class="vnextn"><td>Substrings</td><td>su</td><td>Str s<br/>Int s<br/>Block s</td><td>all substrings of s sorted by length</td></tr> 
+<tr><td>SuffixOf</td><td>!~</td><td>Block a, Block b</td><td>Is b a suffix of a?</td></tr> 
+<tr><td></td><td>!~</td><td>Int a, Int b</td><td>Is b a suffix of a?</td></tr> 
+<tr><td></td><td>!~</td><td>Str a, Str b</td><td>Is b a suffix of a?</td></tr> 
+<tr><td>Sum</td><td>++</td><td>Block a</td><td>Defined as {.+}r[. Returns Int 0 on empty list</td></tr> 
+<tr><td></td><td>++</td><td>Int a,Int b</td><td>Concatenate digits.</td></tr> 
+<tr><td>Swap</td><td>\/</td><td></td><td>Swap elements on top of the stack.</td></tr> 
+<tr><td>SwapDup</td><td>/^</td><td></td><td>Defined as \/ ^^ </td></tr> 
+<tr><td>SwapPop</td><td>/v</td><td></td><td>Defined as \/ vv</td></tr> 
+<tr><td>Tail</td><td>[-</td><td>Block a<br/>Int a</td><td>All except first element.</td></tr> 
+<tr><td></td><td>[-</td><td>Str a</td><td>All except first character</td></tr> 
+<tr><td></td><td>[-</td><td>Char a</td><td>Convert to string</td></tr> 
+<tr><td></td><td>[-</td><td>Int a</td><td>All except first digit</td></tr> 
+<tr class="vnext"><td>TakeWhile</td><td>tw</td><td>Block p<br/>Block ls</td><td>take elements from ls as long as p holds true</td></tr> 
+<tr class="vnext"><td></td><td>tw</td><td>Block p<br/>Str s</td><td>Defined as **tw\[</td></tr> 
+<tr class="vnext"><td>Tan</td><td>Tt</td><td>Double a<br/>Int a</td><td>tangens</td></tr> 
+<tr class="vnextn"><td></td><td>Tt</td><td>deepmap</td><td></td></tr> 
+<tr class="vnextn"><td>ToDouble</td><td>td</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to double</td></tr> 
+<tr class="vnextn"><td>ToInt</td><td>ti</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to int</td></tr> 
+<tr><td>ToLower</td><td>zz</td><td>Str a<br/>Char a</td><td>to lower case</td></tr> 
+<tr class="vnextn"><td></td><td>zz</td><td>deepmap</td><td></td></tr> 
+<tr><td>ToUpper</td><td>ZZ</td><td>Str a<br/>Char a</td><td>to upper case</td></tr> 
+<tr class="vnextn"><td></td><td>ZZ</td><td>deepmap</td><td></td></tr> 
+<tr class="vnext"><td>Transpose</td><td>tp</td><td>Block a</td><td>Transpose block of blocks (Matrix transpose)</td></tr> 
+<tr><td>TrimLeft</td><td>t[</td><td>Str a</td><td>Trim left</td></tr> 
+<tr class="vnextn"><td></td><td>t[</td><td>deepmap</td><td></td></tr> 
+<tr><td>TrimRight</td><td>t]</td><td>Str a</td><td>Trim right</td></tr> 
+<tr class="vnextn"><td></td><td>t]</td><td>deepmap</td><td></td></tr> 
+<tr><td>TrimLeftRight</td><td>tt</td><td>Str a</td><td>Defined as t[ t]</td></tr> 
+<tr class="vnext"><td>TrimLines</td><td>tl</td><td></td><td>Defined as ln{tt}m[un</td></tr> 
+<tr class="vnext"><td>TypeOf</td><td>to</td><td>Any a</td><td>Returns the type of a as Str</td></tr> 
+<tr class="vnext"><td>Ungroup</td><td>U[<td></td></td><td>Ungroups. (Reverses what f: does, except for the order, because f: sorts).<br/> 
+Defined as {p^.*}\m</td></tr> 
+<tr><td>Union</td><td>UN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Union</td></tr> 
+<tr class="vnext"><td>UniformDCumulative</td><td>uc</td><td>Double low, Double high, Double c</td><td>uniform distribution cumulative</td></tr> 
+<tr class="vnext"><td>UniformDDensity</td><td>ud</td><td>Double low, Double high, Double c</td><td>uniform distribution density</td></tr> 
+<tr class="vnext"><td>UniformDQuantile</td><td>uq</td><td>Double low, Double high, Double c</td><td>uniform distribution quantile</td></tr> 
+<tr><td>Unlines</td><td>un</td><td>n/a</td><td>Defined as "\n" \/ [[ \[</td></tr> 
+<tr><td>UnlinesPretty</td><td>uN</td><td></td><td>Defined as unsh</td></tr> 
+<tr class="vnext"><td>Unzip</td><td>u[<td></td></td><td>Unzips. (Reverses what z[ does). Defined as ^^{-]}m[\/{[~}m[</td></tr> 
+<tr class="vnext"><td>Variance</td><td>vr</td><td></td><td>Defined as ^^^^avbx(?-)[+m[2?^++\/L[-.?/</td></tr> 
+<tr><td>Version</td><td>??</td><td></td><td>Version string</td></tr> 
+<tr><td>Words</td><td>wd</td><td>Str a</td><td>Defined as " ";;</td></tr> 
+<tr><td></td><td>wd</td><td>Block a</td><td>Defined as ' \/[[\[</td></tr> 
+<tr><td></td><td>wd</td><td>a</td><td>Defined as \/]]</td></tr> 
+<tr class="vnext"><td>Words2</td><td>WD</td><td>Str a</td><td>Splits a string into a list of words. (This also treats other whitespaces which the regular wd does not).</td></tr> 
+<tr class="vnext"><td>Words3</td><td>wD</td><td></td><td>Defined as wdsh</td></tr> 
 <tr><td>While</td><td>w!</td><td>Block f, Block p</td><td>While p execute f. (p is expected to leave an Int on top of the stack)
-                                                          <br/>Executing p does not affect the global stack.</td></tr>
-<tr><td></td><td>w!</td><td>Block f</td><td>Same effect as {f}{}w!</td></tr>
-<tr><td>WithLines</td><td>wl</td><td>n/a</td><td>Defined as \/ ln \/ m[ un</td></tr>
-<tr class="vnext"><td>WithLinesString</td><td>Wl</td><td></td><td>Defined as {*Sh}WL (appends Sh)</td></tr>
-<tr><td>WithLinesPretty</td><td>WL</td><td>n/a</td><td>Defined as wl sh</td></tr>
-<tr><td>WithLinesParsePretty</td><td>wL</td><td>n/a</td><td>Defined as {ps*}WL (prepends ps to block)</td></tr>
-<tr class="vnext"><td>WithWords</td><td>ww</td><td>n/a</td><td>Defined as \/ WD \/ m[ wd</td></tr>
-<tr class="vnext"><td>WithWordsPretty</td><td>WW</td><td>n/a</td><td>Defined as wwsh</td></tr>
-<tr><td>Xor</td><td>$$</td><td>Int a, Int b</td><td>Bitwise xor</td></tr>
-<tr class="vnextn"><td></td><td>$$</td><td>deepzip2 (int)</td><td></td></tr>
-<tr><td>Xplode</td><td>XX</td><td>Str a</td><td>Convert a to a block of characters</td></tr>
-<tr><td></td><td>XX</td><td>Int a</td><td>Convert a to a block of digits</td></tr>
-<tr><td></td><td>XX</td><td>Double a</td><td>Convert a to block containing ceiling a and floor a</td></tr>
-<tr><td></td><td>XX</td><td>Char a</td><td>Convert a to a string</td></tr>
-<tr><td></td><td>XX</td><td>Block a</td><td>Identity</td></tr>
-<tr class="vnext"><td>XSwap</td><td>x/</td><td></td><td>If the stack order is [a,b,c] XSwap changes it to [b,c,a]</td></tr>
-<tr><td>Zip</td><td>z[</td><td>Block a, Block b<br/>Str a,Str b<br/>Block a, Str b<br/>Str a,Block b</td></td><td>Zips</td></tr>
-<tr class="vnext"><td>ZipIndices</td><td>zi</td><td></td><td>Defined as 0R@\/z[</td></tr>
-<tr><td>ZipWith</td><td>Z[</td><td></td><td>Defined as z[\/m[</td></tr>
-<tr class="vnext"><td>ZipWithPush</td><td>Z]</td><td></td><td>Defined as {^p*}Z[. Prepends ^p.</td></tr>
-</tbody>
-</table>
-<span style="color: #AA8888;">Since Burlesque 1.7</span><br/>
-<span style="color: #88AA88;">Since Burlesque 1.7.1</span><br/>
-<!-- -->
-
-      <h1>Syntax</h1>
-<pre class="code">
+                                                          <br/>Executing p does not affect the global stack.</td></tr> 
+<tr><td></td><td>w!</td><td>Block f</td><td>Same effect as {f}{}w!</td></tr> 
+<tr><td>WithLines</td><td>wl</td><td>n/a</td><td>Defined as \/ ln \/ m[ un</td></tr> 
+<tr class="vnext"><td>WithLinesString</td><td>Wl</td><td></td><td>Defined as {*Sh}WL (appends Sh)</td></tr> 
+<tr><td>WithLinesPretty</td><td>WL</td><td>n/a</td><td>Defined as wl sh</td></tr> 
+<tr><td>WithLinesParsePretty</td><td>wL</td><td>n/a</td><td>Defined as {ps*}WL (prepends ps to block)</td></tr> 
+<tr class="vnext"><td>WithWords</td><td>ww</td><td>n/a</td><td>Defined as \/ WD \/ m[ wd</td></tr> 
+<tr class="vnext"><td>WithWordsPretty</td><td>WW</td><td>n/a</td><td>Defined as wwsh</td></tr> 
+<tr><td>Xor</td><td>$$</td><td>Int a, Int b</td><td>Bitwise xor</td></tr> 
+<tr class="vnextn"><td></td><td>$$</td><td>deepzip2 (int)</td><td></td></tr> 
+<tr><td>Xplode</td><td>XX</td><td>Str a</td><td>Convert a to a block of characters</td></tr> 
+<tr><td></td><td>XX</td><td>Int a</td><td>Convert a to a block of digits</td></tr> 
+<tr><td></td><td>XX</td><td>Double a</td><td>Convert a to block containing ceiling a and floor a</td></tr> 
+<tr><td></td><td>XX</td><td>Char a</td><td>Convert a to a string</td></tr> 
+<tr><td></td><td>XX</td><td>Block a</td><td>Identity</td></tr> 
+<tr class="vnext"><td>XSwap</td><td>x/</td><td></td><td>If the stack order is [a,b,c] XSwap changes it to [b,c,a]</td></tr> 
+<tr><td>Zip</td><td>z[</td><td>Block a, Block b<br/>Str a,Str b<br/>Block a, Str b<br/>Str a,Block b</td></td><td>Zips</td></tr> 
+<tr class="vnext"><td>ZipIndices</td><td>zi</td><td></td><td>Defined as 0R@\/z[</td></tr> 
+<tr><td>ZipWith</td><td>Z[</td><td></td><td>Defined as z[\/m[</td></tr> 
+<tr class="vnext"><td>ZipWithPush</td><td>Z]</td><td></td><td>Defined as {^p*}Z[. Prepends ^p.</td></tr> 
+</tbody> 
+</table> 
+<span style="color: #AA8888;">Since Burlesque 1.7</span><br/> 
+<span style="color: #88AA88;">Since Burlesque 1.7.1</span><br/> 
+<!-- --> 
+ 
+      <h1>Syntax</h1> 
+<pre class="code"> 
 Special :: {"," | ")"}
 Double :: { digit }+ , "." , { digit }+
 Int :: { digit }+
@@ -490,71 +494,71 @@ Quoted :: "(", ExpressionSingle , ")"
 Identifier :: noneOf "1234567890{},' \"" , noneOf "1234567890{},' \""
 ExpressionSingle :: { Block | Int | Char | String | Quoted | Identifier }
 Expression = { ExpressionSingle }*
-</pre>
-<h1>Format / Pretty</h1>
-<p>
+</pre> 
+<h1>Format / Pretty</h1> 
+<p> 
 If you write a Burlesque program like <i>"Hello, world!"</i> you will see, that the
 output is also <i>"Hello, world!"</i> and not <i>Hello, world!</i>. Stuff is printed
 the same way you enter it in code unless you change it to the 'Pretty' type. The <b>sh</b> command
 for example does this. <i>"Hello, world!"sh</i> outputs <i>Hello, world!</i>. Keep in mind that
 <b>sh</b> changes the type to Pretty, so it's not a string anymore and you can not treat it as a string. A pretty
 value can have different formattings and currently the following exist:
-<ul>
-  <li>0 - normal format</li>
-  <li>1 - no spaces</li>
-  <li>2 - with spaces</li>
-  <li>3 - raw format (as it would be printed if it were not prettied)</li>
-</ul>
+<ul> 
+  <li>0 - normal format</li> 
+  <li>1 - no spaces</li> 
+  <li>2 - with spaces</li> 
+  <li>3 - raw format (as it would be printed if it were not prettied)</li> 
+</ul> 
 <i>{1 2 3}sh1FF</i> is <i>[1,2,3]</i>. <i>{1 2 3}sh0FF</i> is <i>[1, 2, 3]</i>. <i>{1 2 3}sh2FF</i> is
 <i>[1 2 3]</i>.
-</p>
-<h1>Lazy</h1>
-<p>
+</p> 
+<h1>Lazy</h1> 
+<p> 
  Burlesque is a lazy programming language which means that it only evaluates stuff that is necessary to evaluate.
  A good example for this is the RangeInf command. <i>1R@"ABCD"z[</i> generates an infinite list 1..Infinity
  and zips it with "ABCD". However, its support for lazyness is limited and does not extend to every command.
-</p>
-<h1>Hack mode</h1>
-<p>
+</p> 
+<h1>Hack mode</h1> 
+<p> 
 Hack mode allows you to use one byte instead of two bytes to refer to a command. 
 All commands are in a ordered list. In hackmode, they are accessed as builtins[ord(hack char)].
 See <a href="hackmode.txt">here</a>. HackMode is not officially supported. You can enable it by
 hacking the code in parser.hs ;).
-</p>
-<h1>Store load shortcuts</h1>
+</p> 
+<h1>Store load shortcuts</h1> 
 These are: a -> 0, b -> 1, c -> 2. For Load: #*. For Load2: !*. For Store: `*. Replace * with the corresponding letter.
 Example: <i>5 6hd#a.+`a33#a.+</i>.Hides 6, loads it, adds it to 5, stores the  result, push 33, load 0, add => 44.
-
-<h1>Coerce commands</h1>
+ 
+<h1>Coerce commands</h1> 
 Coerce commands fall back to their none coerce corresponding commands if the arguments do not match!
-
-<h1>Commands taking Int</h1>
-
+ 
+<h1>Commands taking Int</h1> 
+ 
 Int is unbounded. However, some commands only work with bounded integers. Unbounded integers are automatically converted.
 This conversion from unbouded -> bounded can have side-effects.
-
-<h1>Math constants</h1>
-Pi : pi => 3.141592653589793<br/>
-e : ee => 2.718281828459045<br/>
-
-<h1>Special</h1>
+ 
+<h1>Math constants</h1> 
+Pi : pi => 3.141592653589793<br/> 
+e : ee => 2.718281828459045<br/> 
+ 
+<h1>Special</h1> 
 For <i>,</i> read the FAQ. <i>)</i> is the block modifier. It encloses the next token inside a map statement. Therefore 
-<pre>
+<pre> 
 blsq ) {"abc" "dba"})<-
 {"cba" "abd"}
-
-<h1>Advanced manipulation functions</h1>
-<ul>
-  <li>#Q -- Push remaining code to stack</li>
-  <li>#q -- Pop code from stack and replace remaining code with it</li>
-  <li>#j -- Pop code from stack and prepend it to remaining code</li>
-  <li>#J -- Pop code from stack and append it to remaining code</li>
-  <li>#s -- Push stack to stack</li>
-  <li>#S -- Pop stack from stack</li>
-  <li>#r -- Rotate stack left</li>
-  <li>#R -- Rotate stack right</li>
-</ul>
-</pre>
- </div>
- </body>
-</html>
+</pre> 
+<h1>Advanced manipulation functions</h1> 
+<ul> 
+  <li>#Q -- Push remaining code to stack</li> 
+  <li>#q -- Pop code from stack and replace remaining code with it</li> 
+  <li>#j -- Pop code from stack and prepend it to remaining code</li> 
+  <li>#J -- Pop code from stack and append it to remaining code</li> 
+  <li>#s -- Push stack to stack</li> 
+  <li>#S -- Pop stack from stack</li> 
+  <li>#r -- Rotate stack left</li> 
+  <li>#R -- Rotate stack right</li> 
+</ul> 
+ 
+ </div> 
+ </body> 
+</html> 

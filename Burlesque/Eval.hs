@@ -37,6 +37,10 @@ eval (BlsqSpecial ")" : i : xs) = do
  modify (BlsqBlock [ i ] : )
  builtinMap
  eval xs
+eval (BlsqSpecial ":" : i : xs) = do
+ modify (BlsqBlock [ i ] : )
+ builtinFilter
+ eval xs
 eval (BlsqIdent "#Q" : xs) = do
  modify (BlsqBlock xs :)
  eval xs
@@ -374,6 +378,8 @@ builtins = [
   ("#R", builtinRotateStackRight),
   ("cl", builtinCeiling),
   ("fo", builtinFloor),
+  ("z?", builtinZero),
+  ("nz", builtinNotZero),
   
   
   ("??", builtinVersion)
@@ -2026,16 +2032,14 @@ builtinCompare2 = do
 -- | Cm
 builtinCompare3 :: BlsqState
 builtinCompare3 = do
+  -- ^^(\/)[+\/.+{\/cm}.+
   builtinDup
   modify (BlsqIdent "\\/" :)
   builtinAppend
   builtinSwap
-  builtinHead
-  builtinAppend
-  modify (BlsqIdent "\\/" :)
-  builtinAppend
-  modify (BlsqIdent "cm" :)
-  builtinAppend
+  builtinAdd
+  modify (BlsqBlock [ BlsqIdent "\\/", BlsqIdent "cm" ] :)
+  builtinAdd
 
 -- | B!
 builtinConvertBase :: BlsqState
@@ -3448,3 +3452,21 @@ builtinCeiling = builtinProduct >> builtinProduct
 -- | fo
 builtinFloor :: BlsqState
 builtinFloor = builtinAverage >> builtinProduct
+
+-- | z?
+builtinZero :: BlsqState
+builtinZero = do
+ st <- get
+ putResult $
+  case st of
+   (BlsqInt 0 : xs) -> (BlsqInt 1) : xs
+   (BlsqDouble 0.0 : xs) -> (BlsqInt 1) : xs
+   (BlsqStr "" : xs) -> (BlsqInt 1) : xs
+   (BlsqBlock [] : xs) -> (BlsqInt 1) : xs
+   (BlsqChar '\0' : xs) -> (BlsqInt 1) : xs
+   (_ : xs) -> (BlsqInt 0) : xs
+   _ -> BlsqError "Burlesque: (z?) Stack size error or invalid arguments!" : st
+
+-- | nz
+builtinNotZero :: BlsqState
+builtinNotZero = builtinZero >> builtinNot
