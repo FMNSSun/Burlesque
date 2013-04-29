@@ -372,6 +372,8 @@ builtins = [
   ("#S", builtinPopStack),
   ("#r", builtinRotateStackLeft),
   ("#R", builtinRotateStackRight),
+  ("cl", builtinCeiling),
+  ("fo", builtinFloor),
   
   
   ("??", builtinVersion)
@@ -3438,3 +3440,11 @@ builtinRotateStackRight = do
    [] -> return ()
    [a] -> return ()
    xs -> put $ last xs : init xs
+
+-- | cl
+builtinCeiling :: BlsqState
+builtinCeiling = builtinProduct >> builtinProduct
+
+-- | fo
+builtinFloor :: BlsqState
+builtinFloor = builtinAverage >> builtinProduct
