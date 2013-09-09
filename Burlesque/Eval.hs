@@ -41,6 +41,15 @@ eval (BlsqSpecial ":" : i : xs) = do
  modify (BlsqBlock [ i ] : )
  builtinFilter
  eval xs
+eval (BlsqSpecial "@" : (BlsqIdent s) : xs) = do
+ let a = BlsqChar $ s !! 1
+ let b = BlsqChar $ s !! 0
+ modify( ([a] ++ [b]) ++)
+ eval xs
+eval (BlsqSpecial "%" : (BlsqIdent s) : xs) = do
+ modify (BlsqBlock [BlsqIdent s, BlsqIdent "sh"] :)
+ builtinEval
+ eval xs
 eval (BlsqIdent "#Q" : xs) = do
  modify (BlsqBlock xs :)
  eval xs
