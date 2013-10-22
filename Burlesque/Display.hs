@@ -1,12 +1,11 @@
 module Burlesque.Display
-  (toDisplay, toHTML, notHidden)
+  (toDisplay, notHidden)
  where
 
 import Burlesque.Types
 import Burlesque.Helpers
 
 import Data.List
-import Web.Encodings
 import Numeric
 
 -- This is the ugliest hack in the history of programming.
@@ -57,13 +56,3 @@ toDisplay (BlsqNil) = "_|_"
 toDisplay (BlsqHackMode x) = "#" ++ x ++ "#"
 
 toDisplay q = show q
-
-toHTML a@(BlsqInt _) = "<span class=\"int\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
-toHTML a@(BlsqBlock xs) = "<span class=\"blck\">{</span>" ++ (intercalate " " $ map toHTML xs) ++ "<span class=\"blck\">}</span>"
-toHTML a@(BlsqStr _) = "<span class=\"str\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
-toHTML a@(BlsqError _) = "<span class=\"err\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
-toHTML a@(BlsqIdent _) = "<span class=\"id\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
-toHTML a@(BlsqChar _) = "<span class=\"chr\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
-toHTML a@(BlsqDouble _) = "<span class=\"dbl\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
-toHTML a@(BlsqHackMode _) = "<span class=\"hack\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
-toHTML q = "<span class=\"raw\">" ++ (encodeHtml $ toDisplay q) ++ "</span>"
