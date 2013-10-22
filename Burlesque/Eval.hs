@@ -610,7 +610,7 @@ builtinReadInt = do
  case st of
    (BlsqStr a) : xs -> putResult $ (BlsqInt . read $ a) : xs
    (BlsqInt a) : xs -> putResult $ (BlsqInt a) : xs
-   (BlsqDouble a : xs) -> builtinProduct
+   (BlsqDouble a : xs) -> builtinAverage
    (BlsqChar a) : xs -> putResult $ BlsqInt (if isAlphaNum a then 1 else 0) : xs
    (BlsqBlock a : xs) -> modify (BlsqBlock [ BlsqIdent "ri" ] :) >> builtinMap
    _ -> putResult $ (BlsqError "Burlesque: (ri) Invalid arguments!") : st
