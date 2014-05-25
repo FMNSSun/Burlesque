@@ -41,6 +41,7 @@ removeAt n xs = let (a,b) = splitAt (fromIntegral n) xs in a ++ (tail b)
 
 setAt n e xs = let (a,b) = splitAt (fromIntegral n) xs in a ++ (e : tail b)
 
+toBase bs 0 = "0"
 toBase bs n = map (\c -> (['0'..'9'] ++ ['a'..'z']) !! c) $ digits bs n
 fromBase bs n = unDigits bs $ map (\c -> fromMaybe 0 $ findIndex (==c) (['0'..'9'] ++ ['a'..'z'])) n
 
