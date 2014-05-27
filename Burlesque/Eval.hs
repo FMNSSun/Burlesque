@@ -2056,8 +2056,8 @@ builtinConvertBase :: BlsqState
 builtinConvertBase = do
   st <- get
   case st of
-    (BlsqInt bs : BlsqInt n : xs) -> putResult $ BlsqStr (toBase (fromIntegral bs) (fromIntegral n)) : xs
-    (BlsqInt bs : BlsqStr n : xs) -> putResult $ BlsqInt (toInteger (fromBase (fromIntegral bs) n)) : xs
+    (BlsqInt bs : BlsqInt n : xs) -> putResult $ BlsqStr (toBase bs n) : xs
+    (BlsqInt bs : BlsqStr n : xs) -> putResult $ BlsqInt ((fromBase bs n)) : xs
     (BlsqBlock a : BlsqInt b : xs) -> do builtinSwap
                                          builtinBoxCycle
                                          builtinSwap

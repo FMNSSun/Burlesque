@@ -41,9 +41,12 @@ removeAt n xs = let (a,b) = splitAt (fromIntegral n) xs in a ++ (tail b)
 
 setAt n e xs = let (a,b) = splitAt (fromIntegral n) xs in a ++ (e : tail b)
 
+toBase :: Integral n => n -> n -> String
 toBase bs 0 = "0"
-toBase bs n = map (\c -> (['0'..'9'] ++ ['a'..'z']) !! c) $ digits bs n
-fromBase bs n = unDigits bs $ map (\c -> fromMaybe 0 $ findIndex (==c) (['0'..'9'] ++ ['a'..'z'])) n
+toBase bs n = map (\c -> (['0'..'9'] ++ ['a'..'z']) !! (fromIntegral c)) $ digits bs n
+
+
+fromBase bs n = unDigits bs $ map (fromIntegral.(\c -> fromMaybe 0 $ findIndex (==c) (['0'..'9'] ++ ['a'..'z']))) n
 
 pfactor 1 = []
 pfactor n = let divisors = dropWhile ((/= 0) . mod n) [2 .. ceiling $ sqrt $ fromIntegral n]
