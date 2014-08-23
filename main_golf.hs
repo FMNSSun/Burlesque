@@ -9,7 +9,7 @@ import Data.List
 
 runProgram :: String -> String -> String
 runProgram p stdin =
- unlines . map toDisplay . filter notHidden $ execState (eval (runParserWithString parseBlsq p)) [BlsqStr stdin]
+ unlines . map toDisplay . filter notHidden . fst $ execState (eval (runParserWithString parseBlsq p)) ([BlsqStr stdin],[BlsqStr stdin])
 
 
 main = do
