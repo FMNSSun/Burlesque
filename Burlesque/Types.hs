@@ -2,6 +2,7 @@ module Burlesque.Types
   (BlsqExp (..),
    BlsqStack (..),
    BlsqState (..),
+   BlsqState' (..),
    BlsqProg (..),
    BlsqPrettyFormat (..),
    module Control.Monad.State)
@@ -31,5 +32,6 @@ data BlsqPrettyFormat =  BlsqFormatNormal
   deriving (Show,Read,Eq,Ord)
 
 type BlsqStack = [BlsqExp]
-type BlsqState = State BlsqStack ()
+type BlsqState = State (BlsqStack, BlsqStack) ()
+type BlsqState' a = State (BlsqStack, BlsqStack) a
 type BlsqProg = [BlsqExp]
