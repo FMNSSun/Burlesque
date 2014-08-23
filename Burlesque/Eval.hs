@@ -17,6 +17,7 @@ import Text.Regex
 import Numeric
 import Control.Monad
 import System.Random
+import Data.Digits
 
 import Statistics.Distribution
 import Statistics.Distribution.Normal
@@ -390,7 +391,8 @@ builtins = [
   ("fo", builtinFloor),
   ("z?", builtinZero),
   ("nz", builtinNotZero),
-  
+  ("dg", builtinDigits),
+  ("ug", builtinUnDigits),
   
   ("??", builtinVersion)
  ]
@@ -2199,7 +2201,7 @@ builtinHide2 = do
  case st of
    (a : xs) -> do builtinPop
                   modify (BlsqHiddenState a : )
-   _ -> putResult $ BlsqError "Burlesque: (hd) Invalid arguments!" : st
+   _ -> putResult $ BlsqError "Burlesque: (HD) Invalid arguments!" : st
    
 -- | ld
 -- very hackish
@@ -2225,7 +2227,7 @@ builtinStore = do
  st <- get
  case st of
    (BlsqInt a : e : xs) -> do put $ setAt (toInt (length xs - 1 - (toInt a))) (BlsqHiddenState e) xs
-   _ -> putResult $ BlsqError "Burlesque: (ld) Invalid arguments!" : st
+   _ -> putResult $ BlsqError "Burlesque: (st) Invalid arguments!" : st
 
 builtinALoad = modify (BlsqInt 0 :) >> builtinLoad
 builtinBLoad = modify (BlsqInt 1 :) >> builtinLoad
@@ -3486,3 +3488,24 @@ builtinZero = do
 -- | nz
 builtinNotZero :: BlsqState
 builtinNotZero = builtinZero >> builtinNot
+
+-- | dg
+builtinDigits :: BlsqState
+builtinDigits = do
+ st <- get
+ putResult $
+  case st of
+    (BlsqInt b : BlsqInt n : xs) -> (BlsqBlock (map (BlsqInt) (digits b n))) : xs 
+    _ -> BlsqError "Burlesque: (dg) Invalid arguments!" : st
+    
+-- | ug
+builtinUnDigits :: BlsqState
+builtinUnDigits = do
+ st <- get
+ putResult $
+  case st of
+    (BlsqInt b : BlsqBlock ns : xs) -> (BlsqInt . unDigits b $
+                                       map (\c -> case c of
+                                                   BlsqInt q -> q
+                                                   _ -> 0) ns) : xs
+    _ -> BlsqError "Burlesque: (ug) Invalid arguments!" : st

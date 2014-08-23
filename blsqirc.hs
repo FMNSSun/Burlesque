@@ -1,5 +1,5 @@
 import System.Timeout
-import Control.Exception hiding (catch, bracket_, bracket)
+import Control.Exception hiding (catch', bracket_, bracket)
 import Data.List
 import Network
 import System.IO
@@ -7,9 +7,9 @@ import System.Time
 import System.Exit
 import Control.Monad.Reader
 -- import Control.Exception -- for base-3, with base-4 use Control.OldException
-import Control.OldException
+import Control.Exception
 import Text.Printf
-import Prelude hiding (catch)
+import Prelude hiding (catch')
 import System.Process
 
 import Burlesque.Parser
@@ -23,6 +23,10 @@ runProgramWrapper :: String -> IO String
 runProgramWrapper p = do
  readProcess "blsqirci.exe" ["--ircbot",p] ""
  
+runProgramWrapper2 :: String -> IO String
+runProgramWrapper2 p = do
+ readProcess "Foo.exe" ["--ircbot",p] ""
+ 
 server = "irc.freenode.org"
 port   = 6667
 chan   = "#esoteric"
@@ -34,6 +38,8 @@ nick   = "blsqbot"
 --
 type Net = ReaderT Bot IO
 data Bot = Bot { socket :: Handle, starttime :: ClockTime }
+
+catch' fio p = catch fio (\e -> p $ (e :: IOException)) 
  
 --
 -- Set up actions to run on start and end, and run the main loop
@@ -76,7 +82,7 @@ run = do
 listen :: Handle -> Net ()
 listen h = forever $ do
     s <- init `fmap` io (hGetLine h)
-    io $ catch ((putStrLn s)) (const $ return ())
+    io $ catch' ((putStrLn s)) (const $ return ())
     if ping s then pong s else Main.eval (clean s)
   where
     forever a = a >> forever a
@@ -91,6 +97,7 @@ eval :: String -> Net ()
 eval     "!blsq_uptime"             = uptime >>= privmsg
 eval     "blsqbot please do quit"   = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
 eval x | "!blsq " `isPrefixOf` x = blsqev (drop 6 x)
+eval x | "!foo " `isPrefixOf` x = fooev (drop 5 x)
 eval     _                     = return () -- ignore everything else
 
 privmsg :: String -> Net ()
@@ -103,11 +110,26 @@ privmsg s = do
 blsqev :: String -> Net ()
 blsqev s = do
     ss <- foo s
-    io $ catch (putStrLn ("El resulto: " ++ (show ss))) (const $ return())
+    io $ catch' (putStrLn ("El resulto: " ++ (show ss))) (const $ return())
     write "PRIVMSG" (chan ++ " :" ++ (ss!!0))
     write "PRIVMSG" (chan ++ " :" ++ (ss!!1))
     where foo p = do start <- io $ getCurrentTime
-                     result <- io $ timeout (3*10^6) (runProgramWrapper p)
+                     result <- io $ catch' (timeout (3*10^6) (runProgramWrapper p)) (const $ return $ Just "That line gave me an error")
+                     stop <- io $ getCurrentTime
+                     case result of
+                         Nothing -> return $ ["Ain't nobody got time fo' that!","Tightout!"]
+                         Just q -> case lines q of
+                                     [] -> return $ ["Ain't nobody got output fo' that!","Tightout!"]
+                                     x:_ -> return $ [" "++x, show $ diffUTCTime stop start]
+                                     
+fooev :: String -> Net ()
+fooev s = do
+    ss <- foo s
+    io $ catch' (putStrLn ("El resulto: " ++ (show ss))) (const $ return())
+    write "PRIVMSG" (chan ++ " :" ++ (ss!!0))
+    write "PRIVMSG" (chan ++ " :" ++ (ss!!1))
+    where foo p = do start <- io $ getCurrentTime
+                     result <- io $ catch' (timeout (3*10^6) (runProgramWrapper2 p)) (const $ return $ Just "That line gave me an error")
                      stop <- io $ getCurrentTime
                      case result of
                          Nothing -> return $ ["Ain't nobody got time fo' that!","Tightout!"]
@@ -121,9 +143,9 @@ blsqev s = do
 write :: String -> String -> Net ()
 write s t = do
     h <- asks socket
-    io $ catch (printf    ">> %s %s\n" s t) (const $ return ())
-    io $ catch (hPrintf h "%s %s\r\n" s t) (const $ return ())
-    io $ catch (printf    "> %s %s\n" s t) (const $ return ())
+    io $ catch' (printf    ">> %s %s\n" s t) (const $ return ())
+    io $ catch' (hPrintf h "%s %s\r\n" s t) (const $ return ())
+    io $ catch' (printf    "> %s %s\n" s t) (const $ return ())
  
 --
 -- Calculate and pretty print the uptime
