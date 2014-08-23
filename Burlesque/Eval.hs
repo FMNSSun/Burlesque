@@ -109,6 +109,11 @@ pushToStack q = do
   (st, st') <- get
   put (q:st, st')
   
+popFromStack = do
+  (s:st, st') <- get
+  put (st, st')
+  return s
+  
 pushToBottom q = do
   (st, st') <- get
   put (st++[q], st')
@@ -430,6 +435,8 @@ builtins = [
   ("PP", builtinPopFromState),
   ("pP", builtinPeekFromState),
   ("p/", builtinSwapOnState),
+  ("GO", builtinGenerateListO),
+  ("GZ", builtinGenerateListZ),
   
   ("??", builtinVersion)
  ]
@@ -437,6 +444,27 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+-- | GO
+builtinGenerateListO :: BlsqState
+builtinGenerateListO = do
+  s <- popFromStack
+  pushToStack (BlsqInt 1)
+  builtinSwap
+  builtinRange
+  pushToStack s
+  builtinMap
+  
+-- | GZ
+builtinGenerateListZ :: BlsqState
+builtinGenerateListZ = do
+  s <- popFromStack
+  pushToStack (BlsqInt 0)
+  builtinSwap
+  builtinRange
+  pushToStack s
+  builtinMap
+  
 
 -- | > .+
 builtinAdd :: BlsqState

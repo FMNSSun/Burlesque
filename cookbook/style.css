@@ -43,6 +43,10 @@ table.fancy tr.vnextn:hover {
   background-color: #88AA88;
 }
 
+table.fancy tr.vnextq:hover {
+  background-color: #D02090;
+}
+
 div.container {
   margin: auto;
   margin-top: 5%;

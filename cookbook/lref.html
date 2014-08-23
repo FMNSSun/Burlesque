@@ -160,6 +160,7 @@ multiple commands.</td></tr>
 <tr><td></td><td>-.</td><td>Str a<br/>Block a</td><td>Prepend head of a to a</td></tr> 
 <tr class="vnext"><td>DeleteIndices</td><td>di</td><td></td><td>Defined as (RA)\/[[(RA)[+e!</td></tr> 
 <tr><td>DiffLs</td><td>\\</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>List difference (a \\ b)</td></tr> 
+<tr class="vnextq"><td>Digits</td><td>dg</td><td>Int n, Int b</td><td>Returns the digits of n base b. E.g. 14 3dg={1 1 2}</td></tr> 
 <tr class="vnext"><td>DimArrayAccess</td><td>d!</td><td></td><td>Defined as (!!)\/[[(!!)[+e!</td></tr> 
 <tr class="vnext"><td>DimArraySet</td><td>D!</td><td>Block arr, Block adr, Any e</td><td>Sets the element in arr at position adr to e (see DimArrayAccess)</td></tr> 
 <tr><td>Div</td><td>./</td><td>Int a, Int b</td><td>Regular integer division (a / b)</td></tr> 
@@ -197,6 +198,8 @@ multiple commands.</td></tr>
 Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr> 
 <tr class="vnext"><td>FrequencyListPercentage</td><td>F:</td><td></td><td>Like FrequencyList but contains relative percentages. Defined as f:u[\/PD^^++?/\/z[</td></tr>.
 <tr><td>FromFormat</td><td>ff</td><td>Pretty a</td><td>Extracts the string out of the pretty</td></tr> 
+<tr class="vnextq"><td>GenerateListO</td><td>GO</td><td></td><td>Defined as <b><i>POP</i></b>1\/R@<b><i>PUSH</b></i>m[</td></tr>
+<tr class="vnextq"><td>GenerateListZ</td><td>GZ</td><td></td><td>Defined as <b><i>POP</i></b>0\/R@<b><i>PUSH</b></i>m[</td></tr> 
 <tr class="vnext"><td>Geq</td><td>&gt;=</td><td>Any a, Any b</td><td> a &gt;= b</td></tr> 
 <tr class="vnext"><td>Gcd</td><td>g_</td><td>Int a, Int b</td><td>gcd(a,b)</td></tr> 
 <tr class="vnext"><td></td><td>g_</td><td>Block a<br/>Str a</td><td>Defined as ^^-]\/[-\/</td></tr> 
@@ -287,6 +290,7 @@ Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
 <tr><td>Not</td><td>n!</td><td>Int a</td><td>Boolish not</td></tr> 
 <tr><td></td><td>n!</td><td>Block a<br>Str a</td><td>Most common element</td></tr> 
 <tr class="vnext"><td>NotEqual</td><td>!=</td><td></td><td>Defined as == n!</td></tr> 
+<tr class="vnextq"><td>NotZero?</td><td>nz</td><td></td><td>Defined as z?n!</td></tr> 
 <tr class="vnext"><td>nCr</td><td>nr</td><td>Int n, Int k</td><td>nCr(n,k)</td></tr> 
 <tr class="vnextn"><td></td><td>nr</td><td>deepzip (int)</td><td></td></tr> 
 <tr><td>Or</td><td>||</td><td>Int a, Int b</td><td>Bitwise or</td></tr> 
@@ -438,7 +442,8 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr class="vnextn"><td></td><td>t]</td><td>deepmap</td><td></td></tr> 
 <tr><td>TrimLeftRight</td><td>tt</td><td>Str a</td><td>Defined as t[ t]</td></tr> 
 <tr class="vnext"><td>TrimLines</td><td>tl</td><td></td><td>Defined as ln{tt}m[un</td></tr> 
-<tr class="vnext"><td>TypeOf</td><td>to</td><td>Any a</td><td>Returns the type of a as Str</td></tr> 
+<tr class="vnext"><td>TypeOf</td><td>to</td><td>Any a</td><td>Returns the type of a as Str</td></tr>
+<tr class="vnextq"><td>Undigits</td><td>ug</td><td>List digits, Int base</td><td>Reverses what Digits (dg) does. </td></tr> 
 <tr class="vnext"><td>Ungroup</td><td>U[<td></td></td><td>Ungroups. (Reverses what f: does, except for the order, because f: sorts).<br/> 
 Defined as {p^.*}\m</td></tr> 
 <tr><td>Union</td><td>UN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Union</td></tr> 
@@ -471,7 +476,8 @@ Defined as {p^.*}\m</td></tr>
 <tr><td></td><td>XX</td><td>Double a</td><td>Convert a to block containing ceiling a and floor a</td></tr> 
 <tr><td></td><td>XX</td><td>Char a</td><td>Convert a to a string</td></tr> 
 <tr><td></td><td>XX</td><td>Block a</td><td>Identity</td></tr> 
-<tr class="vnext"><td>XSwap</td><td>x/</td><td></td><td>If the stack order is [a,b,c] XSwap changes it to [b,c,a]</td></tr> 
+<tr class="vnext"><td>XSwap</td><td>x/</td><td></td><td>If the stack order is [a,b,c] XSwap changes it to [b,c,a]</td></tr>
+<tr class="vnextq"><td>Zero?</td><td>z?</td><td></td><td>Returns 1 if the argument passed was zero, an empty string, an empty list or a null byte.</td></tr> 
 <tr><td>Zip</td><td>z[</td><td>Block a, Block b<br/>Str a,Str b<br/>Block a, Str b<br/>Str a,Block b</td></td><td>Zips</td></tr> 
 <tr class="vnext"><td>ZipIndices</td><td>zi</td><td></td><td>Defined as 0R@\/z[</td></tr> 
 <tr><td>ZipWith</td><td>Z[</td><td></td><td>Defined as z[\/m[</td></tr> 
@@ -480,6 +486,7 @@ Defined as {p^.*}\m</td></tr>
 </table> 
 <span style="color: #AA8888;">Since Burlesque 1.7</span><br/> 
 <span style="color: #88AA88;">Since Burlesque 1.7.1</span><br/> 
+<span style="color: #D02090;">Since Burlesque 1.7.2f</span><br/>
 <!-- --> 
  
       <h1>Syntax</h1> 
@@ -558,6 +565,26 @@ blsq ) {"abc" "dba"})<-
   <li>#r -- Rotate stack left</li> 
   <li>#R -- Rotate stack right</li> 
 </ul> 
+ 
+ <h1>Global state stack</h1>.
+ 
+ Since Burlesque 1.7.2f you can use state even inside maps/filters etc. (However, this doesn't work for sortBy yet). 
+ Burlesque 1.7.2f now runs with two stacks. 
+ 
+ <h1>Global state stack commands</h1>
+ 
+ <ul>
+   <li>PP - Pop an element from the state stack (and push it to the the normal stack)</li>
+   <li>Pp - Push an element to the state stack (and pop it from the normal stack)</li>
+   <li>pP - Peek an element from the state stack (and push it to the normal stack)</li>
+   <li>p/ - Perform a swap on the state stack</li>
+ </ul>
+ 
+ <b>Example</b>
+<pre>
+blsq ) 5Pp4Pp{1 1 1 1 1}{pPp/}m[
+{4 1 5 1 4 1 5 1 4 1}
+</pre>
  
  </div> 
  </body> 
