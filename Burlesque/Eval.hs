@@ -35,24 +35,19 @@ import Debug.Trace
 -- | > Evaluate a Burlesque program
 eval :: BlsqProg -> BlsqState
 eval (BlsqSpecial ")" : i : xs) = do
- modify (BlsqBlock [ i ] : )
+ pushToStack (BlsqBlock [ i ])
  builtinMap
  eval xs
 eval (BlsqSpecial ":" : i : xs) = do
- modify (BlsqBlock [ i ] : )
+ pushToStack (BlsqBlock [ i ])
  builtinFilter
  eval xs
-eval (BlsqSpecial "@" : (BlsqIdent s) : xs) = do
- let a = BlsqChar $ s !! 1
- let b = BlsqChar $ s !! 0
- modify( ([a] ++ [b]) ++)
- eval xs
 eval (BlsqSpecial "%" : (BlsqIdent s) : xs) = do
- modify (BlsqBlock [BlsqIdent s, BlsqIdent "sh"] :)
+ pushToStack(BlsqBlock [BlsqIdent s, BlsqIdent "sh"])
  builtinEval
  eval xs
 eval (BlsqIdent "#Q" : xs) = do
- modify (BlsqBlock xs :)
+ pushToStack (BlsqBlock xs)
  eval xs
 eval (BlsqIdent "#q" : xs) = do
  st <- getStack
@@ -87,7 +82,7 @@ evalI v = pushToStack v
 
 -- | > Run program with empty stack
 run :: BlsqProg -> BlsqStack
-run p = execState (runStack p []) []
+run p = fst $ execState (runStack p []) ([],[])
 
 putStack q = do
   (_ , st') <- get
@@ -114,6 +109,9 @@ runStack p xs = do
   (nst, st') <- get
   put (st, st')
   return nst
+  
+runStack' :: BlsqProg -> BlsqStack -> BlsqStack
+runStack' p xs = fst $ execState (eval p) (xs,[])
 
 toInt p = (fromIntegral p) :: Int
 
@@ -1739,7 +1737,7 @@ builtinFindIndex = do
        findIndex' p (x:xs) i = do
                                  rs <- runStack p [x]
                                  case rs of
-                                  (BlsqInt 1 : ys) -> putResult $ i
+                                  (BlsqInt 1 : ys) -> return $ i
                                   _ -> findIndex' p xs (succ i)
 
 -- | Fi
@@ -1916,14 +1914,20 @@ builtinFindIndices :: BlsqState
 builtinFindIndices = do
   st <- getStack
   case st of
-   (BlsqBlock p : BlsqBlock b : xs) -> putResult $ BlsqBlock (map BlsqInt $ findIndices' p b 0) : xs
+   (BlsqBlock p : BlsqBlock b : xs) -> do
+     qq <- findIndices' p b 0
+     putResult $ BlsqBlock (map BlsqInt $ qq) : xs
    (BlsqBlock p : BlsqStr b : xs) -> builtinSwap >> builtinExplode >> 
                                      builtinSwap >> builtinFindIndices
    _ -> putResult $ BlsqError "Burlesque: (fi) Invalid arguments!" : st
- where findIndices' p [] _ = []
-       findIndices' p (x:xs) i = case runStack p [x] of
-                                 (BlsqInt 1 : ys) -> i : findIndices' p xs (succ i)
-                                 _ -> findIndices' p xs (succ i) 
+ where findIndices' p [] _ = return $ []
+       findIndices' p (x:xs) i = do
+                                  rs <- runStack p [x]
+                                  case rs of
+                                   (BlsqInt 1 : ys) -> do
+                                     is <- findIndices' p xs (succ i)
+                                     return $ i : is
+                                   _ -> findIndices' p xs (succ i) 
 
 -- | lg
 builtinLog :: BlsqState
@@ -2062,12 +2066,12 @@ builtinSortBy = do
   st <- getStack
   case st of
     (BlsqBlock f : BlsqBlock ls : xs) -> putResult $ BlsqBlock (
-                                         sortBy (\ a b -> case runStack f [b,a] of
+                                         sortBy (\ a b -> case runStack' f [b,a] of
                                                                  (BlsqInt 1 : xs) -> GT
                                                                  (BlsqInt (-1) : xs) -> LT
                                                                  _ -> EQ) ls) : xs
     (BlsqBlock f : BlsqStr ls : xs) -> putResult $ BlsqStr (
-                                       sortBy (\ a b -> case runStack f [BlsqChar b,BlsqChar a] of
+                                       sortBy (\ a b -> case runStack' f [BlsqChar b,BlsqChar a] of
                                                                  (BlsqInt 1 : xs) -> GT
                                                                  (BlsqInt (-1) : xs) -> LT
                                                                  _ -> EQ) ls) : xs
@@ -2174,29 +2178,39 @@ builtinTakeWhile :: BlsqState
 builtinTakeWhile = do
  st <- getStack
  case st of
-   (BlsqBlock ls : BlsqBlock p : xs) -> putResult $ (BlsqBlock $ takeWhile' p ls) : xs
+   (BlsqBlock ls : BlsqBlock p : xs) -> do 
+     tw <- takeWhile' p ls
+     putResult $ (BlsqBlock $ tw) : xs
    (BlsqStr ls : BlsqBlock p : xs) -> do builtinExplode
                                          builtinTakeWhile
                                          builtinConcat
    _ -> putResult $ BlsqError "Burlesque: (tw) Invalid arguments!" : st
- where takeWhile' _ [] = []
-       takeWhile' p (y:ys) = case runStack p [y] of
-                               (BlsqInt 0 : _) -> []
-                               _ -> y : takeWhile' p ys
+ where takeWhile' _ [] = return []
+       takeWhile' p (y:ys) = do
+                              rs <- runStack p [y]
+                              case rs of
+                               (BlsqInt 0 : _) -> return []
+                               _ -> do
+                                 yy <- takeWhile' p ys
+                                 return $ y : yy
 
 -- |dw
 builtinDropWhile :: BlsqState
 builtinDropWhile = do
  st <- getStack
  case st of
-   (BlsqBlock ls : BlsqBlock p : xs) -> putResult $ (BlsqBlock $ dropWhile' p ls) : xs
+   (BlsqBlock ls : BlsqBlock p : xs) -> do 
+     dw <- dropWhile' p ls
+     putResult $ (BlsqBlock $ dw) : xs
    (BlsqStr ls : BlsqBlock p : xs) -> do builtinExplode
                                          builtinDropWhile
                                          builtinConcat
    _ -> putResult $ BlsqError "Burlesque: (dw) Invalid arguments!" : st
- where dropWhile' _ [] = []
-       dropWhile' p yss@(y:ys) = case runStack p [y] of
-                               (BlsqInt 0 : _) -> yss
+ where dropWhile' _ [] = return []
+       dropWhile' p yss@(y:ys) = do
+                             rs <- runStack p [y]
+                             case rs of
+                               (BlsqInt 0 : _) -> return yss
                                _ -> dropWhile' p ys
 
 -- | tp
@@ -3357,16 +3371,16 @@ builtinMmult = do
  case st of
   (BlsqBlock b : BlsqBlock a : xs) -> do
     putResult $ (BlsqBlock . map BlsqBlock $ [ [ qsum $ qmul ar bc | bc <- b ] | ar <- a ]) : xs
- where qmul a b = head $ 
+ where qmul a b = head . fst $ 
         execState
          (do pushToStack (a)
              pushToStack (b)
              pushToStack (BlsqBlock [ BlsqIdent "?*" ])
-             builtinZipWithPush) []
-       qsum ls = head $
+             builtinZipWithPush) ([],[])
+       qsum ls = head . fst $
         execState
          (do pushToStack (ls)
-             builtinSum) []
+             builtinSum) ([],[])
 
 -- | ss
 builtinStrStr :: BlsqState
