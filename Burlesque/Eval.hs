@@ -92,6 +92,19 @@ getStack = do
   (st, _) <- get
   return st
   
+pushStateStack q = do
+  (st, st') <- get
+  put (st, q:st')
+  
+popStateStack = do
+  (st, (s:st')) <- get
+  put (st, st')
+  return s
+  
+swapStateStack = do
+  (st, (a:b:st')) <- get
+  put (st,b:a:st')
+  
 pushToStack q = do
   (st, st') <- get
   put (q:st, st')
@@ -413,6 +426,10 @@ builtins = [
   ("nz", builtinNotZero),
   ("dg", builtinDigits),
   ("ug", builtinUnDigits),
+  ("Pp", builtinPushToState),
+  ("PP", builtinPopFromState),
+  ("pP", builtinPeekFromState),
+  ("p/", builtinSwapOnState),
   
   ("??", builtinVersion)
  ]
@@ -3580,3 +3597,29 @@ builtinUnDigits = do
                                                    BlsqInt q -> q
                                                    _ -> 0) ns) : xs
     _ -> BlsqError "Burlesque: (ug) Invalid arguments!" : st
+    
+-- | PP
+builtinPopFromState :: BlsqState
+builtinPopFromState = do
+  s <- popStateStack
+  pushToStack s
+  
+-- | Pp
+builtinPushToState :: BlsqState
+builtinPushToState = do
+ st <- getStack
+ case st of
+   (a : xs) -> pushStateStack a >> putStack xs
+   _ -> pushToStack $ BlsqError "Burlesque: (Pp) Invalid stack!"
+   
+-- | pP
+builtinPeekFromState :: BlsqState
+builtinPeekFromState = do
+  s <- popStateStack
+  pushStateStack s
+  pushToStack s
+  
+-- | p/
+builtinSwapOnState :: BlsqState
+builtinSwapOnState = do
+  swapStateStack
