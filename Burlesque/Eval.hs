@@ -34,6 +34,17 @@ import Debug.Trace
 
 -- | > Evaluate a Burlesque program
 eval :: BlsqProg -> BlsqState
+eval (BlsqSpecial "@" : BlsqIdent s : xs) = do
+ pushToStack (BlsqChar $ s !! 0)
+ pushToStack (BlsqChar $ s !! 1)
+ eval xs
+eval (BlsqSpecial "@" : BlsqChar c : xs) = do
+ pushToStack (BlsqStr $ [c])
+ builtinCycle
+ eval xs
+eval (BlsqSpecial "@" : BlsqInt i : xs) = do
+ pushToStack (BlsqDouble $ fromIntegral i)
+ eval xs
 eval (BlsqSpecial "j" : xs) = do
  builtinSwap
  eval xs
@@ -442,6 +453,7 @@ builtins = [
   ("GZ", builtinGenerateListZ),
   ("l2", builtinLogBase2),
   ("l0", builtinLogBase10),
+  ("p\\", builtinSwapStacks),
   
   ("??", builtinVersion)
  ]
@@ -3671,3 +3683,9 @@ builtinPeekFromState = do
 builtinSwapOnState :: BlsqState
 builtinSwapOnState = do
   swapStateStack
+  
+-- | p\
+builtinSwapStacks :: BlsqState
+builtinSwapStacks = do
+  (st, st') <- get
+  put (st', st)

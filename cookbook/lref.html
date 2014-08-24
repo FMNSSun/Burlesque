@@ -493,14 +493,14 @@ Defined as {p^.*}\m</td></tr>
  
       <h1>Syntax</h1> 
 <pre class="code"> 
-Special :: {"," | ")"}
+Special :: oneOf ",)@:%j"
 Double :: { digit }+ , "." , { digit }+
 Int :: { digit }+
 Char :: "'" , anyChar
 String :: "\"" , { anyChar }* , "\""
 Block :: "{" , { Expression }* , "}"
 Quoted :: "(", ExpressionSingle , ")"
-Identifier :: noneOf "1234567890{},' \"" , noneOf "1234567890{},' \""
+Identifier :: noneOf "1234567890{},' \"" , anyChar
 ExpressionSingle :: { Block | Int | Char | String | Quoted | Identifier }
 Expression = { ExpressionSingle }*
 </pre> 
@@ -563,6 +563,23 @@ blsq ) "abc98a8"{><}f[
 blsq ) "abc98a8":><
 "988"
 </pre>
+<i>@</i> has multiple functions. When prefixed to an ident, it converts the ident into two characters.
+<pre>
+blsq ) @az
+'z
+'a
+</pre>
+When <i>@</i> is prefixed to a character it converts the character to an infinite string containing only said character.
+<pre>
+blsq ) @'z100.+
+"zzzzzzzzzzzzzzzzzzzzzzzzzz ......
+zzzzzzzzzzzzzzzzzzzzz"
+</pre>
+When <i>@</i> is prefixed to an integer it is converted to a double.
+<pre>
+blsq ) @5
+5.0
+</pre>
 <h1>Advanced manipulation functions</h1> 
 <ul> 
   <li>#Q -- Push remaining code to stack</li> 
@@ -587,6 +604,7 @@ blsq ) "abc98a8":><
    <li>Pp - Push an element to the state stack (and pop it from the normal stack)</li>
    <li>pP - Peek an element from the state stack (and push it to the normal stack)</li>
    <li>p/ - Perform a swap on the state stack</li>
+   <li>p\ - Swap the normal stack with the state stack</li>
  </ul>
  
  <b>Example</b>
