@@ -34,6 +34,9 @@ import Debug.Trace
 
 -- | > Evaluate a Burlesque program
 eval :: BlsqProg -> BlsqState
+eval (BlsqSpecial "j" : xs) = do
+ builtinSwap
+ eval xs
 eval (BlsqSpecial ")" : i : xs) = do
  pushToStack (BlsqBlock [ i ])
  builtinMap
@@ -437,6 +440,8 @@ builtins = [
   ("p/", builtinSwapOnState),
   ("GO", builtinGenerateListO),
   ("GZ", builtinGenerateListZ),
+  ("l2", builtinLogBase2),
+  ("l0", builtinLogBase10),
   
   ("??", builtinVersion)
  ]
@@ -444,6 +449,21 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+
+-- | l2
+builtinLogBase2 :: BlsqState
+builtinLogBase2 = do
+  pushToStack (BlsqInt 2)
+  builtinSwap
+  builtinLog2
+  
+-- | l0
+builtinLogBase10 :: BlsqState
+builtinLogBase10 = do
+  pushToStack (BlsqInt 10)
+  builtinSwap
+  builtinLog2
 
 -- | GO
 builtinGenerateListO :: BlsqState

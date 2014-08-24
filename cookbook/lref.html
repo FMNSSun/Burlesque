@@ -250,6 +250,8 @@ Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
 <tr class="vnext"><td>Load2</td><td>LD</td><td></td><td>Defined as lde!</td></tr> 
 <tr class="vnext"><td>Log</td><td>lg</td><td>Double a<br/>Int a</td><td>log(a) (natural logarithm)</td></tr> 
 <tr class="vnext"><td>Log2</td><td>LG</td><td></td><td>Defined as lg\/lg./</td></tr> 
+<tr class="vnextq"><td>LogBase2</td><td>l2</td><td></td><td>Defined as 2\/LG.</td></tr>
+<tr class="vnextq"><td>LogBase10</td><td>l0</td><td></td><td>Defined as 10\/LG.</td></tr>
 <tr><td>Map</td><td>m[</td><td>Block ls, Block f</td><td>Apply f to every element in ls and collect the result in a block</td></tr> 
 <tr><td></td><td>m[</td><td>Str ls, Block f</td><td>Defined as \/ XX \/ m[ \[</td></tr> 
 <tr><td>MapDup</td><td>[m</td><td><td>Defined as (^^)+]m[</td></tr> 
@@ -549,11 +551,18 @@ Pi : pi => 3.141592653589793<br/>
 e : ee => 2.718281828459045<br/> 
  
 <h1>Special</h1> 
-For <i>,</i> read the FAQ. <i>)</i> is the block modifier. It encloses the next token inside a map statement. Therefore 
+For <i>,</i> read the FAQ. <i>)</i> is the block map modifier. It encloses the next token inside a map statement. Therefore 
 <pre> 
 blsq ) {"abc" "dba"})<-
 {"cba" "abd"}
 </pre> 
+<i>:</i> is the block filter modifier. 
+<pre>
+blsq ) "abc98a8"{><}f[
+"988"
+blsq ) "abc98a8":><
+"988"
+</pre>
 <h1>Advanced manipulation functions</h1> 
 <ul> 
   <li>#Q -- Push remaining code to stack</li> 

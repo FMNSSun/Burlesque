@@ -61,13 +61,13 @@ parseChar' = do
 parseIdent :: Parser BlsqExp
 parseIdent = do 
   a <- noneOf "1234567890{}',\" "
-  b <- noneOf "1234567890{}',\" "
+  b <- anyChar
   optional spaces
   return . BlsqIdent $ a:b:[]
 
 parseSep :: Parser BlsqExp
 parseSep = do
-  b <- oneOf ",)@:%"
+  b <- oneOf ",)@:%j"
   optional spaces
   return $ BlsqSpecial [b]
 
