@@ -24,10 +24,34 @@ Users of Burlesque are highly encouraged to upgrade to 1.7.2.
 
 Current stable version: 1.7.2
 
+Compile
+=======
+
+You need a decently recent ghc and haskell-plattform. 
+
+Install the required packages:
+
+    cabal install split web-encodings haskeline mtl regex-compat parsec digits statistics
+
+Then compile
+
+    ghc --make main.hs -o burlesque -O3 -fforce-recomp
+
+If you just want the "--file" option (like on golf.shinh.org) use
+
+    ghc --make main_golf.hs -o blsq -O3 -fforce-recomp
+    
+Tests
+=====
+
+With Burlesque 1.7.2f I added some little tests. However, it's too late to write a comprehensive testsuite.
+If you like you can fork this repo and add tests and send me a pull request. Whenever I solve a golf challenge
+I'll add my solution to the testsuite (once the challenge is post mortem of course :) )
+
 License
 =======
 
-Copyright (c) 2012, Roman Müntener
+Copyright (c) 2012, Roman MÃ¼ntener
  All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, 
