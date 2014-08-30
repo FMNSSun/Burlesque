@@ -5,10 +5,10 @@ module Burlesque.Types
    BlsqState' (..),
    BlsqProg (..),
    BlsqPrettyFormat (..),
-   module Control.Monad.State)
+   module Control.Monad.State.Lazy)
  where
 
-import Control.Monad.State
+import Control.Monad.State.Lazy
 
 data BlsqExp =  BlsqInt Integer
               | BlsqDouble Double

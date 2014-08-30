@@ -138,12 +138,14 @@ runStack p xs = do
   (st, st') <- get
   put (xs, st')
   eval p
-  (nst, st') <- get
-  put (st, st')
+  (nst, st'') <- get
+  put (st, st'')
   return nst
   
 runStack' :: BlsqProg -> BlsqStack -> BlsqStack
 runStack' p xs = fst $ execState (eval p) (xs,[])
+
+runStack'' p xs g = execState (eval p) (xs,g)
 
 toInt p = (fromIntegral p) :: Int
 
@@ -905,15 +907,23 @@ builtinMap = do
       builtinMap
       builtinConcat
    (BlsqBlock a : BlsqBlock b : xs) -> do 
-      mst <- map' a b
+      (s , g) <- get
+      let (mst, ng) = map' a b g
+      put (s, ng)
       putResult $ (BlsqBlock $ mst) : xs
    _ -> putResult $ BlsqError "Burlesque: (m[) Invalid arguments!" : st
- where map' _ [] = return []
+ where map' _ [] g = ([], g)
+       map' f (x:xs) g = 
+         let (st, ng) = runStack'' f [x] g
+             (st', ng') = map' f xs ng
+         in (st++st', ng')       
+ {-
+       map' _ [] = return []
        map' f (x:xs) = do
         st' <- runStack f [x]
         st'' <- map' f xs
         return $ st' ++ st''
-       --(runStack f [x]) ++ (map' f xs)
+       --(runStack f [x]) ++ (map' f xs)-}
 
 -- | > f[
 builtinFilter :: BlsqState
@@ -933,17 +943,27 @@ builtinFilter = do
                                             boxString
         _ -> return ()
   (BlsqBlock f : BlsqBlock v : xs) -> do
-    ff <- filter' f v
+    (s, g) <- get
+    let (ff, ng) = filter' f v g
+    put (s, ng)
     putResult $ (BlsqBlock $ ff) : xs
   _ -> putResult $ BlsqError "Burlesque: (f[) Invalid arguments!" : st
- where filter' _ [] = return []
+ where filter' _ [] g = ([], g)
+       filter' f (x:xs) g = 
+         let (st, ng) = runStack'' f [x] g in
+         case st of
+           (BlsqInt 0):ys -> filter' f xs ng
+           _ -> let (ys, ng') = filter' f xs ng in
+                (x : ys, ng')
+       {-
+       filter' _ [] = return []
        filter' f (x:xs) = do
                            rsf <- runStack f [x]
                            case rsf of
                             (BlsqInt 0):ys -> filter' f xs
                             _ -> do 
                                xx <- filter' f xs
-                               return $ x : xx
+                               return $ x : xx-}
        boxString = do
          st <- getStack
          case st of
