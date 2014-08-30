@@ -456,6 +456,9 @@ builtins = [
   ("l2", builtinLogBase2),
   ("l0", builtinLogBase10),
   ("p\\", builtinSwapStacks),
+  ("CN", builtinCount),
+  ("MV", builtinMove),
+  ("C!", builtinContinuationMany),
   
   ("??", builtinVersion)
  ]
@@ -464,7 +467,31 @@ lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b +
 
 putResult = putStack
 
+-- | C!
+builtinContinuationMany :: BlsqState
+builtinContinuationMany = do
+ st <- getStack
+ case st of
+   (BlsqInt n : BlsqBlock cont : xs) -> do
+     let ls = (intersperse (BlsqIdent "c!") $ replicate (toInt n) (BlsqBlock cont)) ++ [BlsqIdent "c!"]
+     putStack xs
+     pushToStack (BlsqBlock ls)
+     builtinEval
 
+-- | MV
+builtinMove = do 
+  st <- getStack
+  case st of
+    (BlsqInt n : xs) -> putStack $ (xs !! (toInt n)) : (removeAt (toInt n) xs)
+    _ -> pushToStack $ BlsqError "Burlesque (MV): Invalid arguments!"
+
+-- | CN
+builtinCount :: BlsqState
+builtinCount = do 
+  i <- popFromStack
+  pushToStack (BlsqBlock [i, BlsqIdent "=="])
+  builtinFilterLength
+  
 -- | l2
 builtinLogBase2 :: BlsqState
 builtinLogBase2 = do
