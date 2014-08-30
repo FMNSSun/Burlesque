@@ -57,6 +57,12 @@ parseChar' = do
   char '\''
   optional spaces
   return $ BlsqChar c
+  
+parseSingleIdent :: Parser BlsqExp
+parseSingleIdent = do
+  a <- oneOf "jJQ"
+  optional spaces
+  return . BlsqIdent $ [a]
 
 parseIdent :: Parser BlsqExp
 parseIdent = do 
@@ -67,9 +73,17 @@ parseIdent = do
 
 parseSep :: Parser BlsqExp
 parseSep = do
-  b <- oneOf ",)@:%j"
+  b <- oneOf ",)@:%"
   optional spaces
   return $ BlsqSpecial [b]
+  
+parseSingleBlock :: Parser BlsqExp
+parseSingleBlock = do
+  char 'q'
+  optional spaces
+  e <- parseSingle
+  optional spaces
+  return $ BlsqBlock [e]
 
 parseBlock :: Parser BlsqExp
 parseBlock = do
@@ -134,9 +148,9 @@ parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseSingle
 
 parseSingle :: Parser BlsqExp
-parseSingle = parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
+parseSingle = parseSingleBlock <|> parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseNumber) <|>
-              parseChar <|> parseQuoted <|> parseIdent
+              parseChar <|> parseQuoted <|> parseSingleIdent <|> parseIdent
 
 runParserWithString p input = 
   case parse p "" input of

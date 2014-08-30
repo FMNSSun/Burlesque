@@ -45,9 +45,6 @@ eval (BlsqSpecial "@" : BlsqChar c : xs) = do
 eval (BlsqSpecial "@" : BlsqInt i : xs) = do
  pushToStack (BlsqDouble $ fromIntegral i)
  eval xs
-eval (BlsqSpecial "j" : xs) = do
- builtinSwap
- eval xs
 eval (BlsqSpecial ")" : i : xs) = do
  pushToStack (BlsqBlock [ i ])
  builtinMap
@@ -156,6 +153,8 @@ toInt p = (fromIntegral p) :: Int
 -- OF THIS LIST! JUST DO NOT!
 -- HackMode will not make it into an official version. Screw the order!
 builtins = [
+  ("j", builtinSwap),
+  ("J", builtinDup),
   (".+", builtinAdd),
   ("_+", builtinAddX),
   (".-", builtinSub),
@@ -459,6 +458,9 @@ builtins = [
   ("CN", builtinCount),
   ("MV", builtinMove),
   ("C!", builtinContinuationMany),
+  ("#<", builtinReverseStack), 
+  ("!C", builtinContinuationManyReverse),
+  
   
   ("??", builtinVersion)
  ]
@@ -466,6 +468,18 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+-- | !C
+builtinContinuationManyReverse :: BlsqState
+builtinContinuationManyReverse = do
+  builtinContinuationMany
+  builtinReverseStack
+
+-- | #<
+builtinReverseStack :: BlsqState
+builtinReverseStack = do
+  st <- getStack
+  putStack (reverse st)
 
 -- | C!
 builtinContinuationMany :: BlsqState
