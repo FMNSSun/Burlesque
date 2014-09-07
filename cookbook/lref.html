@@ -173,6 +173,7 @@ multiple commands.</td></tr>
 <tr class="vnext"><td></td><td>./</td><td>Str a,Str b</td><td>If a starts with b, remove b from a</td></tr> 
 <tr class="vnext"><td>DropWhile</td><td>dw</td><td>Block p<br/>Block ls</td><td>drop elements from ls as long as p holds true</td></tr> 
 <tr class="vnext"><td></td><td>dw</td><td>Block p<br/>Str s</td><td>Defined as **dw\[</td></tr> 
+<tr class="vnextq"><td>DropWhileSwapped</td><td>DW</td><td></td><td>Defined as \/dw</td></tr>
 <tr><td>Dup</td><td>^^</td><td></td><td>Duplicate top most element on the stack</td></tr> 
 <tr><td>DupSwap</td><td>^/</td><td></td><td>Defined as ^^ \/</td></tr> 
 <tr class="vnext"><td>EmptyBlockToStr</td><td>es<td></td></td><td>Converts an empty block to an empty string. Else it does nothing</td></tr> 
@@ -236,8 +237,10 @@ Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
 <tr><td></td><td>~]</td><td>Int a</td><td>All except last digit</td></tr> 
 <tr><td>InitTail</td><td>~-</td><td>n/a</td><td>Defined as ~][-</td></tr> 
 <tr class="vnext"><td>Intercalate</td><td>ic</td><td></td><td>Defined as [[\[</td></tr> 
+<tr class="vnextq"><td>IntercalateSwapped</td><td>IC</td><td></td><td>Defined as \/ic</td></tr>
 <tr><td>Intersection</td><td>IN</td><td>Block a, Block b<br/>Str a,Str b<br/>Int a, Int b</td><td>Intersection</td></tr> 
 <tr><td>Intersperse</td><td>[[</td><td>Any a, Block b<br/>Char a,String b</td><td>Inserts a between every two element in b</td></tr> 
+<tr class="vnextq"><td>IntersperseSwapped</td><td>[]</td><td></td><td>Defined as \/[[</td></tr>
 <tr class="vnext"><td>InsertAt</td><td>ia</td><td>Str ls, Char e, Int idx<br/>Block ls, Any e, Int idx</td><td>Insert element e into ls at index idx</td></tr> 
 <tr><td>Last</td><td>[~</td><td>Block a<br/>Int a</td><td>Last element of the block</td></tr> 
 <tr class="vnext"><td>Lcm</td><td>l_</td><td>Int a, Int b</td><td>lcm(a,b)</td></tr> 
@@ -434,6 +437,7 @@ which satisfy p and not satisfying p. (Like doing two filter passes with p and w
 <tr><td></td><td>[-</td><td>Int a</td><td>All except first digit</td></tr> 
 <tr class="vnext"><td>TakeWhile</td><td>tw</td><td>Block p<br/>Block ls</td><td>take elements from ls as long as p holds true</td></tr> 
 <tr class="vnext"><td></td><td>tw</td><td>Block p<br/>Str s</td><td>Defined as **tw\[</td></tr> 
+<tr class="vnextq"><td>TakeWhileSwapped</td><td>TW</td><td></td><td>Defined as \/tw</td></tr>
 <tr class="vnext"><td>Tan</td><td>Tt</td><td>Double a<br/>Int a</td><td>tangens</td></tr> 
 <tr class="vnextn"><td></td><td>Tt</td><td>deepmap</td><td></td></tr> 
 <tr class="vnextn"><td>ToDouble</td><td>td</td><td>Str s<br/>Int s<br/>Double s</td><td>Convert to double</td></tr> 

@@ -460,6 +460,10 @@ builtins = [
   ("C!", builtinContinuationMany),
   ("#<", builtinReverseStack), 
   ("!C", builtinContinuationManyReverse),
+  ("TW", builtinTakeWhileSwapped),
+  ("DW", builtinDropWhileSwapped),
+  ("IC", builtinIntercalateSwapped),
+  ("[]", builtinIntersperseSwapped),
   
   
   ("??", builtinVersion)
@@ -468,6 +472,22 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+builtinTakeWhileSwapped = do
+  builtinSwap
+  builtinTakeWhile
+  
+builtinDropWhileSwapped = do
+  builtinSwap
+  builtinDropWhile
+  
+builtinIntercalateSwapped = do
+  builtinSwap
+  builtinIntercalate
+  
+builtinIntersperseSwapped = do
+  builtinSwap
+  builtinIntersperse
 
 -- | !C
 builtinContinuationManyReverse :: BlsqState
