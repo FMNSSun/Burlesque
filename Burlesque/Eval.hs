@@ -466,6 +466,8 @@ builtins = [
   ("[]", builtinIntersperseSwapped),
   ("CW", builtinChooseWords),
   ("MP", builtinMapPush),
+  ("CL", builtinCollectStack),
+  ("Cl", builtinCollectStackReverse),
   
   ("??", builtinVersion)
  ]
@@ -473,6 +475,16 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+-- | Cl
+builtinCollectStackReverse = do
+  builtinCollectStack
+  builtinReverse
+
+-- | CL
+builtinCollectStack = do
+  st <- getStack
+  putStack $ [BlsqBlock st]
 
 -- | MP
 builtinMapPush = do
