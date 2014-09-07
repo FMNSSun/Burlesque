@@ -464,7 +464,8 @@ builtins = [
   ("DW", builtinDropWhileSwapped),
   ("IC", builtinIntercalateSwapped),
   ("[]", builtinIntersperseSwapped),
-  
+  ("CW", builtinChooseWords),
+  ("MP", builtinMapPush),
   
   ("??", builtinVersion)
  ]
@@ -473,18 +474,32 @@ lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b +
 
 putResult = putStack
 
+-- | MP
+builtinMapPush = do
+  builtinMap
+  builtinPushMany
+
+-- | CW
+builtinChooseWords = do
+  builtinWords
+  builtinChoose
+
+-- | TW
 builtinTakeWhileSwapped = do
   builtinSwap
   builtinTakeWhile
-  
+
+-- | DW
 builtinDropWhileSwapped = do
   builtinSwap
   builtinDropWhile
-  
+
+-- | IC
 builtinIntercalateSwapped = do
   builtinSwap
   builtinIntercalate
-  
+
+-- | []
 builtinIntersperseSwapped = do
   builtinSwap
   builtinIntersperse
