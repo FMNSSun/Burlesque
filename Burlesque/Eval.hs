@@ -468,6 +468,14 @@ builtins = [
   ("MP", builtinMapPush),
   ("CL", builtinCollectStack),
   ("Cl", builtinCollectStackReverse),
+  ("U_", builtinUnique),
+  ("sm", builtinSame),
+  ("fu", builtinFilterUnlines),
+  ("ck", builtinCheck), 
+  ("it", builtinIt),
+  ("th", builtinThat),
+  ("?_", builtinBuiltins),
+  ("?n", builtinBuiltinNth),
   
   ("??", builtinVersion)
  ]
@@ -475,6 +483,49 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+-- | ?n
+builtinBuiltinNth = do
+  (BlsqInt n) <- popFromStack
+  pushToStack . BlsqIdent $ fst (builtins !! (toInt n))
+
+-- | ?_
+builtinBuiltins = do
+  pushToStack . BlsqStr $ "I have " ++ (show $ length builtins) ++ " non-special builtins!"
+
+-- | th
+builtinThat = do
+  st <- getStack
+  putStack [last st]
+  
+-- | it
+builtinIt = do
+  t <- popFromStack
+  putStack [t]
+
+-- | ck
+builtinCheck = do
+  builtinNot
+  builtinNot
+
+-- | fu
+builtinFilterUnlines = do
+  builtinFilter
+  builtinUnlines
+
+-- | sm
+builtinSame = do
+  builtinDup
+  builtinHead
+  t <- popFromStack
+  pushToStack $ BlsqBlock [t, BlsqIdent "=="]
+  builtinAll
+
+-- | U_
+builtinUnique = do
+  builtinDup
+  builtinNub
+  builtinEqual
 
 -- | Cl
 builtinCollectStackReverse = do

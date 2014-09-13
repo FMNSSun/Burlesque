@@ -13,17 +13,17 @@ import Control.DeepSeq
 
 runProgram :: String -> String -> String
 runProgram p stdin =
- unlines . map toDisplay . filter notHidden $ execState (eval (runParserWithString parseBlsq p)) [BlsqStr stdin]
+ unlines . map toDisplay . filter notHidden . fst $ execState (eval (runParserWithString parseBlsq p)) ([BlsqStr stdin],[])
 
 runProgramNoStdin :: String -> String
 runProgramNoStdin p =
- unlines . map toDisplay . filter notHidden $ execState (eval (runParserWithString parseBlsq p)) []
+ unlines . map toDisplay . filter notHidden . fst $ execState (eval (runParserWithString parseBlsq p)) ([],[])
 
 
 main = do
  args <- getArgs
  case args of
-   ["--ircbot",prog] -> do result <- timeout 100 $ evaluate $!! runProgramNoStdin prog
+   ["--ircbot",prog] -> do result <- timeout 31100 $ evaluate $!! runProgramNoStdin prog
                            case result of
                               Nothing -> putStrLn "Ain't nobody got time fo' dat!"
                               Just q -> case lines q of

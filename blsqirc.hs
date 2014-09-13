@@ -112,7 +112,7 @@ blsqev s = do
     ss <- foo s
     io $ catch' (putStrLn ("El resulto: " ++ (show ss))) (const $ return())
     write "PRIVMSG" (chan ++ " :" ++ (ss!!0))
-    write "PRIVMSG" (chan ++ " :" ++ (ss!!1))
+    --write "PRIVMSG" (chan ++ " :" ++ (ss!!1))
     where foo p = do start <- io $ getCurrentTime
                      result <- io $ catch' (timeout (3*10^6) (runProgramWrapper p)) (const $ return $ Just "That line gave me an error")
                      stop <- io $ getCurrentTime
