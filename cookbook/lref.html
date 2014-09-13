@@ -80,6 +80,8 @@
 <tr><td>BlockAccess</td><td>!!</td><td>Block a, Int n<br/>Str a, Int n</td><td>Return the nth element</td></tr> 
 <tr><td>Box</td><td>bx</td><td>Any a</td><td>Put a in an empty block</td></tr> 
 <tr class="vnext"><td>BoxCycle</td><td>bc</td><td></td><td>Defined as bxcy</td></tr> 
+<tr class="vnextq"><td>BoxSP</td><td>bs</td><td></td><td>Defined as bxsp</td></tr>
+<tr class="vnextq"><td>BoxSP2</td><td>BS</td><td></td><td>Defined as bxspsh</td></tr>
 <tr class="vnext"><td>BinomialDCumulative</td><td>Bc</td><td>Int n, Double prb, Double c</td><td>binomial distribution cumulative</td></tr> 
 <tr class="vnext"><td>BinomialDPropability</td><td>Bp</td><td>Int n, Double prb, Int nth</td><td>binomial distribution probability</td></tr> 
 <tr class="vnextn"><td>Ceiling</td><td>cl</td><td></td><tD>Defined as pdpd</td></tr> 
@@ -91,6 +93,7 @@
 <tr class="vnext"><td>ChiSquaredTest</td><td>ct</td><td></td><td>Defined as ^^x/?-2?^\/0.0?+?/++</td></tr> 
 <tr><td>ChunksOf</td><td>co</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Split a into chunks of size n</td></tr> 
 <tr><td>Chunky</td><td>CO</td><td>Block a, Int n<br/>Str a, Int n<br/>Int a, Int n</td><td>Create n-grams. "abc"2CO is {"ab" "bc"}</td></tr> 
+<tr class="vnextq"><td>CoolMap</td><td>M-</td><td></td><td>Defined as \/bxcy\/z[{p^+]e!}m[. Example: <tt>2{{?i}{?d}}M-</tt></td></tr>
 <tr class="vnext"><td>CoerceAdd</td><td>?+</td><td>Double a, Int b<br/>Int a, Double b</td><td>Defined as pd.+</td></tr> 
 <tr class="vnext"><td></td><td>?+</td><td>Str a, Int b<br/>Int a, Str b</td><td>Defined as Sh.+</td></tr> 
 <tr class="vnext"><td></td><td>?+</td><td>Str a, Double b<br/>Double a, Str b</td><td>Defined as Sh.+</td></tr> 
@@ -140,6 +143,7 @@
 <tr><td></td><td>~[</td><td>Str a, Char b</td><td>Does a contain b?</td></tr> 
 <tr><td></td><td>~[</td><td>Int a, Int b</td><td>Does a contain the digits of b?</td><tr> 
 <tr><td></td><td>~[</td><td>Str a, Str b</td><td>Does a contain b?</td></tr> 
+<tr class="vnextq"><td>Cond</td><td>cn</td><td>Any a, Block conds</td><td>conds is a block with conditions at even indices and what happens at odd indices. I.e. <tt>3 {{15.%n!} "FizzBuzz" {5.%n!} "Fizz" {3.%n!} "Buzz"}cn</tt><br/>If no condition matches it returns <i>a</i>.</td></tr>
 <tr><td>Continuation</td><td>c!</td><td>Block a</td><td>Continuation with a</td></tr> 
 <tr class="vnextq"><td>ContinuationMany</td><td>C!</td><td>Block a, Int n</td><td>Runs the continuation a exactly n times</td></tr>
 <tr class="vnextq"><td>ContinuationManyReverse</td><td>!C</td><td></td><td>Defined as C!#&lt;</td></tr>
@@ -289,6 +293,9 @@ Defined as sg{^^L[\/-]bx\/+]}m[&lt;&gt;</td></tr>
 <tr class="vnext"><td>Modulo</td><td>.%</td><td>Int a, Int b</td><td>a `mod` b</td></tr> 
 <tr class="vnextn"><td></td><td>.%</td><td>deepzip (int)</td><td></td></tr> 
 <tr class="vnextq"><td>Move</td><td>MV</td><td>Int n</td><td>Moves the <i>n</i>-th element of the stack to the top</td></tr>
+<tr class="vnextq"><td>MkAnd</td><td>m&amp;</td><td>BlsqBlock a, BlsqBlock b</td><td>Defined as ^^<b>a</b>e!\/<b>b</b>e!&amp;&amp; (bold stuff refers to the arguments passed)</td></tr>
+<tr class="vnextq"><td>MkOr</td><td>m|</td><td>BlsqBlock a, BlsqBlock b</td><td>Defined as ^^<b>a</b>e!\/<b>b</b>e!|| (bold stuff refers to the arguments passed)</td></tr>
+<tr class="vnextq"><td>MkXor</td><td>m$</td><td>BlsqBlock a, BlsqBlock b</td><td>Defined as ^^<b>a</b>e!\/<b>b</b>e!$$ (bold stuff refers to the arguments passed)</td></tr>
 <tr><td>Mul</td><td>.*</td><td>Int a, Int b</td><td>Regular integer multiplication (a * b)</td></tr> 
 <tr><td></td><td>.*</td><td>Double a, Double b</td><td>Multiplication (a * b)</td></tr> 
 <tr><td></td><td>.*</td><td>Str a, Int n</td><td>Returns a block containing n copies of a</td></tr> 

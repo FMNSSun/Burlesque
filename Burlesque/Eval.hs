@@ -474,9 +474,18 @@ builtins = [
   ("ck", builtinCheck), 
   ("it", builtinIt),
   ("th", builtinThat),
+  ("bs", builtinBoxSP),
+  ("BS", builtinBoxSP2),
+  ("cn", builtinCond),
+  ("m&", builtinMkAnd),
+  ("m|", builtinMkOr),
+  ("m$", builtinMkXor),
+  ("M-", builtinCoolMap),
+  ("ap", builtinApply),
+  
+  
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
-  
   ("??", builtinVersion)
  ]
 
@@ -493,6 +502,102 @@ builtinBuiltinNth = do
 builtinBuiltins = do
   pushToStack . BlsqStr $ "I have " ++ (show $ length builtins) ++ " non-special builtins!"
 
+-- | ap
+builtinApply = do
+  st <- getStack
+  case st of 
+    (BlsqBlock f : BlsqInt idx : BlsqBlock xs : ss) -> do
+      putStack ss
+      pushToStack $ BlsqBlock xs
+      pushToStack $ BlsqInt idx
+      builtinBlockAccess
+      pushToStack $ BlsqBlock f
+      builtinEval
+      nelem <- popFromStack
+      pushToStack $ BlsqBlock xs
+      pushToStack nelem
+      pushToStack $ BlsqInt idx
+      builtinSetAt
+  
+-- | M-
+builtinCoolMap = do
+  pushToStack $ BlsqStr "\\/bxcy\\/z[{p^+]e!}m["
+  builtinParse
+  builtinEval
+  
+-- | m&
+builtinMkAnd = do
+  st <- getStack
+  case st of
+    (BlsqBlock a : BlsqBlock b : xs) -> do
+      putStack xs
+      builtinDup
+      pushToStack $ BlsqBlock a
+      builtinEval
+      builtinSwap
+      pushToStack $ BlsqBlock b
+      builtinEval
+      builtinAnd
+    _ -> pushToStack $ BlsqError "Burlesque (m&): Invalid arguments!"
+    
+-- | m|
+builtinMkOr = do
+  st <- getStack
+  case st of
+    (BlsqBlock a : BlsqBlock b : xs) -> do
+      putStack xs
+      builtinDup
+      pushToStack $ BlsqBlock a
+      builtinEval
+      builtinSwap
+      pushToStack $ BlsqBlock b
+      builtinEval
+      builtinOr
+    _ -> pushToStack $ BlsqError "Burlesque (m&): Invalid arguments!"
+    
+-- | m$
+builtinMkXor = do
+  st <- getStack
+  case st of
+    (BlsqBlock a : BlsqBlock b : xs) -> do
+      putStack xs
+      builtinDup
+      pushToStack $ BlsqBlock a
+      builtinEval
+      builtinSwap
+      pushToStack $ BlsqBlock b
+      builtinEval
+      builtinXor
+    _ -> pushToStack $ BlsqError "Burlesque (m&): Invalid arguments!"
+  
+-- | cn
+builtinCond = do
+  st <- getStack
+  case st of
+    (BlsqBlock xs : ss) -> do
+      putStack ss
+      cond' xs ss
+    _ -> pushToStack $ BlsqError "Burlesque (cn): Invalid arguments!"
+  where cond' (x:xs) os = do
+           pushToStack x
+           builtinEval
+           st' <- getStack
+           case st' of
+             (BlsqInt 0 : ss) -> putStack os >> cond' (tail xs) os
+             _ -> putStack $ (head xs) : (tail os)
+        cond' [] os = putStack $ os
+  
+-- | BS
+builtinBoxSP2 = do
+  builtinBox
+  builtinSpecialInput
+  builtinPretty
+  
+-- | bs
+builtinBoxSP = do
+  builtinBox
+  builtinSpecialInput
+  
 -- | th
 builtinThat = do
   st <- getStack
