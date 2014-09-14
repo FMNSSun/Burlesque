@@ -68,6 +68,7 @@
 <tr class="vnext"><td>Any</td><td>ay</td><td></td><td>Defined as m[r|</td></tr> 
 <tr><td>Append</td><td>[+</td><td>Block  a, Any b<br/>Int a, Int b</td><td>Append b to a</td></tr> 
 <tr><td></td><td>[+</td><td>Str a,Char b</td><td>Append b to a</td></tr> 
+<tr class="vnextq"><td>Apply</td><td>ap</td><td>Block f, Int idx, Block xs<br/>Int idx, Block f, Block xs</td><td>Applies <i>f</i> to the element in <i>xs</i> at index <i>idx</i></td></tr>
 <tr class="vnext"><td>Average</td><td>av</td><td>Block a</td><td>Defined as ^^ ++ \/ L[ pd ./</td></tr> 
 <tr class="vnext"><td></td><td>av</td><td>Double a</td><td>Floor a</td></tr> 
 <tr class="vnext"><td>Average2</td><td>AV</td><td></td><td>Defined as PDav</td></tr> 
@@ -150,6 +151,9 @@
 <tr class="vnext"><td>ConvertBase</td><td>B!</td><td>Int n, Int b</td><td>convert n to base b (result is a string)</td></tr> 
 <tr class="vnextn"><td></td><td>B!</td><td>deepzip2 (int,string)</td><td></td></tr> 
 <tr class="vnext"><td></td><td>B!</td><td>String n, Int b</td><td>Parse n as an number in base b (result is an int)</td></tr> 
+<tr class="vnextq"><td>ConvertBase2</td><td>b2</td><td></td><td>Defined as 2B!</td></tr> 
+<tr class="vnextq"><td>ConvertBase16</td><td>b6</td><td></td><td>Defined as 16B!</td></tr> 
+<tr class="vnextq"><td>ConvertBase10</td><td>b0</td><td></td><td>Defined as 10B!</td></tr> 
 <tr><td>Combinations</t><td>CB</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a of length n</td></tr> 
 <tr><td>CombinationsUpTo</td><td>cb</td><td>Block a, Int n<br/>Str a, Int n</br>Int a, Int n</td><td>Generate a list of combinations of a up to length n</td></tr> 
 <tr class="vnext"><td>Compare</td><td>cm</td><td>Any a, Any b</td><td>Compare a with b (1 for greater, 0 for equal, -1 else)</td></tr> 
@@ -631,6 +635,7 @@ blsq ) @5
    <li>pP - Peek an element from the state stack (and push it to the normal stack)</li>
    <li>p/ - Perform a swap on the state stack</li>
    <li>p\ - Swap the normal stack with the state stack</li>
+   <li>P_ - Pop an element from the state stack</li>
  </ul>
  
  <b>Example</b>

@@ -482,6 +482,10 @@ builtins = [
   ("m$", builtinMkXor),
   ("M-", builtinCoolMap),
   ("ap", builtinApply),
+  ("b2", builtinConvertBase2),
+  ("b6", builtinConvertBase16),
+  ("b0", builtinConvertBase10),
+  ("P_", builtinPopFromState2),
   
   
   ("?_", builtinBuiltins),
@@ -502,6 +506,21 @@ builtinBuiltinNth = do
 builtinBuiltins = do
   pushToStack . BlsqStr $ "I have " ++ (show $ length builtins) ++ " non-special builtins!"
 
+-- | b2
+builtinConvertBase2 = do
+  pushToStack $ BlsqInt 2
+  builtinConvertBase
+  
+-- | b6
+builtinConvertBase16 = do
+  pushToStack $ BlsqInt 16
+  builtinConvertBase
+
+-- | b0
+builtinConvertBase10 = do
+  pushToStack $ BlsqInt 10
+  builtinConvertBase
+  
 -- | ap
 builtinApply = do
   st <- getStack
@@ -518,6 +537,10 @@ builtinApply = do
       pushToStack nelem
       pushToStack $ BlsqInt idx
       builtinSetAt
+    (BlsqInt idx : BlsqBlock f : BlsqBlock xs : ss) -> do
+      builtinSwap
+      builtinApply
+    _ -> pushToStack $ BlsqError "Burlesque (ap): Invalid arguments!"
   
 -- | M-
 builtinCoolMap = do
@@ -3921,6 +3944,12 @@ builtinUnDigits = do
                                                    BlsqInt q -> q
                                                    _ -> 0) ns) : xs
     _ -> BlsqError "Burlesque: (ug) Invalid arguments!" : st
+    
+-- | P_
+builtinPopFromState2 :: BlsqState
+builtinPopFromState2 = do
+  s <- popStateStack
+  return ()
     
 -- | PP
 builtinPopFromState :: BlsqState
