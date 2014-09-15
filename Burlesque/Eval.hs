@@ -53,10 +53,6 @@ eval (BlsqSpecial ":" : i : xs) = do
  pushToStack (BlsqBlock [ i ])
  builtinFilter
  eval xs
-eval (BlsqSpecial "%" : (BlsqIdent s) : xs) = do
- pushToStack(BlsqBlock [BlsqIdent s, BlsqIdent "sh"])
- builtinEval
- eval xs
 eval (BlsqIdent "#Q" : xs) = do
  pushToStack (BlsqBlock xs)
  eval xs
@@ -486,6 +482,10 @@ builtins = [
   ("b6", builtinConvertBase16),
   ("b0", builtinConvertBase10),
   ("P_", builtinPopFromState2),
+  ("lp", builtinLeftPad),
+  ("rp", builtinRightPad),
+  ("Q", builtinPretty),
+  ("dv", builtinDivides),
   
   
   ("?_", builtinBuiltins),
@@ -505,6 +505,23 @@ builtinBuiltinNth = do
 -- | ?_
 builtinBuiltins = do
   pushToStack . BlsqStr $ "I have " ++ (show $ length builtins) ++ " non-special builtins!"
+
+-- | dv
+builtinDivides = do
+  builtinMod
+  builtinNot
+  
+-- | lp
+builtinLeftPad = do
+  pushToStack $ BlsqStr "x/Shx/\\/x/x/\\/P["
+  builtinParse
+  builtinEval
+  
+-- | rp
+builtinRightPad = do
+  pushToStack $ BlsqStr "x/Shx/\\/x/x/\\/[P"
+  builtinParse
+  builtinEval
 
 -- | b2
 builtinConvertBase2 = do
@@ -826,6 +843,9 @@ builtinSub = do
     
     (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ b - (fromIntegral a)) : xs
     (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ (fromIntegral b) - a) : xs
+    ((BlsqBlock b):(BlsqBlock a):xs) -> if b `isSuffixOf` a
+                                     then (BlsqBlock $ genericTake (genericLength a - length b) a) : xs
+                                     else (BlsqBlock a) : xs
     _ -> (BlsqError "Burlesque: (.-) Invalid arguments!") : st
 
 -- | > .*
@@ -2016,7 +2036,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = pushToStack (BlsqStr "Burlesque - 1.7.2c" )
+builtinVersion = pushToStack (BlsqStr "Burlesque - 1.7.3" )
 
 -- | -~
 builtinHeadTail :: BlsqState
