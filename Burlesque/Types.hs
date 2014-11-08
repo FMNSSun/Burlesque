@@ -9,6 +9,7 @@ module Burlesque.Types
  where
 
 import Control.Monad.State.Lazy
+import Data.Map as M
 
 data BlsqExp =  BlsqInt Integer
               | BlsqDouble Double
@@ -32,6 +33,6 @@ data BlsqPrettyFormat =  BlsqFormatNormal
   deriving (Show,Read,Eq,Ord)
 
 type BlsqStack = [BlsqExp]
-type BlsqState = State (BlsqStack, BlsqStack) ()
-type BlsqState' a = State (BlsqStack, BlsqStack) a
+type BlsqState = State (BlsqStack, BlsqStack, M.Map BlsqExp BlsqExp) ()
+type BlsqState' a = State (BlsqStack, BlsqStack, M.Map BlsqExp BlsqExp) a
 type BlsqProg = [BlsqExp]

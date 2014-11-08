@@ -9,13 +9,15 @@ import System.Console.Haskeline
 import System.Console.Haskeline.Completion
 import Data.List
 
+import qualified Data.Map as M
+
 runProgram :: String -> String -> String
 runProgram p stdin =
- unlines . map toDisplay . filter notHidden . fst $ execState (eval (runParserWithString parseBlsq p)) ([BlsqStr stdin],[BlsqStr stdin])
+ unlines . map toDisplay . filter notHidden . fst' $ execState (eval (runParserWithString parseBlsq p)) ([BlsqStr stdin],[], M.fromList [])
 
 runProgramNoStdin :: String -> String
 runProgramNoStdin p =
- unlines . map toDisplay . filter notHidden . fst $ execState (eval (runParserWithString parseBlsq p)) ([],[])
+ unlines . map toDisplay . filter notHidden . fst' $ execState (eval (runParserWithString parseBlsq p)) ([],[], M.fromList [])
 
 main = do
  args <- getArgs

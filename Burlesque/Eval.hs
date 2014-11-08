@@ -1,5 +1,5 @@
 module Burlesque.Eval
-  (eval, run, runStack, builtins)
+  (eval, runStack, builtins, fst')
  where
 
 import Burlesque.Types
@@ -29,6 +29,8 @@ import Statistics.Distribution.ChiSquared
 import Statistics.Distribution.Exponential
 import Statistics.Distribution.StudentT
 import Statistics.Distribution.Uniform
+
+import qualified Data.Map as M
 
 import Debug.Trace
 
@@ -88,57 +90,69 @@ evalI v@(BlsqIdent i) = lookupBuiltin i
 evalI v = pushToStack v
 
 -- | > Run program with empty stack
-run :: BlsqProg -> BlsqStack
-run p = fst $ execState (runStack p []) ([],[])
+--run :: BlsqProg -> BlsqStack
+--run p = fst $ execState (runStack p []) ([],[], M.fromList [])
 
 putStack q = do
-  (_ , st') <- get
-  put (q, st')
+  (_ , st', v') <- get
+  put (q, st', v')
 
 getStack = do
-  (st, _) <- get
+  (st, _, _) <- get
   return st
   
 pushStateStack q = do
-  (st, st') <- get
-  put (st, q:st')
+  (st, st', v') <- get
+  put (st, q:st', v')
   
 popStateStack = do
-  (st, (s:st')) <- get
-  put (st, st')
+  (st, (s:st'), v') <- get
+  put (st, st', v')
   return s
   
 swapStateStack = do
-  (st, (a:b:st')) <- get
-  put (st,b:a:st')
+  (st, (a:b:st'), v') <- get
+  put (st,b:a:st', v')
   
 pushToStack q = do
-  (st, st') <- get
-  put (q:st, st')
+  (st, st', v') <- get
+  put (q:st, st', v')
   
 popFromStack = do
-  (s:st, st') <- get
-  put (st, st')
+  (s:st, st', v') <- get
+  put (st, st', v')
   return s
   
 pushToBottom q = do
-  (st, st') <- get
-  put (st++[q], st')
+  (st, st', v') <- get
+  put (st++[q], st', v')
+  
+setVar name value = do
+  (st, st', v) <- get
+  put (st, st', M.insert name value v)
+  
+getVar name  = do
+  (_, _, v) <- get
+  return $ fromMaybe BlsqNil (M.lookup name v)
+  
+fst' (a,b,c) = a
+snd' (a,b,c) = b
+trd'  (a,b,c) = c
   
 -- | > Run program with predefined stack
 runStack :: BlsqProg -> BlsqStack -> BlsqState' BlsqStack
 runStack p xs = do
-  (st, st') <- get
-  put (xs, st')
+  (st, st', v') <- get
+  put (xs, st', v')
   eval p
-  (nst, st'') <- get
-  put (st, st'')
+  (nst, st'', v'') <- get
+  put (st, st'', v'')
   return nst
   
 runStack' :: BlsqProg -> BlsqStack -> BlsqStack
-runStack' p xs = fst $ execState (eval p) (xs,[])
+runStack' p xs = fst' $ execState (eval p) (xs,[],M.fromList [])
 
-runStack'' p xs g = execState (eval p) (xs,g)
+runStack'' p xs g v = execState (eval p) (xs,g, v)
 
 toInt p = (fromIntegral p) :: Int
 
@@ -486,6 +500,14 @@ builtins = [
   ("rp", builtinRightPad),
   ("Q", builtinPretty),
   ("dv", builtinDivides),
+  ("rs", builtinRunStack),
+  ("RS", builtinRunStack2),
+  ("pa", builtinPartial),
+  ("iT", builtinInits),
+  ("iS", builtinTails),
+  ("iR", builtinRotations),
+  ("sv", builtinSetVar),
+  ("gv", builtinGetVar),
   
   
   ("?_", builtinBuiltins),
@@ -497,6 +519,23 @@ lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b +
 
 putResult = putStack
 
+builtinGetVar = do
+  st <- getStack
+  case st of
+    (a : xs) -> do
+      putStack xs
+      v <- getVar a
+      pushToStack v
+    _ -> putResult $ BlsqError "Burlesque (gv): Stack empty!" : st
+    
+builtinSetVar = do
+  st <- getStack
+  case st of
+    (a : v : xs) -> do
+      putStack xs
+      setVar a v
+    _ -> putResult $ BlsqError "Burlesque (sv): Stack almost empty!" : st
+
 -- | ?n
 builtinBuiltinNth = do
   (BlsqInt n) <- popFromStack
@@ -505,6 +544,44 @@ builtinBuiltinNth = do
 -- | ?_
 builtinBuiltins = do
   pushToStack . BlsqStr $ "I have " ++ (show $ length builtins) ++ " non-special builtins!"
+  
+-- | iT
+builtinInits = do
+  st <- getStack
+  case st of
+    (BlsqBlock xs : ss) -> do
+      putResult $ (BlsqBlock (map BlsqBlock (inits xs))) : ss
+    (BlsqStr xs : ss) -> do
+      putResult $ (BlsqBlock (map BlsqStr (inits xs))) : ss
+    _ -> builtinExplode >> builtinInits
+    
+-- | iS
+builtinTails = do
+  st <- getStack
+  case st of
+    (BlsqBlock xs : ss) -> do
+      putResult $ (BlsqBlock (map BlsqBlock (tails xs))) : ss
+    (BlsqStr xs : ss) -> do
+      putResult $ (BlsqBlock (map BlsqStr (tails xs))) : ss
+    _ -> builtinExplode >> builtinTails
+    
+-- | iR
+builtinRotations = do
+  st <- getStack
+  case st of
+    (BlsqBlock xs : ss) -> do
+      putStack []
+      pushToStack $ BlsqBlock xs
+      pushToStack $ BlsqBlock [BlsqIdent "rt"]
+      pushToStack $ BlsqInt (fromIntegral $ length xs)
+      builtinContinuationMany
+      st' <- getStack
+      putStack $ (BlsqBlock (init st')) : ss
+    (BlsqStr str : ss) -> do
+      builtinExplode
+      builtinRotations
+      pushToStack $ BlsqStr ")\\["
+      builtinParseEval
 
 -- | dv
 builtinDivides = do
@@ -1194,16 +1271,35 @@ builtinMap = do
       builtinMap
       builtinConcat
    (BlsqBlock a : BlsqBlock b : xs) -> do 
-      (s , g) <- get
-      let (mst, ng) = map' a b g
-      put (s, ng)
+      (s , g, v) <- get
+      let (mst, ng, nv) = map' a b g v
+      put (s, ng, nv)
       putResult $ (BlsqBlock $ mst) : xs
    _ -> putResult $ BlsqError "Burlesque: (m[) Invalid arguments!" : st
- where map' _ [] g = ([], g)
-       map' f (x:xs) g = 
-         let (st, ng) = runStack'' f [x] g
-             (st', ng') = map' f xs ng
-         in (st++st', ng')       
+ where map' _ [] g v = ([], g, v)
+       map' f (x:xs) g v = 
+         let (st, ng, nv) = runStack'' f [x] g v
+             (st', ng', nv') = map' f xs ng nv
+         in (st++st', ng', nv')    
+
+builtinPartial :: BlsqState
+builtinPartial = do
+  st <- getStack
+  case st of
+    (BlsqBlock f : BlsqBlock xs : ss) -> do
+      putStack ss
+      (s, g, v) <- get
+      let (nst, ng, nv) = partial' f xs g v
+      put (s, ng, nv)
+      putResult $ (BlsqBlock nst) : ss
+      builtinReverse
+    _ -> putResult $ BlsqError "Burlesque: (pa) Invalid arguments!" : st
+ where partial' _ [] g v = ([], g, v)
+       partial' f xs g v = 
+         let (st, ng, nv) = runStack'' f [BlsqBlock xs] g v
+             (st', ng', nv') = partial' f (init xs) ng nv
+         in (st++st', ng', nv')             
+         
  {-
        map' _ [] = return []
        map' f (x:xs) = do
@@ -1230,18 +1326,18 @@ builtinFilter = do
                                             boxString
         _ -> return ()
   (BlsqBlock f : BlsqBlock v : xs) -> do
-    (s, g) <- get
-    let (ff, ng) = filter' f v g
-    put (s, ng)
+    (s, g, vv) <- get
+    let (ff, ng, nvv) = filter' f v g vv
+    put (s, ng, nvv)
     putResult $ (BlsqBlock $ ff) : xs
   _ -> putResult $ BlsqError "Burlesque: (f[) Invalid arguments!" : st
- where filter' _ [] g = ([], g)
-       filter' f (x:xs) g = 
-         let (st, ng) = runStack'' f [x] g in
+ where filter' _ [] g vv = ([], g, vv)
+       filter' f (x:xs) g vv = 
+         let (st, ng, nvv) = runStack'' f [x] g vv in
          case st of
-           (BlsqInt 0):ys -> filter' f xs ng
-           _ -> let (ys, ng') = filter' f xs ng in
-                (x : ys, ng')
+           (BlsqInt 0):ys -> filter' f xs ng nvv
+           _ -> let (ys, ng', nvv') = filter' f xs ng nvv in
+                (x : ys, ng', nvv')
        {-
        filter' _ [] = return []
        filter' f (x:xs) = do
@@ -2444,6 +2540,24 @@ builtinSetAt = do
           builtinLength
     _ -> putResult $ BlsqError "Burlesque: (sa) Invalid arguments!" : st 
 
+-- | rs
+builtinRunStack :: BlsqState
+builtinRunStack = do
+  st <- getStack
+  case st of
+    (BlsqBlock f : BlsqBlock q : xs) -> do
+      let st' = runStack' f q
+      putStack xs
+      pushToStack (BlsqBlock st')
+      
+-- | RS
+builtinRunStack2 :: BlsqState
+builtinRunStack2 = do
+  builtinSwap
+  builtinBox
+  builtinSwap
+  builtinRunStack
+    
 -- | sb
 builtinSortBy :: BlsqState
 builtinSortBy = do
@@ -3755,16 +3869,16 @@ builtinMmult = do
  case st of
   (BlsqBlock b : BlsqBlock a : xs) -> do
     putResult $ (BlsqBlock . map BlsqBlock $ [ [ qsum $ qmul ar bc | bc <- b ] | ar <- a ]) : xs
- where qmul a b = head . fst $ 
+ where qmul a b = head . fst' $ 
         execState
          (do pushToStack (a)
              pushToStack (b)
              pushToStack (BlsqBlock [ BlsqIdent "?*" ])
-             builtinZipWithPush) ([],[])
-       qsum ls = head . fst $
+             builtinZipWithPush) ([],[], M.fromList [])
+       qsum ls = head . fst' $
         execState
          (do pushToStack (ls)
-             builtinSum) ([],[])
+             builtinSum) ([],[], M.fromList [])
 
 -- | ss
 builtinStrStr :: BlsqState
@@ -4000,5 +4114,5 @@ builtinSwapOnState = do
 -- | p\
 builtinSwapStacks :: BlsqState
 builtinSwapStacks = do
-  (st, st') <- get
-  put (st', st)
+  (st, st', v) <- get
+  put (st', st, v)
