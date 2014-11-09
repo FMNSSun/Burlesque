@@ -18,6 +18,7 @@ import Numeric
 import Control.Monad
 import System.Random
 import Data.Digits
+import Data.Function
 
 import Statistics.Distribution
 import Statistics.Distribution.Normal
@@ -519,6 +520,10 @@ builtins = [
   ("iR", builtinRotations),
   ("sv", builtinSetVar),
   ("gv", builtinGetVar),
+  ("ng", builtinNegate),
+  ("fp", builtinFlipBits),
+  ("gb", builtinGroupBy),
+  ("gB", builtinGroupBy2),
   
   
   ("?_", builtinBuiltins),
@@ -529,6 +534,17 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+builtinFlipBits = do
+  st <- getStack
+  case st of
+    (BlsqInt a : xs) -> do
+      putResult $ (BlsqInt (complement a)) : xs
+    _ -> builtinToInt >> builtinFlipBits
+
+builtinNegate = do
+  pushToStack $ BlsqInt (-1)
+  builtinCoerceMul
 
 builtinGetVar = do
   st <- getStack
@@ -2568,6 +2584,52 @@ builtinRunStack2 = do
   builtinBox
   builtinSwap
   builtinRunStack
+  
+-- | gB
+builtinGroupBy2 :: BlsqState
+builtinGroupBy2 = do
+  st <- getStack
+  case st of
+    (BlsqBlock f : BlsqBlock ls : xs) -> putResult $ BlsqBlock (map BlsqBlock (
+                                         groupBy (\ a b -> 
+                                                           (case runStack' f [a] of
+                                                                 (BlsqInt 1 : xs) -> True
+                                                                 (BlsqInt (-1) : xs) -> False
+                                                                 _ -> False) ==
+                                                            (case runStack' f [b] of
+                                                                 (BlsqInt 1 : xs) -> True
+                                                                 (BlsqInt (-1) : xs) -> False
+                                                                 _ -> False))
+                                                                 ls)) : xs
+    (BlsqBlock f : BlsqStr ls : xs) -> putResult $ BlsqBlock (map BlsqStr (
+                                         groupBy (\ a b -> 
+                                                           (case runStack' f [BlsqChar a] of
+                                                                 (BlsqInt 1 : xs) -> True
+                                                                 (BlsqInt (-1) : xs) -> False
+                                                                 _ -> False) ==
+                                                            (case runStack' f [BlsqChar b] of
+                                                                 (BlsqInt 1 : xs) -> True
+                                                                 (BlsqInt (-1) : xs) -> False
+                                                                 _ -> False))
+                                                                 ls)) : xs
+    _ -> putResult $ BlsqError "Burlesque: (gB) Invalid arguments!" : st
+  
+-- | gb
+builtinGroupBy :: BlsqState
+builtinGroupBy = do
+  st <- getStack
+  case st of
+    (BlsqBlock f : BlsqBlock ls : xs) -> putResult $ BlsqBlock (map BlsqBlock (
+                                         groupBy (\ a b -> case runStack' f [b,a] of
+                                                                 (BlsqInt 1 : xs) -> True
+                                                                 (BlsqInt (-1) : xs) -> False
+                                                                 _ -> False) ls)) : xs
+    (BlsqBlock f : BlsqStr ls : xs) -> putResult $ BlsqBlock (map BlsqStr (
+                                         groupBy (\ a b -> case runStack' f [BlsqChar b,BlsqChar a] of
+                                                                 (BlsqInt 1 : xs) -> True
+                                                                 (BlsqInt (-1) : xs) -> False
+                                                                 _ -> False) ls)) : xs
+    _ -> putResult $ BlsqError "Burlesque: (gb) Invalid arguments!" : st
     
 -- | sb
 builtinSortBy :: BlsqState
