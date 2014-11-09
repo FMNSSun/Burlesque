@@ -50,7 +50,7 @@ toDisplay (BlsqPretty (BlsqBlock xs) BlsqFormatNoSpaces) =
 toDisplay (BlsqPretty f _) = toDisplay f
 
 toDisplay (BlsqSpecial q) = q
-toDisplay (BlsqQuoted q) = "(" ++ toDisplay q ++ ")"
+toDisplay (BlsqQuoted q) = "(" ++ (intercalate " " $ map toDisplay q) ++ ")"
 toDisplay (BlsqNil) = "_|_"
 
 toDisplay (BlsqHackMode x) = "#" ++ x ++ "#"

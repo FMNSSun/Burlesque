@@ -66,7 +66,7 @@ parseSingleIdent = do
 
 parseIdent :: Parser BlsqExp
 parseIdent = do 
-  a <- noneOf "1234567890{}',\" "
+  a <- noneOf "1234567890{}',\" ()yY"
   b <- anyChar
   optional spaces
   return . BlsqIdent $ a:b:[]
@@ -136,19 +136,41 @@ parsePretty = do
 parseAssign :: Parser BlsqExp
 parseAssign = do 
   char '%'
-  name <- many $ noneOf "%=!"
+  name <- many $ noneOf "%=!?"
   char '='
   optional spaces
   s <- parseSingle
-  return $ BlsqAssign name s
+  return $ BlsqAssign name s False False
+  
+parseAssign2 :: Parser BlsqExp
+parseAssign2 = do
+  char 's'
+  d <- oneOf "0123456789"
+  optional spaces
+  return $ BlsqAssign [d] undefined True False
+  
+parseAssign3 :: Parser BlsqExp
+parseAssign3 = do
+  char 'S'
+  d <- oneOf "0123456789"
+  optional spaces
+  return $ BlsqAssign [d] undefined True True
   
 parseCall :: Parser BlsqExp
 parseCall = do
   char '%'
-  name <- many $ noneOf "%=!"
+  name <- many $ noneOf "%=!?"
   char '!'
   optional spaces
   return $ BlsqCall name
+  
+parseGet :: Parser BlsqExp
+parseGet = do
+  char '%'
+  name <- many $ noneOf "%=!?"
+  char '?'
+  optional spaces
+  return $BlsqGet name
  
 parseHackMode :: Parser BlsqExp
 parseHackMode = do
@@ -166,7 +188,18 @@ parseQuoted = do
   optional spaces
   _ <- char ')'
   optional spaces
+  return $ BlsqQuoted [e]
+  
+parseQuoted2 :: Parser BlsqExp
+parseQuoted2 = do
+  _ <- char 'y'
+  optional spaces
+  e <- many1 $ parseSingle
+  optional spaces
+  _ <- char 'Y'
+  optional spaces
   return $ BlsqQuoted e
+
 
 parseData :: Parser BlsqExp
 parseData = parseString {- <|> parsePretty <|> parseHackMode -} <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
@@ -175,10 +208,11 @@ parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseSingle
 
 parseSingle :: Parser BlsqExp
-parseSingle = (try parseCall) <|> (try parseAssign) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
+parseSingle = (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
+              (try parseCall) <|> (try parseAssign) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseNumber) <|>
-              parseChar <|> parseQuoted <|> parseSingleIdent <|> parseIdent
+              parseChar <|> parseQuoted <|> parseQuoted2 <|> parseSingleIdent <|> parseIdent
 
 runParserWithString p input = 
   case parse p "" input of

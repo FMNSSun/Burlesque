@@ -21,14 +21,15 @@ data BlsqExp =  BlsqInt Integer
               | BlsqError String
               | BlsqNil
               | BlsqPretty BlsqExp BlsqPrettyFormat
-              | BlsqQuoted BlsqExp
+              | BlsqQuoted [BlsqExp]
               | BlsqHackMode String
               | BlsqHiddenState BlsqExp
               | BlsqMapBlock [BlsqExp]
               | BlsqFilterBlock [BlsqExp]
               | BlsqReduceBlock [BlsqExp]
-              | BlsqAssign String BlsqExp
+              | BlsqAssign String BlsqExp Bool Bool
               | BlsqCall String
+              | BlsqGet String
   deriving (Show,Eq,Read,Ord)
 
 data BlsqPrettyFormat =  BlsqFormatNormal

@@ -81,7 +81,9 @@ eval (BlsqHackMode x : xs) = do
 eval (x:xs) = evalI x >> eval xs
 eval [] = return ()
 
-evalI (BlsqQuoted q) = pushToStack q
+evalI (BlsqQuoted q) = do
+  st <- getStack
+  putStack ((reverse q) ++ st)
 evalI v@(BlsqSpecial ",") = do
  st <- getStack
  if length st == 1 then
@@ -91,14 +93,29 @@ evalI v@(BlsqIdent i) = lookupBuiltin i
 evalI (BlsqMapBlock e) = do
   pushToStack (BlsqBlock e)
   builtinMap
-evalI (BlsqAssign name e) = do
+evalI (BlsqAssign name e False _) = do
   (st, st', v) <- get
   let v' = M.insert (BlsqStr name) e v
   put (st, st', v')
+evalI (BlsqAssign name _ True q) = 
+  if q then do
+    e <- popFromStack
+    pushToStack e
+    (st, st', v) <- get
+    let v' = M.insert (BlsqStr name) e v
+    put(st, st', v')
+  else do
+    e <- popFromStack
+    (st, st', v) <- get
+    let v' = M.insert (BlsqStr name) e v
+    put(st, st', v')
 evalI (BlsqCall name) = do
   pushToStack (BlsqStr name)
   builtinGetVar
   builtinEval
+evalI (BlsqGet name) = do
+  pushToStack (BlsqStr name)
+  builtinGetVar
 evalI v = pushToStack v
 
 -- | > Run program with empty stack
@@ -524,6 +541,8 @@ builtins = [
   ("fp", builtinFlipBits),
   ("gb", builtinGroupBy),
   ("gB", builtinGroupBy2),
+  ("|[", builtinMarker), 
+  ("]|", builtinSlice),
   
   
   ("?_", builtinBuiltins),
@@ -534,6 +553,14 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+builtinSlice = do
+  st <- getStack
+  let st' = takeWhile (/=(BlsqIdent "|[")) st
+  putStack $ (BlsqBlock (reverse st')) : (drop (succ $ length st') st)
+
+builtinMarker = do
+  pushToStack $ BlsqIdent "|["
 
 builtinFlipBits = do
   st <- getStack
@@ -1286,6 +1313,15 @@ builtinConcat = do
       (a : xs) -> putResult $ BlsqBlock [a] : xs
   _ -> putResult $ (BlsqError "Burlesque: (\\[) Invalid arguments!") : st
 
+{-
+-- | PA
+builtinPartial2 :: BlsqState
+builtinPartial2 = do
+  st <- getStack
+  case st of
+    (BlsqBlock f : BlsqBlock xs : st) -> do-}
+      
+  
 -- | > m[
 builtinMap :: BlsqState
 builtinMap = do
