@@ -87,6 +87,17 @@ evalI v@(BlsqSpecial ",") = do
    do putStack []
  else return ()
 evalI v@(BlsqIdent i) = lookupBuiltin i
+evalI (BlsqMapBlock e) = do
+  pushToStack (BlsqBlock e)
+  builtinMap
+evalI (BlsqAssign name e) = do
+  (st, st', v) <- get
+  let v' = M.insert (BlsqStr name) e v
+  put (st, st', v')
+evalI (BlsqCall name) = do
+  pushToStack (BlsqStr name)
+  builtinGetVar
+  builtinEval
 evalI v = pushToStack v
 
 -- | > Run program with empty stack

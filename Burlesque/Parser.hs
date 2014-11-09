@@ -93,6 +93,16 @@ parseBlock = do
   t <- char '}'
   optional spaces
   return $ BlsqBlock e
+  
+parseMapBlock :: Parser BlsqExp
+parseMapBlock = do
+  string "m{"
+  optional spaces
+  e <- parseBlsq
+  optional spaces
+  char '}'
+  optional spaces
+  return $ BlsqMapBlock e
 
 parseArray :: Parser BlsqExp
 parseArray = do char '['
@@ -123,6 +133,23 @@ parsePretty = do
  optional spaces
  return $ BlsqPretty (BlsqStr e) BlsqFormatNormal
 
+parseAssign :: Parser BlsqExp
+parseAssign = do 
+  char '%'
+  name <- many $ noneOf "%=!"
+  char '='
+  optional spaces
+  s <- parseSingle
+  return $ BlsqAssign name s
+  
+parseCall :: Parser BlsqExp
+parseCall = do
+  char '%'
+  name <- many $ noneOf "%=!"
+  char '!'
+  optional spaces
+  return $ BlsqCall name
+ 
 parseHackMode :: Parser BlsqExp
 parseHackMode = do
  _ <- char '#'
@@ -148,7 +175,8 @@ parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseSingle
 
 parseSingle :: Parser BlsqExp
-parseSingle = parseSingleBlock <|> parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
+parseSingle = (try parseCall) <|> (try parseAssign) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
+              parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseNumber) <|>
               parseChar <|> parseQuoted <|> parseSingleIdent <|> parseIdent
 

@@ -24,6 +24,11 @@ data BlsqExp =  BlsqInt Integer
               | BlsqQuoted BlsqExp
               | BlsqHackMode String
               | BlsqHiddenState BlsqExp
+              | BlsqMapBlock [BlsqExp]
+              | BlsqFilterBlock [BlsqExp]
+              | BlsqReduceBlock [BlsqExp]
+              | BlsqAssign String BlsqExp
+              | BlsqCall String
   deriving (Show,Eq,Read,Ord)
 
 data BlsqPrettyFormat =  BlsqFormatNormal

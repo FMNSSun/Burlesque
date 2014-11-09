@@ -30,7 +30,7 @@ runProgramWrapper2 p = do
 server = "irc.freenode.org"
 port   = 6667
 chan   = "#esoteric"
-nick   = "blsqbot"
+nick   = "blsqbot2"
  
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.
@@ -96,7 +96,7 @@ listen h = forever $ do
 eval :: String -> Net ()
 eval     "!blsq_uptime"             = uptime >>= privmsg
 eval     "blsqbot please do quit"   = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
-eval x | "!blsq " `isPrefixOf` x = blsqev (drop 6 x)
+eval x | "!blsQ " `isPrefixOf` x = blsqev (drop 6 x)
 eval x | "!foo " `isPrefixOf` x = fooev (drop 5 x)
 eval     _                     = return () -- ignore everything else
 
