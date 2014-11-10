@@ -156,6 +156,13 @@ parseAssign3 = do
   optional spaces
   return $ BlsqAssign [d] undefined True True
   
+parseGet2 :: Parser BlsqExp
+parseGet2 = do
+  char 'g'
+  d <- oneOf "0123456789"
+  optional spaces
+  return $ BlsqGet [d]
+  
 parseCall :: Parser BlsqExp
 parseCall = do
   char '%'
@@ -208,7 +215,7 @@ parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseSingle
 
 parseSingle :: Parser BlsqExp
-parseSingle = (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
+parseSingle = (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
               (try parseCall) <|> (try parseAssign) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseNumber) <|>
