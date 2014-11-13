@@ -22,6 +22,7 @@ import Text.ParserCombinators.Parsec.Token
 import Burlesque.Types
 import Burlesque.Helpers
 import Debug.Trace
+import qualified Data.Map as M
 
 parseDouble :: Parser BlsqExp
 parseDouble = do 
@@ -66,7 +67,7 @@ parseSingleIdent = do
 
 parseIdent :: Parser BlsqExp
 parseIdent = do 
-  a <- noneOf "1234567890{}',\" ()yY"
+  a <- noneOf "1234567890{}',\" ()yYV"
   b <- anyChar
   optional spaces
   return . BlsqIdent $ a:b:[]
@@ -136,7 +137,7 @@ parsePretty = do
 parseAssign :: Parser BlsqExp
 parseAssign = do 
   char '%'
-  name <- many $ noneOf "%=!?"
+  name <- many $ noneOf "%=!?<>:"
   char '='
   optional spaces
   s <- parseSingle
@@ -163,10 +164,27 @@ parseGet2 = do
   optional spaces
   return $ BlsqGet [d]
   
+parseMap :: Parser BlsqExp
+parseMap = do
+  char '%'
+  char ':'
+  def <- parseSingle
+  keyValues <- many1 $ parseKeyValues
+  char 'V'
+  return $ BlsqMap (M.fromList keyValues) def
+
+parseKeyValues :: Parser (BlsqExp, BlsqExp)
+parseKeyValues = do
+  optional spaces
+  key <- parseSingle
+  optional spaces 
+  value <- parseSingle
+  return $ (key, value)
+  
 parseCall :: Parser BlsqExp
 parseCall = do
   char '%'
-  name <- many $ noneOf "%=!?"
+  name <- many $ noneOf "%=!?<>:"
   char '!'
   optional spaces
   return $ BlsqCall name
@@ -174,7 +192,7 @@ parseCall = do
 parseGet :: Parser BlsqExp
 parseGet = do
   char '%'
-  name <- many $ noneOf "%=!?"
+  name <- many $ noneOf "%=!?<>:"
   char '?'
   optional spaces
   return $BlsqGet name
@@ -215,7 +233,7 @@ parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseSingle
 
 parseSingle :: Parser BlsqExp
-parseSingle = (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
+parseSingle = (try parseMap) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
               (try parseCall) <|> (try parseAssign) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseNumber) <|>

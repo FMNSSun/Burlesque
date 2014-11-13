@@ -7,6 +7,7 @@ import Burlesque.Helpers
 
 import Data.List
 import Numeric
+import qualified Data.Map as M
 
 -- This is the ugliest hack in the history of programming.
 -- Nothing to see here: Move along.
@@ -54,6 +55,8 @@ toDisplay (BlsqQuoted q) = "(" ++ (intercalate " " $ map toDisplay q) ++ ")"
 toDisplay (BlsqNil) = "_|_"
 
 toDisplay (BlsqHackMode x) = "#" ++ x ++ "#"
+
+toDisplay (BlsqMap m _) = intercalate "" $  (map (\(a,b) -> "<" ++ toDisplay a ++ "," ++ toDisplay b ++ ">") $ M.toList m)
 
 toDisplay q = show q
 

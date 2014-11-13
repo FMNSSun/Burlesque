@@ -30,6 +30,7 @@ data BlsqExp =  BlsqInt Integer
               | BlsqAssign String BlsqExp Bool Bool
               | BlsqCall String
               | BlsqGet String
+              | BlsqMap (M.Map BlsqExp BlsqExp) BlsqExp
   deriving (Show,Eq,Read,Ord)
 
 data BlsqPrettyFormat =  BlsqFormatNormal

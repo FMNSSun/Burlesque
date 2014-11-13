@@ -543,6 +543,10 @@ builtins = [
   ("gB", builtinGroupBy2),
   ("|[", builtinMarker), 
   ("]|", builtinSlice),
+  ("nm", builtinNewMap),
+  ("mi", builtinMapInsert),
+  ("~?", builtinMatchesAll),
+  ("~a", builtinApplyRegex),
   
   
   ("?_", builtinBuiltins),
@@ -553,6 +557,23 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+builtinMapInsert = do
+  st <- getStack
+  case st of
+    (key : value : BlsqMap m d : xs) -> do
+      putStack xs
+      pushToStack $ BlsqMap (M.insert key value m) d
+    (key : BlsqMap m d : value : xs) -> do
+      putStack xs
+      pushToStack $ BlsqMap (M.insert key value m) d
+    (BlsqMap m d : key : value : xs) -> do
+      putStack xs
+      pushToStack $ BlsqMap (M.insert key value m) d
+    _ -> putResult $ BlsqError "Burlesque (mi): Invalid arguments!" : st
+      
+builtinNewMap = do
+  pushToStack $ BlsqMap (M.fromList []) (BlsqNil)
 
 builtinSlice = do
   st <- getStack
@@ -1855,6 +1876,37 @@ builtinMatchesList = do
                                             Just q -> BlsqBlock $ map BlsqStr q
                                             _ -> BlsqBlock []) : xs
    _ -> BlsqError "Burlesque: (~=) Invalid arguments!" : st
+   
+   
+builtinMatchesAll :: BlsqState
+builtinMatchesAll = do 
+  st <- getStack
+  putResult $
+    case st of
+     (BlsqStr str : BlsqStr regex : xs) -> (BlsqBlock $ map BlsqStr (allMatches' regex str)) : xs
+     _ -> BlsqError "Burlesque: (~?) Invalid arguments!" : st     
+ where allMatches' regex str = case matchRegexAll (mkRegex regex) str of
+                                Nothing -> []
+                                Just (pre, matched, after, _) -> matched : (allMatches' regex after)
+                                
+builtinApplyRegex :: BlsqState
+builtinApplyRegex = do 
+    st <- getStack
+    case st of
+     (BlsqStr str : BlsqBlock f : BlsqStr regex : xs) -> do
+       (_, g, v) <- get
+       let (_, g', v', str') = (allMatches'' f regex str g v)
+       put (xs, g', v')
+       putResult $ (BlsqStr str') : xs
+     _ -> putResult $ BlsqError "Burlesque: (~?) Invalid arguments!" : st     
+ where allMatches'' f regex str g v =
+                           case matchRegexAll (mkRegex regex) str of
+                                Nothing -> ([], g, v, "")
+                                Just (pre, matched, after, _) -> 
+                                   let ((BlsqStr x:_), ng, nv) = runStack'' f [BlsqStr matched] g v
+                                       (_, ng', nv', p) = allMatches'' f regex after ng nv
+                                   in ([], ng', nv', pre ++ x ++ p)
+                                  
 
 -- | > R~
 builtinReplaceRegex :: BlsqState

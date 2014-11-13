@@ -19,6 +19,8 @@ runProgramNoStdin :: String -> String
 runProgramNoStdin p =
  unlines . map toDisplay . filter notHidden . fst' $ execState (eval (runParserWithString parseBlsq p)) ([],[], M.fromList [])
 
+runTheFreakingShell = runInputT settings burlesqueShell
+ 
 main = do
  args <- getArgs
  case args of
@@ -51,13 +53,13 @@ main = do
            putStrLn "  --stdin <code>          Read code from argv (incl. STDIN)"
            putStrLn ""
            putStrLn "\tBurlesque\tRoman Muentener, 2012"
- where settings :: Settings IO
-       settings = Settings { 
-                   complete = completeWord Nothing " \t" $ return . search,
-                   historyFile = Nothing,
-                   autoAddHistory = True
-                  }
-       search s = map simpleCompletion . filter (s `isPrefixOf`) $ map fst builtins
+settings :: Settings IO
+settings = Settings { 
+           complete = completeWord Nothing " \t" $ return . search,
+           historyFile = Nothing,
+           autoAddHistory = True
+          }
+search s = map simpleCompletion . filter (s `isPrefixOf`) $ map fst builtins
  
 
 
