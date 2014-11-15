@@ -549,6 +549,7 @@ builtins = [
   ("~a", builtinApplyRegex),
   ("^m", builtinMapPushMany),
   ("m^", builtinMapPushManyReverse),
+  ("LO", builtinLoop),
   
   
   ("?_", builtinBuiltins),
@@ -1919,7 +1920,23 @@ builtinApplyRegex = do
                                        (_, ng', nv', p) = allMatches'' f regex after ng nv
                                    in ([], ng', nv', pre ++ x ++ p)
                                   
-
+builtinLoop :: BlsqState
+builtinLoop = do
+  st <- getStack
+  case st of
+    (BlsqBlock f : s : BlsqBlock ls : xs) -> do
+      (_, g, v) <- get
+      putStack xs
+      let (g', v', res) = loop' f ls g v s
+      put ((BlsqBlock res):xs, g', v')
+    _ -> putResult $ BlsqError "Burlesque: (LO) Invalid arguments!" : st
+ where loop' f [] g v _ = (g, v, [])
+       loop' f (q:qs) g v s = 
+                            let (stc, ng, nv) = runStack'' f [s,q] g v in
+                            case stc of
+                              (BlsqInt 0 : _) -> loop' f qs ng nv s
+                              _ -> let (ng', nv', intm) = loop' f qs ng nv q
+                                   in (ng', nv', q : intm)
 -- | > R~
 builtinReplaceRegex :: BlsqState
 builtinReplaceRegex = do
