@@ -547,6 +547,9 @@ builtins = [
   ("mi", builtinMapInsert),
   ("~?", builtinMatchesAll),
   ("~a", builtinApplyRegex),
+  ("^m", builtinMapPushMany),
+  ("m^", builtinMapPushManyReverse),
+  ("LO", builtinLoop),
   
   
   ("?_", builtinBuiltins),
@@ -557,6 +560,16 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+builtinMapPushMany = do 
+    pushToStack $ BlsqIdent "^p"
+    builtinPrepend
+    builtinMap
+    
+builtinMapPushManyReverse = do
+    pushToStack $ BlsqIdent "p^"
+    builtinPrepend
+    builtinMap
 
 builtinMapInsert = do
   st <- getStack
@@ -1883,7 +1896,7 @@ builtinMatchesAll = do
   st <- getStack
   putResult $
     case st of
-     (BlsqStr str : BlsqStr regex : xs) -> (BlsqBlock $ map BlsqStr (allMatches' regex str)) : xs
+     (BlsqStr regex : BlsqStr str : xs) -> (BlsqBlock $ map BlsqStr (allMatches' regex str)) : xs
      _ -> BlsqError "Burlesque: (~?) Invalid arguments!" : st     
  where allMatches' regex str = case matchRegexAll (mkRegex regex) str of
                                 Nothing -> []
@@ -1893,12 +1906,12 @@ builtinApplyRegex :: BlsqState
 builtinApplyRegex = do 
     st <- getStack
     case st of
-     (BlsqStr str : BlsqBlock f : BlsqStr regex : xs) -> do
+     (BlsqStr regex : BlsqBlock f : BlsqStr str : xs) -> do
        (_, g, v) <- get
        let (_, g', v', str') = (allMatches'' f regex str g v)
        put (xs, g', v')
        putResult $ (BlsqStr str') : xs
-     _ -> putResult $ BlsqError "Burlesque: (~?) Invalid arguments!" : st     
+     _ -> putResult $ BlsqError "Burlesque: (~a) Invalid arguments!" : st     
  where allMatches'' f regex str g v =
                            case matchRegexAll (mkRegex regex) str of
                                 Nothing -> ([], g, v, "")
@@ -1907,7 +1920,23 @@ builtinApplyRegex = do
                                        (_, ng', nv', p) = allMatches'' f regex after ng nv
                                    in ([], ng', nv', pre ++ x ++ p)
                                   
-
+builtinLoop :: BlsqState
+builtinLoop = do
+  st <- getStack
+  case st of
+    (BlsqBlock f : s : BlsqBlock ls : xs) -> do
+      (_, g, v) <- get
+      putStack xs
+      let (g', v', res) = loop' f ls g v s
+      put ((BlsqBlock res):xs, g', v')
+    _ -> putResult $ BlsqError "Burlesque: (LO) Invalid arguments!" : st
+ where loop' f [] g v _ = (g, v, [])
+       loop' f (q:qs) g v s = 
+                            let (stc, ng, nv) = runStack'' f [s,q] g v in
+                            case stc of
+                              (BlsqInt 0 : _) -> loop' f qs ng nv s
+                              _ -> let (ng', nv', intm) = loop' f qs ng nv q
+                                   in (ng', nv', q : intm)
 -- | > R~
 builtinReplaceRegex :: BlsqState
 builtinReplaceRegex = do
