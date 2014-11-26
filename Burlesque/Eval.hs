@@ -545,12 +545,29 @@ builtins = [
   ("]|", builtinSlice),
   ("nm", builtinNewMap),
   ("mi", builtinMapInsert),
+  ("ml", builtinMapLookup),
   ("~?", builtinMatchesAll),
   ("~a", builtinApplyRegex),
   ("^m", builtinMapPushMany),
   ("m^", builtinMapPushManyReverse),
   ("LO", builtinLoop),
-  
+  ("LI", builtinLoopIndices),
+  ("FO", builtinFilterFromOne),
+  ("FZ", builtinFilterFromZero),
+  ("r0", builtinRangeInfFromZero),
+  ("r1", builtinRangeInfFromOne),
+  ("~&", builtinMatchRegex),
+  ("~;", builtinSplitRegex2),
+  ("PI", builtinParseId),
+  ("|+", builtinStringAdd),
+  ("|*", builtinStringMul),
+  ("|/", builtinStringDiv),
+  ("|-", builtinStringSub),
+  ("|i", builtinStringInc),
+  ("|d", builtinStringDec),
+  ("DB", builtinDebug),
+  ("mk", builtinMapKeys),
+  ("mv", builtinMapValues),
   
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
@@ -560,6 +577,72 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+builtinStringInc = do
+    builtinParseId
+    builtinCoerceInc
+    
+builtinStringDec = do
+    builtinParseId
+    builtinCoerceDec
+
+builtinStringAdd = do
+    builtinParseId
+    builtinSwap
+    builtinParseId
+    builtinSwap
+    builtinCoerceAdd
+    
+builtinStringMul = do
+    builtinParseId
+    builtinSwap
+    builtinParseId
+    builtinSwap
+    builtinCoerceMul
+    
+builtinStringDiv = do
+    builtinParseId
+    builtinSwap
+    builtinParseId
+    builtinSwap
+    builtinCoerceDiv
+    
+builtinStringSub = do
+    builtinParseId
+    builtinSwap
+    builtinParseId
+    builtinSwap
+    builtinCoerceSub
+
+builtinParseId = do
+    st <- getStack
+    case st of
+        (BlsqStr a : xs) -> do builtinParse >> builtinHead
+        _ -> do return ()
+
+builtinRangeInfFromZero = do
+    pushToStack $ BlsqInt 0
+    builtinRangeInf
+    
+builtinRangeInfFromOne = do
+    pushToStack $ BlsqInt 1
+    builtinRangeInf
+
+builtinFilterFromOne = do
+    builtinSwap
+    pushToStack $ BlsqInt 1
+    builtinSwap
+    builtinRange
+    builtinSwap
+    builtinFilter
+    
+builtinFilterFromZero = do
+    builtinSwap
+    pushToStack $ BlsqInt 0
+    builtinSwap
+    builtinRange
+    builtinSwap
+    builtinFilter
 
 builtinMapPushMany = do 
     pushToStack $ BlsqIdent "^p"
@@ -584,6 +667,30 @@ builtinMapInsert = do
       putStack xs
       pushToStack $ BlsqMap (M.insert key value m) d
     _ -> putResult $ BlsqError "Burlesque (mi): Invalid arguments!" : st
+    
+builtinMapKeys = do
+  st <- getStack
+  case st of
+    (BlsqMap m d : xs) -> do
+      putStack xs
+      pushToStack $ BlsqBlock . map fst $ M.toList m
+    _ -> putResult $ BlsqError "Burlesque (mk): Invalid arguments!" : st
+    
+builtinMapValues = do
+  st <- getStack
+  case st of
+    (BlsqMap m d : xs) -> do
+      putStack xs
+      pushToStack $ BlsqBlock . map snd $ M.toList m
+    _ -> putResult $ BlsqError "Burlesque (mv): Invalid arguments!" : st
+    
+builtinMapLookup = do
+  st <- getStack
+  case st of
+    (key : BlsqMap m d : xs) -> do
+      putStack xs
+      pushToStack $ fromMaybe d $ M.lookup key m
+    _ -> putResult $ BlsqError "Burlesque (ml): Invalid arguments!" : st
       
 builtinNewMap = do
   pushToStack $ BlsqMap (M.fromList []) (BlsqNil)
@@ -1902,6 +2009,28 @@ builtinMatchesAll = do
                                 Nothing -> []
                                 Just (pre, matched, after, _) -> matched : (allMatches' regex after)
                                 
+builtinMatchRegex :: BlsqState
+builtinMatchRegex = do 
+  st <- getStack
+  putResult $
+    case st of
+     (BlsqStr regex : BlsqStr str : xs) -> (BlsqBlock $ map BlsqStr (matchRegex' regex str)) : xs
+     _ -> BlsqError "Burlesque: (~&) Invalid arguments!" : st     
+ where matchRegex' regex str = case matchRegexAll (mkRegex regex) str of
+                                Nothing -> [str]
+                                Just (pre, matched, after, _) -> [pre, matched, after]
+                                
+builtinSplitRegex2 :: BlsqState
+builtinSplitRegex2 = do 
+  st <- getStack
+  putResult $
+    case st of
+     (BlsqStr regex : BlsqStr str : xs) -> (BlsqBlock $ map BlsqStr (matchRegex' regex str)) : xs
+     _ -> BlsqError "Burlesque: (~&) Invalid arguments!" : st     
+ where matchRegex' regex str = case matchRegexAll (mkRegex regex) str of
+                                Nothing -> [str]
+                                Just (pre, matched, after, _) -> [pre, after]
+                                
 builtinApplyRegex :: BlsqState
 builtinApplyRegex = do 
     st <- getStack
@@ -1916,7 +2045,7 @@ builtinApplyRegex = do
                            case matchRegexAll (mkRegex regex) str of
                                 Nothing -> ([], g, v, "")
                                 Just (pre, matched, after, _) -> 
-                                   let ((BlsqStr x:_), ng, nv) = runStack'' f [BlsqStr matched] g v
+                                   let ((BlsqStr x:_), ng, nv) = runStack'' (f ++ [BlsqIdent "Sh"]) [BlsqStr matched] g v
                                        (_, ng', nv', p) = allMatches'' f regex after ng nv
                                    in ([], ng', nv', pre ++ x ++ p)
                                   
@@ -1937,6 +2066,25 @@ builtinLoop = do
                               (BlsqInt 0 : _) -> loop' f qs ng nv s
                               _ -> let (ng', nv', intm) = loop' f qs ng nv q
                                    in (ng', nv', q : intm)
+                                   
+builtinLoopIndices :: BlsqState
+builtinLoopIndices = do
+  st <- getStack
+  case st of
+    (BlsqBlock f : s : BlsqBlock ls : xs) -> do
+      (_, g, v) <- get
+      putStack xs
+      let (g', v', res) = loop' f ls g v s 0
+      put ((BlsqBlock $ map BlsqInt res):xs, g', v')
+    _ -> putResult $ BlsqError "Burlesque: (LI) Invalid arguments!" : st
+ where loop' f [] g v _ idx = (g, v, [])
+       loop' f (q:qs) g v s idx = 
+                            let (stc, ng, nv) = runStack'' f [s,q] g v in
+                            case stc of
+                              (BlsqInt 0 : _) -> loop' f qs ng nv s (idx+1)
+                              _ -> let (ng', nv', intm) = loop' f qs ng nv q (idx+1)
+                                   in (ng', nv', idx : intm)
+                                   
 -- | > R~
 builtinReplaceRegex :: BlsqState
 builtinReplaceRegex = do
@@ -2088,6 +2236,8 @@ builtinSplit = do
   case st of
    (BlsqBlock a : BlsqBlock b : xs) -> BlsqBlock (map BlsqBlock (splitOn a b)) : xs
    (BlsqStr a : BlsqStr b : xs) -> BlsqBlock (map BlsqStr (splitOn a b)) : xs
+   (BlsqChar a : BlsqStr b : xs) -> BlsqBlock (map BlsqStr (splitOn [a] b)) : xs --TODO: Document
+   (BlsqStr b: BlsqChar a : xs) -> BlsqBlock (map BlsqStr (splitOn [a] b)) : xs  --TODO: Document
    (BlsqInt a : BlsqInt b : xs) -> BlsqBlock (map (BlsqInt . read) (splitOn (show (abs a)) (show (abs b)))) : xs
    _ -> BlsqError "Burlesque: (;;) Invalid arguments!" : st
 
@@ -3462,7 +3612,9 @@ builtinTypeOf = do
    (BlsqError _ : xs) -> BlsqStr "Error" : xs
    (BlsqHackMode _ :xs) -> BlsqStr "HackMode" : xs
    (BlsqChar _ : xs) -> BlsqStr "Char" : xs
-   _ -> BlsqStr "Dafuq? You found a type I don't know?" : st
+   (BlsqMap _ _ : xs) -> BlsqStr "Map" : xs
+   (_ : xs) -> BlsqStr "INTERNAL" : xs
+   _ -> BlsqStr "Woot?" : st
    
 -- | sr
 builtinSplitRegex :: BlsqState
@@ -4306,3 +4458,8 @@ builtinSwapStacks :: BlsqState
 builtinSwapStacks = do
   (st, st', v) <- get
   put (st', st, v)
+  
+builtinDebug :: BlsqState
+builtinDebug = do
+  (_, _, v) <- get
+  pushToStack $ BlsqMap v BlsqNil
