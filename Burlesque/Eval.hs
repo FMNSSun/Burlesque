@@ -568,6 +568,14 @@ builtins = [
   ("DB", builtinDebug),
   ("mk", builtinMapKeys),
   ("mv", builtinMapValues),
+  ("Sn", builtinSortedNub),
+  ("sN", builtinSortedReverseNub),
+  ("SI", builtinSelectIf),
+  ("fw", builtinFilterWordsB),
+  ("mw", builtinMapWords),
+  ("mu", builtinMapUnlines),
+  ("Su", builtinStringUnlines),
+  ("Sw", builtinStringWords),
   
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
@@ -577,6 +585,45 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+builtinStringWords = do
+    builtinMapToPrettyFromFormat
+    builtinWords
+
+builtinStringUnlines = do
+    builtinMapToPrettyFromFormat
+    builtinUnlines
+
+builtinMapUnlines = do
+    builtinMap
+    builtinUnlines
+
+builtinMapWords = do
+    builtinMap
+    builtinWords
+
+builtinFilterWordsB = do
+    builtinFilter
+    builtinWords
+
+builtinSelectIf = do
+    -- zi:^p)-]si
+    builtinZipIndices
+    pushToStack $ BlsqBlock [ BlsqIdent "^p" ]
+    builtinFilter
+    pushToStack $ BlsqBlock [ BlsqIdent "-]" ]
+    builtinMap
+    builtinSelectIndices
+
+builtinSortedNub = do
+    pushToStack $ BlsqBlock [BlsqIdent "><"]
+    builtinMap
+    builtinNub
+    
+builtinSortedReverseNub = do
+    pushToStack $ BlsqBlock [BlsqIdent "<>"]
+    builtinMap
+    builtinNub
 
 builtinStringInc = do
     builtinParseId
