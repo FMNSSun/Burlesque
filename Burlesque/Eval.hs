@@ -576,6 +576,7 @@ builtins = [
   ("mu", builtinMapUnlines),
   ("Su", builtinStringUnlines),
   ("Sw", builtinStringWords),
+  ("FL", builtinFlatten),
   
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
@@ -585,6 +586,17 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+builtinFlatten = do
+	st <- getStack
+	case st of
+		(BlsqBlock a : xs) -> do
+			putStack $ (BlsqBlock $ flatten a) : xs
+		_ -> pushToStack (BlsqError "Burlesque (FL): Invalid arguments!")
+	where
+		flatten (BlsqBlock a : xs) = flatten a ++ flatten xs
+		flatten (a : xs) = [a] ++ flatten xs
+		flatten [] = []
 
 builtinStringWords = do
     builtinMapToPrettyFromFormat
