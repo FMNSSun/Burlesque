@@ -28,8 +28,6 @@ main = do
    ["--ircbot",prog] -> do result <- timeout 31100 $ evaluate $!! runProgramNoStdin prog
                            case result of
                               Nothing -> putStrLn "Ain't nobody got time fo' dat!"
-                              Just q -> case lines q of
-                                          [] -> putStr "No output!\n"
-                                          x:_ -> putStr . take 80 $ x
+                              Just q -> putStr $ take 256 $ q
    _ -> do putStrLn $ "Invalid usage"
            putStrLn "\tBurlesque\tRoman Muentener, 2012"

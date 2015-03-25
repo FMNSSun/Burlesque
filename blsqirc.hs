@@ -17,11 +17,12 @@ import Burlesque.Types
 import Burlesque.Eval hiding (run)
 import Burlesque.Display
 import Data.Time
+import Data.Char
 
 
 runProgramWrapper :: String -> IO String
 runProgramWrapper p = do
- readProcess "blsqirci.exe" ["--ircbot",p] ""
+ readProcess "./blsqirci" ["--ircbot",p] ""
  
 runProgramWrapper2 :: String -> IO String
 runProgramWrapper2 p = do
@@ -30,7 +31,7 @@ runProgramWrapper2 p = do
 server = "irc.freenode.org"
 port   = 6667
 chan   = "#esoteric"
-nick   = "blsqbot2"
+nick   = "blsqbot"
  
 --
 -- The 'Net' monad, a wrapper over IO, carrying the bot's immutable state.
@@ -96,7 +97,7 @@ listen h = forever $ do
 eval :: String -> Net ()
 eval     "!blsq_uptime"             = uptime >>= privmsg
 eval     "blsqbot please do quit"   = write "QUIT" ":Exiting" >> io (exitWith ExitSuccess)
-eval x | "!blsQ " `isPrefixOf` x = blsqev (drop 6 x)
+eval x | "!blsq " `isPrefixOf` x = blsqev (drop 6 x)
 eval x | "!foo " `isPrefixOf` x = fooev (drop 5 x)
 eval     _                     = return () -- ignore everything else
 
@@ -111,16 +112,17 @@ blsqev :: String -> Net ()
 blsqev s = do
     ss <- foo s
     io $ catch' (putStrLn ("El resulto: " ++ (show ss))) (const $ return())
-    write "PRIVMSG" (chan ++ " :" ++ (ss!!0))
+    mapM_ (\c -> write "PRIVMSG" (chan ++ " : | " ++ filtor c)) ss
     --write "PRIVMSG" (chan ++ " :" ++ (ss!!1))
-    where foo p = do start <- io $ getCurrentTime
+    where filtor c = filter (isPrint) c
+          foo p = do start <- io $ getCurrentTime
                      result <- io $ catch' (timeout (3*10^6) (runProgramWrapper p)) (const $ return $ Just "That line gave me an error")
                      stop <- io $ getCurrentTime
                      case result of
-                         Nothing -> return $ ["Ain't nobody got time fo' that!","Tightout!"]
-                         Just q -> case lines q of
-                                     [] -> return $ ["Ain't nobody got output fo' that!","Tightout!"]
-                                     x:_ -> return $ [" "++x, show $ diffUTCTime stop start]
+                         Nothing -> return $ ["Ain't nobody got time fo' that!"]
+                         Just q -> case lines q of 
+                                     [] -> return $ ["Ain't nobody got output fo' that!"]
+                                     xs -> return $ take 3 xs
                                      
 fooev :: String -> Net ()
 fooev s = do
