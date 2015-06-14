@@ -2085,7 +2085,7 @@ builtinSplitRegex2 = do
   putResult $
     case st of
      (BlsqStr regex : BlsqStr str : xs) -> (BlsqBlock $ map BlsqStr (matchRegex' regex str)) : xs
-     _ -> BlsqError "Burlesque: (~&) Invalid arguments!" : st     
+     _ -> BlsqError "Burlesque: (~;) Invalid arguments!" : st     
  where matchRegex' regex str = case matchRegexAll (mkRegex regex) str of
                                 Nothing -> [str]
                                 Just (pre, matched, after, _) -> [pre, after]
@@ -2485,7 +2485,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = pushToStack (BlsqStr "Burlesque - 1.7.4.dev" )
+builtinVersion = pushToStack (BlsqStr "Burlesque - 1.7.4" )
 
 -- | -~
 builtinHeadTail :: BlsqState
