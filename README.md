@@ -19,6 +19,8 @@ blsq ) 1234 100\/0 9rn.+10coSPsh
 
 **1.7.4**: I encourage users to discuss the future of Burlesque in the ticket #51 (https://github.com/FMNSSun/Burlesque/issues/51)
 
+The online shell is available under http://104.167.104.168/~burlesque/burlesque.cgi?q=9ro%29rosp 
+
 1.7.3
 =========
 
