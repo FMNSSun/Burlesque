@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 module Burlesque.Parser
   (parseNumber,
    parseDouble,
