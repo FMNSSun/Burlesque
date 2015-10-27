@@ -7,9 +7,11 @@ import System.Environment
 import System.IO
 import Data.List
 
+import qualified Data.Map as M
+
 runProgram :: String -> String -> String
 runProgram p stdin =
- unlines . map toDisplay . filter notHidden . fst $ execState (eval (runParserWithString parseBlsq p)) ([BlsqStr stdin],[BlsqStr stdin])
+ unlines . map toDisplay . filter notHidden . fst' $ execState (eval (runParserWithString parseBlsq p)) ([BlsqStr stdin],[BlsqStr stdin], M.fromList [])
 
 
 main = do

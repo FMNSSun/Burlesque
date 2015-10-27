@@ -4,7 +4,7 @@ import os.path
 print "**** BURLESQUE ****"
 print "******* TESTSUITE ******"
 
-win='.exe'
+win=''
 try:
   os.remove('blsq'+win)
 except:
@@ -25,7 +25,7 @@ for test in tests:
   phout = ph + '.out'
   phtmp = ph + '.tmp'
   
-  proc = os.system('type ' + phin + ' | blsq'+win+' --file ' + os.path.abspath('./tests/'+test) + ' > ' + phtmp)
+  proc = os.system('cat ' + phin + ' | ./blsq'+win+' --file ' + os.path.abspath('./tests/'+test) + ' > ' + phtmp)
   
   if(proc != 0):
     print '** FAIL ** FAIL **'
