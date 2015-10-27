@@ -6,10 +6,12 @@ import Burlesque.Types
 import Burlesque.Eval
 import Burlesque.Display
 
+import qualified Data.Map as M
+
 main = runCGI $ handleErrors cgiMain
 
 linkCSS
- = thelink ! [rel "stylesheet", thetype "text/css", href "http://mroman.ch/burlesque/style.css"] << noHtml
+ = thelink ! [rel "stylesheet", thetype "text/css", href "./style.css"] << noHtml
 
 documentHtml content
  = (header << ((thetitle << "Burlesque Shell") +++ linkCSS)) +++ (body << content)
@@ -28,4 +30,4 @@ cgiMain = do
 
 runProgramNoStdin :: String -> String
 runProgramNoStdin p =
- unlines . map toHTML . filter notHidden . fst $ execState (eval (runParserWithString parseBlsq p)) ([],[])
+ unlines . map toHTML . filter notHidden . fst' $ execState (eval (runParserWithString parseBlsq p)) ([],[], M.fromList [])

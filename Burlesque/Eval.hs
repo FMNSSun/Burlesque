@@ -467,6 +467,7 @@ builtins = [
   ("mm", builtinMmult),
   ("ss", builtinStrStr),
   ("en", builtinEveryNth),
+  ("EN", builtinEveryNth2),
   ("pe", builtinParseEval),
   ("sl", builtinSelectLines),
   ("sw", builtinSelectWords),
@@ -4320,6 +4321,20 @@ builtinEveryNth = do
       builtinSwap
       builtinEveryNth
       builtinImplode
+      
+-- | EN
+builtinEveryNth2 :: BlsqState
+builtinEveryNth2 = do
+  st <- getStack
+  case st of
+    (BlsqInt n : BlsqBlock ls : xs) -> do
+      putStack xs
+      let res = everyNth 0 ls (pred n)
+      pushToStack $ BlsqBlock res
+    _ -> builtinSwap >> builtinExplode >> builtinSwap >> builtinEveryNth2 >> builtinConcat
+ where everyNth 0 (x:xs) m = x : everyNth m xs m
+       everyNth _ [] _ = []
+       everyNth n (x:xs) m = everyNth (pred n) xs m
       
 -- | pe
 builtinParseEval :: BlsqState
