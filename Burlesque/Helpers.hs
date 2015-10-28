@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 module Burlesque.Helpers
   (replace,
    noSpaces,

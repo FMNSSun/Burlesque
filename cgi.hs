@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 import Network.CGI
 import Text.XHtml.Strict
 

@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 module Burlesque.Display
   (toDisplay, notHidden, toHTML)
  where

@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 import Burlesque.Parser
 import Burlesque.Types
 import Burlesque.Eval

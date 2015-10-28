@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 module Burlesque.Types 
   (BlsqExp (..),
    BlsqStack (..),
