@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Burlesque by FMNSSun</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Burlesque</h1>
+        <h2></h2>
+
+        <section id="downloads">
+          <a href="https://github.com/FMNSSun/Burlesque/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/FMNSSun/Burlesque/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/FMNSSun/Burlesque" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+       <h1><a id="20151030_0"></a>2015-10-30</h1>
+<p>As I’ve mentioned a few places around the Int0rw3b an update to Burlesque is planned. What are the plans?</p>
+<ul>
+<li>Rewrite documentation (in Markdown)</li>
+<li>Plenty of new built-ins</li>
+<li>Some syntax extensions</li>
+<li>Support for true randomness (by setting a variable to a randomly generated seed at launch) [1]</li>
+</ul>
+<p>For example in Burlesque 1.7.5 the <code>e</code>-Notation will be supported:</p>
+<pre><code>blsq ) <span class="hljs-number">2e5</span>
+<span class="hljs-number">200000</span>
+blsq ) @<span class="hljs-number">2e5</span>
+<span class="hljs-number">200000.0</span>
+</code></pre>
+<p>Especially rewriting the documentation will probably take some time so I don’t know when this new update is ready for release but I’ll keep you posted about the progress.</p>
+<p>Some of the already new existing built-ins are (guess what they do :p):</p>
+<pre><code>blsq ) <span class="hljs-number">5</span>e-
+<span class="hljs-number">0.00001</span>
+blsq ) <span class="hljs-number">2</span>e-
+<span class="hljs-number">0.01</span>
+blsq ) <span class="hljs-number">2e-4</span>rM
+<span class="hljs-number">0.0100</span>
+blsq ) <span class="hljs-number">2e-6</span>rM
+<span class="hljs-number">0.010000</span>
+blsq ) <span class="hljs-number">9</span>ro3EN
+{<span class="hljs-number">1</span> <span class="hljs-number">4</span> <span class="hljs-number">7</span>}
+</code></pre>
+<p>[1]: Yes, since 1.7.4 Burlesque actually has variables, they just were never documented. 1.7.4 actually has Maps (or
+as they are called in other languages: Dictionaries, KeyValueStorage).</p>
+<pre><code>blsq ) %a=<span class="hljs-number">5</span> %b=<span class="hljs-number">6</span> %a? %b? ?*
+<span class="hljs-number">30</span>
+blsq ) %a=<span class="hljs-number">5</span> %b=<span class="hljs-number">6</span> %a? %b? DB
+&lt;<span class="hljs-string">"a"</span>,<span class="hljs-number">5</span>&gt;&lt;<span class="hljs-string">"b"</span>,<span class="hljs-number">6</span>&gt;
+<span class="hljs-number">6</span>
+<span class="hljs-number">5</span>
+blsq ) %:<span class="hljs-number">0</span> <span class="hljs-string">"foo"</span> <span class="hljs-number">8</span> <span class="hljs-string">"bar"</span> <span class="hljs-number">9</span>V
+&lt;<span class="hljs-string">"bar"</span>,<span class="hljs-number">9</span>&gt;&lt;<span class="hljs-string">"foo"</span>,<span class="hljs-number">8</span>&gt;
+blsq ) %:<span class="hljs-number">0</span> <span class="hljs-string">"foo"</span> <span class="hljs-number">8</span> <span class="hljs-string">"bar"</span> <span class="hljs-number">9</span>V<span class="hljs-string">"bar"</span>ml
+<span class="hljs-number">9</span>
+blsq ) %:<span class="hljs-number">0</span> <span class="hljs-string">"foo"</span> <span class="hljs-number">8</span> <span class="hljs-string">"bar"</span> <span class="hljs-number">9</span>V<span class="hljs-string">"bor"</span>ml
+<span class="hljs-number">0</span>
+blsq ) %reverse={&lt;-} {<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>}%reverse!
+{<span class="hljs-number">3</span> <span class="hljs-number">2</span> <span class="hljs-number">1</span>}
+</code></pre>
+<p>All the above things have been silently there since 1.7.4. They will of course be documented with the next planned release.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
