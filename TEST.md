@@ -1,5 +1,6 @@
 ---
 title: Document Center
+layout: post
 ---
 
 # Burlesque
