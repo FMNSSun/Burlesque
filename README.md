@@ -17,16 +17,8 @@ blsq ) 1234 100\/0 9rn.+10coSPsh
 8 4 1 7 1 6 7 3 6 8
 ```
 
-**1.7.4**: I encourage users to discuss the future of Burlesque in the ticket #51 (https://github.com/FMNSSun/Burlesque/issues/51)
-
-The online shell is available under http://104.167.104.168/~burlesque/burlesque.cgi?q=9ro%29rosp 
-
-1.7.3
-=========
-
-Users of Burlesque are highly encouraged to upgrade to 1.7.3.
-
-Current stable version: 1.7.3
+Current stable version: 1.7.3 (used on anagol). Latest version: 1.7.4 (not on anagol). Also check out the ```BLOG/```
+directory of this repository, which contains Burlesque related blog posts.
 
 Compile
 =======
