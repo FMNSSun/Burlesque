@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Burlesque by FMNSSun</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Burlesque</h1>
+        <h2></h2>
+
+        <section id="downloads">
+          <a href="https://github.com/FMNSSun/Burlesque/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/FMNSSun/Burlesque/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/FMNSSun/Burlesque" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="burlesque" class="anchor" href="#burlesque" aria-hidden="true"><span class="octicon octicon-link"></span></a>Burlesque</h1>
+
+<p>Burlesque is a concatenative, dynamic typed, lazy, probably esoteric programming language. Burlesque is a neat command line utility that can be used as a little desktop calculator, homework helper, to manipulate files, do some statistics or even some data analysis. It's also used as a language for code-golf. If a feature is missing you can let me know through a bug report. If you encounter a bug, incorrect documentation please also create a bug report.</p>
+
+<pre><code>blsq ) 1234 16j0 9rn.+4cosp
+7 5 1 6
+1 2 1 9
+1 5 2 0
+3 0 6 5
+blsq ) 4ro)rosp
+1
+1 2
+1 2 3
+1 2 3 4
+blsq ) "abc"su\[)**
+{97 98 99 97 98 98 99 97 98 99}
+</code></pre>
+
+<p>Current stable version: 1.7.3 (used on anagol). Latest version: 1.7.4 (not on anagol). Also check out the <code>BLOG/</code>
+directory of this repository, which contains Burlesque related blog posts.</p>
+
+<h1>
+<a id="compile" class="anchor" href="#compile" aria-hidden="true"><span class="octicon octicon-link"></span></a>Compile</h1>
+
+<p>You need a decently recent ghc and haskell-plattform. </p>
+
+<p>Install the required packages:</p>
+
+<pre><code>cabal install split  haskeline mtl regex-compat parsec digits statistics
+</code></pre>
+
+<p>Then compile</p>
+
+<pre><code>ghc --make main.hs -o burlesque -O3 -fforce-recomp
+</code></pre>
+
+<p>If you just want the "--file" option (like on golf.shinh.org) use</p>
+
+<pre><code>ghc --make main_golf.hs -o blsq -O3 -fforce-recomp
+</code></pre>
+
+<h1>
+<a id="tests" class="anchor" href="#tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tests</h1>
+
+<p>With Burlesque 1.7.2f I added some little tests. However, it's too late to write a comprehensive testsuite.
+If you like you can fork this repo and add tests and send me a pull request. Whenever I solve a golf challenge
+I'll add my solution to the testsuite (once the challenge is post mortem of course :) )</p>
+
+<h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
+
+<p>Copyright (c) 2012, Roman Müntener
+ All rights reserved.</p>
+
+<p>Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met:
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer 
+in the documentation and/or other materials provided with the distribution.
+Neither the name of the  nor the names of its contributors may be
+used to endorse or promote products derived from this software without specific prior written permission.</p>
+
+<p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
