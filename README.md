@@ -18,8 +18,7 @@ blsq ) "abc"su\[)**
 {97 98 99 97 98 98 99 97 98 99}
 ```
 
-Current stable version: 1.7.3 (used on anagol). Latest version: 1.7.4 (not on anagol). Also check out the ```BLOG/```
-directory of this repository, which contains Burlesque related blog posts.
+Current stable version: 1.7.3 (used on anagol). Latest version: 1.7.4 (not on anagol). Also check out http://fmnssun.github.com/Burlesque.
 
 Compile
 =======
