@@ -254,12 +254,15 @@ Hello, world!
 ```
 
 Strings can contain raw bytes as well. If you want to use a ```"``` within a String you need to escape it with ```\'```, also if you want a ```\``` in your String you need to escape it with
-```\\````:
+``` \\ ```:
 
 
 ```
 blsq ) "Hi \' there"Q
 Hi " there
+```
+
+```
 blsq ) "Hi \\' there"Q
 Hi \' there
 ```
