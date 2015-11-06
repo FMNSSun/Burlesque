@@ -20,6 +20,8 @@ blsq ) "abc"su\[)**
 
 Current stable version: 1.7.3 (used on anagol). Latest version: 1.7.4 (not on anagol). Also check out http://fmnssun.github.com/Burlesque.
 
+If you don't know where to start read the ```TUTORIAL.md``` and try to learn from examples on anagol: http://golf.shinh.org/l.rb?blsq. If you need help you can also consult ```#esoteric``` on ```irc.freenode.net```.
+
 Compile
 =======
 
