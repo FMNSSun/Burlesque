@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Roman Müntener" />
+  <title>Burleseque - Moonpage</title>
+  <link rel="stylesheet" href="doc.css" type="text/css" />
+</head>
+<body>
+<div id="header">
+<h1 class="title">Burleseque - Moonpage</h1>
+<h2 class="author">Roman Müntener</h2>
+</div>
+<div id="TOC">
+<ul>
+<li><a href="#about">ABOUT</a></li>
+<li><a href="#synopsis">SYNOPSIS</a></li>
+<li><a href="#language">LANGUAGE</a><ul>
+<li><a href="#syntax">SYNTAX</a></li>
+<li><a href="#built-ins">BUILT-INS</a><ul>
+<li><a href="#add-.">ADD <code>.+</code></a></li>
+<li><a href="#duplicate-j">Duplicate <code>J</code> <code>^^</code></a></li>
+<li><a href="#swap-j">Swap <code>j</code> <code>\/</code></a></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<h1 id="about"><a href="#TOC">ABOUT</a></h1>
+<p>An interpreter for the esoteric programming language <em>The Burlesque Programming Language</em>.</p>
+<p><strong>Author:</strong> Roman Müntener, 2012-?</p>
+<p>Useful Weblinks:</p>
+<ul>
+<li><a href="http://rosettacode.org/wiki/Category:Burlesque">Burlesque on RosettaCode</a></li>
+<li><a href="http://github.com/FMNSSun/Burlesque">Source code</a></li>
+<li><a href="http://mroman.ch/burlesque/lref.html">Language Reference</a></li>
+</ul>
+<p>Until this moonpage is complete, please consult the Language Reference. Once compelete, the moonpage will superseed the Language Referenc.</p>
+<h1 id="synopsis"><a href="#TOC">SYNOPSIS</a></h1>
+<pre class="cmdline"><code>blsq &lt;options&gt;</code></pre>
+<h1 id="language"><a href="#TOC">LANGUAGE</a></h1>
+<h2 id="syntax"><a href="#TOC">SYNTAX</a></h2>
+<h2 id="built-ins"><a href="#TOC">BUILT-INS</a></h2>
+<h3 id="add-."><a href="#TOC">ADD <code>.+</code></a></h3>
+<p><code>Int a, Int b:</code> Integer addition.</p>
+<pre class="shell"><code>blsq ) 5 5.+
+10</code></pre>
+<p><code>Double a, Double b:</code> Double addition.</p>
+<pre class="shell"><code>blsq ) 5.1 0.9.+
+6.0</code></pre>
+<p><code>String a, String b:</code> Concatenates two strings.</p>
+<pre class="shell"><code>blsq ) &quot;ab&quot; &quot;cd&quot; .+
+&quot;abcd&quot;</code></pre>
+<p><code>Int a, String b:</code> Returns the first <code>a</code> characters of <code>b</code> as a String.</p>
+<pre class="shell"><code>blsq ) 3 &quot;abcdef&quot; .+
+&quot;abc&quot;</code></pre>
+<p><code>Block a, Block b:</code> Concatenates two blocks.</p>
+<pre class="shell"><code>blsq ) {1 2}{3 4}.+
+{1 2 3 4}</code></pre>
+<p><code>Char a, Char b:</code> Creates a string with the two characters <code>a</code> and <code>b</code> in it (in that exact order).</p>
+<pre class="shell"><code>blsq ) &#39;a&#39;b.+
+&quot;ab&quot;</code></pre>
+<p><code>String a, Char b:</code> Append <code>b</code> to <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;ab&quot;&#39;c.+
+&quot;abc&quot;</code></pre>
+<p><code>Int a, Block b:</code> Returns the first <code>a</code> elements of <code>b</code>.</p>
+<pre class="shell"><code>blsq ) 2{1 2 3}.+
+{1 2}</code></pre>
+<p><code>Block a, Int b:</code> Returns the first <code>b</code> elements of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3}2.+
+{1 2}</code></pre>
+<p><code>String a, Int b:</code> Returns the first <code>b</code> characters of <code>a</code> as a String.</p>
+<pre class="shell"><code>blsq ) &quot;abc&quot;2.+
+&quot;ab&quot;</code></pre>
+<p><code>Double a, Int b:</code> Convert <code>b</code> to Double, then perform addition.</p>
+<pre class="shell"><code>blsq ) 1.0 2.+
+3.0</code></pre>
+<p><code>Int a, Double b:</code> Convert <code>a</code> to Double, then perform addition.</p>
+<pre class="shell"><code>blsq ) 2 1.0.+
+3.0</code></pre>
+<h3 id="duplicate-j"><a href="#TOC">Duplicate <code>J</code> <code>^^</code></a></h3>
+<p>Duplicates the top most element.</p>
+<pre class="shell"><code>blsq ) 5
+5
+blsq ) 5J
+5
+5</code></pre>
+<h3 id="swap-j"><a href="#TOC">Swap <code>j</code> <code>\/</code></a></h3>
+<p>Swaps the top two elements.</p>
+<pre class="shell"><code>blsq ) 1 2
+2
+1
+blsq ) 1 2j
+1
+2</code></pre>
+</body>
+</html>

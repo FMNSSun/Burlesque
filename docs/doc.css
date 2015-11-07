@@ -1,0 +1,32 @@
+code {
+  font-family: serif;
+  color: #DD1122;
+  font-weight: bold;
+}
+
+pre.cmdline {
+  background-color: #DCDCDC;
+  color: black;
+  padding: 1em;
+  border-top: solid 0.2em black;
+  border-bottom: solid 0.1em black;
+}
+
+pre.shell {
+  background-color: #DEDEDE;
+  color: black;
+  padding: 1em;
+  border-top: dashed 0.2em black;
+  border-bottom: dashed 0.1em black;
+}
+
+#header {
+    width: 50%;
+    margin: auto;
+    text-align: center;
+    font-family: serif;
+    border: dotted 0.3em black;
+}
+
+pre.cmdline code, pre.shell code { color: black; font-weight: normal; font-family: monospace; font-size: 1.25em; }
+
