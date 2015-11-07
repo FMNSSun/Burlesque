@@ -15,16 +15,33 @@
 </div>
 <div id="TOC">
 <ul>
-<li><a href="#about">ABOUT</a></li>
+<li><a href="#about">ABOUT</a><ul>
+<li><a href="#history">HISTORY</a></li>
+</ul></li>
 <li><a href="#synopsis">SYNOPSIS</a></li>
 <li><a href="#language">LANGUAGE</a><ul>
 <li><a href="#syntax">SYNTAX</a></li>
 <li><a href="#built-ins">BUILT-INS</a><ul>
 <li><a href="#add-.">Add <code>.+</code></a></li>
 <li><a href="#addx-_">AddX <code>_+</code></a></li>
+<li><a href="#decrement--.">Decrement <code>-.</code></a></li>
 <li><a href="#div-.">Div <code>./</code></a></li>
 <li><a href="#duplicate-j">Duplicate <code>J</code> <code>^^</code></a></li>
+<li><a href="#equal">Equal <code>==</code></a></li>
+<li><a href="#greater-.">Greater <code>.&gt;</code></a></li>
+<li><a href="#increment-.">Increment <code>+.</code></a></li>
+<li><a href="#max-.">Max <code>&gt;.</code></a></li>
+<li><a href="#maximum">Maximum <code>&gt;]</code></a></li>
+<li><a href="#min-.">Min <code>&lt;.</code></a></li>
+<li><a href="#minimum">Minimum <code>&lt;]</code></a></li>
+<li><a href="#mod-.">Mod <code>.%</code></a></li>
 <li><a href="#mul-.">Mul <code>.*</code></a></li>
+<li><a href="#notequal">NotEqual <code>!=</code></a></li>
+<li><a href="#pow">Pow <code>**</code></a></li>
+<li><a href="#reverse--">Reverse <code>&lt;-</code></a></li>
+<li><a href="#round-r_">Round <code>r_</code></a></li>
+<li><a href="#round2-r_">Round2 <code>R_</code></a></li>
+<li><a href="#smaller-.">Smaller <code>.&lt;</code></a></li>
 <li><a href="#sub-.-">Sub <code>.-</code></a></li>
 <li><a href="#swap-j">Swap <code>j</code> <code>\/</code></a></li>
 </ul></li>
@@ -32,8 +49,7 @@
 </ul>
 </div>
 <h1 id="about"><a href="#TOC">ABOUT</a></h1>
-<p>An interpreter for the esoteric programming language <em>The Burlesque Programming Language</em>.</p>
-<p><strong>Author:</strong> Roman Müntener, 2012-?</p>
+<p>An interpreter for the esoteric programming language <em>The Burlesque Programming Language</em>. Actually, Burlesque is less of a programming language than it is a tool. The actual language behind it is very simple and the only thing that makes Burlesque notable is the amount of built-ins it has. The syntax can be learnt within a few minutes (there are basically only Numbers, Strings and Blocks) and the concepts can be learnt quickly as well. People familiar with functional programming languages will already know these concepts so Burlesque is especially easy to learn if you already know the terms <em>map</em>, <em>filter</em>, <em>reduce</em>, <em>zip</em> and others. This moonpage tries to be as accurate, complete and easy to understand as possible. If you encounter an error in the documentation please report it on <a href="http://github.com/FMNSSun/Burlesque">github</a>. <strong>Author:</strong> Roman Müntener, 2012-?</p>
 <p>Useful Weblinks:</p>
 <ul>
 <li><a href="http://rosettacode.org/wiki/Category:Burlesque">Burlesque on RosettaCode</a></li>
@@ -41,6 +57,8 @@
 <li><a href="http://mroman.ch/burlesque/lref.html">Language Reference</a></li>
 </ul>
 <p>Until this moonpage is complete, please consult the Language Reference. Once compelete, the moonpage will superseed the Language Reference.</p>
+<h2 id="history"><a href="#TOC">HISTORY</a></h2>
+<p>Burlesque has been under development since 2012 and is still being improved on a regular basis. It was built as a tool for me (mroman) to use as a helper for my computer science studies.</p>
 <h1 id="synopsis"><a href="#TOC">SYNOPSIS</a></h1>
 <pre class="cmdline"><code>blsq &lt;options&gt;</code></pre>
 <h1 id="language"><a href="#TOC">LANGUAGE</a></h1>
@@ -111,6 +129,19 @@
 <p><code>String a, Int b:</code> Converts <code>b</code> to String, then concatenates.</p>
 <pre class="shell"><code>blsq ) &quot;b&quot;1_+
 &quot;b1&quot;</code></pre>
+<h3 id="decrement--."><a href="#TOC">Decrement <code>-.</code></a></h3>
+<p><code>Int a:</code> Decrements <code>a</code>.</p>
+<pre class="shell"><code>blsq ) 5-.
+4</code></pre>
+<p><code>Char a:</code> Returns the previous character (unicode point - 1)</p>
+<pre class="shell"><code>blsq ) &#39;c-.
+&#39;b</code></pre>
+<p><code>String a:</code> Prepend first character of <code>a</code> to <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;abc&quot;-.
+&quot;aabc&quot;</code></pre>
+<p><code>Block a:</code> Prepend first element of <code>a</code> to <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3}-.
+{1 1 2 3}</code></pre>
 <h3 id="div-."><a href="#TOC">Div <code>./</code></a></h3>
 <p><code>Int a, Int b:</code> Integer division.</p>
 <pre class="shell"><code>blsq ) 10 3./
@@ -141,6 +172,93 @@ blsq ) {1 2 3}{2 2}./
 blsq ) 5J
 5
 5</code></pre>
+<h3 id="equal"><a href="#TOC">Equal <code>==</code></a></h3>
+<p><code>Any a, Any b:</code> Returns 1 if <code>a == b</code> else returns 0.</p>
+<pre class="shell"><code>blsq ) 5 5==
+1
+blsq ) 5.0 5==
+0
+blsq ) 3 2==
+0
+blsq ) {1 23}{1 23}==
+1</code></pre>
+<h3 id="greater-."><a href="#TOC">Greater <code>.&gt;</code></a></h3>
+<p><code>Any a, Any b:</code> Returns 1 if <code>a &gt; b</code> else returns 0.</p>
+<pre class="shell"><code>blsq ) 3.0 2.9 .&gt;
+1
+blsq ) 2.0 2.9 .&gt;
+0
+blsq ) 10 5 .&gt;
+1
+blsq ) 10 5.0 .&gt;
+0
+blsq ) &#39;a 1 .&gt;
+1
+blsq ) &#39;a 9.0 .&gt;
+1
+blsq ) &#39;a {} .&gt;
+0
+blsq ) {} 9.0 .&gt;
+1
+blsq ) {} 9 .&gt;
+1</code></pre>
+<p><strong>Note:</strong> Comparing values with different types may result in unexpected (but determinstic, thus not undefined) behaviour.</p>
+<h3 id="increment-."><a href="#TOC">Increment <code>+.</code></a></h3>
+<p><code>Int a:</code> Increments a.</p>
+<pre class="shell"><code>blsq ) 5+.
+6</code></pre>
+<p><code>Char a:</code> Returns the next character (unicode point + 1).</p>
+<pre class="shell"><code>blsq ) &#39;a+.
+&#39;b</code></pre>
+<p><code>String a:</code> Appends the last character of <code>a</code> to <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;abc&quot;+.
+&quot;abcc&quot;</code></pre>
+<p><code>Block a:</code> Appends the last element of <code>a</code> to <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3}+.
+{1 2 3 3}</code></pre>
+<h3 id="max-."><a href="#TOC">Max <code>&gt;.</code></a></h3>
+<p><code>Any a, Any b:</code> Returns whichever is greatest.</p>
+<pre class="shell"><code>blsq ) 5 6&gt;.
+6
+blsq ) 6 5&gt;.
+6
+blsq ) {12}12&gt;.
+{12}</code></pre>
+<h3 id="maximum"><a href="#TOC">Maximum <code>&gt;]</code></a></h3>
+<p><code>Block a:</code> Returns the maximum of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3 2 1}&gt;]
+3</code></pre>
+<p><code>String a:</code> Returns the maximum of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;debca&quot;&gt;]
+&#39;e</code></pre>
+<p><code>Int a:</code> Returns the largest digit as an Integer.</p>
+<pre class="shell"><code>blsq ) 1971&gt;]
+9
+blsq ) 1671&gt;]
+7</code></pre>
+<h3 id="min-."><a href="#TOC">Min <code>&lt;.</code></a></h3>
+<p><code>Any a, Any b:</code> Returns whichever is smallest.</p>
+<pre class="shell"><code>blsq ) 5 4&lt;.
+4
+blsq ) 5 4&lt;.
+4
+blsq ) 10 10.0&lt;.
+10</code></pre>
+<h3 id="minimum"><a href="#TOC">Minimum <code>&lt;]</code></a></h3>
+<p><code>Block a:</code> Returns the minimum of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 0 3}&lt;]
+0</code></pre>
+<p><code>String a:</code> Returns the minimum of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;bac&quot;&lt;]
+&#39;a</code></pre>
+<p><code>Int a:</code> Returns the smallest digit as an Integer.</p>
+<pre class="shell"><code>blsq ) 109&lt;]
+0</code></pre>
+<h3 id="mod-."><a href="#TOC">Mod <code>.%</code></a></h3>
+<p>This is an auto-zip and auto-map built-in.</p>
+<p><code>Int a, Int b:</code> Integer modulo.</p>
+<pre class="shell"><code>blsq ) 10 3.%
+1</code></pre>
 <h3 id="mul-."><a href="#TOC">Mul <code>.*</code></a></h3>
 <p><code>Int a, Int b:</code> Integer multiplication.</p>
 <pre class="shell"><code>blsq ) 2 3.*
@@ -163,9 +281,87 @@ blsq ) 5J
 <p><code>Int a, Double b:</code> Converts <code>a</code> to Double, then multiplies.</p>
 <pre class="shell"><code>blsq ) 2 3.0.*
 6.0</code></pre>
-<p><code>Double a, Int b:</code> Converts 'b' to Double, then multiplies.</p>
+<p><code>Double a, Int b:</code> Converts <code>b</code> to Double, then multiplies.</p>
 <pre class="shell"><code>blsq ) 2.0 3.*
 6.0</code></pre>
+<h3 id="notequal"><a href="#TOC">NotEqual <code>!=</code></a></h3>
+<p><em>Defined as:</em> <em><code>==n!</code></em>.</p>
+<pre class="shell"><code>blsq ) 4 4==n!
+0
+blsq ) 4 3==n!
+1
+blsq ) 3 4==n!
+1
+blsq ) 3 4!=
+1
+blsq ) 4 4!=
+0</code></pre>
+<h3 id="pow"><a href="#TOC">Pow <code>**</code></a></h3>
+<p><code>Int a, Int b:</code> Returns <code>a</code> to the power of <code>b</code> (<code>a ^ b</code>).</p>
+<pre class="shell"><code>blsq ) 2 3**
+8</code></pre>
+<p><code>Double a, Double b:</code> Returns <code>a</code> to the power of <code>b</code> (<code>a ^ b</code>).</p>
+<pre class="shell"><code>blsq ) 4.0 3.0**
+64.0</code></pre>
+<p><code>Block a, Block b:</code> Merges <code>a</code> and <code>b</code>. <code>c = a_1, b_1, a_2, b_2</code></p>
+<pre class="shell"><code>blsq ) {1 2 3}{4 5 6}**
+{1 4 2 5 3 6}</code></pre>
+<p><code>String a, String b:</code> Merges <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) &quot;123&quot;&quot;456&quot;**
+&quot;142536&quot;</code></pre>
+<p><code>Char a:</code> Returns the unicode codepoint of <code>a</code> as an Integer.</p>
+<pre class="shell"><code>blsq ) &#39;A**
+65
+blsq ) &#39;a**
+97</code></pre>
+<h3 id="reverse--"><a href="#TOC">Reverse <code>&lt;-</code></a></h3>
+<p><code>String a:</code> Reverses <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;123&quot;&lt;-
+&quot;321&quot;</code></pre>
+<p><code>Block a:</code> Reverses <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {4 5 6}&lt;-
+{6 5 4}</code></pre>
+<p><code>Int a:</code> Reverses the digits of an Integer. (Works on absolute value).</p>
+<pre class="shell"><code>blsq ) -123&lt;-
+321</code></pre>
+<p><code>Char a:</code> Inverts case.</p>
+<pre class="shell"><code>blsq ) &#39;a&lt;-
+&#39;A
+blsq ) &#39;B&lt;-
+&#39;b</code></pre>
+<h3 id="round-r_"><a href="#TOC">Round <code>r_</code></a></h3>
+<p>This built-in accepts a Block as first argument, in which case an auto-map is performed.</p>
+<p><code>Double a, Int b:</code> Rounds <code>a</code> to <code>b</code> decimal points.</p>
+<pre class="shell"><code>blsq ) 3.12 2r_
+3.12
+blsq ) 3.19 2r_
+3.19
+blsq ) 3.5 0r_
+4.0
+blsq ) {3.5 3.4}0r_
+{4.0 3.0}</code></pre>
+<h3 id="round2-r_"><a href="#TOC">Round2 <code>R_</code></a></h3>
+<p><em>Defined as:</em> <em><code>0r_pd</code></em>.</p>
+<pre class="shell"><code>blsq ) {3.5 3.4}0r_pd
+12.0
+blsq ) {3.5 3.4}R_
+12.0
+blsq ) 5.5R_
+6
+blsq ) 5.3R_
+5
+blsq ) 5.3 0r_pd
+5</code></pre>
+<p><strong>Authors' Notes:</strong> Even though <code>r_</code> can auto-map this built-in won't do the same <em>expected</em> job because <code>pd</code> will calculate the product of a Block. You may however use this fact as a shortcut for example for <code>{0r_}m[pd</code>. If you want to round every Double to the nearest Integer in a Block use <code>)R_</code>.</p>
+<h3 id="smaller-."><a href="#TOC">Smaller <code>.&lt;</code></a></h3>
+<p><code>Any a, Any b:</code> Returns 1 if <code>a &lt; b</code> else returns 0.</p>
+<pre class="shell"><code>blsq ) 2 3.&lt;
+1
+blsq ) 4 3.&lt;
+0
+blsq ) {1 2 3}{2 2 3}.&lt;
+1</code></pre>
+<p><strong>Note:</strong> Comparing values with different types may result in unexpected (but determinstic, thus not undefined) behaviour.</p>
 <h3 id="sub-.-"><a href="#TOC">Sub <code>.-</code></a></h3>
 <p><code>Int a, Int b:</code> Integer subtraction.</p>
 <pre class="shell"><code>blsq ) 1 5.-
