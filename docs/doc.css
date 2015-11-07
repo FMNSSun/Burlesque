@@ -4,12 +4,15 @@ code {
   font-weight: bold;
 }
 
+pre { overflow: auto; }
+
 pre.cmdline {
   background-color: #DCDCDC;
   color: black;
   padding: 1em;
   border-top: solid 0.2em black;
   border-bottom: solid 0.1em black;
+  max-width: 90%;
 }
 
 pre.shell {
@@ -18,6 +21,8 @@ pre.shell {
   padding: 1em;
   border-top: dashed 0.2em black;
   border-bottom: dashed 0.1em black;
+  margin-left: 2em;
+  max-width: 90%;
 }
 
 #header {

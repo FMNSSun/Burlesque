@@ -20,8 +20,12 @@
 <li><a href="#language">LANGUAGE</a><ul>
 <li><a href="#syntax">SYNTAX</a></li>
 <li><a href="#built-ins">BUILT-INS</a><ul>
-<li><a href="#add-.">ADD <code>.+</code></a></li>
+<li><a href="#add-.">Add <code>.+</code></a></li>
+<li><a href="#addx-_">AddX <code>_+</code></a></li>
+<li><a href="#div-.">Div <code>./</code></a></li>
 <li><a href="#duplicate-j">Duplicate <code>J</code> <code>^^</code></a></li>
+<li><a href="#mul-.">Mul <code>.*</code></a></li>
+<li><a href="#sub-.-">Sub <code>.-</code></a></li>
 <li><a href="#swap-j">Swap <code>j</code> <code>\/</code></a></li>
 </ul></li>
 </ul></li>
@@ -36,13 +40,13 @@
 <li><a href="http://github.com/FMNSSun/Burlesque">Source code</a></li>
 <li><a href="http://mroman.ch/burlesque/lref.html">Language Reference</a></li>
 </ul>
-<p>Until this moonpage is complete, please consult the Language Reference. Once compelete, the moonpage will superseed the Language Referenc.</p>
+<p>Until this moonpage is complete, please consult the Language Reference. Once compelete, the moonpage will superseed the Language Reference.</p>
 <h1 id="synopsis"><a href="#TOC">SYNOPSIS</a></h1>
 <pre class="cmdline"><code>blsq &lt;options&gt;</code></pre>
 <h1 id="language"><a href="#TOC">LANGUAGE</a></h1>
 <h2 id="syntax"><a href="#TOC">SYNTAX</a></h2>
 <h2 id="built-ins"><a href="#TOC">BUILT-INS</a></h2>
-<h3 id="add-."><a href="#TOC">ADD <code>.+</code></a></h3>
+<h3 id="add-."><a href="#TOC">Add <code>.+</code></a></h3>
 <p><code>Int a, Int b:</code> Integer addition.</p>
 <pre class="shell"><code>blsq ) 5 5.+
 10</code></pre>
@@ -79,6 +83,57 @@
 <p><code>Int a, Double b:</code> Convert <code>a</code> to Double, then perform addition.</p>
 <pre class="shell"><code>blsq ) 2 1.0.+
 3.0</code></pre>
+<h3 id="addx-_"><a href="#TOC">AddX <code>_+</code></a></h3>
+<p><code>Int a, Int b:</code> Creates a Block with the two Integers <code>a</code> and <code>b</code> as elements (in this exact order).</p>
+<pre class="shell"><code>blsq ) 1 2_+
+{1 2}</code></pre>
+<p><code>Double a, Double b:</code> Creates a Block with the two Doubles <code>a</code> and <code>b</code> as elements (in this exact order).</p>
+<pre class="shell"><code>blsq ) 1.0 2.0_+
+{1.0 2.0}</code></pre>
+<p><code>String a, String b:</code> Concatenates the two Strings.</p>
+<pre class="shell"><code>blsq ) &quot;ab&quot;&quot;cd&quot;_+
+&quot;abcd&quot;</code></pre>
+<p><code>Block a, Block b:</code> Concatenates the two Blocks.</p>
+<pre class="shell"><code>blsq ) {1}{2}_+
+{1 2}</code></pre>
+<p><code>Char a, Char b:</code> Converts both arguments two string and concatenates them.</p>
+<pre class="shell"><code>blsq ) &#39;a&#39;b_+
+&quot;ab&quot;</code></pre>
+<p><code>String a, Char b:</code> Converts <code>b</code> to String, then concatenates.</p>
+<pre class="shell"><code>blsq ) &quot;a&quot;&#39;b_+
+&quot;ab&quot;</code></pre>
+<p><code>Char a, String b:</code> Converts <code>a</code> to String, then appends it to <code>b</code>.</p>
+<pre class="shell"><code>blsq ) &#39;a&quot;b&quot;_+
+&quot;ba&quot;</code></pre>
+<p><code>Int a, String b:</code> Converts <code>a</code> to String, then appends it to <code>b</code>.</p>
+<pre class="shell"><code>blsq ) 1&quot;b&quot;_+
+&quot;b1&quot;</code></pre>
+<p><code>String a, Int b:</code> Converts <code>b</code> to String, then concatenates.</p>
+<pre class="shell"><code>blsq ) &quot;b&quot;1_+
+&quot;b1&quot;</code></pre>
+<h3 id="div-."><a href="#TOC">Div <code>./</code></a></h3>
+<p><code>Int a, Int b:</code> Integer division.</p>
+<pre class="shell"><code>blsq ) 10 3./
+3</code></pre>
+<p><code>Double a, Double b:</code> Double division.</p>
+<pre class="shell"><code>blsq ) 10.0 3.0./
+3.3333333333333335</code></pre>
+<p><code>String a, String b:</code> Removes <code>b</code> from the beginning of <code>a</code> iff <code>b</code> is a prefix of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;README.md&quot; &quot;README&quot; ./
+&quot;.md&quot;
+blsq ) &quot;README.md&quot; &quot;REDME&quot; ./
+&quot;README.md&quot;</code></pre>
+<p><code>Block a, Block b:</code> Removes <code>b</code> from the beginning of <code>a</code> iff <code>b</code> is a prefix of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3}{1 2}./
+{3}
+blsq ) {1 2 3}{2 2}./
+{1 2 3}</code></pre>
+<p><code>Int a, Double b:</code> Converts <code>a</code> to Double, then divides.</p>
+<pre class="shell"><code>blsq ) 10 3.0./
+3.3333333333333335</code></pre>
+<p><code>Double a, Int b:</code> Converts <code>b</code> to Double, then divides.</p>
+<pre class="shell"><code>blsq ) 10.0 3./
+3.3333333333333335</code></pre>
 <h3 id="duplicate-j"><a href="#TOC">Duplicate <code>J</code> <code>^^</code></a></h3>
 <p>Duplicates the top most element.</p>
 <pre class="shell"><code>blsq ) 5
@@ -86,6 +141,66 @@
 blsq ) 5J
 5
 5</code></pre>
+<h3 id="mul-."><a href="#TOC">Mul <code>.*</code></a></h3>
+<p><code>Int a, Int b:</code> Integer multiplication.</p>
+<pre class="shell"><code>blsq ) 2 3.*
+6</code></pre>
+<p><code>Double a, Double b:</code> Double multiplication.</p>
+<pre class="shell"><code>blsq ) 2.0 3.0.*
+6.0</code></pre>
+<p><code>String a, Int b:</code> Creates a Block containing <code>a</code> exactly <code>b</code> times.</p>
+<pre class="shell"><code>blsq ) &quot;ab&quot;3.*
+{&quot;ab&quot; &quot;ab&quot; &quot;ab&quot;}</code></pre>
+<p><code>Char a, Int b:</code> Creates a String containing <code>a</code> exactly <code>b</code> times.</p>
+<pre class="shell"><code>blsq ) &#39;a 3.*
+&quot;aaa&quot;</code></pre>
+<p><code>Block a, Int b:</code> Creates a Block containing <code>a</code> exactly <code>b</code> times.</p>
+<pre class="shell"><code>blsq ) {1 2}3.*
+{{1 2} {1 2} {1 2}}</code></pre>
+<p><code>String a, String b:</code> Appends <code>a</code> to <code>b</code> then reverses.</p>
+<pre class="shell"><code>blsq ) &quot;123&quot;&quot;456&quot;.*
+&quot;321654&quot;</code></pre>
+<p><code>Int a, Double b:</code> Converts <code>a</code> to Double, then multiplies.</p>
+<pre class="shell"><code>blsq ) 2 3.0.*
+6.0</code></pre>
+<p><code>Double a, Int b:</code> Converts 'b' to Double, then multiplies.</p>
+<pre class="shell"><code>blsq ) 2.0 3.*
+6.0</code></pre>
+<h3 id="sub-.-"><a href="#TOC">Sub <code>.-</code></a></h3>
+<p><code>Int a, Int b:</code> Integer subtraction.</p>
+<pre class="shell"><code>blsq ) 1 5.-
+-4</code></pre>
+<p><code>Double a, Double b:</code> Double subtraction.</p>
+<pre class="shell"><code>blsq ) 1.0 4.0.-
+-3.0</code></pre>
+<p><code>String a, String b:</code> Removes <code>b</code> from the end of <code>a</code> iff <code>b</code> is a suffix of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;README.md&quot; &quot;.md&quot;.-
+&quot;README&quot;
+blsq ) &quot;README.md&quot; &quot;.txt&quot;.-
+&quot;README.md&quot;</code></pre>
+<p><code>Int a, Block b:</code> Removes the first <code>a</code> elements from <code>b</code>.</p>
+<pre class="shell"><code>blsq ) 3{1 2 3 4}.-
+{4}</code></pre>
+<p><code>String a, Int b:</code> Removes the first <code>b</code> characters from <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;abcd&quot;2.-
+&quot;cd&quot;</code></pre>
+<p><code>Int a, String b:</code> Removes the first <code>a</code> characters from <code>b</code>.</p>
+<pre class="shell"><code>blsq ) 2&quot;abcd&quot;.-
+&quot;cd&quot;</code></pre>
+<p><code>Block a, Int b:</code> Removes the first <code>b</code> elements from <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3 4}2.-
+{3 4}</code></pre>
+<p><code>Int a, Double b:</code> Converts <code>a</code> to Double, then subtracts.</p>
+<pre class="shell"><code>blsq ) 4 3.0.-
+1.0</code></pre>
+<p><code>Double a, Int b:</code> Converts <code>b</code> to Double, then subtracts.</p>
+<pre class="shell"><code>blsq ) 4.0 3.-
+1.0</code></pre>
+<p><code>Block a, Block b:</code> Removes <code>b</code> from the end of <code>a</code> iff <code>b</code> is a suffix of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3 4}{3 4}.-
+{1 2}
+blsq ) {1 2 3 4}{3 4 5}.-
+{1 2 3 4}</code></pre>
 <h3 id="swap-j"><a href="#TOC">Swap <code>j</code> <code>\/</code></a></h3>
 <p>Swaps the top two elements.</p>
 <pre class="shell"><code>blsq ) 1 2
