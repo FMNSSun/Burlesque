@@ -26,6 +26,9 @@ import Burlesque.Helpers
 import Debug.Trace
 import qualified Data.Map as M
 
+
+-- Usable singles: kKoO
+
 parseDouble :: Parser BlsqExp
 parseDouble = do 
   s <- many $ char '-'
@@ -45,6 +48,17 @@ parseNumber = do
   if not.null $ s then
     return $ BlsqInt (-1 * (read num))
   else return $ BlsqInt (read num)
+  
+parseIntE :: Parser BlsqExp
+parseIntE = do
+  s <- many $ char '-'
+  num <- many1 digit
+  char 'e'
+  num2 <- many1 digit
+  optional spaces
+  if not.null $ s then
+    return $ BlsqInt (-1 * ( (read num) * 10^(read num2) ))
+  else return $ BlsqInt (1 * ( (read num) * 10^(read num2) ))
 
 parseChar :: Parser BlsqExp
 parseChar = do 
@@ -238,7 +252,7 @@ parseSingle :: Parser BlsqExp
 parseSingle = (try parseMap) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
               (try parseCall) <|> (try parseAssign) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
-              (try parseDouble) <|> (try parseNumber) <|>
+              (try parseDouble) <|> (try parseIntE) <|> (try parseNumber) <|>
               parseChar <|> parseQuoted <|> parseQuoted2 <|> parseSingleIdent <|> parseIdent
 
 runParserWithString p input = 

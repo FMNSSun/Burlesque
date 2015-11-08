@@ -352,6 +352,33 @@ blsq ) {1 2 3}+.
 {1 2 3 3}
 ```
 
+### Lines ```ln```
+
+```String a: ``` Split `a` into lines. 
+
+```shell
+blsq ) "abc\ndef\ngeh"ln
+{"abc" "def" "geh"}
+```
+
+```Int a: ``` Number of digits in `a` (works on absolute value).
+
+```shell
+blsq ) 123ln
+3
+blsq ) -123ln
+3
+```
+
+```Block a, Block b: ``` Returns whichever is longer. If both are equal in length `b` is returned.
+
+```shell
+blsq ) {1 2}{1 2 3}ln
+{1 2 3}
+blsq ) {1 2 4}{1 2 3}ln
+{1 2 3}
+```
+
 ### Max ```>.```
 
 ```Any a, Any b: ``` Returns whichever is greatest.
@@ -513,6 +540,35 @@ blsq ) 4 4!=
 0
 ```
 
+### Parse ```ps```
+
+This built-in auto-maps if the argument given is a block.
+
+```String a: ``` Tries to parse `a` with the Burlesque parser. (Tries to parse `a` as Burlesque code). Returns a Block.
+
+```shell
+blsq ) "5"ps
+{5}
+blsq ) "5 3.0.+"ps
+{5 3.0 .+}
+blsq ) "{5 3.0.+}m["ps
+{{5 3.0 .+} m[}
+```
+
+**Authors' Notes:** This built-in is handy. Instead of doing something like:
+
+```shell
+blsq ) "5 3 6 7"wdri++
+21
+```
+
+you can just do:
+
+```shell
+blsq ) "5 3 6 7"ps++
+21
+```
+
 ### Pow ```**```
 
 ```Int a, Int b: ``` Returns `a` to the power of `b` (`a ^ b`).
@@ -551,6 +607,113 @@ blsq ) 'A**
 blsq ) 'a**
 97
 ```
+
+### ReadArray ```ra```
+
+This built-in auto-maps if the argument given is a Block.
+
+```String a: ``` Parses an array in `[,]`-notation.
+
+```shell
+blsq ) "[1,2,3]"ra
+{1 2 3}
+blsq ) "[1,[2,4],3]"ra
+{1 {2 4} 3}
+blsq ) "[1,[2 4],3]"ra
+{1 {2 4} 3}
+blsq ) "[1,[2 4],,,,3]"ra
+{1 {2 4} 3}
+```
+
+It should be noted that `,` are optional and multiple `,` will be skipped as well. Nesting is supported. 
+
+```Char a: ``` Returns 1 iff `a` is space, else returns 0.
+
+```shell
+blsq ) " \t\ra0"{ra}m[
+{1 1 1 0 0}
+```
+
+### ReadDouble ```rd```
+
+This built-in auto-maps if the argument given is a Block.
+
+```String a: ``` Converts `a` to Double.
+
+```shell
+blsq ) "3.0"rd
+3.0
+```
+
+```Int a: ``` *Defined as:* *```pd```*. 
+
+```Double a: ``` No operation.
+
+```shell
+blsq ) 3.1rd
+3.1
+```
+
+```Char a: ``` Returns 1 iff `a` is alpha, else returns 0.
+
+```shell
+blsq ) 'ard
+1
+blsq ) '1rd
+0
+```
+
+**Authors' Notes:** This built-in is useful to convert every element in a Block to a Double:
+
+```shell
+blsq ) {3.0 5 "3.14"}rd
+{3.0 5.0 3.14}
+```
+
+### ReadInt ```ri```
+
+This built-in auto-maps if the argument given is a Block. 
+
+```String a: ``` Converts `a` to Int.
+
+```shell
+blsq ) "100"ri
+100
+blsq ) "-101"ri
+-101
+```
+
+```Int a: ``` No operation.
+
+```shell
+blsq ) 5ri
+5
+blsq ) -5ri
+-5
+```
+
+```Double a: ``` *Defined as:* *```av```*. 
+
+```Char a: ``` Returns 1 iff `a` is alpha numeric, else returns 0.
+
+```shell
+blsq ) 'ari
+1
+blsq ) '1ri
+1
+blsq ) '.ri
+0
+```
+
+**Authors' Notes:** This built-in is useful to convert every element in a Block to an Integer:
+
+```shell
+blsq ) {"12" 12.0 13 12.7}ri
+{12 12 13 12}
+```
+
+However, Doubles are not rounded to the nearest Integer but are truncated. Rounding everything to the nearest Integer can be done with for example ```rd)R_```. 
+
 
 ### Reverse ```<-```
 
@@ -725,4 +888,107 @@ blsq ) 1 2
 blsq ) 1 2j
 1
 2
+```
+
+### Unlines ```un```
+
+```Block {}: ``` If given an empty block returns an empty string.
+
+```shell
+blsq ) {}un
+""
+```
+
+```Otherwise: ``` *Defined as:* *```"\n"j[[\[```*. This is the *inverse* of `ln` and inserts newlines between elements. 
+
+```shell
+blsq ) {"abc" "def" "ghe"}"\n"j[[\[
+"abc\ndef\nghe"
+blsq ) {"abc" "def" "ghe"}un
+"abc\ndef\nghe"
+```
+
+**Authors' Notes:** Due to its definition this built-in will only work as expected when the Block contains Strings.
+If you want to *unlines* a Block containing other types use `Su`. 
+
+```shell
+blsq ) {1 2 3}un
+"\n12\n3"
+blsq ) {1 2 3}Su
+"1\n2\n3"
+```
+
+### UnlinesPretty ```uN```
+
+*Defined as:* *```unsh```*.
+
+```shell
+blsq ) {"12" "23"}un
+"12\n23"
+blsq ) {"12" "23"}uN
+12
+23
+blsq ) {"12" "23"}unsh
+12
+23
+```
+
+### WithLines ```wl```
+
+*Defined as:* *```jlnjm[un```*. This built-in allows to map over the lines in a String. 
+
+```shell
+blsq ) "abc\ndef"{<-}jlnjm[un
+"cba\nfed"
+blsq ) "abc\ndef"{<-}wl
+"cba\nfed"
+```
+
+
+### WithLinesParsePretty ```wL``` 
+
+*Defined as:* *```(ps)+]WL```*. This built-in allows to map over the lines in a String while calling *Parse* on each line automatically.
+
+```shell
+blsq ) "11 22\n5 6"{++Sh}(ps)+]WL
+33
+11
+blsq ) "11 22\n5 6"{++Sh}wL
+33
+11
+```
+
+### WithLinesPretty ```WL```
+
+*Defined as:* *```wlsh```*. 
+
+```shell
+blsq ) "abc\ndef"{<-}wlsh
+cba
+fed
+blsq ) "abc\ndef"{<-}WL
+cba
+fed
+```
+
+### WithWords ```ww```
+
+*Defined as*: *```jWDjm[wd```*. This built-in allows to map over the words in a String.
+
+```shell
+blsq ) "hello world"{<-}jWDjm[wd
+"olleh dlrow"
+blsq ) "hello world"{<-}ww
+"olleh dlrow"
+```
+
+### WithWordsPretty ```WW```
+
+*Defined as*: *```wwsh```*.
+
+```shell
+blsq ) "hello world"{<-}wwsh
+olleh dlrow
+blsq ) "hello world"{<-}WW
+olleh dlrow
 ```

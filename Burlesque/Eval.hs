@@ -215,7 +215,7 @@ builtins = [
   ("R_", builtinRound2),
   ("==", builtinEqual),
   ("!=", builtinNotEqual),
-  ("<-", builtinReverse),
+  ("<-", builtinReverse), -- doc until here 7.11.15
   ("ln", builtinLines),
   ("un", builtinUnlines),
   ("uN", builtinUnlinesPretty),
@@ -227,7 +227,7 @@ builtins = [
   ("ri", builtinReadInt),
   ("rd", builtinReadDouble),
   ("ra", builtinReadArray),
-  ("ps", builtinParse),
+  ("ps", builtinParse), -- <-
   ("up", builtinUnparse),
   ("if", builtinIff),
   ("ie", builtinIfElse),
@@ -581,6 +581,9 @@ builtins = [
   ("Sw", builtinStringWords),
   ("FL", builtinFlatten),
   
+  ("rM", builtinRangeModulo2),
+  ("e-", builtinEMinus),
+  
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
   ("??", builtinVersion)
@@ -589,6 +592,11 @@ builtins = [
 lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
 
 putResult = putStack
+
+builtinEMinus = pushToStack (BlsqDouble 10.0) >> builtinSwap >> builtinCoercePow >> 
+  pushToStack (BlsqDouble 1) >> builtinSwap >> builtinDiv
+
+builtinRangeModulo2 = builtinRangeModulo >> builtinPretty
 
 builtinFlatten = do
 	st <- getStack
@@ -1211,6 +1219,10 @@ builtinDiv = do
                                  True -> BlsqStr (drop (length a) b) : xs
                                  False -> BlsqStr b : xs
                                  
+    (BlsqBlock a : BlsqBlock b : xs) -> case a `isPrefixOf` b of
+                                 True -> BlsqBlock (drop (length a) b) : xs
+                                 False -> BlsqBlock b : xs
+                                 
     (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ b / (fromIntegral a)) : xs
     (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ (fromIntegral b) / a) : xs
     _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
@@ -1283,7 +1295,7 @@ builtinReverse = do
  putResult $
   case st of
    (BlsqStr a) : xs -> (BlsqStr $ reverse a) : xs
-   (BlsqInt a) : xs -> (BlsqInt . read . reverse . show $ a) : xs
+   (BlsqInt a) : xs -> (BlsqInt . read . reverse . show $ abs a) : xs
    (BlsqBlock a) : xs -> (BlsqBlock $ reverse a) : xs
    (BlsqChar a : xs) -> (BlsqChar (if isUpper a then toLower a else toUpper a)) : xs
    _ -> (BlsqError "Burlesque: (<-) Invalid arguments!") : st
@@ -1295,7 +1307,8 @@ builtinLines = do
  putResult $
   case st of
    (BlsqStr a) : xs -> (BlsqBlock . map BlsqStr . lines $ a) : xs
-   (BlsqInt a) : xs -> (BlsqInt . genericLength . show $ a) : xs
+   (BlsqInt a) : xs -> (BlsqInt . genericLength . show $ abs a) : xs
+   (BlsqBlock b : BlsqBlock a : xs) -> (BlsqBlock (if (genericLength a) > (genericLength b) then a else b)) : xs
    _ -> (BlsqError "Burlesque: (ln) Invalid arguments!") : st
 
 -- | > un

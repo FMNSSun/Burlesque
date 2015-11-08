@@ -30,6 +30,7 @@
 <li><a href="#equal">Equal <code>==</code></a></li>
 <li><a href="#greater-.">Greater <code>.&gt;</code></a></li>
 <li><a href="#increment-.">Increment <code>+.</code></a></li>
+<li><a href="#lines-ln">Lines <code>ln</code></a></li>
 <li><a href="#max-.">Max <code>&gt;.</code></a></li>
 <li><a href="#maximum">Maximum <code>&gt;]</code></a></li>
 <li><a href="#min-.">Min <code>&lt;.</code></a></li>
@@ -37,13 +38,24 @@
 <li><a href="#mod-.">Mod <code>.%</code></a></li>
 <li><a href="#mul-.">Mul <code>.*</code></a></li>
 <li><a href="#notequal">NotEqual <code>!=</code></a></li>
+<li><a href="#parse-ps">Parse <code>ps</code></a></li>
 <li><a href="#pow">Pow <code>**</code></a></li>
+<li><a href="#readarray-ra">ReadArray <code>ra</code></a></li>
+<li><a href="#readdouble-rd">ReadDouble <code>rd</code></a></li>
+<li><a href="#readint-ri">ReadInt <code>ri</code></a></li>
 <li><a href="#reverse--">Reverse <code>&lt;-</code></a></li>
 <li><a href="#round-r_">Round <code>r_</code></a></li>
 <li><a href="#round2-r_">Round2 <code>R_</code></a></li>
 <li><a href="#smaller-.">Smaller <code>.&lt;</code></a></li>
 <li><a href="#sub-.-">Sub <code>.-</code></a></li>
 <li><a href="#swap-j">Swap <code>j</code> <code>\/</code></a></li>
+<li><a href="#unlines-un">Unlines <code>un</code></a></li>
+<li><a href="#unlinespretty-un">UnlinesPretty <code>uN</code></a></li>
+<li><a href="#withlines-wl">WithLines <code>wl</code></a></li>
+<li><a href="#withlinesparsepretty-wl">WithLinesParsePretty <code>wL</code></a></li>
+<li><a href="#withlinespretty-wl">WithLinesPretty <code>WL</code></a></li>
+<li><a href="#withwords-ww">WithWords <code>ww</code></a></li>
+<li><a href="#withwordspretty-ww">WithWordsPretty <code>WW</code></a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -216,6 +228,20 @@ blsq ) {} 9 .&gt;
 <p><code>Block a:</code> Appends the last element of <code>a</code> to <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3}+.
 {1 2 3 3}</code></pre>
+<h3 id="lines-ln"><a href="#TOC">Lines <code>ln</code></a></h3>
+<p><code>String a:</code> Split <code>a</code> into lines.</p>
+<pre class="shell"><code>blsq ) &quot;abc\ndef\ngeh&quot;ln
+{&quot;abc&quot; &quot;def&quot; &quot;geh&quot;}</code></pre>
+<p><code>Int a:</code> Number of digits in <code>a</code> (works on absolute value).</p>
+<pre class="shell"><code>blsq ) 123ln
+3
+blsq ) -123ln
+3</code></pre>
+<p><code>Block a, Block b:</code> Returns whichever is longer. If both are equal in length <code>b</code> is returned.</p>
+<pre class="shell"><code>blsq ) {1 2}{1 2 3}ln
+{1 2 3}
+blsq ) {1 2 4}{1 2 3}ln
+{1 2 3}</code></pre>
 <h3 id="max-."><a href="#TOC">Max <code>&gt;.</code></a></h3>
 <p><code>Any a, Any b:</code> Returns whichever is greatest.</p>
 <pre class="shell"><code>blsq ) 5 6&gt;.
@@ -296,6 +322,21 @@ blsq ) 3 4!=
 1
 blsq ) 4 4!=
 0</code></pre>
+<h3 id="parse-ps"><a href="#TOC">Parse <code>ps</code></a></h3>
+<p>This built-in auto-maps if the argument given is a block.</p>
+<p><code>String a:</code> Tries to parse <code>a</code> with the Burlesque parser. (Tries to parse <code>a</code> as Burlesque code). Returns a Block.</p>
+<pre class="shell"><code>blsq ) &quot;5&quot;ps
+{5}
+blsq ) &quot;5 3.0.+&quot;ps
+{5 3.0 .+}
+blsq ) &quot;{5 3.0.+}m[&quot;ps
+{{5 3.0 .+} m[}</code></pre>
+<p><strong>Authors' Notes:</strong> This built-in is handy. Instead of doing something like:</p>
+<pre class="shell"><code>blsq ) &quot;5 3 6 7&quot;wdri++
+21</code></pre>
+<p>you can just do:</p>
+<pre class="shell"><code>blsq ) &quot;5 3 6 7&quot;ps++
+21</code></pre>
 <h3 id="pow"><a href="#TOC">Pow <code>**</code></a></h3>
 <p><code>Int a, Int b:</code> Returns <code>a</code> to the power of <code>b</code> (<code>a ^ b</code>).</p>
 <pre class="shell"><code>blsq ) 2 3**
@@ -314,6 +355,62 @@ blsq ) 4 4!=
 65
 blsq ) &#39;a**
 97</code></pre>
+<h3 id="readarray-ra"><a href="#TOC">ReadArray <code>ra</code></a></h3>
+<p>This built-in auto-maps if the argument given is a Block.</p>
+<p><code>String a:</code> Parses an array in <code>[,]</code>-notation.</p>
+<pre class="shell"><code>blsq ) &quot;[1,2,3]&quot;ra
+{1 2 3}
+blsq ) &quot;[1,[2,4],3]&quot;ra
+{1 {2 4} 3}
+blsq ) &quot;[1,[2 4],3]&quot;ra
+{1 {2 4} 3}
+blsq ) &quot;[1,[2 4],,,,3]&quot;ra
+{1 {2 4} 3}</code></pre>
+<p>It should be noted that <code>,</code> are optional and multiple <code>,</code> will be skipped as well. Nesting is supported.</p>
+<p><code>Char a:</code> Returns 1 iff <code>a</code> is space, else returns 0.</p>
+<pre class="shell"><code>blsq ) &quot; \t\ra0&quot;{ra}m[
+{1 1 1 0 0}</code></pre>
+<h3 id="readdouble-rd"><a href="#TOC">ReadDouble <code>rd</code></a></h3>
+<p>This built-in auto-maps if the argument given is a Block.</p>
+<p><code>String a:</code> Converts <code>a</code> to Double.</p>
+<pre class="shell"><code>blsq ) &quot;3.0&quot;rd
+3.0</code></pre>
+<p><code>Int a:</code> <em>Defined as:</em> <em><code>pd</code></em>.</p>
+<p><code>Double a:</code> No operation.</p>
+<pre class="shell"><code>blsq ) 3.1rd
+3.1</code></pre>
+<p><code>Char a:</code> Returns 1 iff <code>a</code> is alpha, else returns 0.</p>
+<pre class="shell"><code>blsq ) &#39;ard
+1
+blsq ) &#39;1rd
+0</code></pre>
+<p><strong>Authors' Notes:</strong> This built-in is useful to convert every element in a Block to a Double:</p>
+<pre class="shell"><code>blsq ) {3.0 5 &quot;3.14&quot;}rd
+{3.0 5.0 3.14}</code></pre>
+<h3 id="readint-ri"><a href="#TOC">ReadInt <code>ri</code></a></h3>
+<p>This built-in auto-maps if the argument given is a Block.</p>
+<p><code>String a:</code> Converts <code>a</code> to Int.</p>
+<pre class="shell"><code>blsq ) &quot;100&quot;ri
+100
+blsq ) &quot;-101&quot;ri
+-101</code></pre>
+<p><code>Int a:</code> No operation.</p>
+<pre class="shell"><code>blsq ) 5ri
+5
+blsq ) -5ri
+-5</code></pre>
+<p><code>Double a:</code> <em>Defined as:</em> <em><code>av</code></em>.</p>
+<p><code>Char a:</code> Returns 1 iff <code>a</code> is alpha numeric, else returns 0.</p>
+<pre class="shell"><code>blsq ) &#39;ari
+1
+blsq ) &#39;1ri
+1
+blsq ) &#39;.ri
+0</code></pre>
+<p><strong>Authors' Notes:</strong> This built-in is useful to convert every element in a Block to an Integer:</p>
+<pre class="shell"><code>blsq ) {&quot;12&quot; 12.0 13 12.7}ri
+{12 12 13 12}</code></pre>
+<p>However, Doubles are not rounded to the nearest Integer but are truncated. Rounding everything to the nearest Integer can be done with for example <code>rd)R_</code>.</p>
 <h3 id="reverse--"><a href="#TOC">Reverse <code>&lt;-</code></a></h3>
 <p><code>String a:</code> Reverses <code>a</code>.</p>
 <pre class="shell"><code>blsq ) &quot;123&quot;&lt;-
@@ -405,5 +502,63 @@ blsq ) {1 2 3 4}{3 4 5}.-
 blsq ) 1 2j
 1
 2</code></pre>
+<h3 id="unlines-un"><a href="#TOC">Unlines <code>un</code></a></h3>
+<p><code>Block {}:</code> If given an empty block returns an empty string.</p>
+<pre class="shell"><code>blsq ) {}un
+&quot;&quot;</code></pre>
+<p><code>Otherwise:</code> <em>Defined as:</em> <em><code>&quot;\n&quot;j[[\[</code></em>. This is the <em>inverse</em> of <code>ln</code> and inserts newlines between elements.</p>
+<pre class="shell"><code>blsq ) {&quot;abc&quot; &quot;def&quot; &quot;ghe&quot;}&quot;\n&quot;j[[\[
+&quot;abc\ndef\nghe&quot;
+blsq ) {&quot;abc&quot; &quot;def&quot; &quot;ghe&quot;}un
+&quot;abc\ndef\nghe&quot;</code></pre>
+<p><strong>Authors' Notes:</strong> Due to its definition this built-in will only work as expected when the Block contains Strings. If you want to <em>unlines</em> a Block containing other types use <code>Su</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3}un
+&quot;\n12\n3&quot;
+blsq ) {1 2 3}Su
+&quot;1\n2\n3&quot;</code></pre>
+<h3 id="unlinespretty-un"><a href="#TOC">UnlinesPretty <code>uN</code></a></h3>
+<p><em>Defined as:</em> <em><code>unsh</code></em>.</p>
+<pre class="shell"><code>blsq ) {&quot;12&quot; &quot;23&quot;}un
+&quot;12\n23&quot;
+blsq ) {&quot;12&quot; &quot;23&quot;}uN
+12
+23
+blsq ) {&quot;12&quot; &quot;23&quot;}unsh
+12
+23</code></pre>
+<h3 id="withlines-wl"><a href="#TOC">WithLines <code>wl</code></a></h3>
+<p><em>Defined as:</em> <em><code>jlnjm[un</code></em>. This built-in allows to map over the lines in a String.</p>
+<pre class="shell"><code>blsq ) &quot;abc\ndef&quot;{&lt;-}jlnjm[un
+&quot;cba\nfed&quot;
+blsq ) &quot;abc\ndef&quot;{&lt;-}wl
+&quot;cba\nfed&quot;</code></pre>
+<h3 id="withlinesparsepretty-wl"><a href="#TOC">WithLinesParsePretty <code>wL</code></a></h3>
+<p><em>Defined as:</em> <em><code>(ps)+]WL</code></em>. This built-in allows to map over the lines in a String while calling <em>Parse</em> on each line automatically.</p>
+<pre class="shell"><code>blsq ) &quot;11 22\n5 6&quot;{++Sh}(ps)+]WL
+33
+11
+blsq ) &quot;11 22\n5 6&quot;{++Sh}wL
+33
+11</code></pre>
+<h3 id="withlinespretty-wl"><a href="#TOC">WithLinesPretty <code>WL</code></a></h3>
+<p><em>Defined as:</em> <em><code>wlsh</code></em>.</p>
+<pre class="shell"><code>blsq ) &quot;abc\ndef&quot;{&lt;-}wlsh
+cba
+fed
+blsq ) &quot;abc\ndef&quot;{&lt;-}WL
+cba
+fed</code></pre>
+<h3 id="withwords-ww"><a href="#TOC">WithWords <code>ww</code></a></h3>
+<p><em>Defined as</em>: <em><code>jWDjm[wd</code></em>. This built-in allows to map over the words in a String.</p>
+<pre class="shell"><code>blsq ) &quot;hello world&quot;{&lt;-}jWDjm[wd
+&quot;olleh dlrow&quot;
+blsq ) &quot;hello world&quot;{&lt;-}ww
+&quot;olleh dlrow&quot;</code></pre>
+<h3 id="withwordspretty-ww"><a href="#TOC">WithWordsPretty <code>WW</code></a></h3>
+<p><em>Defined as</em>: <em><code>wwsh</code></em>.</p>
+<pre class="shell"><code>blsq ) &quot;hello world&quot;{&lt;-}wwsh
+olleh dlrow
+blsq ) &quot;hello world&quot;{&lt;-}WW
+olleh dlrow</code></pre>
 </body>
 </html>
