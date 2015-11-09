@@ -189,6 +189,151 @@ blsq ) "b"1_+
 "b1"
 ```
 
+### Append ```[+```
+
+```Block a, Any b: ``` Append `b` to `a`.
+
+```shell
+blsq ) {1 2}9[+
+{1 2 9}
+```
+
+```String a, Char b: ``` Append `b` to `a`.
+
+```shell
+blsq ) "ab"'c[+
+"abc"
+```
+
+```Int a, Int b: ``` Concatenates Integers.
+
+```shell
+blsq ) 12 23[+
+1223
+```
+
+**Authors' Notes:** This built-in is rather superfluous because most of its use-cases can be covered by either using `++` or `_+`. Yet, there may be some rare use-cases where you might want to use it for example in
+`{[+}r[` or the like. 
+
+### Average ```av```
+
+```Block a:``` *Defined as:* *```J++jL[pd./```*. Calculates average.
+
+```shell
+blsq ) {1 2 3 4}J++jL[pd./
+2.5
+blsq ) {1 2 3 4}av
+2.5
+```
+
+**Authors' Notes:** The `pd` is there to ensure that the result is always a Double. 
+
+```Block a:``` Floor of `a` as Integer.
+
+```shell
+blsq ) 5.9av
+5
+blsq ) 5.1av
+5
+```
+
+**Authors' Notes:** If you want the floor of `a` as Double use `fo`. 
+
+### Average2 ```AV```
+
+*Defined as:* *```PDav```*. Calculates average. 
+
+```shell
+blsq ) {1 2 3.2 4}AV
+2.75
+blsq ) {1 2 3.2 4}av
+2.55
+```
+
+**Authors' Notes:** This built-in is a relic from earlier versions of Burlesque where `./` only worked on ```Int, Int``` or ```Double, Double``` but not with ```Double, Int``` or ```Int, Double```. 
+This meant that ```av``` could only be used on Blocks that contained Doubles (because `++` would produce an Integer otherwise and the `L[pd./` would fail because an Integer could not be divided by
+a Double). In such cases `AV` had to be used. With newer versions the functionality of `./` was extended and `av` can now be used on Blocks that contain Integers as well. However,
+if you use `AV` on a Block that contains Doubles it will convert all these Doubles to ceiling(a) which is not what you want in most cases. Thus: The use of `av` is recommended as it is safer. 
+
+### Concat ```\[```
+
+```Block {}: ``` *Defined as:* *```{}```*. Empty Block becomes empty Block.
+
+```shell
+blsq ) {}\[
+{}
+```
+
+```Block {Block (Char a)}: ``` Return a single character string consisting of `a`. 
+
+```shell
+blsq ) {'a}\[
+"a"
+```
+
+```Block a: ``` *Defined as:* *```{_+}r[```*. Concatenates elements in a Block.
+
+```shell
+blsq ) {{1 1} {2 1} {3}}{_+}r[
+{1 1 2 1 3}
+blsq ) {{1 1} {2 1} {3}}\[
+{1 1 2 1 3}
+blsq ) {'a 'b 'c}\[
+"abc"
+```
+
+**Authors' Notes:** There is an additional special case when ```{_+}r[``` does not return a Block the return value will be boxed. Why this special case exist remains unknown.
+
+### ConcatMap ```\m```
+
+*Defined as:* *```m[\[```*. 
+
+```shell
+blsq ) {1 2 3}{ro}m[\[
+{1 1 2 1 2 3}
+blsq ) {1 2 3}{ro}\m
+{1 1 2 1 2 3}
+blsq ) {1 2 3}{ro}m[
+{{1} {1 2} {1 2 3}}
+blsq ) "abc"{'ajr@}\m
+"aababc"
+```
+
+**Authors' Notes:** The Map built-in detects if the input argument is a String and will concat automatically. Compare these examples:
+
+```shell
+blsq ) "abc"{'ajr@}m[
+{'a 'a 'b 'a 'b 'c}
+blsq ) "abc"XX{'ajr@}m[
+{{'a} {'a 'b} {'a 'b 'c}}
+blsq ) "abc"XX{'ajr@}\m
+{'a 'a 'b 'a 'b 'c}
+blsq ) "abc"XX{'ajr@}\m\[
+"aababc"
+blsq ) "abc"{'ajr@}\m
+"aababc"
+```
+
+### Continuation ```c!```
+
+Generally speaking a *Continuation* refers to executing code on a snapshot of the stack and then pushing the result back to the actual stack. 
+This means that this built-in lets you run code without destroying data on the stack.
+
+```Block a: ``` Run `a` as a Continuation.
+
+```shell
+blsq ) 5 4.+
+9
+blsq ) 5 4{.+}c!
+9
+4
+5
+blsq ) 5 4{.+J}c!
+9
+4
+5
+```
+
 ### Decrement ```-.```
 
 ```Int a: ``` Decrements `a`.
@@ -295,6 +440,34 @@ blsq ) {1 23}{1 23}==
 1
 ```
 
+### Eval ```e!```
+
+```Block a: ``` Evaluates (executes) `a`.
+
+```shell
+blsq ) {5 5.+}e!
+10
+```
+
+**Authors' Notes:** If you want to eval a String use `pe`. 
+
+### EvalMany ```E!```
+
+*Defined as:* *```.*\[e!```*. This built-in can be used to evaluate a Block a number of times.
+
+```shell
+blsq ) 1{J.+}1E!
+2
+blsq ) 1{J.+}2E!
+4
+blsq ) 1{J.+}3E!
+8
+blsq ) 1{J.+}4E!
+16
+blsq ) 1{J.+}4.*\[e!
+16
+```
+
 ### Greater ```.>```
 
 ```Any a, Any b: ``` Returns 1 if `a > b` else returns 0.
@@ -321,6 +494,79 @@ blsq ) {} 9 .>
 ```
 
 **Note:** Comparing values with different types may result in unexpected (but determinstic, thus not undefined) behaviour. 
+
+### Head ```-]```
+
+```Block a: ``` Returns the first element of `a`.
+
+```shell
+blsq ) {2 4 0}-]
+2
+```
+
+```String a: ``` Returns the first character of `a`.
+
+```shell
+blsq ) "abc"-]
+'a
+```
+
+**Authors' Notes:** If you need the first character of `a` as a String use `-~`. 
+
+```Int a: ``` Returns the first digit of `a` (works on absolute value).
+
+```shell
+blsq ) -451-]
+4
+```
+
+### HeadTail ```-~```
+
+*Defined as:* *```-][-```*. 
+
+```shell
+blsq ) "abcd"-][-
+"a"
+blsq ) {{1 2 3} {4 5 6}}-~
+{2 3}
+blsq ) "abcd"-~
+"a"
+```
+
+**Authors' Notes:** Useful to get the first character of a String as a String. 
+
+### IfElse ```ie```
+
+```Block a, Block b, Int a: ``` Executes `a` if b is not zero, otherwise executes `b`.
+
+```shell
+blsq ) 5{3.*}{2.*}1ie
+15
+blsq ) 5{3.*}{2.*}0ie
+10
+```
+
+**Authors' Notes:** This built-in is terrible because in most real-world cases it requires at least two additional swaps to get the result of a predicate to the top of the stack.
+
+### Iff ```if```
+
+```Int a, Block b: ``` Executes `b` only iff `a` is not zero.
+
+```shell
+blsq ) 5 1{3.*}if
+15
+blsq ) 5 0{3.*}if
+5
+```
+
+```Block a, Int b: ``` Executes `a` only iff `b` is not zero.
+
+```shell
+blsq ) 5{3.*}0if
+5
+blsq ) 5{3.*}1if
+15
+```
 
 ### Increment ```+.```
 
@@ -352,6 +598,81 @@ blsq ) {1 2 3}+.
 {1 2 3 3}
 ```
 
+### Init ```~]```
+
+```Block a: ``` Returns all but the last elements of `a`.
+
+```shell
+blsq ) {1 2 3}~]
+{1 2}
+```
+
+```String a: ``` Returns all but the last character of `a`.
+
+```shell
+blsq ) "12a"~]
+"12"
+```
+
+```Int a: ``` Returns all but the last digit of `a` (as Integer) (works on absolute value).
+
+```shell
+blsq ) 451~]
+45
+```
+
+### InitTail ```~-```
+
+*Defined as:* *```~][-```*. Can be used to remove the first and last element of a String/Block.
+
+```shell
+blsq ) "abcd"~][-
+"bc"
+blsq ) "abcd"~-
+"bc"
+```
+
+### Intersperse ```[[```
+
+```Any a, Block b: ``` Inserts `a` between elements in `b`.
+
+```shell
+blsq ) 0{1 2 3}[[
+{1 0 2 0 3}
+```
+
+```Char a, String b: ``` Inserts `a` between characters in `b`.
+
+```shell
+blsq ) 'x"abc"[[
+"axbxc"
+```
+
+**See also:** *Intercalate*. 
+
+### Last ```[~```
+
+```String a: ``` Returns the last character of `a`.
+
+```shell
+blsq ) "abc"[~
+'c
+```
+
+```Block a: ``` Returns the last element of `a`.
+
+```shell
+blsq ) {1 2 3}[~
+3
+```
+
+```Int a: ``` Returns the last digit of `a` (works on absolute value).
+
+```shell
+blsq ) 451[~
+1
+```
+
 ### Lines ```ln```
 
 ```String a: ``` Split `a` into lines. 
@@ -378,6 +699,28 @@ blsq ) {1 2}{1 2 3}ln
 blsq ) {1 2 4}{1 2 3}ln
 {1 2 3}
 ```
+
+**See also:** *WithLines*.
+
+### Map ```m[```
+
+```String a, Block f: ``` *Defined as:* *```jXXjm[\[```*. Applies `f` to every character in `a`.
+
+```shell
+blsq ) "aBc"{<-}jXXjm[\[
+"AbC"
+blsq ) "aBc"{<-}m[
+"AbC"
+```
+
+```Block a, Block f: ``` Applies `f` to every element in `a`.
+
+```shell
+blsq ) {1 2 3 4 5}{J.*}m[
+{1 4 9 16 25}
+```
+
+**See also:** *ConcatMap* and there are many other different versions and shortcuts for *Map*. 
 
 ### Max ```>.```
 
@@ -608,6 +951,77 @@ blsq ) 'a**
 97
 ```
 
+### Prepend ```+]```
+
+```Block a, Any b: ``` Prepend `b` to `a`.
+
+```shell
+blsq ) {1 2}3+]
+{3 1 2}
+```
+
+```String a, Char b: ``` Prepend `b` to `a`.
+
+```shell
+blsq ) "ab"'c+]
+"cab"
+```
+
+```Int a, Int b: ``` Prepends `b` to `a` (result is an Integer).
+
+```shell
+blsq ) 12 23+]
+2312
+```
+
+### Product ```pd```
+
+```Block {}: ``` *Defined as:* *```1```*. The product of an empty block is one.
+
+```Block a: ``` *Defined as:* *```{.*}r[```*. Calculates the product of a Block.
+
+```shell
+blsq ) {1 2 3 4}{.*}r[
+24
+blsq ) {1 2 3 4}pd
+24
+blsq ) {1 2 3.0 4}pd
+24.0
+```
+
+```Int a: ``` *Defined as:* *```Shrd```*. Converts to double. 
+
+```shell
+blsq ) 5Shrd
+5.0
+blsq ) 5pd
+5.0
+blsq ) 5rd
+5.0
+```
+
+```Double a: ``` Ceiling of `a` as Integer.
+
+```shell
+blsq ) 1.1pd
+2
+```
+
+**Authors' Notes:** If you want ceiling of `a` as Double use `cl`. 
+
+### ProductMany ```PD```
+
+*Defined as:* *```{pd}m[```*. Just maps `pd` over a Block.
+
+```shell
+blsq ) {{1 2 3} 5 {2 4}}{pd}m[
+{6 5.0 8}
+blsq ) {{1 2 3} 5 {2 4}}PD
+{6 5.0 8}
+```
+
+**Authors' Notes:** Can be used as a shortcut for `)pd`. Otherwise this built-in doesn't offer too much over `rd` as `rd` auto-maps. 
+
 ### ReadArray ```ra```
 
 This built-in auto-maps if the argument given is a Block.
@@ -714,6 +1128,18 @@ blsq ) {"12" 12.0 13 12.7}ri
 
 However, Doubles are not rounded to the nearest Integer but are truncated. Rounding everything to the nearest Integer can be done with for example ```rd)R_```. 
 
+
+### Reduce ```r[```
+
+```Block a, Block f: ``` Takes the first element of `a` and the second element of `a`, applies `f`, takes the next element of `a` and applies `f` again and continues like that. More symbolically speaking
+`{1 2 3 4}{.+}r[` becomes `1 2 .+ 3 .+ 4 .+`, `{1 2 3 5}{?-}r[` becomes `1 2 ?- 3 ?- 4?-` and so forth. 
+
+```shell
+blsq ) {1 2 3 4}{.+}r[
+10
+blsq ) {1 2 3 4}{.*}r[
+24
+```
 
 ### Reverse ```<-```
 
@@ -877,6 +1303,28 @@ blsq ) {1 2 3 4}{3 4 5}.-
 {1 2 3 4}
 ```
 
+### Sum ```++```
+
+```Block {}: ``` *Defined as:* *```0```*. The sum of an empty Block is zero.
+
+```Block a: ``` *Defined as:* *```{.+}r[```*. Calculates the sum of a Block.
+
+```shell
+blsq ) {1 2 3 4}{.+}r[
+10
+blsq ) {1 2 3 4}++
+10
+blsq ) {1 2 3 4.0}++
+10.0
+```
+
+```Int a, Int b: ``` Concatenates Integers (works on absolute values). 
+
+```shell
+blsq ) 12 34++
+1234
+```
+
 ### Swap ```j``` ```\/```
 
 Swaps the top two elements.
@@ -888,6 +1336,36 @@ blsq ) 1 2
 blsq ) 1 2j
 1
 2
+```
+
+### Tail ```[-```
+
+```Block a: ``` Returns all but the first element of `a`.
+
+```shell
+blsq ) {1 2 3}[-
+{2 3}
+```
+
+```String a: ``` Returns all but the first character of `a`.
+
+```shell
+blsq ) "hello"[-
+"ello"
+```
+
+```Int a: ``` Returns all but the last digit of `a` (as Integer) (works on absolute value).
+
+```shell
+blsq ) 451[-
+51
+```
+
+```Char a: ``` Convert to string.
+
+```shell
+blsq ) 'a[-
+"a"
 ```
 
 ### Unlines ```un```
@@ -931,6 +1409,36 @@ blsq ) {"12" "23"}uN
 blsq ) {"12" "23"}unsh
 12
 23
+```
+
+### Unparse ```up```
+
+```Any a: ``` Converts a to display string. This is somewhat the *inverse* of `ps`.
+
+```shell
+blsq ) {1 2++}up
+"{1 2 ++}"
+```
+
+**Authors' Note:** This built-in is somewhat equivalent to using `3SH`. 
+
+### While ```w!```
+
+A while-loop
+
+```Block f, Block p: ``` Executes `f` while `p` is not zero. `p` will be tested each time against the top of the stack.
+
+```shell
+blsq ) 5{+.}{10.<}w!
+10
+```
+
+```Block f: ``` Executes `f` as long as the top of the stack is not zero. Same thing as doing ```{code}{}w!```.
+
+```shell
+blsq ) 0 10{j+.+.j-.}w!
+0
+20
 ```
 
 ### WithLines ```wl```
