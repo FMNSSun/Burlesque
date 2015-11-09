@@ -17,8 +17,8 @@ Useful Weblinks:
 * [Source code](http://github.com/FMNSSun/Burlesque)
 * [Language Reference](http://mroman.ch/burlesque/lref.html)
 
-Until this moonpage is complete, please consult the Language Reference. Once compelete, the moonpage will
-superseed the Language Reference.
+**Until this moonpage is complete please consult the Language Reference. Once compelete, the moonpage will
+superseed the Language Reference and this warning will disappear.**
 
 ## HISTORY
 
@@ -189,6 +189,19 @@ blsq ) "b"1_+
 "b1"
 ```
 
+### And ```&&```
+
+This built-in auto-zips if an argument provided is a Block.
+
+```Int a, Int b: ``` Bitwise AND.
+
+```shell
+blsq ) 2 4&&
+0
+blsq ) 1 7&&
+1
+```
+
 ### Append ```[+```
 
 ```Block a, Any b: ``` Append `b` to `a`.
@@ -312,6 +325,44 @@ blsq ) "abc"XX{'ajr@}\m\[
 "aababc"
 blsq ) "abc"{'ajr@}\m
 "aababc"
+```
+
+### Contains ```~[```
+
+```Block a, Any b: ``` Returns 1 if `a` contains `b` otherwise returns 0.
+
+```shell
+blsq ) {1 2 3}4~[
+0
+blsq ) {1 2 3}2~[
+1
+```
+
+```String a, Char b: ``` Returns 1 if `a` contains `b` otherwise returns 0.
+
+```shell
+blsq ) "abc"'b~[
+1
+blsq ) "abc"'z~[
+0
+```
+
+```Int a, Int b: ``` Returns 1 if `a` contains `b` otherwise returns 0 (works on absolute values).
+
+```shell
+blsq ) 1223 22~[
+1
+blsq ) 1223 21~[
+0
+```
+
+```String a, String b: ``` Returns 1 if `a` contains `b` otherwise returns 0.
+
+```shell
+blsq ) "hello" "ell"~[
+1
+blsq ) "hello" "elo"~[
+0
 ```
 
 ### Continuation ```c!```
@@ -468,6 +519,89 @@ blsq ) 1{J.+}4.*\[e!
 16
 ```
 
+### Explode ```XX```
+
+```String a: ``` Converts `a` to a Block of characters. 
+
+```shell
+blsq ) "abc"XX
+{'a 'b 'c}
+```
+
+```Int a: ``` Converts `a` to a Block of digits (works on absolute value.
+
+```shell
+blsq ) 971XX
+{9 7 1}
+```
+
+```Double a: ``` Converts `a` to a Block containing floor(`a`) and ceiling(`a`).
+
+```shell
+blsq ) 5.3XX
+{5 6}
+```
+
+```Char a: ``` Converts to String.
+
+```shell
+blsq ) 'aXX
+"a"
+```
+
+```Block a: ``` No operation.
+
+```shell
+blsq ) {1 2}XX
+{1 2}
+```
+
+**Authors' Notes:** Sometimes this built-in is also referred to as *Xplode*. 
+
+### Format ```FF```
+
+```Pretty a, Int format: ``` Change format of `a` to `format`.
+
+Formats are:
+
+* 0 - Normal
+* 1 - No spaces
+* 2 - With spaces
+* 3 - Raw
+
+```shell
+blsq ) {1 2 {3 4 "5"}}sh0FF
+[1, 2, [3, 4, "5"]]
+blsq ) {1 2 {3 4 "5"}}sh1FF
+[1,2,[3,4,"5"]]
+blsq ) {1 2 {3 4 "5"}}sh2FF
+[1 2 [3 4 "5"]]
+blsq ) {1 2 {3 4 "5"}}sh3FF
+{1 2 {3 4 "5"}}
+```
+
+### FormatFromFormat ```Ff```
+
+*Defined as:* *```FFff```*. Generally just a shortcut for `FFff`.
+
+```shell
+blsq ) {1 2 {3 4}}sh2Ff
+"[1 2 [3 4]]"
+```
+
+**Authors' Notes:** In most cases you want to use `SH` directly. 
+
+### FromFormat ```ff```
+
+```Pretty a: ``` Converts the `a` to String.
+
+```shell
+blsq ) {1 2 {3 4}}shff
+"[1, 2, [3, 4]]"
+blsq ) {1 2 {3 4}}sh2FFff
+"[1 2 [3 4]]"
+```
+
 ### Greater ```.>```
 
 ```Any a, Any b: ``` Returns 1 if `a > b` else returns 0.
@@ -494,6 +628,26 @@ blsq ) {} 9 .>
 ```
 
 **Note:** Comparing values with different types may result in unexpected (but determinstic, thus not undefined) behaviour. 
+
+### Group ```=[```
+
+```Block a: ``` Groups together elements next to each other that are equal.
+
+```shell
+blsq ) {1 2 2 3 4 4 5 6}=[
+{{1} {2 2} {3} {4 4} {5} {6}}
+blsq ) {1 2 2 3 4 4 4 6}=[
+{{1} {2 2} {3} {4 4 4} {6}}
+```
+
+```String a: ``` Groups together characters next to each other that are equal.
+
+```shell
+blsq ) "abbbbbc"=[
+{"a" "bbbbb" "c"}
+```
+
+**See also:** *GroupBy*.
 
 ### Head ```-]```
 
@@ -597,6 +751,19 @@ blsq ) "abc"+.
 blsq ) {1 2 3}+.
 {1 2 3 3}
 ```
+
+### InfixOf ```~~```
+
+```Block a, Block b: ``` Returns 1 if `b` is an infix of `a` otherwise returns 0.
+
+```shell
+blsq ) {1 2 3 4}{2 3}~~
+1
+blsq ) {1 2 3 4}{3 3}~~
+0
+```
+
+**Authors' Notes:** For Strings use `~[`. 
 
 ### Init ```~]```
 
@@ -721,6 +888,28 @@ blsq ) {1 2 3 4 5}{J.*}m[
 ```
 
 **See also:** *ConcatMap* and there are many other different versions and shortcuts for *Map*. 
+
+### Matches ```~=```
+
+```String str, String regex: ``` Returns 1 if `regex` matches `str` otherwise returns 0.
+
+```shell
+blsq ) "123""[0-3]{3}"~=
+1
+blsq ) "123""[1-3]{3}"~=
+1
+blsq ) "123""[1-3]{4}"~=
+0
+```
+
+### MatchesList ```=~```
+
+```String str, String regex: ``` Returns the capturing groups as a list. Empty block if no matches or no capture groups were used in the regular expression. 
+
+```shell
+blsq ) "123abc""([0-3]{3}).(b.)"=~
+{"123" "bc"}
+```
 
 ### Max ```>.```
 
@@ -883,9 +1072,22 @@ blsq ) 4 4!=
 0
 ```
 
+### Or ```||```
+
+This built-in auto-zips if an argument provided is a Block.
+
+```Int a, Int b: ``` Bitwise OR.
+
+```shell
+blsq ) 2 4||
+6
+blsq ) 2 {4 8}||
+{6 10}
+```
+
 ### Parse ```ps```
 
-This built-in auto-maps if the argument given is a block.
+This built-in auto-maps if the argument given is a Block.
 
 ```String a: ``` Tries to parse `a` with the Burlesque parser. (Tries to parse `a` as Burlesque code). Returns a Block.
 
@@ -911,6 +1113,20 @@ you can just do:
 blsq ) "5 3 6 7"ps++
 21
 ```
+
+### Pop ```vv```
+
+Removes the element on top of the stack.
+
+```shell
+blsq ) 1 2
+2
+1
+blsq ) 1 2vv
+1
+```
+
+**Authors' Notes:** If there only is one element on top of the stack using `,` is shorter. 
 
 ### Pow ```**```
 
@@ -951,6 +1167,35 @@ blsq ) 'a**
 97
 ```
 
+### PrefixOf ```~!```
+
+```Block a, Block b: ``` Returns 1 if `b` is a prefix of `a` otherwise returns 0.
+
+```shell
+blsq ) {1 4 3 2}{1 4}~!
+1
+blsq ) {1 4 3 2}{4 3}~!
+0
+```
+
+```String a, String b: ``` Returns 1 if `b` is a prefix of `a` otherwise returns 0.
+
+```shell
+blsq ) "http://mroman.ch" "http://"~!
+1
+blsq ) "http://mroman.ch" "https://"~!
+0
+```
+
+```Int a, Int b: ``` Returns 1 if `b` is a prefix of `a` otherwise returns 0 (works on absolute values).
+
+```shell
+blsq ) 1991 91~!
+0
+blsq ) 1991 199~!
+1
+```
+
 ### Prepend ```+]```
 
 ```Block a, Any b: ``` Prepend `b` to `a`.
@@ -972,6 +1217,53 @@ blsq ) "ab"'c+]
 ```shell
 blsq ) 12 23+]
 2312
+```
+
+### Pretty ```sh```
+
+```Any a: ``` Convert to a Pretty with format *Normal*.
+
+```shell
+blsq ) "abc\ndef"sh
+abc
+def
+blsq ) {1 2 3}
+{1 2 3}
+blsq ) {1 2 3}sh
+[1, 2, 3]
+blsq ) 5.0
+5.0
+blsq ) 5.0sh
+5.0
+```
+
+### PrettyFormatFromFormat ```SH```
+
+*Defined as:* *```jshjFf```*. Can be used to convert something to a String with a specified format. 
+
+```shell
+blsq ) {1 2 {3 4}}2SH
+"[1 2 [3 4]]"
+blsq ) {1 2 {3 4}}1SH
+"[1,2,[3,4]]"
+```
+
+### PrettyFromFormat ```Sh```
+
+*Defined as:* *```shff```*. Can be used to convert something to a String with format `Normal`.
+
+```shell
+blsq ) {1 2 3}Sh
+"[1, 2, 3]"
+```
+
+### PrettyPretty ```sH```
+
+*Defined as:* *```SHsh```*. Can be used to convert something for display with a specified format.
+
+```shell
+blsq ) {1 2 {3 4}}1sH
+[1,2,[3,4]]
 ```
 
 ### Product ```pd```
@@ -1021,6 +1313,30 @@ blsq ) {{1 2 3} 5 {2 4}}PD
 ```
 
 **Authors' Notes:** Can be used as a shortcut for `)pd`. Otherwise this built-in doesn't offer too much over `rd` as `rd` auto-maps. 
+
+### PushMany ```^p```
+
+```Block a: ``` Pushes every element in `a` to the stack.
+
+```shell
+blsq ) 'a{1 2 3}^p
+3
+2
+1
+'a
+```
+
+### PushManyReverse ```p^```
+
+```Block a: ``` Pushes every element in `a` to the stack in reversed order.
+
+```shell
+blsq ) 'a{1 2 3}p^
+1
+2
+3
+'a
+```
 
 ### ReadArray ```ra```
 
@@ -1139,6 +1455,49 @@ blsq ) {1 2 3 4}{.+}r[
 10
 blsq ) {1 2 3 4}{.*}r[
 24
+```
+
+### Replace ```r~```
+
+```Block a, Any b, Any c: ``` Replaces every occurence of `b` in `a` with `c`.
+
+```shell
+blsq ) {1 2 3 1 4}1 9r~
+{9 2 3 9 4}
+```
+
+```String a, Char b, Char c: ``` Replaces every occurence of `b` in `a` with `c`.
+
+```shell
+blsq ) "hello"'l'!r~
+"he!!o"
+```
+
+```String a, String b, String c: ``` Replaces every occurence of `b` in `a` with `c`.
+
+```shell
+blsq ) "hi there hi go""hi""bye"r~
+"bye there bye go"
+```
+
+```Int a, Int b, Int c: ``` Replaces every occurence of `b` in `a` with `c` (works on absolute values).
+
+```shell
+blsq ) -1334336 33 10r~
+1104106
+```
+
+### ReplaceRegex ```R~```
+
+```String str, String repl, String regex: ``` Replaces every match of `regex` with `repl`. 
+
+```shell
+blsq ) "Year 2014.""X""[[:digit:]]"R~
+"Year XXXX."
+blsq ) "Year 2014.""X""[0-3]"R~
+"Year XXX4."
+blsq ) "Year 2014.""__""[a-z]|[0-3]{2}"R~
+"Y______ __14."
 ```
 
 ### Reverse ```<-```
@@ -1301,6 +1660,35 @@ blsq ) {1 2 3 4}{3 4}.-
 {1 2}
 blsq ) {1 2 3 4}{3 4 5}.-
 {1 2 3 4}
+```
+
+### SuffixOf ```!~```
+
+```Block a, Block b: ``` Returns 1 if `b` is a suffix of `a` otherwise returns 0.
+
+```shell
+blsq ) {1 2 3}{2 3}!~
+1
+blsq ) {1 2 3}{1 2}!~
+0
+```
+
+```String a, String b: ``` Returns 1 if `b` is a suffix of `a` otherwise returns 0.
+
+```shell
+blsq ) "this.txt" ".txt"!~
+1
+blsq ) "this.txt" ".pdf"!~
+0
+```
+
+```Int a, Int b: ``` Returns 1 if `b` is a suffix of `a` otherwise returns 0 (works on absolute values).
+
+```shell
+blsq ) 123 -23!~
+1
+blsq ) 123 -24!~
+0
 ```
 
 ### Sum ```++```
@@ -1499,4 +1887,19 @@ blsq ) "hello world"{<-}wwsh
 olleh dlrow
 blsq ) "hello world"{<-}WW
 olleh dlrow
+```
+
+### Xor ```$$```
+
+This built-in auto-zips if an argument provided is a block.
+
+```Int a, Int b: ``` Bitwise XOR.
+
+```shell
+blsq ) 66 34$$
+96
+blsq ) 96 66 $$
+34
+blsq ) 96 34 $$
+66
 ```

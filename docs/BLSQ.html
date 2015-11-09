@@ -24,11 +24,13 @@
 <li><a href="#built-ins">BUILT-INS</a><ul>
 <li><a href="#add-.">Add <code>.+</code></a></li>
 <li><a href="#addx-_">AddX <code>_+</code></a></li>
+<li><a href="#and">And <code>&amp;&amp;</code></a></li>
 <li><a href="#append">Append <code>[+</code></a></li>
 <li><a href="#average-av">Average <code>av</code></a></li>
 <li><a href="#average2-av">Average2 <code>AV</code></a></li>
 <li><a href="#concat">Concat <code>\[</code></a></li>
 <li><a href="#concatmap-m">ConcatMap <code>\m</code></a></li>
+<li><a href="#contains">Contains <code>~[</code></a></li>
 <li><a href="#continuation-c">Continuation <code>c!</code></a></li>
 <li><a href="#decrement--.">Decrement <code>-.</code></a></li>
 <li><a href="#div-.">Div <code>./</code></a></li>
@@ -36,18 +38,26 @@
 <li><a href="#equal">Equal <code>==</code></a></li>
 <li><a href="#eval-e">Eval <code>e!</code></a></li>
 <li><a href="#evalmany-e">EvalMany <code>E!</code></a></li>
+<li><a href="#explode-xx">Explode <code>XX</code></a></li>
+<li><a href="#format-ff">Format <code>FF</code></a></li>
+<li><a href="#formatfromformat-ff">FormatFromFormat <code>Ff</code></a></li>
+<li><a href="#fromformat-ff">FromFormat <code>ff</code></a></li>
 <li><a href="#greater-.">Greater <code>.&gt;</code></a></li>
+<li><a href="#group">Group <code>=[</code></a></li>
 <li><a href="#head--">Head <code>-]</code></a></li>
 <li><a href="#headtail--">HeadTail <code>-~</code></a></li>
 <li><a href="#ifelse-ie">IfElse <code>ie</code></a></li>
 <li><a href="#iff-if">Iff <code>if</code></a></li>
 <li><a href="#increment-.">Increment <code>+.</code></a></li>
+<li><a href="#infixof">InfixOf <code>~~</code></a></li>
 <li><a href="#init">Init <code>~]</code></a></li>
 <li><a href="#inittail--">InitTail <code>~-</code></a></li>
 <li><a href="#intersperse">Intersperse <code>[[</code></a></li>
 <li><a href="#last">Last <code>[~</code></a></li>
 <li><a href="#lines-ln">Lines <code>ln</code></a></li>
 <li><a href="#map-m">Map <code>m[</code></a></li>
+<li><a href="#matches">Matches <code>~=</code></a></li>
+<li><a href="#matcheslist">MatchesList <code>=~</code></a></li>
 <li><a href="#max-.">Max <code>&gt;.</code></a></li>
 <li><a href="#maximum">Maximum <code>&gt;]</code></a></li>
 <li><a href="#min-.">Min <code>&lt;.</code></a></li>
@@ -55,20 +65,32 @@
 <li><a href="#mod-.">Mod <code>.%</code></a></li>
 <li><a href="#mul-.">Mul <code>.*</code></a></li>
 <li><a href="#notequal">NotEqual <code>!=</code></a></li>
+<li><a href="#or">Or <code>||</code></a></li>
 <li><a href="#parse-ps">Parse <code>ps</code></a></li>
+<li><a href="#pop-vv">Pop <code>vv</code></a></li>
 <li><a href="#pow">Pow <code>**</code></a></li>
+<li><a href="#prefixof">PrefixOf <code>~!</code></a></li>
 <li><a href="#prepend">Prepend <code>+]</code></a></li>
+<li><a href="#pretty-sh">Pretty <code>sh</code></a></li>
+<li><a href="#prettyformatfromformat-sh">PrettyFormatFromFormat <code>SH</code></a></li>
+<li><a href="#prettyfromformat-sh">PrettyFromFormat <code>Sh</code></a></li>
+<li><a href="#prettypretty-sh">PrettyPretty <code>sH</code></a></li>
 <li><a href="#product-pd">Product <code>pd</code></a></li>
 <li><a href="#productmany-pd">ProductMany <code>PD</code></a></li>
+<li><a href="#pushmany-p">PushMany <code>^p</code></a></li>
+<li><a href="#pushmanyreverse-p">PushManyReverse <code>p^</code></a></li>
 <li><a href="#readarray-ra">ReadArray <code>ra</code></a></li>
 <li><a href="#readdouble-rd">ReadDouble <code>rd</code></a></li>
 <li><a href="#readint-ri">ReadInt <code>ri</code></a></li>
 <li><a href="#reduce-r">Reduce <code>r[</code></a></li>
+<li><a href="#replace-r">Replace <code>r~</code></a></li>
+<li><a href="#replaceregex-r">ReplaceRegex <code>R~</code></a></li>
 <li><a href="#reverse--">Reverse <code>&lt;-</code></a></li>
 <li><a href="#round-r_">Round <code>r_</code></a></li>
 <li><a href="#round2-r_">Round2 <code>R_</code></a></li>
 <li><a href="#smaller-.">Smaller <code>.&lt;</code></a></li>
 <li><a href="#sub-.-">Sub <code>.-</code></a></li>
+<li><a href="#suffixof">SuffixOf <code>!~</code></a></li>
 <li><a href="#sum">Sum <code>++</code></a></li>
 <li><a href="#swap-j">Swap <code>j</code> <code>\/</code></a></li>
 <li><a href="#tail--">Tail <code>[-</code></a></li>
@@ -81,6 +103,7 @@
 <li><a href="#withlinespretty-wl">WithLinesPretty <code>WL</code></a></li>
 <li><a href="#withwords-ww">WithWords <code>ww</code></a></li>
 <li><a href="#withwordspretty-ww">WithWordsPretty <code>WW</code></a></li>
+<li><a href="#xor">Xor <code>$$</code></a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -93,7 +116,7 @@
 <li><a href="http://github.com/FMNSSun/Burlesque">Source code</a></li>
 <li><a href="http://mroman.ch/burlesque/lref.html">Language Reference</a></li>
 </ul>
-<p>Until this moonpage is complete, please consult the Language Reference. Once compelete, the moonpage will superseed the Language Reference.</p>
+<p><strong>Until this moonpage is complete please consult the Language Reference. Once compelete, the moonpage will superseed the Language Reference and this warning will disappear.</strong></p>
 <h2 id="history"><a href="#TOC">HISTORY</a></h2>
 <p>Burlesque has been under development since 2012 and is still being improved on a regular basis. It was built as a tool for me (mroman) to use as a helper for my computer science studies.</p>
 <h1 id="synopsis"><a href="#TOC">SYNOPSIS</a></h1>
@@ -166,6 +189,13 @@
 <p><code>String a, Int b:</code> Converts <code>b</code> to String, then concatenates.</p>
 <pre class="shell"><code>blsq ) &quot;b&quot;1_+
 &quot;b1&quot;</code></pre>
+<h3 id="and"><a href="#TOC">And <code>&amp;&amp;</code></a></h3>
+<p>This built-in auto-zips if an argument provided is a Block.</p>
+<p><code>Int a, Int b:</code> Bitwise AND.</p>
+<pre class="shell"><code>blsq ) 2 4&amp;&amp;
+0
+blsq ) 1 7&amp;&amp;
+1</code></pre>
 <h3 id="append"><a href="#TOC">Append <code>[+</code></a></h3>
 <p><code>Block a, Any b:</code> Append <code>b</code> to <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2}9[+
@@ -233,6 +263,27 @@ blsq ) &quot;abc&quot;XX{&#39;ajr@}\m\[
 &quot;aababc&quot;
 blsq ) &quot;abc&quot;{&#39;ajr@}\m
 &quot;aababc&quot;</code></pre>
+<h3 id="contains"><a href="#TOC">Contains <code>~[</code></a></h3>
+<p><code>Block a, Any b:</code> Returns 1 if <code>a</code> contains <code>b</code> otherwise returns 0.</p>
+<pre class="shell"><code>blsq ) {1 2 3}4~[
+0
+blsq ) {1 2 3}2~[
+1</code></pre>
+<p><code>String a, Char b:</code> Returns 1 if <code>a</code> contains <code>b</code> otherwise returns 0.</p>
+<pre class="shell"><code>blsq ) &quot;abc&quot;&#39;b~[
+1
+blsq ) &quot;abc&quot;&#39;z~[
+0</code></pre>
+<p><code>Int a, Int b:</code> Returns 1 if <code>a</code> contains <code>b</code> otherwise returns 0 (works on absolute values).</p>
+<pre class="shell"><code>blsq ) 1223 22~[
+1
+blsq ) 1223 21~[
+0</code></pre>
+<p><code>String a, String b:</code> Returns 1 if <code>a</code> contains <code>b</code> otherwise returns 0.</p>
+<pre class="shell"><code>blsq ) &quot;hello&quot; &quot;ell&quot;~[
+1
+blsq ) &quot;hello&quot; &quot;elo&quot;~[
+0</code></pre>
 <h3 id="continuation-c"><a href="#TOC">Continuation <code>c!</code></a></h3>
 <p>Generally speaking a <em>Continuation</em> refers to executing code on a snapshot of the stack and then pushing the result back to the actual stack. This means that this built-in lets you run code without destroying data on the stack.</p>
 <p><code>Block a:</code> Run <code>a</code> as a Continuation.</p>
@@ -316,6 +367,51 @@ blsq ) 1{J.+}4E!
 16
 blsq ) 1{J.+}4.*\[e!
 16</code></pre>
+<h3 id="explode-xx"><a href="#TOC">Explode <code>XX</code></a></h3>
+<p><code>String a:</code> Converts <code>a</code> to a Block of characters.</p>
+<pre class="shell"><code>blsq ) &quot;abc&quot;XX
+{&#39;a &#39;b &#39;c}</code></pre>
+<p><code>Int a:</code> Converts <code>a</code> to a Block of digits (works on absolute value.</p>
+<pre class="shell"><code>blsq ) 971XX
+{9 7 1}</code></pre>
+<p><code>Double a:</code> Converts <code>a</code> to a Block containing floor(<code>a</code>) and ceiling(<code>a</code>).</p>
+<pre class="shell"><code>blsq ) 5.3XX
+{5 6}</code></pre>
+<p><code>Char a:</code> Converts to String.</p>
+<pre class="shell"><code>blsq ) &#39;aXX
+&quot;a&quot;</code></pre>
+<p><code>Block a:</code> No operation.</p>
+<pre class="shell"><code>blsq ) {1 2}XX
+{1 2}</code></pre>
+<p><strong>Authors' Notes:</strong> Sometimes this built-in is also referred to as <em>Xplode</em>.</p>
+<h3 id="format-ff"><a href="#TOC">Format <code>FF</code></a></h3>
+<p><code>Pretty a, Int format:</code> Change format of <code>a</code> to <code>format</code>.</p>
+<p>Formats are:</p>
+<ul>
+<li>0 - Normal</li>
+<li>1 - No spaces</li>
+<li>2 - With spaces</li>
+<li>3 - Raw</li>
+</ul>
+<pre class="shell"><code>blsq ) {1 2 {3 4 &quot;5&quot;}}sh0FF
+[1, 2, [3, 4, &quot;5&quot;]]
+blsq ) {1 2 {3 4 &quot;5&quot;}}sh1FF
+[1,2,[3,4,&quot;5&quot;]]
+blsq ) {1 2 {3 4 &quot;5&quot;}}sh2FF
+[1 2 [3 4 &quot;5&quot;]]
+blsq ) {1 2 {3 4 &quot;5&quot;}}sh3FF
+{1 2 {3 4 &quot;5&quot;}}</code></pre>
+<h3 id="formatfromformat-ff"><a href="#TOC">FormatFromFormat <code>Ff</code></a></h3>
+<p><em>Defined as:</em> <em><code>FFff</code></em>. Generally just a shortcut for <code>FFff</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 {3 4}}sh2Ff
+&quot;[1 2 [3 4]]&quot;</code></pre>
+<p><strong>Authors' Notes:</strong> In most cases you want to use <code>SH</code> directly.</p>
+<h3 id="fromformat-ff"><a href="#TOC">FromFormat <code>ff</code></a></h3>
+<p><code>Pretty a:</code> Converts the <code>a</code> to String.</p>
+<pre class="shell"><code>blsq ) {1 2 {3 4}}shff
+&quot;[1, 2, [3, 4]]&quot;
+blsq ) {1 2 {3 4}}sh2FFff
+&quot;[1 2 [3 4]]&quot;</code></pre>
 <h3 id="greater-."><a href="#TOC">Greater <code>.&gt;</code></a></h3>
 <p><code>Any a, Any b:</code> Returns 1 if <code>a &gt; b</code> else returns 0.</p>
 <pre class="shell"><code>blsq ) 3.0 2.9 .&gt;
@@ -337,6 +433,16 @@ blsq ) {} 9.0 .&gt;
 blsq ) {} 9 .&gt;
 1</code></pre>
 <p><strong>Note:</strong> Comparing values with different types may result in unexpected (but determinstic, thus not undefined) behaviour.</p>
+<h3 id="group"><a href="#TOC">Group <code>=[</code></a></h3>
+<p><code>Block a:</code> Groups together elements next to each other that are equal.</p>
+<pre class="shell"><code>blsq ) {1 2 2 3 4 4 5 6}=[
+{{1} {2 2} {3} {4 4} {5} {6}}
+blsq ) {1 2 2 3 4 4 4 6}=[
+{{1} {2 2} {3} {4 4 4} {6}}</code></pre>
+<p><code>String a:</code> Groups together characters next to each other that are equal.</p>
+<pre class="shell"><code>blsq ) &quot;abbbbbc&quot;=[
+{&quot;a&quot; &quot;bbbbb&quot; &quot;c&quot;}</code></pre>
+<p><strong>See also:</strong> <em>GroupBy</em>.</p>
 <h3 id="head--"><a href="#TOC">Head <code>-]</code></a></h3>
 <p><code>Block a:</code> Returns the first element of <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {2 4 0}-]
@@ -388,6 +494,13 @@ blsq ) 5{3.*}1if
 <p><code>Block a:</code> Appends the last element of <code>a</code> to <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3}+.
 {1 2 3 3}</code></pre>
+<h3 id="infixof"><a href="#TOC">InfixOf <code>~~</code></a></h3>
+<p><code>Block a, Block b:</code> Returns 1 if <code>b</code> is an infix of <code>a</code> otherwise returns 0.</p>
+<pre class="shell"><code>blsq ) {1 2 3 4}{2 3}~~
+1
+blsq ) {1 2 3 4}{3 3}~~
+0</code></pre>
+<p><strong>Authors' Notes:</strong> For Strings use <code>~[</code>.</p>
 <h3 id="init"><a href="#TOC">Init <code>~]</code></a></h3>
 <p><code>Block a:</code> Returns all but the last elements of <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3}~]
@@ -447,6 +560,18 @@ blsq ) &quot;aBc&quot;{&lt;-}m[
 <pre class="shell"><code>blsq ) {1 2 3 4 5}{J.*}m[
 {1 4 9 16 25}</code></pre>
 <p><strong>See also:</strong> <em>ConcatMap</em> and there are many other different versions and shortcuts for <em>Map</em>.</p>
+<h3 id="matches"><a href="#TOC">Matches <code>~=</code></a></h3>
+<p><code>String str, String regex:</code> Returns 1 if <code>regex</code> matches <code>str</code> otherwise returns 0.</p>
+<pre class="shell"><code>blsq ) &quot;123&quot;&quot;[0-3]{3}&quot;~=
+1
+blsq ) &quot;123&quot;&quot;[1-3]{3}&quot;~=
+1
+blsq ) &quot;123&quot;&quot;[1-3]{4}&quot;~=
+0</code></pre>
+<h3 id="matcheslist"><a href="#TOC">MatchesList <code>=~</code></a></h3>
+<p><code>String str, String regex:</code> Returns the capturing groups as a list. Empty block if no matches or no capture groups were used in the regular expression.</p>
+<pre class="shell"><code>blsq ) &quot;123abc&quot;&quot;([0-3]{3}).(b.)&quot;=~
+{&quot;123&quot; &quot;bc&quot;}</code></pre>
 <h3 id="max-."><a href="#TOC">Max <code>&gt;.</code></a></h3>
 <p><code>Any a, Any b:</code> Returns whichever is greatest.</p>
 <pre class="shell"><code>blsq ) 5 6&gt;.
@@ -527,8 +652,15 @@ blsq ) 3 4!=
 1
 blsq ) 4 4!=
 0</code></pre>
+<h3 id="or"><a href="#TOC">Or <code>||</code></a></h3>
+<p>This built-in auto-zips if an argument provided is a Block.</p>
+<p><code>Int a, Int b:</code> Bitwise OR.</p>
+<pre class="shell"><code>blsq ) 2 4||
+6
+blsq ) 2 {4 8}||
+{6 10}</code></pre>
 <h3 id="parse-ps"><a href="#TOC">Parse <code>ps</code></a></h3>
-<p>This built-in auto-maps if the argument given is a block.</p>
+<p>This built-in auto-maps if the argument given is a Block.</p>
 <p><code>String a:</code> Tries to parse <code>a</code> with the Burlesque parser. (Tries to parse <code>a</code> as Burlesque code). Returns a Block.</p>
 <pre class="shell"><code>blsq ) &quot;5&quot;ps
 {5}
@@ -542,6 +674,14 @@ blsq ) &quot;{5 3.0.+}m[&quot;ps
 <p>you can just do:</p>
 <pre class="shell"><code>blsq ) &quot;5 3 6 7&quot;ps++
 21</code></pre>
+<h3 id="pop-vv"><a href="#TOC">Pop <code>vv</code></a></h3>
+<p>Removes the element on top of the stack.</p>
+<pre class="shell"><code>blsq ) 1 2
+2
+1
+blsq ) 1 2vv
+1</code></pre>
+<p><strong>Authors' Notes:</strong> If there only is one element on top of the stack using <code>,</code> is shorter.</p>
 <h3 id="pow"><a href="#TOC">Pow <code>**</code></a></h3>
 <p><code>Int a, Int b:</code> Returns <code>a</code> to the power of <code>b</code> (<code>a ^ b</code>).</p>
 <pre class="shell"><code>blsq ) 2 3**
@@ -560,6 +700,22 @@ blsq ) &quot;{5 3.0.+}m[&quot;ps
 65
 blsq ) &#39;a**
 97</code></pre>
+<h3 id="prefixof"><a href="#TOC">PrefixOf <code>~!</code></a></h3>
+<p><code>Block a, Block b:</code> Returns 1 if <code>b</code> is a prefix of <code>a</code> otherwise returns 0.</p>
+<pre class="shell"><code>blsq ) {1 4 3 2}{1 4}~!
+1
+blsq ) {1 4 3 2}{4 3}~!
+0</code></pre>
+<p><code>String a, String b:</code> Returns 1 if <code>b</code> is a prefix of <code>a</code> otherwise returns 0.</p>
+<pre class="shell"><code>blsq ) &quot;http://mroman.ch&quot; &quot;http://&quot;~!
+1
+blsq ) &quot;http://mroman.ch&quot; &quot;https://&quot;~!
+0</code></pre>
+<p><code>Int a, Int b:</code> Returns 1 if <code>b</code> is a prefix of <code>a</code> otherwise returns 0 (works on absolute values).</p>
+<pre class="shell"><code>blsq ) 1991 91~!
+0
+blsq ) 1991 199~!
+1</code></pre>
 <h3 id="prepend"><a href="#TOC">Prepend <code>+]</code></a></h3>
 <p><code>Block a, Any b:</code> Prepend <code>b</code> to <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2}3+]
@@ -570,6 +726,33 @@ blsq ) &#39;a**
 <p><code>Int a, Int b:</code> Prepends <code>b</code> to <code>a</code> (result is an Integer).</p>
 <pre class="shell"><code>blsq ) 12 23+]
 2312</code></pre>
+<h3 id="pretty-sh"><a href="#TOC">Pretty <code>sh</code></a></h3>
+<p><code>Any a:</code> Convert to a Pretty with format <em>Normal</em>.</p>
+<pre class="shell"><code>blsq ) &quot;abc\ndef&quot;sh
+abc
+def
+blsq ) {1 2 3}
+{1 2 3}
+blsq ) {1 2 3}sh
+[1, 2, 3]
+blsq ) 5.0
+5.0
+blsq ) 5.0sh
+5.0</code></pre>
+<h3 id="prettyformatfromformat-sh"><a href="#TOC">PrettyFormatFromFormat <code>SH</code></a></h3>
+<p><em>Defined as:</em> <em><code>jshjFf</code></em>. Can be used to convert something to a String with a specified format.</p>
+<pre class="shell"><code>blsq ) {1 2 {3 4}}2SH
+&quot;[1 2 [3 4]]&quot;
+blsq ) {1 2 {3 4}}1SH
+&quot;[1,2,[3,4]]&quot;</code></pre>
+<h3 id="prettyfromformat-sh"><a href="#TOC">PrettyFromFormat <code>Sh</code></a></h3>
+<p><em>Defined as:</em> <em><code>shff</code></em>. Can be used to convert something to a String with format <code>Normal</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3}Sh
+&quot;[1, 2, 3]&quot;</code></pre>
+<h3 id="prettypretty-sh"><a href="#TOC">PrettyPretty <code>sH</code></a></h3>
+<p><em>Defined as:</em> <em><code>SHsh</code></em>. Can be used to convert something for display with a specified format.</p>
+<pre class="shell"><code>blsq ) {1 2 {3 4}}1sH
+[1,2,[3,4]]</code></pre>
 <h3 id="product-pd"><a href="#TOC">Product <code>pd</code></a></h3>
 <p><code>Block {}:</code> <em>Defined as:</em> <em><code>1</code></em>. The product of an empty block is one.</p>
 <p><code>Block a:</code> <em>Defined as:</em> <em><code>{.*}r[</code></em>. Calculates the product of a Block.</p>
@@ -597,6 +780,20 @@ blsq ) 5rd
 blsq ) {{1 2 3} 5 {2 4}}PD
 {6 5.0 8}</code></pre>
 <p><strong>Authors' Notes:</strong> Can be used as a shortcut for <code>)pd</code>. Otherwise this built-in doesn't offer too much over <code>rd</code> as <code>rd</code> auto-maps.</p>
+<h3 id="pushmany-p"><a href="#TOC">PushMany <code>^p</code></a></h3>
+<p><code>Block a:</code> Pushes every element in <code>a</code> to the stack.</p>
+<pre class="shell"><code>blsq ) &#39;a{1 2 3}^p
+3
+2
+1
+&#39;a</code></pre>
+<h3 id="pushmanyreverse-p"><a href="#TOC">PushManyReverse <code>p^</code></a></h3>
+<p><code>Block a:</code> Pushes every element in <code>a</code> to the stack in reversed order.</p>
+<pre class="shell"><code>blsq ) &#39;a{1 2 3}p^
+1
+2
+3
+&#39;a</code></pre>
 <h3 id="readarray-ra"><a href="#TOC">ReadArray <code>ra</code></a></h3>
 <p>This built-in auto-maps if the argument given is a Block.</p>
 <p><code>String a:</code> Parses an array in <code>[,]</code>-notation.</p>
@@ -659,6 +856,27 @@ blsq ) &#39;.ri
 10
 blsq ) {1 2 3 4}{.*}r[
 24</code></pre>
+<h3 id="replace-r"><a href="#TOC">Replace <code>r~</code></a></h3>
+<p><code>Block a, Any b, Any c:</code> Replaces every occurence of <code>b</code> in <code>a</code> with <code>c</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3 1 4}1 9r~
+{9 2 3 9 4}</code></pre>
+<p><code>String a, Char b, Char c:</code> Replaces every occurence of <code>b</code> in <code>a</code> with <code>c</code>.</p>
+<pre class="shell"><code>blsq ) &quot;hello&quot;&#39;l&#39;!r~
+&quot;he!!o&quot;</code></pre>
+<p><code>String a, String b, String c:</code> Replaces every occurence of <code>b</code> in <code>a</code> with <code>c</code>.</p>
+<pre class="shell"><code>blsq ) &quot;hi there hi go&quot;&quot;hi&quot;&quot;bye&quot;r~
+&quot;bye there bye go&quot;</code></pre>
+<p><code>Int a, Int b, Int c:</code> Replaces every occurence of <code>b</code> in <code>a</code> with <code>c</code> (works on absolute values).</p>
+<pre class="shell"><code>blsq ) -1334336 33 10r~
+1104106</code></pre>
+<h3 id="replaceregex-r"><a href="#TOC">ReplaceRegex <code>R~</code></a></h3>
+<p><code>String str, String repl, String regex:</code> Replaces every match of <code>regex</code> with <code>repl</code>.</p>
+<pre class="shell"><code>blsq ) &quot;Year 2014.&quot;&quot;X&quot;&quot;[[:digit:]]&quot;R~
+&quot;Year XXXX.&quot;
+blsq ) &quot;Year 2014.&quot;&quot;X&quot;&quot;[0-3]&quot;R~
+&quot;Year XXX4.&quot;
+blsq ) &quot;Year 2014.&quot;&quot;__&quot;&quot;[a-z]|[0-3]{2}&quot;R~
+&quot;Y______ __14.&quot;</code></pre>
 <h3 id="reverse--"><a href="#TOC">Reverse <code>&lt;-</code></a></h3>
 <p><code>String a:</code> Reverses <code>a</code>.</p>
 <pre class="shell"><code>blsq ) &quot;123&quot;&lt;-
@@ -742,6 +960,22 @@ blsq ) &quot;README.md&quot; &quot;.txt&quot;.-
 {1 2}
 blsq ) {1 2 3 4}{3 4 5}.-
 {1 2 3 4}</code></pre>
+<h3 id="suffixof"><a href="#TOC">SuffixOf <code>!~</code></a></h3>
+<p><code>Block a, Block b:</code> Returns 1 if <code>b</code> is a suffix of <code>a</code> otherwise returns 0.</p>
+<pre class="shell"><code>blsq ) {1 2 3}{2 3}!~
+1
+blsq ) {1 2 3}{1 2}!~
+0</code></pre>
+<p><code>String a, String b:</code> Returns 1 if <code>b</code> is a suffix of <code>a</code> otherwise returns 0.</p>
+<pre class="shell"><code>blsq ) &quot;this.txt&quot; &quot;.txt&quot;!~
+1
+blsq ) &quot;this.txt&quot; &quot;.pdf&quot;!~
+0</code></pre>
+<p><code>Int a, Int b:</code> Returns 1 if <code>b</code> is a suffix of <code>a</code> otherwise returns 0 (works on absolute values).</p>
+<pre class="shell"><code>blsq ) 123 -23!~
+1
+blsq ) 123 -24!~
+0</code></pre>
 <h3 id="sum"><a href="#TOC">Sum <code>++</code></a></h3>
 <p><code>Block {}:</code> <em>Defined as:</em> <em><code>0</code></em>. The sum of an empty Block is zero.</p>
 <p><code>Block a:</code> <em>Defined as:</em> <em><code>{.+}r[</code></em>. Calculates the sum of a Block.</p>
@@ -847,5 +1081,14 @@ blsq ) &quot;hello world&quot;{&lt;-}ww
 olleh dlrow
 blsq ) &quot;hello world&quot;{&lt;-}WW
 olleh dlrow</code></pre>
+<h3 id="xor"><a href="#TOC">Xor <code>$$</code></a></h3>
+<p>This built-in auto-zips if an argument provided is a block.</p>
+<p><code>Int a, Int b:</code> Bitwise XOR.</p>
+<pre class="shell"><code>blsq ) 66 34$$
+96
+blsq ) 96 66 $$
+34
+blsq ) 96 34 $$
+66</code></pre>
 </body>
 </html>
