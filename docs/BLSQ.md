@@ -28,7 +28,60 @@ as a helper for my computer science studies.
 # SYNOPSIS
 
 ```cmdline
-blsq <options>
+blsq 
+  --file <path>           Read code from file (incl. STDIN)
+  --file-no-stdin <path>  Read code from file (excl. STDIN)
+  --no-stdin <code>       Read code from argv (excl. STDIN)
+  --shell                 Start in shell mode
+  --version               Print version info
+  --compile <path>        Pseudo-compile file to haskell code
+  --stdin <code>          Read code from argv (incl. STDIN)
+```
+
+* *path* - Path to a file
+* *code* - Burlesque code
+
+*STDIN* will be pushed as a String to the stack. On exit all elements are printed in order from top to bottom. No output will be produced before the Burlesque code terminates. 
+
+## EXAMPLE USAGES
+
+```cmdline
+$ blsq --file-no-stdin hw.blsq 
+Hello, world!
+$ echo -n "hello" | blsq --file revstdin.blsq 
+olleh
+$ echo -n "hello" | blsq --stdin "<-Q"
+olleh
+$ blsq --no-stdin "2 64**"
+18446744073709551616
+```
+
+```cmdline
+$ echo -n `ls *.blsq` | blsq --stdin "wdzisp"
+0 hw.blsq
+1 index.blsq
+2 prog.blsq
+3 revstdin.blsq
+4 test.blsq
+```
+
+```cmdline
+$ echo -n `ls` | blsq --stdin 'wd{".blsq"!~}{".blsq".-}FMuN'
+hw
+index
+prog
+revstdin
+test
+```
+
+```cmdline
+$ df | blsq --stdin "ln[-{WD-]}muQ"
+rootfs
+udev
+tmpfs
+/dev/disk/by-uuid/2e7e48d9-b728-48f7-95db-a58db91f4769
+tmpfs
+tmpfs
 ```
 
 # LANGUAGE
@@ -36,6 +89,26 @@ blsq <options>
 ## SYNTAX
 
 ## BUILT-INS
+
+### Abs ```ab```
+
+```Int a: ``` Absolute value of `a`.
+
+```shell
+blsq ) -6ab
+6
+blsq ) 6ab
+6
+```
+
+```Double a: ``` Absolute value of `a`.
+
+```shell
+blsq ) -6.0ab
+6.0
+blsq ) 6.0ab
+6.0
+```
 
 ### Add ```.+```
 
@@ -413,6 +486,31 @@ blsq ) "abc"-.
 ```shell
 blsq ) {1 2 3}-.
 {1 1 2 3}
+```
+
+### Difference ```\\```
+
+**Notes:** If left argument contains duplicates as many of them will be removed as are in the right argument. Order is preserved. 
+
+```Block a, Block b: ``` Difference of `a` and `b`.
+
+```shell
+blsq ) {1 1 1 2 3}{1 1}\\
+{1 2 3}
+```
+
+```String a, String b: ``` Difference of `a` and `b`.
+
+```shell
+blsq ) "abcde""ce"\\
+"abd"
+```
+
+```Int a, Int b: ``` Difference of `a` and `b`.
+
+```shell
+blsq ) 1232 22\\
+13
 ```
 
 ### Div ```./```
@@ -799,6 +897,31 @@ blsq ) "abcd"~-
 "bc"
 ```
 
+### Intersection ```IN```
+
+**Notes:** Duplicates in the left argument are preserved. Order is preserved. 
+
+```Block a, Block b: ``` Intersection of `a` and `b`.
+
+```shell
+blsq ) {5 1 1 2 2 2 2} {1 2 2 2 3 4 5}IN
+{5 1 1 2 2 2 2}
+```
+
+```String a, String b: ``` Intersection of `a` and `b`.
+
+```shell
+blsq ) "abc""dce"IN
+"c"
+```
+
+```Int a, Int b: ``` Intersection of `a` and `b`.
+
+```shell
+blsq ) 512 721IN
+12
+```
+
 ### Intersperse ```[[```
 
 ```Any a, Block b: ``` Inserts `a` between elements in `b`.
@@ -838,6 +961,40 @@ blsq ) {1 2 3}[~
 ```shell
 blsq ) 451[~
 1
+```
+
+### Length ```L[```
+
+```String a: ``` Number of characters in a String.
+
+```shell
+blsq ) "abc"L[
+3
+```
+
+```Block a: ``` Number of elements in a Block.
+
+```shell
+blsq ) {1 2 3}L[
+3
+```
+
+```Int a: ``` Converts to character based on unicode code point.
+
+```shell
+blsq ) 69L[
+'E
+blsq ) 98L[
+'b
+```
+
+```Char a: ``` Returns case as either `'A` or `'a`.
+
+```shell
+blsq ) 'BL[
+'A
+blsq ) 'bL[
+'a
 ```
 
 ### Lines ```ln```
@@ -1072,6 +1229,31 @@ blsq ) 4 4!=
 0
 ```
 
+### Nub ```NB```
+
+Nub means *removing duplicates*. Order is preserved. 
+
+```Block a: ``` Nub `a`.
+
+```shell
+blsq ) {5 1 1 2 2 2 2}NB
+{5 1 2}
+```
+
+```String a: ``` Nub `a`.
+
+```shell
+blsq ) "abccd"NB
+"abcd"
+```
+
+```Int a: ``` Nub `a`.
+
+```shell
+blsq ) 101010011NB
+10
+```
+
 ### Or ```||```
 
 This built-in auto-zips if an argument provided is a Block.
@@ -1083,6 +1265,48 @@ blsq ) 2 4||
 6
 blsq ) 2 {4 8}||
 {6 10}
+```
+
+### PadLeft ```P[```
+
+
+```Block a, Int b, Any c: ``` Pad `a` to length `b` by inserting `c` on the left (or removing elements from the right).
+
+```shell
+blsq ) {3 4 5}4 1P[
+{1 3 4 5}
+blsq ) {3 4 5 6 7}4 1P[
+{3 4 5 6}
+```
+
+```String a, Int b, Char c: ``` Pad `a` to length `b` by inserting `c` on the left (or removing characters from the right).
+
+```shell
+blsq ) "12"4' P[
+"  12"
+blsq ) "12345"4' P[
+"1234"
+```
+
+### PadRight ```[P```
+
+
+```Block a, Int b, Any c: ``` Pad `a` to length `b` by inserting `c` on the right (or removing elements from the right).
+
+```shell
+blsq ) {3 4 5}4 1[P
+{3 4 5 1}
+blsq ) {3 4 5 6 7}4 1[P
+{3 4 5 6}
+```
+
+```String a, Int b, Char c: ``` Pad `a` to length `b` by inserting `c` on the right (or removing characters from the right).
+
+```shell
+blsq ) "12345"4' [P
+"1234"
+blsq ) "12"4' [P
+"12  "
 ```
 
 ### Parse ```ps```
@@ -1338,6 +1562,45 @@ blsq ) 'a{1 2 3}p^
 'a
 ```
 
+### Range ```r@```
+
+```Int a, Int b: ``` Generates a Block containing the numbers `a` through `b`.
+
+```shell
+blsq ) 1 10r@
+{1 2 3 4 5 6 7 8 9 10}
+```
+
+```Char a, Char b: ``` Generates a Block containing the characters `a` through `b`.
+
+```shell
+blsq ) 'a'zr@
+{'a 'b 'c 'd 'e 'f 'g 'h 'i 'j 'k 'l 'm 'n 'o 'p 'q 'r 's 't 'u 'v 'w 'x 'y 'z}
+```
+
+**Authors' Notes:** Use *RangeConcat* if you need a String. 
+
+```Double a: ``` Square root of `a`.
+
+```shell
+blsq ) 64.0r@
+8.0
+```
+
+```String a: ``` Returns a Block with all permutations of `a`.
+
+```shell
+blsq ) "abc"r@
+{"abc" "bac" "cba" "bca" "cab" "acb"}
+```
+
+```Block a: ``` Returns a Block with all permutations of `a`.
+
+```shell
+blsq ) {1 0 9}r@
+{{1 0 9} {0 1 9} {9 0 1} {0 9 1} {9 1 0} {1 9 0}}
+```
+
 ### ReadArray ```ra```
 
 This built-in auto-maps if the argument given is a Block.
@@ -1569,7 +1832,25 @@ blsq ) 5.3 0r_pd
 **Authors' Notes:** Even though `r_` can auto-map this built-in won't do the same *expected* job because `pd` will calculate the product of a Block. You may however use this fact
 as a shortcut for example for `{0r_}m[pd`. If you want to round every Double to the nearest Integer in a Block use `)R_`. 
 
+### Signum ```sn```
 
+```Int a: ``` Signum of `a`. (-1 for negative, 1 for positive, 0 for zero).
+
+```shell
+blsq ) -6sn6sn0sn
+0
+1
+-1
+```
+
+```Double a: ``` Signum of `a`. (-1.0 for negative, 1.0 for positive, 0.0 for zero).
+
+```shell
+blsq ) -6.0sn6.0sn0.0sn
+0.0
+1.0
+-1.0
+```
 
 ### Smaller ```.<```
 
@@ -1585,6 +1866,84 @@ blsq ) {1 2 3}{2 2 3}.<
 ```
 
 **Note:** Comparing values with different types may result in unexpected (but determinstic, thus not undefined) behaviour. 
+
+### Split ```;;```
+
+```Block a, Block b: ``` Split `a` on `b`.
+
+```shell
+blsq ) {1 2 3 4 2 3 5 7 2 3 8}{2 3};;
+{{1} {4} {5 7} {8}}
+```
+
+```String a, String b: ``` Split `a` on `b`.
+
+```shell
+blsq ) "Hello, world, is,"", ";;
+{"Hello" "world" "is,"}
+```
+
+```String a, Char b: ``` Split `a` on `b`.
+
+```shell
+blsq ) "Hello"'l;;
+{"He" "" "o"}
+```
+
+```Char a, String b: ``` Split `b` on `a`.
+
+```shell
+blsq ) 'e"Hello";;
+{"H" "llo"}
+```
+
+```Int a, Int b: ``` Split `a` on `b`.
+
+```shell
+blsq ) 1234256238 23;;
+{1 4256 8}
+```
+
+### StripLeft ```S[```
+
+```Block a, Any b: ``` Removes any leading `b`s from `a`.
+
+```shell
+blsq ) {1 1 2 5}1S[
+{2 5}
+```
+
+```String a, Char b: ``` Removes any leading `b`s from `a`.
+
+```shell
+blsq ) "QQabQ"'QS[
+"abQ"
+```
+
+```Int a: ``` Returns (`a` * `a`) (squares).
+
+```shell
+blsq ) 5S[
+25
+```
+
+### StripRight ```[S```
+
+```Block a, Any b: ``` Removes any trailing `b`s from `a`.
+
+```shell
+blsq ) {1 0 0 0}0[S
+{1}
+```
+
+```String a, Char b: ``` Removes any trailing `b`s from `a`.
+
+```shell
+blsq ) "abccc"'c[S
+"ab"
+```
+
+**Authors' Notes:** For Doubles use `fC`. 
 
 ### Sub ```.-```
 
@@ -1756,6 +2115,31 @@ blsq ) 'a[-
 "a"
 ```
 
+### Union ```UN```
+
+**Notes:** If left argument contains duplicates these will be preserved. Duplicates in the right argument will be removed. Order is preserved. 
+
+```Block a, Block b: ``` Union of `a` and `b`. 
+
+```shell
+blsq ) {1 1} {1 2 2 2 3}UN
+{1 1 2 3}
+```
+
+```String a, String b: ``` Union of `a` and `b`.
+
+```shell
+blsq ) "zabc""cde"UN
+"zabcde"
+```
+
+```Int a, Int b: ``` Union of `a` and `b`.
+
+```shell
+blsq ) 12 14UN
+124
+```
+
 ### Unlines ```un```
 
 ```Block {}: ``` If given an empty block returns an empty string.
@@ -1891,7 +2275,7 @@ olleh dlrow
 
 ### Xor ```$$```
 
-This built-in auto-zips if an argument provided is a block.
+This built-in auto-zips if an argument provided is a Block.
 
 ```Int a, Int b: ``` Bitwise XOR.
 
