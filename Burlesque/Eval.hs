@@ -227,7 +227,7 @@ builtins = [
   ("ri", builtinReadInt),
   ("rd", builtinReadDouble),
   ("ra", builtinReadArray),
-  ("ps", builtinParse), -- <-
+  ("ps", builtinParse), -- <- doc 8.11.15
   ("up", builtinUnparse),
   ("if", builtinIff),
   ("ie", builtinIfElse),
@@ -252,7 +252,7 @@ builtins = [
   ("\\m", builtinConcatMap),
   ("[[", builtinIntersperse),
   ("m[", builtinMap),
-  ("r[", builtinReduce),
+  ("r[", builtinReduce), 
   ("\\/", builtinSwap),
   ("^^", builtinDup),
   ("vv", builtinPop),
@@ -265,7 +265,7 @@ builtins = [
   ("R~", builtinReplaceRegex),
   ("^p", builtinPushMany),
   ("p^", builtinPushManyReverse),
-  ("=[", builtinGroup),
+  ("=[", builtinGroup), 
   ("sh", builtinPretty),
   ("FF", builtinFormat),
   ("ff", builtinFromFormat),
@@ -284,7 +284,7 @@ builtins = [
   ("S[", builtinStripLeft),
   ("[S", builtinStripRight),
   ("P[", builtinPadLeft),
-  ("[P", builtinPadRight),
+  ("[P", builtinPadRight), -- <-
   (";;", builtinSplit),
   ("UN", builtinUnion),
   ("IN", builtinIntersection),
