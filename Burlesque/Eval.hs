@@ -18,6 +18,7 @@ import Data.Ord
 import Text.Regex
 import Numeric
 import Control.Monad
+import Control.Monad.ListM
 import System.Random
 import Data.Digits
 import Data.Function
@@ -180,10 +181,10 @@ runStack p xs = do
   put (st, st'', v'')
   return nst
   
-runStack' :: BlsqProg -> BlsqStack -> BlsqStack
-runStack' p xs = fst' $ execState (eval p) (xs,[],M.fromList [])
+runStack' :: BlsqProg -> BlsqStack -> IO BlsqStack
+runStack' p xs = execStateT (eval p) (xs,[],M.fromList []) >>= return . fst'
 
-runStack'' p xs g v = execState (eval p) (xs,g, v)
+runStack'' p xs g v = execStateT (eval p) (xs,g, v)
 
 toInt p = (fromIntegral p) :: Int
 
@@ -1551,15 +1552,15 @@ builtinMap = do
       builtinConcat
    (BlsqBlock a : BlsqBlock b : xs) -> do 
       (s , g, v) <- get
-      let (mst, ng, nv) = map' a b g v
+      (mst, ng, nv) <- lift $ map' a b g v
       put (s, ng, nv)
       putResult $ (BlsqBlock $ mst) : xs
    _ -> putResult $ BlsqError "Burlesque: (m[) Invalid arguments!" : st
- where map' _ [] g v = ([], g, v)
-       map' f (x:xs) g v = 
-         let (st, ng, nv) = runStack'' f [x] g v
-             (st', ng', nv') = map' f xs ng nv
-         in (st++st', ng', nv')    
+ where map' _ [] g v = return ([], g, v)
+       map' f (x:xs) g v = do
+         (st, ng, nv) <- runStack'' f [x] g v
+         (st', ng', nv') <- map' f xs ng nv
+         return (st++st', ng', nv')    
 
 builtinPartial :: BlsqState
 builtinPartial = do
@@ -1568,16 +1569,16 @@ builtinPartial = do
     (BlsqBlock f : BlsqBlock xs : ss) -> do
       putStack ss
       (s, g, v) <- get
-      let (nst, ng, nv) = partial' f xs g v
+      (nst, ng, nv) <- lift $ partial' f xs g v
       put (s, ng, nv)
       putResult $ (BlsqBlock nst) : ss
       builtinReverse
     _ -> putResult $ BlsqError "Burlesque: (pa) Invalid arguments!" : st
- where partial' _ [] g v = ([], g, v)
-       partial' f xs g v = 
-         let (st, ng, nv) = runStack'' f [BlsqBlock xs] g v
-             (st', ng', nv') = partial' f (init xs) ng nv
-         in (st++st', ng', nv')             
+ where partial' _ [] g v = return ([], g, v)
+       partial' f xs g v = do
+         (st, ng, nv) <- runStack'' f [BlsqBlock xs] g v
+         (st', ng', nv') <- partial' f (init xs) ng nv
+         return (st++st', ng', nv')             
          
  {-
        map' _ [] = return []
@@ -1606,17 +1607,17 @@ builtinFilter = do
         _ -> return ()
   (BlsqBlock f : BlsqBlock v : xs) -> do
     (s, g, vv) <- get
-    let (ff, ng, nvv) = filter' f v g vv
+    (ff, ng, nvv) <- lift $ filter' f v g vv
     put (s, ng, nvv)
     putResult $ (BlsqBlock $ ff) : xs
   _ -> putResult $ BlsqError "Burlesque: (f[) Invalid arguments!" : st
- where filter' _ [] g vv = ([], g, vv)
-       filter' f (x:xs) g vv = 
-         let (st, ng, nvv) = runStack'' f [x] g vv in
+ where filter' _ [] g vv = return ([], g, vv)
+       filter' f (x:xs) g vv = do
+         (st, ng, nvv) <- runStack'' f [x] g vv
          case st of
            (BlsqInt 0):ys -> filter' f xs ng nvv
-           _ -> let (ys, ng', nvv') = filter' f xs ng nvv in
-                (x : ys, ng', nvv')
+           _ -> do (ys, ng', nvv') <- filter' f xs ng nvv
+                   return (x : ys, ng', nvv')
        {-
        filter' _ [] = return []
        filter' f (x:xs) = do
@@ -2112,17 +2113,17 @@ builtinApplyRegex = do
     case st of
      (BlsqStr regex : BlsqBlock f : BlsqStr str : xs) -> do
        (_, g, v) <- get
-       let (_, g', v', str') = (allMatches'' f regex str g v)
+       (_, g', v', str') <- lift $ (allMatches'' f regex str g v)
        put (xs, g', v')
        putResult $ (BlsqStr str') : xs
      _ -> putResult $ BlsqError "Burlesque: (~a) Invalid arguments!" : st     
  where allMatches'' f regex str g v =
                            case matchRegexAll (mkRegex regex) str of
-                                Nothing -> ([], g, v, "")
-                                Just (pre, matched, after, _) -> 
-                                   let ((BlsqStr x:_), ng, nv) = runStack'' (f ++ [BlsqIdent "Sh"]) [BlsqStr matched] g v
-                                       (_, ng', nv', p) = allMatches'' f regex after ng nv
-                                   in ([], ng', nv', pre ++ x ++ p)
+                                Nothing -> return ([], g, v, "")
+                                Just (pre, matched, after, _) -> do
+                                   ((BlsqStr x:_), ng, nv) <- runStack'' (f ++ [BlsqIdent "Sh"]) [BlsqStr matched] g v
+                                   (_, ng', nv', p) <- allMatches'' f regex after ng nv
+                                   return ([], ng', nv', pre ++ x ++ p)
                                   
 builtinLoop :: BlsqState
 builtinLoop = do
@@ -2131,16 +2132,16 @@ builtinLoop = do
     (BlsqBlock f : s : BlsqBlock ls : xs) -> do
       (_, g, v) <- get
       putStack xs
-      let (g', v', res) = loop' f ls g v s
+      (g', v', res) <- lift $ loop' f ls g v s
       put ((BlsqBlock res):xs, g', v')
     _ -> putResult $ BlsqError "Burlesque: (LO) Invalid arguments!" : st
- where loop' f [] g v _ = (g, v, [])
-       loop' f (q:qs) g v s = 
-                            let (stc, ng, nv) = runStack'' f [s,q] g v in
+ where loop' f [] g v _ = return (g, v, [])
+       loop' f (q:qs) g v s = do
+                            (stc, ng, nv) <- runStack'' f [s,q] g v
                             case stc of
                               (BlsqInt 0 : _) -> loop' f qs ng nv s
-                              _ -> let (ng', nv', intm) = loop' f qs ng nv q
-                                   in (ng', nv', q : intm)
+                              _ -> do (ng', nv', intm) <- loop' f qs ng nv q
+                                      return (ng', nv', q : intm)
                                    
 builtinLoopIndices :: BlsqState
 builtinLoopIndices = do
@@ -2149,16 +2150,16 @@ builtinLoopIndices = do
     (BlsqBlock f : s : BlsqBlock ls : xs) -> do
       (_, g, v) <- get
       putStack xs
-      let (g', v', res) = loop' f ls g v s 0
+      (g', v', res) <- lift $ loop' f ls g v s 0
       put ((BlsqBlock $ map BlsqInt res):xs, g', v')
     _ -> putResult $ BlsqError "Burlesque: (LI) Invalid arguments!" : st
- where loop' f [] g v _ idx = (g, v, [])
-       loop' f (q:qs) g v s idx = 
-                            let (stc, ng, nv) = runStack'' f [s,q] g v in
+ where loop' f [] g v _ idx = return (g, v, [])
+       loop' f (q:qs) g v s idx = do
+                            (stc, ng, nv) <- runStack'' f [s,q] g v
                             case stc of
                               (BlsqInt 0 : _) -> loop' f qs ng nv s (idx+1)
-                              _ -> let (ng', nv', intm) = loop' f qs ng nv q (idx+1)
-                                   in (ng', nv', idx : intm)
+                              _ -> do (ng', nv', intm) <- loop' f qs ng nv q (idx+1)
+                                      return (ng', nv', idx : intm)
                                    
 -- | > R~
 builtinReplaceRegex :: BlsqState
@@ -2915,7 +2916,7 @@ builtinRunStack = do
   st <- getStack
   case st of
     (BlsqBlock f : BlsqBlock q : xs) -> do
-      let st' = runStack' f q
+      st' <- lift $ runStack' f q
       putStack xs
       pushToStack (BlsqBlock st')
       
@@ -2932,28 +2933,36 @@ builtinGroupBy2 :: BlsqState
 builtinGroupBy2 = do
   st <- getStack
   case st of
-    (BlsqBlock f : BlsqBlock ls : xs) -> putResult $ BlsqBlock (map BlsqBlock (
-                                         groupBy (\ a b -> 
-                                                           (case runStack' f [a] of
-                                                                 (BlsqInt 1 : xs) -> True
-                                                                 (BlsqInt (-1) : xs) -> False
-                                                                 _ -> False) ==
-                                                            (case runStack' f [b] of
-                                                                 (BlsqInt 1 : xs) -> True
-                                                                 (BlsqInt (-1) : xs) -> False
-                                                                 _ -> False))
-                                                                 ls)) : xs
-    (BlsqBlock f : BlsqStr ls : xs) -> putResult $ BlsqBlock (map BlsqStr (
-                                         groupBy (\ a b -> 
-                                                           (case runStack' f [BlsqChar a] of
-                                                                 (BlsqInt 1 : xs) -> True
-                                                                 (BlsqInt (-1) : xs) -> False
-                                                                 _ -> False) ==
-                                                            (case runStack' f [BlsqChar b] of
-                                                                 (BlsqInt 1 : xs) -> True
-                                                                 (BlsqInt (-1) : xs) -> False
-                                                                 _ -> False))
-                                                                 ls)) : xs
+    (BlsqBlock f : BlsqBlock ls : xs) -> do
+      result <- groupByM (\a b -> do
+                  lf <- lift $ runStack' f [a]
+                  rt <- lift $ runStack' f [b]
+                  let lf' = case lf of
+                              (BlsqInt 1 : xs) -> True
+                              (BlsqInt (-1) : xs) -> False
+                              _ -> False
+                      rt' = case rt of
+                              (BlsqInt 1 : xs) -> True
+                              (BlsqInt (-1) : xs) -> False
+                              _ -> False
+                  return $ lf' == rt') ls
+      putResult $ BlsqBlock (map BlsqBlock $ result) : xs
+    (BlsqBlock f : BlsqStr ls : xs) -> do
+      result <- groupByM (\a b -> do
+                  lf <- lift $ runStack' f [BlsqChar a]
+                  rt <- lift $ runStack' f [BlsqChar b]
+                  let lf' = case lf of
+                              (BlsqInt 1 : xs) -> True
+                              (BlsqInt (-1) : xs) -> False
+                              _ -> False
+                      rt' = case rt of
+                              (BlsqInt 1 : xs) -> True
+                              (BlsqInt (-1) : xs) -> False
+                              _ -> False
+                  return $ lf' == rt') ls
+      putResult $ BlsqBlock (map BlsqStr $ result) : xs
+  
+    
     _ -> putResult $ BlsqError "Burlesque: (gB) Invalid arguments!" : st
   
 -- | gb
@@ -2961,16 +2970,22 @@ builtinGroupBy :: BlsqState
 builtinGroupBy = do
   st <- getStack
   case st of
-    (BlsqBlock f : BlsqBlock ls : xs) -> putResult $ BlsqBlock (map BlsqBlock (
-                                         groupBy (\ a b -> case runStack' f [b,a] of
-                                                                 (BlsqInt 1 : xs) -> True
-                                                                 (BlsqInt (-1) : xs) -> False
-                                                                 _ -> False) ls)) : xs
-    (BlsqBlock f : BlsqStr ls : xs) -> putResult $ BlsqBlock (map BlsqStr (
-                                         groupBy (\ a b -> case runStack' f [BlsqChar b,BlsqChar a] of
-                                                                 (BlsqInt 1 : xs) -> True
-                                                                 (BlsqInt (-1) : xs) -> False
-                                                                 _ -> False) ls)) : xs
+    (BlsqBlock f : BlsqBlock ls : xs) -> do
+      result <- groupByM (\a b -> do
+                  lf <- lift $ runStack' f [b,a]
+                  case lf of
+                    (BlsqInt 1 : xs) -> return True
+                    (BlsqInt (-1) : xs) -> return False
+                    _-> return False) ls
+      putResult $ BlsqBlock (map BlsqBlock $ result) : xs
+    (BlsqBlock f : BlsqStr ls : xs) -> do
+      result <- groupByM (\a b -> do
+                  lf <- lift $ runStack' f [BlsqChar b,BlsqChar a]
+                  case lf of
+                    (BlsqInt 1 : xs) -> return True
+                    (BlsqInt (-1) : xs) -> return False
+                    _-> return False) ls
+      putResult $ BlsqBlock (map BlsqStr $ result) : xs
     _ -> putResult $ BlsqError "Burlesque: (gb) Invalid arguments!" : st
     
 -- | sb
@@ -2978,16 +2993,24 @@ builtinSortBy :: BlsqState
 builtinSortBy = do
   st <- getStack
   case st of
-    (BlsqBlock f : BlsqBlock ls : xs) -> putResult $ BlsqBlock (
-                                         sortBy (\ a b -> case runStack' f [b,a] of
-                                                                 (BlsqInt 1 : xs) -> GT
-                                                                 (BlsqInt (-1) : xs) -> LT
-                                                                 _ -> EQ) ls) : xs
-    (BlsqBlock f : BlsqStr ls : xs) -> putResult $ BlsqStr (
-                                       sortBy (\ a b -> case runStack' f [BlsqChar b,BlsqChar a] of
-                                                                 (BlsqInt 1 : xs) -> GT
-                                                                 (BlsqInt (-1) : xs) -> LT
-                                                                 _ -> EQ) ls) : xs
+    (BlsqBlock f : BlsqBlock ls : xs) -> do
+      result <- sortByM (\a b -> do
+                  lf <- lift $ runStack' f [b,a]
+                  case lf of
+                    (BlsqInt 1 : xs) -> return GT
+                    (BlsqInt (-1) : xs) -> return LT
+                    _ -> return EQ) ls
+      putResult $ (BlsqBlock result) : xs
+    (BlsqBlock f : BlsqStr ls : xs) -> do
+      result <- sortByM (\a b -> do
+                  lf <- lift $ runStack' f [BlsqChar b,BlsqChar a]
+                  case lf of
+                    (BlsqInt 1 : xs) -> return GT
+                    (BlsqInt (-1) : xs) -> return LT
+                    _ -> return EQ) ls
+      putResult $ (BlsqStr result) : xs
+  
+    
     _ -> putResult $ BlsqError "Burlesque: (sb) Invalid arguments!" : st
 
 -- | cm
@@ -4285,17 +4308,21 @@ builtinMmult = do
  st <- getStack
  case st of
   (BlsqBlock b : BlsqBlock a : xs) -> do
-    putResult $ (BlsqBlock . map BlsqBlock $ [ [ qsum $ qmul ar bc | bc <- b ] | ar <- a ]) : xs
- where qmul a b = head . fst' $ 
-        execState
+    r <- lift $ sequence [ sequence [ f ar bc | bc <- b ] | ar <- a ]
+    putResult $ (BlsqBlock . map BlsqBlock $ r) : xs
+ where f ar bc = qmul ar bc >>= qsum
+       qmul a b = do
+        r <- execStateT
          (do pushToStack (a)
              pushToStack (b)
              pushToStack (BlsqBlock [ BlsqIdent "?*" ])
              builtinZipWithPush) ([],[], M.fromList [])
-       qsum ls = head . fst' $
-        execState
+        return . head . fst' $ r
+       qsum ls = do
+        r <- execStateT
          (do pushToStack (ls)
              builtinSum) ([],[], M.fromList [])
+        return . head . fst' $ r
 
 -- | ss
 builtinStrStr :: BlsqState
