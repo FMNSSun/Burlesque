@@ -29,7 +29,7 @@ You need a decently recent ghc and haskell-plattform.
 
 Install the required packages:
 
-    cabal install split  haskeline mtl regex-compat parsec digits statistics
+    cabal install split  haskeline mtl regex-compat parsec digits statistics monadlist
 
 Then compile
 
