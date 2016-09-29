@@ -13,14 +13,19 @@ import Data.List
 
 import qualified Data.Map as M
 
+loadPrelude :: IO String
+loadPrelude = readFile "Prelude.blsq"
+
 runProgram :: String -> String -> IO String
 runProgram p stdin = do
- result <- execStateT (eval (runParserWithString parseBlsq p)) ([BlsqStr stdin],[], M.fromList [])
+ p' <- loadPrelude
+ result <- execStateT (eval (runParserWithString parseBlsq (p'++p))) ([BlsqStr stdin],[], M.fromList [])
  return . unlines . map toDisplay . filter notHidden . fst' $ result
 
 runProgramNoStdin :: String -> IO String
 runProgramNoStdin p = do
- result <- execStateT (eval (runParserWithString parseBlsq p)) ([],[], M.fromList [])
+ p' <- loadPrelude
+ result <- execStateT (eval (runParserWithString parseBlsq (p'++p))) ([],[], M.fromList [])
  return . unlines . map toDisplay . filter notHidden . fst' $ result
 
 runTheFreakingShell = runInputT settings burlesqueShell
@@ -44,7 +49,8 @@ main = do
    ["--version"] -> putStrLn "burlesque v1.6.9!"
    ["--stdin",prog] -> do
      cin <- getContents
-     cout <- runProgram prog cin
+     p' <- loadPrelude
+     cout <- runProgram (p'++prog) cin
      putStr cout
    _ -> do putStrLn $ "Invalid usage"
            putStrLn "  --file <path>           Read code from file (incl. STDIN)"

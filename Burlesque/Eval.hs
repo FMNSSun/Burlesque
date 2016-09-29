@@ -93,7 +93,15 @@ evalI v@(BlsqSpecial ",") = do
  if length st == 1 then
    do putStack []
  else return ()
-evalI v@(BlsqIdent i) = lookupBuiltin i
+evalI v@(BlsqIdent i) = do
+  case lookupBuiltin i of
+    (Just f) -> f
+    _ -> do (_, _, v') <- get
+            let q = M.lookup (BlsqStr i) v'
+            case q of
+              (Just (BlsqBlock f)) -> eval f
+              (Just f) -> pushToStack f
+              _ -> pushToStack (BlsqError ("Unknown command: (" ++ i ++ ")!"))
 evalI (BlsqMapBlock e) = do
   pushToStack (BlsqBlock e)
   builtinMap
@@ -592,7 +600,7 @@ builtins = [
   ("??", builtinVersion)
  ]
 
-lookupBuiltin b = fromMaybe (pushToStack (BlsqError ("Unknown command: (" ++ b ++ ")!"))) $ lookup b builtins
+lookupBuiltin b = lookup b builtins
 
 putResult = putStack
 
