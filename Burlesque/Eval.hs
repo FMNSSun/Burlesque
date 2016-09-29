@@ -22,6 +22,7 @@ import Control.Monad.ListM
 import System.Random
 import Data.Digits
 import Data.Function
+import System.Process
 
 import Statistics.Distribution
 import Statistics.Distribution.Normal
@@ -584,6 +585,7 @@ builtins = [
   
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
+  ("ex", builtinExecute),
   
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
@@ -4579,3 +4581,18 @@ builtinDebug :: BlsqState
 builtinDebug = do
   (_, _, v) <- get
   pushToStack $ BlsqMap v BlsqNil
+
+builtinExecute :: BlsqState
+builtinExecute = do
+  st <- getStack
+  case st of
+    (BlsqStr input : BlsqBlock args : BlsqStr path : xs) -> do
+      rp <- lift $ readProcess path (stringsOnly args) input
+      putResult $ BlsqStr rp : xs
+    (BlsqBlock args : BlsqStr path : xs) -> do
+      rp <- lift $ readProcess path (stringsOnly args) ""
+      putResult $ BlsqStr rp : xs
+    _ -> pushToStack $ BlsqError "Burlesque: (ex) Invalid arguments!"
+  where stringsOnly [] = []
+        stringsOnly (BlsqStr a : xs) = a : stringsOnly xs
+        stringsOnly (_ : xs) = stringsOnly xs
