@@ -284,14 +284,14 @@ builtins = [
   ("S[", builtinStripLeft),
   ("[S", builtinStripRight),
   ("P[", builtinPadLeft),
-  ("[P", builtinPadRight), -- <-
-  (";;", builtinSplit),
-  ("UN", builtinUnion),
-  ("IN", builtinIntersection),
-  ("NB", builtinNub),
-  ("\\\\", builtinDiffLs),
-  ("r@", builtinRange),
-  ("R@", builtinRangeInf),
+  ("[P", builtinPadRight), -- d
+  (";;", builtinSplit), -- d
+  ("UN", builtinUnion), -- d
+  ("IN", builtinIntersection), -- d
+  ("NB", builtinNub), -- d
+  ("\\\\", builtinDiffLs), -- d
+  ("r@", builtinRange), -- d
+  ("R@", builtinRangeInf), -- d
   ("bx", builtinBox),
   ("><", builtinSort),
   ("<>", builtinSortReverse),
@@ -583,6 +583,7 @@ builtins = [
   
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
+  ("rw", builtinRaw),
   
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
@@ -4470,6 +4471,16 @@ builtinCeiling = builtinProduct >> builtinProduct
 -- | fo
 builtinFloor :: BlsqState
 builtinFloor = builtinAverage >> builtinProduct
+
+
+-- | rw
+builtinRaw :: BlsqState
+builtinRaw = do
+  st <- getStack
+  putResult $
+   case st of
+     (x : xs) -> BlsqStr (show x) : xs
+     _ -> BlsqError "Burlesque: (rw) Invalid arguments or stack size error!" : st
 
 -- | z?
 builtinZero :: BlsqState
