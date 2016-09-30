@@ -29,7 +29,7 @@ You need a decently recent ghc and haskell-plattform.
 
 Install the required packages:
 
-    cabal install split  haskeline mtl regex-compat parsec digits statistics
+    cabal install split  haskeline mtl regex-compat parsec digits statistics monadlist
 
 Then compile
 
@@ -45,6 +45,20 @@ Tests
 With Burlesque 1.7.2f I added some little tests. However, it's too late to write a comprehensive testsuite.
 If you like you can fork this repo and add tests and send me a pull request. Whenever I solve a golf challenge
 I'll add my solution to the testsuite (once the challenge is post mortem of course :) )
+
+Contributing
+============
+
+I really welcome any help. However, for most of the things you'll need to know Haskell.
+If you know Haskell and wanna help: VERY GOOD, contact me! (PM, Push requests whatever, IRC).
+
+If you don't know Haskell:
+
+You can contribute userdefined builtins. If your builtin can be expressed using other
+builtins you can create a new builtin through the `Prelude.blsq` file. Just have a look at the file.
+I WILL ONLY ACCEPT SUCH BUILTINS IF YOU ALSO PROVIDE THE DOCUMENTATION FOR IT AS WELL AS TESTCASES!
+Thus, have a look at `tests/` and `runtests.py`.
+
 
 License
 =======

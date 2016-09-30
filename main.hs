@@ -13,13 +13,20 @@ import Data.List
 
 import qualified Data.Map as M
 
-runProgram :: String -> String -> String
-runProgram p stdin =
- unlines . map toDisplay . filter notHidden . fst' $ execState (eval (runParserWithString parseBlsq p)) ([BlsqStr stdin],[], M.fromList [])
+loadPrelude :: IO String
+loadPrelude = readFile "Prelude.blsq"
 
-runProgramNoStdin :: String -> String
-runProgramNoStdin p =
- unlines . map toDisplay . filter notHidden . fst' $ execState (eval (runParserWithString parseBlsq p)) ([],[], M.fromList [])
+runProgram :: String -> String -> IO String
+runProgram p stdin = do
+ p' <- loadPrelude
+ result <- execStateT (eval (runParserWithString parseBlsq (p'++p))) ([BlsqStr stdin],[], M.fromList [])
+ return . unlines . map toDisplay . filter notHidden . fst' $ result
+
+runProgramNoStdin :: String -> IO String
+runProgramNoStdin p = do
+ p' <- loadPrelude
+ result <- execStateT (eval (runParserWithString parseBlsq (p'++p))) ([],[], M.fromList [])
+ return . unlines . map toDisplay . filter notHidden . fst' $ result
 
 runTheFreakingShell = runInputT settings burlesqueShell
  
@@ -28,23 +35,23 @@ main = do
  case args of
    ["--file",file] -> do 
      prog <- readFile file
-     interact $ runProgram prog
-   ["--compile",file] -> do
-     prog <- readFile file
-     putStrLn "import Burlesque.Types"
-     putStrLn "import Burlesque.Eval"
-     putStrLn "import Burlesque.Display"
-     putStrLn $ "program = " ++ (show $ runParserWithString parseBlsq prog)
-     putStrLn $ "runProgram stdin = "
-     putStrLn $ "  unlines . map toDisplay $ execState (eval program) [BlsqStr stdin]"
-     putStrLn $ "main = interact $ runProgram"
+     cin <- getContents
+     cout <- runProgram prog cin
+     putStr cout
    ["--file-no-stdin",file] -> do 
      prog <- readFile file
-     putStr $ runProgramNoStdin prog
-   ["--no-stdin",prog] -> putStr $ runProgramNoStdin prog
+     cout <- runProgramNoStdin prog
+     putStr cout
+   ["--no-stdin",prog] -> do
+     cout <- runProgramNoStdin prog
+     putStr cout
    ["--shell"] -> runInputT settings burlesqueShell
    ["--version"] -> putStrLn "burlesque v1.6.9!"
-   ["--stdin",prog] -> interact $ runProgram prog
+   ["--stdin",prog] -> do
+     cin <- getContents
+     p' <- loadPrelude
+     cout <- runProgram (p'++prog) cin
+     putStr cout
    _ -> do putStrLn $ "Invalid usage"
            putStrLn "  --file <path>           Read code from file (incl. STDIN)"
            putStrLn "  --file-no-stdin <path>  Read code from file (excl. STDIN)"
@@ -70,5 +77,6 @@ burlesqueShell = do
  case line of 
    Nothing     -> outputStrLn "* Abort..." >> return ()
    Just "exit!" -> outputStrLn "* Exit!" >> return()
-   Just q -> do outputStr $ runProgramNoStdin q
+   Just q -> do cout <- lift $ runProgramNoStdin q
+                outputStr cout
                 burlesqueShell

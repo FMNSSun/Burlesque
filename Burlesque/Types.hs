@@ -42,6 +42,6 @@ data BlsqPrettyFormat =  BlsqFormatNormal
   deriving (Show,Read,Eq,Ord)
 
 type BlsqStack = [BlsqExp]
-type BlsqState = State (BlsqStack, BlsqStack, M.Map BlsqExp BlsqExp) ()
-type BlsqState' a = State (BlsqStack, BlsqStack, M.Map BlsqExp BlsqExp) a
+type BlsqState = StateT (BlsqStack, BlsqStack, M.Map BlsqExp BlsqExp) IO ()
+type BlsqState' a = StateT (BlsqStack, BlsqStack, M.Map BlsqExp BlsqExp) IO a
 type BlsqProg = [BlsqExp]
