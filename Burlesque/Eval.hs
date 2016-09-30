@@ -2513,7 +2513,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = pushToStack (BlsqStr "Burlesque - 1.7.4" )
+builtinVersion = pushToStack (BlsqStr "Burlasque - 1.8" )
 
 -- | -~
 builtinHeadTail :: BlsqState
