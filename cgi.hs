@@ -20,8 +20,8 @@ documentHtml content
 
 page q p = do
  output . renderHtml $ documentHtml $ (thediv ! [theclass "box"]) << (((form ! [method "get",action "burlesque.cgi"])
-     << (   (input ! [thetype "text", name "q", value p])
-        +++ (input ! [thetype "submit", value "Go!"])
+     << (   ((textarea ! [name "q", rows "25", cols "80"]) << p)
+        +++ br +++ (input ! [thetype "submit", value "Go!"])
         )) +++ (h1 << "Result") +++ (pre << (primHtml q)))
 
 cgiMain = do

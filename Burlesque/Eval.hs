@@ -23,11 +23,7 @@ import Control.Monad.ListM
 import System.Random
 import Data.Digits
 import Data.Function
-import System.Process
-import Database.HDBC
-import Database.HDBC.MySQL
 import qualified Data.ByteString.UTF8 as B8
-
 import Statistics.Distribution
 import Statistics.Distribution.Normal
 import Statistics.Distribution.Binomial
@@ -38,10 +34,15 @@ import Statistics.Distribution.ChiSquared
 import Statistics.Distribution.Exponential
 import Statistics.Distribution.StudentT
 import Statistics.Distribution.Uniform
-
 import qualified Data.Map as M
-
 import Debug.Trace
+
+-- Imports only for IO
+#ifdef HAVE_IO_SHIT
+import System.Process
+import Database.HDBC
+import Database.HDBC.MySQL
+#endif
 
 -- | > Evaluate a Burlesque program
 eval :: BlsqProg -> BlsqState
@@ -603,14 +604,16 @@ builtins = [
   
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
+
+#ifdef HAVE_IO_SHIT
   ("rw", builtinRaw),
   ("ex", builtinExecute),
-
   ("my", builtinMySQL),
   ("rf", builtinReadFile),
   ("wf", builtinWriteFile),
   ("PO", builtinPrintOut),
   ("Po", builtinPrintOutLn),
+#endif
   
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
@@ -627,6 +630,10 @@ doIOShit xs = lift xs
 doIOShit _ = error "IO shit is disabled in this build."
 #endif
 
+
+-- IO Builtins
+
+#ifdef HAVE_IO_SHIT
 builtinMySQL = do
   st <- getStack
   case st of
@@ -685,6 +692,22 @@ builtinPrintOutLn = do
       doIOShit $ putStrLn (toDisplay a)
       putResult $ xs
     _ -> pushToStack (BlsqError "Burlesque (Po): Invalid arguments!")
+
+builtinExecute :: BlsqState
+builtinExecute = do
+  st <- getStack
+  case st of
+    (BlsqStr input : BlsqBlock args : BlsqStr path : xs) -> do
+      rp <- doIOShit $ readProcess path (stringsOnly args) input
+      putResult $ BlsqStr rp : xs
+    (BlsqBlock args : BlsqStr path : xs) -> do
+      rp <- doIOShit $ readProcess path (stringsOnly args) ""
+      putResult $ BlsqStr rp : xs
+    _ -> pushToStack $ BlsqError "Burlesque: (ex) Invalid arguments!"
+  where stringsOnly [] = []
+        stringsOnly (BlsqStr a : xs) = a : stringsOnly xs
+        stringsOnly (_ : xs) = stringsOnly xs
+#endif
 
 
 builtinEMinus = pushToStack (BlsqDouble 10.0) >> builtinSwap >> builtinCoercePow >> 
@@ -4682,18 +4705,3 @@ builtinDebug :: BlsqState
 builtinDebug = do
   (_, _, v) <- get
   pushToStack $ BlsqMap v BlsqNil
-
-builtinExecute :: BlsqState
-builtinExecute = do
-  st <- getStack
-  case st of
-    (BlsqStr input : BlsqBlock args : BlsqStr path : xs) -> do
-      rp <- doIOShit $ readProcess path (stringsOnly args) input
-      putResult $ BlsqStr rp : xs
-    (BlsqBlock args : BlsqStr path : xs) -> do
-      rp <- doIOShit $ readProcess path (stringsOnly args) ""
-      putResult $ BlsqStr rp : xs
-    _ -> pushToStack $ BlsqError "Burlesque: (ex) Invalid arguments!"
-  where stringsOnly [] = []
-        stringsOnly (BlsqStr a : xs) = a : stringsOnly xs
-        stringsOnly (_ : xs) = stringsOnly xs
