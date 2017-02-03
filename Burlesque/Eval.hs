@@ -600,6 +600,8 @@ builtins = [
   ("ex", builtinExecute),
 
   ("my", builtinMySQL),
+  ("rf", builtinReadFile),
+  ("wf", builtinWriteFile),
   
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
@@ -627,6 +629,24 @@ builtinMySQL = do
  where convert (SqlInt64 x) = BlsqInt $ ((fromIntegral x) :: Integer)
        convert (SqlByteString xb) = BlsqStr (B8.toString xb)
        convert a = BlsqStr (show a)
+
+
+builtinReadFile = do
+  st <- getStack
+  case st of
+    (BlsqStr path : xs) -> do
+      contents <- lift $ readFile path
+      putResult $ (BlsqStr contents) : xs
+    _ -> pushToStack (BlsqError "Burlesque (rf): Invalid arguments!")
+    
+builtinWriteFile = do
+  st <- getStack
+  case st of
+    (BlsqStr path : BlsqStr contents : xs) -> do
+      lift $ writeFile path contents
+      putResult $ xs
+    _ -> pushToStack (BlsqError "Burlesque (wf): Invalid arguments!")
+
 
 builtinEMinus = pushToStack (BlsqDouble 10.0) >> builtinSwap >> builtinCoercePow >> 
   pushToStack (BlsqDouble 1) >> builtinSwap >> builtinDiv
@@ -2536,7 +2556,7 @@ builtinMapParse = do
 
 -- | ??
 builtinVersion :: BlsqState
-builtinVersion = pushToStack (BlsqStr "Burlesque - 1.7.4" )
+builtinVersion = pushToStack (BlsqStr "Burlasque - 1.8" )
 
 -- | -~
 builtinHeadTail :: BlsqState

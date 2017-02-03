@@ -150,6 +150,16 @@ parsePretty = do
  optional spaces
  return $ BlsqPretty (BlsqStr e) BlsqFormatNormal
 
+parseProc :: Parser BlsqExp
+parseProc = do
+  string "proc"
+  optional spaces
+  ident <- many1 $ noneOf "@%=!?<>: \t\n\r"
+  optional spaces
+  prog <- parseBlock
+  optional spaces
+  return $ BlsqAssign ident (prog) False False
+ 
 parseAssign :: Parser BlsqExp
 parseAssign = do 
   char '%'
@@ -197,8 +207,18 @@ parseKeyValues = do
   value <- parseSingle
   return $ (key, value)
   
-parseCall :: Parser BlsqExp
-parseCall = do
+parseCall = parseCall' <|> parseCall''
+
+parseCall'' :: Parser BlsqExp
+parseCall'' = do
+  string "call"
+  optional spaces
+  ident <- many $ noneOf "@%=!?<>: \t\n\r"
+  optional spaces
+  return $ BlsqCall ident
+  
+parseCall' :: Parser BlsqExp
+parseCall' = do
   char '%'
   name <- many $ noneOf "%=!?<>:"
   char '!'
@@ -250,7 +270,7 @@ parseBlsq = many parseSingle
 
 parseSingle :: Parser BlsqExp
 parseSingle = (try parseMap) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
-              (try parseCall) <|> (try parseAssign) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
+              (try parseCall) <|> (try parseAssign) <|> (try parseProc) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseIntE) <|> (try parseNumber) <|>
               parseChar <|> parseQuoted <|> parseQuoted2 <|> parseSingleIdent <|> parseIdent
