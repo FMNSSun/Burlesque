@@ -182,6 +182,20 @@ parseAssign3 = do
   d <- oneOf "0123456789"
   optional spaces
   return $ BlsqAssign [d] undefined True True
+
+
+parseSet :: Parser BlsqExp
+parseSet = do
+  string "set"
+  optional spaces
+  name <- many1 $ noneOf "@%=!?<>: \t\n\r"
+  optional spaces
+  string "to"
+  optional spaces
+  exp <- parseBlock
+  optional spaces
+  return $ BlsqSet name exp
+
   
 parseGet2 :: Parser BlsqExp
 parseGet2 = do
@@ -213,22 +227,31 @@ parseCall'' :: Parser BlsqExp
 parseCall'' = do
   string "call"
   optional spaces
-  ident <- many $ noneOf "@%=!?<>: \t\n\r"
+  ident <- many1 $ noneOf "@%=!?<>: \t\n\r"
   optional spaces
   return $ BlsqCall ident
   
 parseCall' :: Parser BlsqExp
 parseCall' = do
   char '%'
-  name <- many $ noneOf "%=!?<>:"
+  name <- many1 $ noneOf "%=!?<>:"
   char '!'
   optional spaces
   return $ BlsqCall name
+
+parseGet = parseGet' <|> parseGet''
   
-parseGet :: Parser BlsqExp
-parseGet = do
+parseGet'' = do
+  string "get"
+  optional spaces
+  ident <- many1 $ noneOf "@%=!?<>: \t\n\r"
+  optional spaces
+  return $ BlsqGet ident
+
+parseGet' :: Parser BlsqExp
+parseGet' = do
   char '%'
-  name <- many $ noneOf "%=!?<>:"
+  name <- many1 $ noneOf "%=!?<>:"
   char '?'
   optional spaces
   return $BlsqGet name
@@ -269,7 +292,7 @@ parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseSingle
 
 parseSingle :: Parser BlsqExp
-parseSingle = (try parseMap) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
+parseSingle = (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
               (try parseCall) <|> (try parseAssign) <|> (try parseProc) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseIntE) <|> (try parseNumber) <|>

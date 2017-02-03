@@ -108,6 +108,12 @@ evalI v@(BlsqIdent i) = do
 evalI (BlsqMapBlock e) = do
   pushToStack (BlsqBlock e)
   builtinMap
+evalI (BlsqSet name (BlsqBlock exp)) = do
+  st <- getStack
+  nst <- runStack exp st
+  case nst of
+    [] -> return ()
+    (x:xs) -> do setVar (BlsqStr name) x
 evalI (BlsqAssign name e False _) = do
   (st, st', v) <- get
   let v' = M.insert (BlsqStr name) e v
@@ -170,7 +176,7 @@ popFromStack = do
 pushToBottom q = do
   (st, st', v') <- get
   put (st++[q], st', v')
-  
+
 setVar name value = do
   (st, st', v) <- get
   put (st, st', M.insert name value v)
@@ -602,6 +608,8 @@ builtins = [
   ("my", builtinMySQL),
   ("rf", builtinReadFile),
   ("wf", builtinWriteFile),
+  ("PO", builtinPrintOut),
+  ("Po", builtinPrintOutLn),
   
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
@@ -646,6 +654,30 @@ builtinWriteFile = do
       lift $ writeFile path contents
       putResult $ xs
     _ -> pushToStack (BlsqError "Burlesque (wf): Invalid arguments!")
+
+
+builtinPrintOut = do
+  st <- getStack
+  case st of
+    (BlsqStr a : xs) -> do
+      lift $ putStr a
+      putResult $ xs
+    (a : xs) -> do
+      lift $ putStr (toDisplay a)
+      putResult $ xs
+    _ -> pushToStack (BlsqError "Burlesque (PO): Invalid arguments!")
+
+
+builtinPrintOutLn = do
+  st <- getStack
+  case st of
+    (BlsqStr a : xs) -> do
+      lift $ putStrLn a
+      putResult $ xs
+    (a : xs) -> do
+      lift $ putStrLn (toDisplay a)
+      putResult $ xs
+    _ -> pushToStack (BlsqError "Burlesque (Po): Invalid arguments!")
 
 
 builtinEMinus = pushToStack (BlsqDouble 10.0) >> builtinSwap >> builtinCoercePow >> 
