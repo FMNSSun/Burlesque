@@ -28,8 +28,10 @@ cgiMain = do
   mn <- getInput "q"
   case mn of
     Nothing -> page "" "Enter your code here!"
-    Just q -> page (runProgramNoStdin q) q
+    Just q -> do result <- liftIO $ runProgramNoStdin q
+                 page result q
 
-runProgramNoStdin :: String -> String
-runProgramNoStdin p =
- unlines . map toHTML . filter notHidden . fst' $ execState (eval (runParserWithString parseBlsq p)) ([],[], M.fromList [])
+runProgramNoStdin :: String -> IO String
+runProgramNoStdin p = do
+  result <- execStateT (eval (runParserWithString parseBlsq p)) ([],[], M.fromList [])
+  return . unlines . map toHTML . filter notHidden . fst' $ result
