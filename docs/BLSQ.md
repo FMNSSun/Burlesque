@@ -341,6 +341,17 @@ This meant that ```av``` could only be used on Blocks that contained Doubles (be
 a Double). In such cases `AV` had to be used. With newer versions the functionality of `./` was extended and `av` can now be used on Blocks that contain Integers as well. However,
 if you use `AV` on a Block that contains Doubles it will convert all these Doubles to ceiling(a) which is not what you want in most cases. Thus: The use of `av` is recommended as it is safer. 
 
+### Box ```bx```
+
+```Any a: ``` Puts `a` into a Block.
+
+```shell
+blsq ) 5bx
+{5}
+blsq ) 'abx
+{'a}
+```
+
 ### Concat ```\[```
 
 ```Block {}: ``` *Defined as:* *```{}```*. Empty Block becomes empty Block.
@@ -1601,6 +1612,29 @@ blsq ) {1 0 9}r@
 {{1 0 9} {0 1 9} {9 0 1} {0 9 1} {9 1 0} {1 9 0}}
 ```
 
+### RangeInfinity ```R@```
+
+```Str a: ``` All subsequences of `a`.
+
+```shell
+blsq ) "abc"R@
+{"" "a" "b" "ab" "c" "ac" "bc" "abc"}
+```
+
+```Block a: ``` All subsequences of `a`.
+
+```shell
+blsq ) {1 2 3}R@
+{{} {1} {2} {1 2} {3} {1 3} {2 3} {1 2 3}}
+```
+
+```Int a: ``` Generates a Block containing the numbers `a` to Infinity. 
+
+```shell
+blsq ) 5R@10.+
+{5 6 7 8 9 10 11 12 13 14}
+```
+
 ### ReadArray ```ra```
 
 This built-in auto-maps if the argument given is a Block.
@@ -1867,6 +1901,51 @@ blsq ) {1 2 3}{2 2 3}.<
 
 **Note:** Comparing values with different types may result in unexpected (but determinstic, thus not undefined) behaviour. 
 
+### Sort ```><```
+
+```Block a: ``` Sorts `a` in ascending order.
+
+```shell
+blsq ) {5 3 4}><
+{3 4 5}
+```
+
+```Str a: ``` Sorts `a` in ascending order.
+
+```shell
+blsq ) "there"><
+"eehrt"
+```
+
+```Int a: ``` Sorts `a` in ascending order.
+
+```shell
+blsq ) 3241><
+1234
+blsq ) 32401><
+1234
+```
+
+**Notes:** Please be aware that this will remove zeroes as numbers don't have leading zeroes.
+
+```Char a: ``` Returns `1` if `a` is a digit, `0` otherwise.
+
+```shell
+blsq ) "ab10c")><
+{0 0 1 1 0}
+```
+
+### SortReverse ```<>```
+
+*Defined as:* *```><<-```*
+
+```shell
+blsq ) {5 3 0 9 7 8}<>
+{9 8 7 5 3 0}
+blsq ) {5 3 0 9 7 8}><<-
+{9 8 7 5 3 0}
+```
+
 ### Split ```;;```
 
 ```Block a, Block b: ``` Split `a` on `b`.
@@ -1927,6 +2006,8 @@ blsq ) 5S[
 25
 ```
 
+**Authors' Notes:** For Doubles use `fC`. 
+
 ### StripRight ```[S```
 
 ```Block a, Any b: ``` Removes any trailing `b`s from `a`.
@@ -1942,8 +2023,6 @@ blsq ) {1 0 0 0}0[S
 blsq ) "abccc"'c[S
 "ab"
 ```
-
-**Authors' Notes:** For Doubles use `fC`. 
 
 ### Sub ```.-```
 

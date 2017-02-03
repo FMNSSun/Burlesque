@@ -6,6 +6,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Roman Müntener" />
   <title>Burleseque - Moonpage</title>
+  <style type="text/css">code{white-space: pre;}</style>
   <link rel="stylesheet" href="doc.css" type="text/css" />
 </head>
 <body>
@@ -18,21 +19,26 @@
 <li><a href="#about">ABOUT</a><ul>
 <li><a href="#history">HISTORY</a></li>
 </ul></li>
-<li><a href="#synopsis">SYNOPSIS</a></li>
+<li><a href="#synopsis">SYNOPSIS</a><ul>
+<li><a href="#example-usages">EXAMPLE USAGES</a></li>
+</ul></li>
 <li><a href="#language">LANGUAGE</a><ul>
 <li><a href="#syntax">SYNTAX</a></li>
 <li><a href="#built-ins">BUILT-INS</a><ul>
+<li><a href="#abs-ab">Abs <code>ab</code></a></li>
 <li><a href="#add-.">Add <code>.+</code></a></li>
 <li><a href="#addx-_">AddX <code>_+</code></a></li>
 <li><a href="#and">And <code>&amp;&amp;</code></a></li>
 <li><a href="#append">Append <code>[+</code></a></li>
 <li><a href="#average-av">Average <code>av</code></a></li>
 <li><a href="#average2-av">Average2 <code>AV</code></a></li>
+<li><a href="#box-bx">Box <code>bx</code></a></li>
 <li><a href="#concat">Concat <code>\[</code></a></li>
 <li><a href="#concatmap-m">ConcatMap <code>\m</code></a></li>
 <li><a href="#contains">Contains <code>~[</code></a></li>
 <li><a href="#continuation-c">Continuation <code>c!</code></a></li>
 <li><a href="#decrement--.">Decrement <code>-.</code></a></li>
+<li><a href="#difference">Difference <code>\\</code></a></li>
 <li><a href="#div-.">Div <code>./</code></a></li>
 <li><a href="#duplicate-j">Duplicate <code>J</code> <code>^^</code></a></li>
 <li><a href="#equal">Equal <code>==</code></a></li>
@@ -52,8 +58,10 @@
 <li><a href="#infixof">InfixOf <code>~~</code></a></li>
 <li><a href="#init">Init <code>~]</code></a></li>
 <li><a href="#inittail--">InitTail <code>~-</code></a></li>
+<li><a href="#intersection-in">Intersection <code>IN</code></a></li>
 <li><a href="#intersperse">Intersperse <code>[[</code></a></li>
 <li><a href="#last">Last <code>[~</code></a></li>
+<li><a href="#length-l">Length <code>L[</code></a></li>
 <li><a href="#lines-ln">Lines <code>ln</code></a></li>
 <li><a href="#map-m">Map <code>m[</code></a></li>
 <li><a href="#matches">Matches <code>~=</code></a></li>
@@ -65,7 +73,10 @@
 <li><a href="#mod-.">Mod <code>.%</code></a></li>
 <li><a href="#mul-.">Mul <code>.*</code></a></li>
 <li><a href="#notequal">NotEqual <code>!=</code></a></li>
+<li><a href="#nub-nb">Nub <code>NB</code></a></li>
 <li><a href="#or">Or <code>||</code></a></li>
+<li><a href="#padleft-p">PadLeft <code>P[</code></a></li>
+<li><a href="#padright-p">PadRight <code>[P</code></a></li>
 <li><a href="#parse-ps">Parse <code>ps</code></a></li>
 <li><a href="#pop-vv">Pop <code>vv</code></a></li>
 <li><a href="#pow">Pow <code>**</code></a></li>
@@ -79,6 +90,8 @@
 <li><a href="#productmany-pd">ProductMany <code>PD</code></a></li>
 <li><a href="#pushmany-p">PushMany <code>^p</code></a></li>
 <li><a href="#pushmanyreverse-p">PushManyReverse <code>p^</code></a></li>
+<li><a href="#range-r">Range <code>r@</code></a></li>
+<li><a href="#rangeinfinity-r">RangeInfinity <code>R@</code></a></li>
 <li><a href="#readarray-ra">ReadArray <code>ra</code></a></li>
 <li><a href="#readdouble-rd">ReadDouble <code>rd</code></a></li>
 <li><a href="#readint-ri">ReadInt <code>ri</code></a></li>
@@ -88,12 +101,19 @@
 <li><a href="#reverse--">Reverse <code>&lt;-</code></a></li>
 <li><a href="#round-r_">Round <code>r_</code></a></li>
 <li><a href="#round2-r_">Round2 <code>R_</code></a></li>
+<li><a href="#signum-sn">Signum <code>sn</code></a></li>
 <li><a href="#smaller-.">Smaller <code>.&lt;</code></a></li>
+<li><a href="#sort">Sort <code>&gt;&lt;</code></a></li>
+<li><a href="#sortreverse">SortReverse <code>&lt;&gt;</code></a></li>
+<li><a href="#split">Split <code>;;</code></a></li>
+<li><a href="#stripleft-s">StripLeft <code>S[</code></a></li>
+<li><a href="#stripright-s">StripRight <code>[S</code></a></li>
 <li><a href="#sub-.-">Sub <code>.-</code></a></li>
 <li><a href="#suffixof">SuffixOf <code>!~</code></a></li>
 <li><a href="#sum">Sum <code>++</code></a></li>
 <li><a href="#swap-j">Swap <code>j</code> <code>\/</code></a></li>
 <li><a href="#tail--">Tail <code>[-</code></a></li>
+<li><a href="#union-un">Union <code>UN</code></a></li>
 <li><a href="#unlines-un">Unlines <code>un</code></a></li>
 <li><a href="#unlinespretty-un">UnlinesPretty <code>uN</code></a></li>
 <li><a href="#unparse-up">Unparse <code>up</code></a></li>
@@ -108,7 +128,7 @@
 </ul></li>
 </ul>
 </div>
-<h1 id="about"><a href="#TOC">ABOUT</a></h1>
+<h1 id="about">ABOUT</h1>
 <p>An interpreter for the esoteric programming language <em>The Burlesque Programming Language</em>. Actually, Burlesque is less of a programming language than it is a tool. The actual language behind it is very simple and the only thing that makes Burlesque notable is the amount of built-ins it has. The syntax can be learnt within a few minutes (there are basically only Numbers, Strings and Blocks) and the concepts can be learnt quickly as well. People familiar with functional programming languages will already know these concepts so Burlesque is especially easy to learn if you already know the terms <em>map</em>, <em>filter</em>, <em>reduce</em>, <em>zip</em> and others. This moonpage tries to be as accurate, complete and easy to understand as possible. If you encounter an error in the documentation please report it on <a href="http://github.com/FMNSSun/Burlesque">github</a>. <strong>Author:</strong> Roman Müntener, 2012-?</p>
 <p>Useful Weblinks:</p>
 <ul>
@@ -117,14 +137,65 @@
 <li><a href="http://mroman.ch/burlesque/lref.html">Language Reference</a></li>
 </ul>
 <p><strong>Until this moonpage is complete please consult the Language Reference. Once compelete, the moonpage will superseed the Language Reference and this warning will disappear.</strong></p>
-<h2 id="history"><a href="#TOC">HISTORY</a></h2>
+<h2 id="history">HISTORY</h2>
 <p>Burlesque has been under development since 2012 and is still being improved on a regular basis. It was built as a tool for me (mroman) to use as a helper for my computer science studies.</p>
-<h1 id="synopsis"><a href="#TOC">SYNOPSIS</a></h1>
-<pre class="cmdline"><code>blsq &lt;options&gt;</code></pre>
-<h1 id="language"><a href="#TOC">LANGUAGE</a></h1>
-<h2 id="syntax"><a href="#TOC">SYNTAX</a></h2>
-<h2 id="built-ins"><a href="#TOC">BUILT-INS</a></h2>
-<h3 id="add-."><a href="#TOC">Add <code>.+</code></a></h3>
+<h1 id="synopsis">SYNOPSIS</h1>
+<pre class="cmdline"><code>blsq 
+  --file &lt;path&gt;           Read code from file (incl. STDIN)
+  --file-no-stdin &lt;path&gt;  Read code from file (excl. STDIN)
+  --no-stdin &lt;code&gt;       Read code from argv (excl. STDIN)
+  --shell                 Start in shell mode
+  --version               Print version info
+  --compile &lt;path&gt;        Pseudo-compile file to haskell code
+  --stdin &lt;code&gt;          Read code from argv (incl. STDIN)</code></pre>
+<ul>
+<li><em>path</em> - Path to a file</li>
+<li><em>code</em> - Burlesque code</li>
+</ul>
+<p><em>STDIN</em> will be pushed as a String to the stack. On exit all elements are printed in order from top to bottom. No output will be produced before the Burlesque code terminates.</p>
+<h2 id="example-usages">EXAMPLE USAGES</h2>
+<pre class="cmdline"><code>$ blsq --file-no-stdin hw.blsq 
+Hello, world!
+$ echo -n &quot;hello&quot; | blsq --file revstdin.blsq 
+olleh
+$ echo -n &quot;hello&quot; | blsq --stdin &quot;&lt;-Q&quot;
+olleh
+$ blsq --no-stdin &quot;2 64**&quot;
+18446744073709551616</code></pre>
+<pre class="cmdline"><code>$ echo -n `ls *.blsq` | blsq --stdin &quot;wdzisp&quot;
+0 hw.blsq
+1 index.blsq
+2 prog.blsq
+3 revstdin.blsq
+4 test.blsq</code></pre>
+<pre class="cmdline"><code>$ echo -n `ls` | blsq --stdin &#39;wd{&quot;.blsq&quot;!~}{&quot;.blsq&quot;.-}FMuN&#39;
+hw
+index
+prog
+revstdin
+test</code></pre>
+<pre class="cmdline"><code>$ df | blsq --stdin &quot;ln[-{WD-]}muQ&quot;
+rootfs
+udev
+tmpfs
+/dev/disk/by-uuid/2e7e48d9-b728-48f7-95db-a58db91f4769
+tmpfs
+tmpfs</code></pre>
+<h1 id="language">LANGUAGE</h1>
+<h2 id="syntax">SYNTAX</h2>
+<h2 id="built-ins">BUILT-INS</h2>
+<h3 id="abs-ab">Abs <code>ab</code></h3>
+<p><code>Int a:</code> Absolute value of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) -6ab
+6
+blsq ) 6ab
+6</code></pre>
+<p><code>Double a:</code> Absolute value of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) -6.0ab
+6.0
+blsq ) 6.0ab
+6.0</code></pre>
+<h3 id="add-.">Add <code>.+</code></h3>
 <p><code>Int a, Int b:</code> Integer addition.</p>
 <pre class="shell"><code>blsq ) 5 5.+
 10</code></pre>
@@ -161,7 +232,7 @@
 <p><code>Int a, Double b:</code> Convert <code>a</code> to Double, then perform addition.</p>
 <pre class="shell"><code>blsq ) 2 1.0.+
 3.0</code></pre>
-<h3 id="addx-_"><a href="#TOC">AddX <code>_+</code></a></h3>
+<h3 id="addx-_">AddX <code>_+</code></h3>
 <p><code>Int a, Int b:</code> Creates a Block with the two Integers <code>a</code> and <code>b</code> as elements (in this exact order).</p>
 <pre class="shell"><code>blsq ) 1 2_+
 {1 2}</code></pre>
@@ -189,14 +260,14 @@
 <p><code>String a, Int b:</code> Converts <code>b</code> to String, then concatenates.</p>
 <pre class="shell"><code>blsq ) &quot;b&quot;1_+
 &quot;b1&quot;</code></pre>
-<h3 id="and"><a href="#TOC">And <code>&amp;&amp;</code></a></h3>
+<h3 id="and">And <code>&amp;&amp;</code></h3>
 <p>This built-in auto-zips if an argument provided is a Block.</p>
 <p><code>Int a, Int b:</code> Bitwise AND.</p>
 <pre class="shell"><code>blsq ) 2 4&amp;&amp;
 0
 blsq ) 1 7&amp;&amp;
 1</code></pre>
-<h3 id="append"><a href="#TOC">Append <code>[+</code></a></h3>
+<h3 id="append">Append <code>[+</code></h3>
 <p><code>Block a, Any b:</code> Append <code>b</code> to <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2}9[+
 {1 2 9}</code></pre>
@@ -207,7 +278,7 @@ blsq ) 1 7&amp;&amp;
 <pre class="shell"><code>blsq ) 12 23[+
 1223</code></pre>
 <p><strong>Authors' Notes:</strong> This built-in is rather superfluous because most of its use-cases can be covered by either using <code>++</code> or <code>_+</code>. Yet, there may be some rare use-cases where you might want to use it for example in <code>{[+}r[</code> or the like.</p>
-<h3 id="average-av"><a href="#TOC">Average <code>av</code></a></h3>
+<h3 id="average-av">Average <code>av</code></h3>
 <p><code>Block a:</code> <em>Defined as:</em> <em><code>J++jL[pd./</code></em>. Calculates average.</p>
 <pre class="shell"><code>blsq ) {1 2 3 4}J++jL[pd./
 2.5
@@ -220,14 +291,20 @@ blsq ) {1 2 3 4}av
 blsq ) 5.1av
 5</code></pre>
 <p><strong>Authors' Notes:</strong> If you want the floor of <code>a</code> as Double use <code>fo</code>.</p>
-<h3 id="average2-av"><a href="#TOC">Average2 <code>AV</code></a></h3>
+<h3 id="average2-av">Average2 <code>AV</code></h3>
 <p><em>Defined as:</em> <em><code>PDav</code></em>. Calculates average.</p>
 <pre class="shell"><code>blsq ) {1 2 3.2 4}AV
 2.75
 blsq ) {1 2 3.2 4}av
 2.55</code></pre>
 <p><strong>Authors' Notes:</strong> This built-in is a relic from earlier versions of Burlesque where <code>./</code> only worked on <code>Int, Int</code> or <code>Double, Double</code> but not with <code>Double, Int</code> or <code>Int, Double</code>. This meant that <code>av</code> could only be used on Blocks that contained Doubles (because <code>++</code> would produce an Integer otherwise and the <code>L[pd./</code> would fail because an Integer could not be divided by a Double). In such cases <code>AV</code> had to be used. With newer versions the functionality of <code>./</code> was extended and <code>av</code> can now be used on Blocks that contain Integers as well. However, if you use <code>AV</code> on a Block that contains Doubles it will convert all these Doubles to ceiling(a) which is not what you want in most cases. Thus: The use of <code>av</code> is recommended as it is safer.</p>
-<h3 id="concat"><a href="#TOC">Concat <code>\[</code></a></h3>
+<h3 id="box-bx">Box <code>bx</code></h3>
+<p><code>Any a:</code> Puts <code>a</code> into a Block.</p>
+<pre class="shell"><code>blsq ) 5bx
+{5}
+blsq ) &#39;abx
+{&#39;a}</code></pre>
+<h3 id="concat">Concat <code>\[</code></h3>
 <p><code>Block {}:</code> <em>Defined as:</em> <em><code>{}</code></em>. Empty Block becomes empty Block.</p>
 <pre class="shell"><code>blsq ) {}\[
 {}</code></pre>
@@ -242,7 +319,7 @@ blsq ) {{1 1} {2 1} {3}}\[
 blsq ) {&#39;a &#39;b &#39;c}\[
 &quot;abc&quot;</code></pre>
 <p><strong>Authors' Notes:</strong> There is an additional special case when <code>{_+}r[</code> does not return a Block the return value will be boxed. Why this special case exist remains unknown.</p>
-<h3 id="concatmap-m"><a href="#TOC">ConcatMap <code>\m</code></a></h3>
+<h3 id="concatmap-m">ConcatMap <code>\m</code></h3>
 <p><em>Defined as:</em> <em><code>m[\[</code></em>.</p>
 <pre class="shell"><code>blsq ) {1 2 3}{ro}m[\[
 {1 1 2 1 2 3}
@@ -263,7 +340,7 @@ blsq ) &quot;abc&quot;XX{&#39;ajr@}\m\[
 &quot;aababc&quot;
 blsq ) &quot;abc&quot;{&#39;ajr@}\m
 &quot;aababc&quot;</code></pre>
-<h3 id="contains"><a href="#TOC">Contains <code>~[</code></a></h3>
+<h3 id="contains">Contains <code>~[</code></h3>
 <p><code>Block a, Any b:</code> Returns 1 if <code>a</code> contains <code>b</code> otherwise returns 0.</p>
 <pre class="shell"><code>blsq ) {1 2 3}4~[
 0
@@ -284,7 +361,7 @@ blsq ) 1223 21~[
 1
 blsq ) &quot;hello&quot; &quot;elo&quot;~[
 0</code></pre>
-<h3 id="continuation-c"><a href="#TOC">Continuation <code>c!</code></a></h3>
+<h3 id="continuation-c">Continuation <code>c!</code></h3>
 <p>Generally speaking a <em>Continuation</em> refers to executing code on a snapshot of the stack and then pushing the result back to the actual stack. This means that this built-in lets you run code without destroying data on the stack.</p>
 <p><code>Block a:</code> Run <code>a</code> as a Continuation.</p>
 <pre class="shell"><code>blsq ) 5 4.+
@@ -297,7 +374,7 @@ blsq ) 5 4{.+J}c!
 9
 4
 5</code></pre>
-<h3 id="decrement--."><a href="#TOC">Decrement <code>-.</code></a></h3>
+<h3 id="decrement--.">Decrement <code>-.</code></h3>
 <p><code>Int a:</code> Decrements <code>a</code>.</p>
 <pre class="shell"><code>blsq ) 5-.
 4</code></pre>
@@ -310,7 +387,18 @@ blsq ) 5 4{.+J}c!
 <p><code>Block a:</code> Prepend first element of <code>a</code> to <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3}-.
 {1 1 2 3}</code></pre>
-<h3 id="div-."><a href="#TOC">Div <code>./</code></a></h3>
+<h3 id="difference">Difference <code>\\</code></h3>
+<p><strong>Notes:</strong> If left argument contains duplicates as many of them will be removed as are in the right argument. Order is preserved.</p>
+<p><code>Block a, Block b:</code> Difference of <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) {1 1 1 2 3}{1 1}\\
+{1 2 3}</code></pre>
+<p><code>String a, String b:</code> Difference of <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) &quot;abcde&quot;&quot;ce&quot;\\
+&quot;abd&quot;</code></pre>
+<p><code>Int a, Int b:</code> Difference of <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) 1232 22\\
+13</code></pre>
+<h3 id="div-.">Div <code>./</code></h3>
 <p><code>Int a, Int b:</code> Integer division.</p>
 <pre class="shell"><code>blsq ) 10 3./
 3</code></pre>
@@ -333,14 +421,14 @@ blsq ) {1 2 3}{2 2}./
 <p><code>Double a, Int b:</code> Converts <code>b</code> to Double, then divides.</p>
 <pre class="shell"><code>blsq ) 10.0 3./
 3.3333333333333335</code></pre>
-<h3 id="duplicate-j"><a href="#TOC">Duplicate <code>J</code> <code>^^</code></a></h3>
+<h3 id="duplicate-j">Duplicate <code>J</code> <code>^^</code></h3>
 <p>Duplicates the top most element.</p>
 <pre class="shell"><code>blsq ) 5
 5
 blsq ) 5J
 5
 5</code></pre>
-<h3 id="equal"><a href="#TOC">Equal <code>==</code></a></h3>
+<h3 id="equal">Equal <code>==</code></h3>
 <p><code>Any a, Any b:</code> Returns 1 if <code>a == b</code> else returns 0.</p>
 <pre class="shell"><code>blsq ) 5 5==
 1
@@ -350,12 +438,12 @@ blsq ) 3 2==
 0
 blsq ) {1 23}{1 23}==
 1</code></pre>
-<h3 id="eval-e"><a href="#TOC">Eval <code>e!</code></a></h3>
+<h3 id="eval-e">Eval <code>e!</code></h3>
 <p><code>Block a:</code> Evaluates (executes) <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {5 5.+}e!
 10</code></pre>
 <p><strong>Authors' Notes:</strong> If you want to eval a String use <code>pe</code>.</p>
-<h3 id="evalmany-e"><a href="#TOC">EvalMany <code>E!</code></a></h3>
+<h3 id="evalmany-e">EvalMany <code>E!</code></h3>
 <p><em>Defined as:</em> <em><code>.*\[e!</code></em>. This built-in can be used to evaluate a Block a number of times.</p>
 <pre class="shell"><code>blsq ) 1{J.+}1E!
 2
@@ -367,7 +455,7 @@ blsq ) 1{J.+}4E!
 16
 blsq ) 1{J.+}4.*\[e!
 16</code></pre>
-<h3 id="explode-xx"><a href="#TOC">Explode <code>XX</code></a></h3>
+<h3 id="explode-xx">Explode <code>XX</code></h3>
 <p><code>String a:</code> Converts <code>a</code> to a Block of characters.</p>
 <pre class="shell"><code>blsq ) &quot;abc&quot;XX
 {&#39;a &#39;b &#39;c}</code></pre>
@@ -384,7 +472,7 @@ blsq ) 1{J.+}4.*\[e!
 <pre class="shell"><code>blsq ) {1 2}XX
 {1 2}</code></pre>
 <p><strong>Authors' Notes:</strong> Sometimes this built-in is also referred to as <em>Xplode</em>.</p>
-<h3 id="format-ff"><a href="#TOC">Format <code>FF</code></a></h3>
+<h3 id="format-ff">Format <code>FF</code></h3>
 <p><code>Pretty a, Int format:</code> Change format of <code>a</code> to <code>format</code>.</p>
 <p>Formats are:</p>
 <ul>
@@ -401,18 +489,18 @@ blsq ) {1 2 {3 4 &quot;5&quot;}}sh2FF
 [1 2 [3 4 &quot;5&quot;]]
 blsq ) {1 2 {3 4 &quot;5&quot;}}sh3FF
 {1 2 {3 4 &quot;5&quot;}}</code></pre>
-<h3 id="formatfromformat-ff"><a href="#TOC">FormatFromFormat <code>Ff</code></a></h3>
+<h3 id="formatfromformat-ff">FormatFromFormat <code>Ff</code></h3>
 <p><em>Defined as:</em> <em><code>FFff</code></em>. Generally just a shortcut for <code>FFff</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 {3 4}}sh2Ff
 &quot;[1 2 [3 4]]&quot;</code></pre>
 <p><strong>Authors' Notes:</strong> In most cases you want to use <code>SH</code> directly.</p>
-<h3 id="fromformat-ff"><a href="#TOC">FromFormat <code>ff</code></a></h3>
+<h3 id="fromformat-ff">FromFormat <code>ff</code></h3>
 <p><code>Pretty a:</code> Converts the <code>a</code> to String.</p>
 <pre class="shell"><code>blsq ) {1 2 {3 4}}shff
 &quot;[1, 2, [3, 4]]&quot;
 blsq ) {1 2 {3 4}}sh2FFff
 &quot;[1 2 [3 4]]&quot;</code></pre>
-<h3 id="greater-."><a href="#TOC">Greater <code>.&gt;</code></a></h3>
+<h3 id="greater-.">Greater <code>.&gt;</code></h3>
 <p><code>Any a, Any b:</code> Returns 1 if <code>a &gt; b</code> else returns 0.</p>
 <pre class="shell"><code>blsq ) 3.0 2.9 .&gt;
 1
@@ -433,7 +521,7 @@ blsq ) {} 9.0 .&gt;
 blsq ) {} 9 .&gt;
 1</code></pre>
 <p><strong>Note:</strong> Comparing values with different types may result in unexpected (but determinstic, thus not undefined) behaviour.</p>
-<h3 id="group"><a href="#TOC">Group <code>=[</code></a></h3>
+<h3 id="group">Group <code>=[</code></h3>
 <p><code>Block a:</code> Groups together elements next to each other that are equal.</p>
 <pre class="shell"><code>blsq ) {1 2 2 3 4 4 5 6}=[
 {{1} {2 2} {3} {4 4} {5} {6}}
@@ -443,7 +531,7 @@ blsq ) {1 2 2 3 4 4 4 6}=[
 <pre class="shell"><code>blsq ) &quot;abbbbbc&quot;=[
 {&quot;a&quot; &quot;bbbbb&quot; &quot;c&quot;}</code></pre>
 <p><strong>See also:</strong> <em>GroupBy</em>.</p>
-<h3 id="head--"><a href="#TOC">Head <code>-]</code></a></h3>
+<h3 id="head--">Head <code>-]</code></h3>
 <p><code>Block a:</code> Returns the first element of <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {2 4 0}-]
 2</code></pre>
@@ -454,7 +542,7 @@ blsq ) {1 2 2 3 4 4 4 6}=[
 <p><code>Int a:</code> Returns the first digit of <code>a</code> (works on absolute value).</p>
 <pre class="shell"><code>blsq ) -451-]
 4</code></pre>
-<h3 id="headtail--"><a href="#TOC">HeadTail <code>-~</code></a></h3>
+<h3 id="headtail--">HeadTail <code>-~</code></h3>
 <p><em>Defined as:</em> <em><code>-][-</code></em>.</p>
 <pre class="shell"><code>blsq ) &quot;abcd&quot;-][-
 &quot;a&quot;
@@ -463,14 +551,14 @@ blsq ) {{1 2 3} {4 5 6}}-~
 blsq ) &quot;abcd&quot;-~
 &quot;a&quot;</code></pre>
 <p><strong>Authors' Notes:</strong> Useful to get the first character of a String as a String.</p>
-<h3 id="ifelse-ie"><a href="#TOC">IfElse <code>ie</code></a></h3>
+<h3 id="ifelse-ie">IfElse <code>ie</code></h3>
 <p><code>Block a, Block b, Int a:</code> Executes <code>a</code> if b is not zero, otherwise executes <code>b</code>.</p>
 <pre class="shell"><code>blsq ) 5{3.*}{2.*}1ie
 15
 blsq ) 5{3.*}{2.*}0ie
 10</code></pre>
 <p><strong>Authors' Notes:</strong> This built-in is terrible because in most real-world cases it requires at least two additional swaps to get the result of a predicate to the top of the stack.</p>
-<h3 id="iff-if"><a href="#TOC">Iff <code>if</code></a></h3>
+<h3 id="iff-if">Iff <code>if</code></h3>
 <p><code>Int a, Block b:</code> Executes <code>b</code> only iff <code>a</code> is not zero.</p>
 <pre class="shell"><code>blsq ) 5 1{3.*}if
 15
@@ -481,7 +569,7 @@ blsq ) 5 0{3.*}if
 5
 blsq ) 5{3.*}1if
 15</code></pre>
-<h3 id="increment-."><a href="#TOC">Increment <code>+.</code></a></h3>
+<h3 id="increment-.">Increment <code>+.</code></h3>
 <p><code>Int a:</code> Increments a.</p>
 <pre class="shell"><code>blsq ) 5+.
 6</code></pre>
@@ -494,14 +582,14 @@ blsq ) 5{3.*}1if
 <p><code>Block a:</code> Appends the last element of <code>a</code> to <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3}+.
 {1 2 3 3}</code></pre>
-<h3 id="infixof"><a href="#TOC">InfixOf <code>~~</code></a></h3>
+<h3 id="infixof">InfixOf <code>~~</code></h3>
 <p><code>Block a, Block b:</code> Returns 1 if <code>b</code> is an infix of <code>a</code> otherwise returns 0.</p>
 <pre class="shell"><code>blsq ) {1 2 3 4}{2 3}~~
 1
 blsq ) {1 2 3 4}{3 3}~~
 0</code></pre>
 <p><strong>Authors' Notes:</strong> For Strings use <code>~[</code>.</p>
-<h3 id="init"><a href="#TOC">Init <code>~]</code></a></h3>
+<h3 id="init">Init <code>~]</code></h3>
 <p><code>Block a:</code> Returns all but the last elements of <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3}~]
 {1 2}</code></pre>
@@ -511,13 +599,24 @@ blsq ) {1 2 3 4}{3 3}~~
 <p><code>Int a:</code> Returns all but the last digit of <code>a</code> (as Integer) (works on absolute value).</p>
 <pre class="shell"><code>blsq ) 451~]
 45</code></pre>
-<h3 id="inittail--"><a href="#TOC">InitTail <code>~-</code></a></h3>
+<h3 id="inittail--">InitTail <code>~-</code></h3>
 <p><em>Defined as:</em> <em><code>~][-</code></em>. Can be used to remove the first and last element of a String/Block.</p>
 <pre class="shell"><code>blsq ) &quot;abcd&quot;~][-
 &quot;bc&quot;
 blsq ) &quot;abcd&quot;~-
 &quot;bc&quot;</code></pre>
-<h3 id="intersperse"><a href="#TOC">Intersperse <code>[[</code></a></h3>
+<h3 id="intersection-in">Intersection <code>IN</code></h3>
+<p><strong>Notes:</strong> Duplicates in the left argument are preserved. Order is preserved.</p>
+<p><code>Block a, Block b:</code> Intersection of <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) {5 1 1 2 2 2 2} {1 2 2 2 3 4 5}IN
+{5 1 1 2 2 2 2}</code></pre>
+<p><code>String a, String b:</code> Intersection of <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) &quot;abc&quot;&quot;dce&quot;IN
+&quot;c&quot;</code></pre>
+<p><code>Int a, Int b:</code> Intersection of <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) 512 721IN
+12</code></pre>
+<h3 id="intersperse">Intersperse <code>[[</code></h3>
 <p><code>Any a, Block b:</code> Inserts <code>a</code> between elements in <code>b</code>.</p>
 <pre class="shell"><code>blsq ) 0{1 2 3}[[
 {1 0 2 0 3}</code></pre>
@@ -525,7 +624,7 @@ blsq ) &quot;abcd&quot;~-
 <pre class="shell"><code>blsq ) &#39;x&quot;abc&quot;[[
 &quot;axbxc&quot;</code></pre>
 <p><strong>See also:</strong> <em>Intercalate</em>.</p>
-<h3 id="last"><a href="#TOC">Last <code>[~</code></a></h3>
+<h3 id="last">Last <code>[~</code></h3>
 <p><code>String a:</code> Returns the last character of <code>a</code>.</p>
 <pre class="shell"><code>blsq ) &quot;abc&quot;[~
 &#39;c</code></pre>
@@ -535,7 +634,24 @@ blsq ) &quot;abcd&quot;~-
 <p><code>Int a:</code> Returns the last digit of <code>a</code> (works on absolute value).</p>
 <pre class="shell"><code>blsq ) 451[~
 1</code></pre>
-<h3 id="lines-ln"><a href="#TOC">Lines <code>ln</code></a></h3>
+<h3 id="length-l">Length <code>L[</code></h3>
+<p><code>String a:</code> Number of characters in a String.</p>
+<pre class="shell"><code>blsq ) &quot;abc&quot;L[
+3</code></pre>
+<p><code>Block a:</code> Number of elements in a Block.</p>
+<pre class="shell"><code>blsq ) {1 2 3}L[
+3</code></pre>
+<p><code>Int a:</code> Converts to character based on unicode code point.</p>
+<pre class="shell"><code>blsq ) 69L[
+&#39;E
+blsq ) 98L[
+&#39;b</code></pre>
+<p><code>Char a:</code> Returns case as either <code>'A</code> or <code>'a</code>.</p>
+<pre class="shell"><code>blsq ) &#39;BL[
+&#39;A
+blsq ) &#39;bL[
+&#39;a</code></pre>
+<h3 id="lines-ln">Lines <code>ln</code></h3>
 <p><code>String a:</code> Split <code>a</code> into lines.</p>
 <pre class="shell"><code>blsq ) &quot;abc\ndef\ngeh&quot;ln
 {&quot;abc&quot; &quot;def&quot; &quot;geh&quot;}</code></pre>
@@ -550,7 +666,7 @@ blsq ) -123ln
 blsq ) {1 2 4}{1 2 3}ln
 {1 2 3}</code></pre>
 <p><strong>See also:</strong> <em>WithLines</em>.</p>
-<h3 id="map-m"><a href="#TOC">Map <code>m[</code></a></h3>
+<h3 id="map-m">Map <code>m[</code></h3>
 <p><code>String a, Block f:</code> <em>Defined as:</em> <em><code>jXXjm[\[</code></em>. Applies <code>f</code> to every character in <code>a</code>.</p>
 <pre class="shell"><code>blsq ) &quot;aBc&quot;{&lt;-}jXXjm[\[
 &quot;AbC&quot;
@@ -560,7 +676,7 @@ blsq ) &quot;aBc&quot;{&lt;-}m[
 <pre class="shell"><code>blsq ) {1 2 3 4 5}{J.*}m[
 {1 4 9 16 25}</code></pre>
 <p><strong>See also:</strong> <em>ConcatMap</em> and there are many other different versions and shortcuts for <em>Map</em>.</p>
-<h3 id="matches"><a href="#TOC">Matches <code>~=</code></a></h3>
+<h3 id="matches">Matches <code>~=</code></h3>
 <p><code>String str, String regex:</code> Returns 1 if <code>regex</code> matches <code>str</code> otherwise returns 0.</p>
 <pre class="shell"><code>blsq ) &quot;123&quot;&quot;[0-3]{3}&quot;~=
 1
@@ -568,11 +684,11 @@ blsq ) &quot;123&quot;&quot;[1-3]{3}&quot;~=
 1
 blsq ) &quot;123&quot;&quot;[1-3]{4}&quot;~=
 0</code></pre>
-<h3 id="matcheslist"><a href="#TOC">MatchesList <code>=~</code></a></h3>
+<h3 id="matcheslist">MatchesList <code>=~</code></h3>
 <p><code>String str, String regex:</code> Returns the capturing groups as a list. Empty block if no matches or no capture groups were used in the regular expression.</p>
 <pre class="shell"><code>blsq ) &quot;123abc&quot;&quot;([0-3]{3}).(b.)&quot;=~
 {&quot;123&quot; &quot;bc&quot;}</code></pre>
-<h3 id="max-."><a href="#TOC">Max <code>&gt;.</code></a></h3>
+<h3 id="max-.">Max <code>&gt;.</code></h3>
 <p><code>Any a, Any b:</code> Returns whichever is greatest.</p>
 <pre class="shell"><code>blsq ) 5 6&gt;.
 6
@@ -580,7 +696,7 @@ blsq ) 6 5&gt;.
 6
 blsq ) {12}12&gt;.
 {12}</code></pre>
-<h3 id="maximum"><a href="#TOC">Maximum <code>&gt;]</code></a></h3>
+<h3 id="maximum">Maximum <code>&gt;]</code></h3>
 <p><code>Block a:</code> Returns the maximum of <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3 2 1}&gt;]
 3</code></pre>
@@ -592,7 +708,7 @@ blsq ) {12}12&gt;.
 9
 blsq ) 1671&gt;]
 7</code></pre>
-<h3 id="min-."><a href="#TOC">Min <code>&lt;.</code></a></h3>
+<h3 id="min-.">Min <code>&lt;.</code></h3>
 <p><code>Any a, Any b:</code> Returns whichever is smallest.</p>
 <pre class="shell"><code>blsq ) 5 4&lt;.
 4
@@ -600,7 +716,7 @@ blsq ) 5 4&lt;.
 4
 blsq ) 10 10.0&lt;.
 10</code></pre>
-<h3 id="minimum"><a href="#TOC">Minimum <code>&lt;]</code></a></h3>
+<h3 id="minimum">Minimum <code>&lt;]</code></h3>
 <p><code>Block a:</code> Returns the minimum of <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 0 3}&lt;]
 0</code></pre>
@@ -610,12 +726,12 @@ blsq ) 10 10.0&lt;.
 <p><code>Int a:</code> Returns the smallest digit as an Integer.</p>
 <pre class="shell"><code>blsq ) 109&lt;]
 0</code></pre>
-<h3 id="mod-."><a href="#TOC">Mod <code>.%</code></a></h3>
+<h3 id="mod-.">Mod <code>.%</code></h3>
 <p>This is an auto-zip and auto-map built-in.</p>
 <p><code>Int a, Int b:</code> Integer modulo.</p>
 <pre class="shell"><code>blsq ) 10 3.%
 1</code></pre>
-<h3 id="mul-."><a href="#TOC">Mul <code>.*</code></a></h3>
+<h3 id="mul-.">Mul <code>.*</code></h3>
 <p><code>Int a, Int b:</code> Integer multiplication.</p>
 <pre class="shell"><code>blsq ) 2 3.*
 6</code></pre>
@@ -640,7 +756,7 @@ blsq ) 10 10.0&lt;.
 <p><code>Double a, Int b:</code> Converts <code>b</code> to Double, then multiplies.</p>
 <pre class="shell"><code>blsq ) 2.0 3.*
 6.0</code></pre>
-<h3 id="notequal"><a href="#TOC">NotEqual <code>!=</code></a></h3>
+<h3 id="notequal">NotEqual <code>!=</code></h3>
 <p><em>Defined as:</em> <em><code>==n!</code></em>.</p>
 <pre class="shell"><code>blsq ) 4 4==n!
 0
@@ -652,14 +768,47 @@ blsq ) 3 4!=
 1
 blsq ) 4 4!=
 0</code></pre>
-<h3 id="or"><a href="#TOC">Or <code>||</code></a></h3>
+<h3 id="nub-nb">Nub <code>NB</code></h3>
+<p>Nub means <em>removing duplicates</em>. Order is preserved.</p>
+<p><code>Block a:</code> Nub <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {5 1 1 2 2 2 2}NB
+{5 1 2}</code></pre>
+<p><code>String a:</code> Nub <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;abccd&quot;NB
+&quot;abcd&quot;</code></pre>
+<p><code>Int a:</code> Nub <code>a</code>.</p>
+<pre class="shell"><code>blsq ) 101010011NB
+10</code></pre>
+<h3 id="or">Or <code>||</code></h3>
 <p>This built-in auto-zips if an argument provided is a Block.</p>
 <p><code>Int a, Int b:</code> Bitwise OR.</p>
 <pre class="shell"><code>blsq ) 2 4||
 6
 blsq ) 2 {4 8}||
 {6 10}</code></pre>
-<h3 id="parse-ps"><a href="#TOC">Parse <code>ps</code></a></h3>
+<h3 id="padleft-p">PadLeft <code>P[</code></h3>
+<p><code>Block a, Int b, Any c:</code> Pad <code>a</code> to length <code>b</code> by inserting <code>c</code> on the left (or removing elements from the right).</p>
+<pre class="shell"><code>blsq ) {3 4 5}4 1P[
+{1 3 4 5}
+blsq ) {3 4 5 6 7}4 1P[
+{3 4 5 6}</code></pre>
+<p><code>String a, Int b, Char c:</code> Pad <code>a</code> to length <code>b</code> by inserting <code>c</code> on the left (or removing characters from the right).</p>
+<pre class="shell"><code>blsq ) &quot;12&quot;4&#39; P[
+&quot;  12&quot;
+blsq ) &quot;12345&quot;4&#39; P[
+&quot;1234&quot;</code></pre>
+<h3 id="padright-p">PadRight <code>[P</code></h3>
+<p><code>Block a, Int b, Any c:</code> Pad <code>a</code> to length <code>b</code> by inserting <code>c</code> on the right (or removing elements from the right).</p>
+<pre class="shell"><code>blsq ) {3 4 5}4 1[P
+{3 4 5 1}
+blsq ) {3 4 5 6 7}4 1[P
+{3 4 5 6}</code></pre>
+<p><code>String a, Int b, Char c:</code> Pad <code>a</code> to length <code>b</code> by inserting <code>c</code> on the right (or removing characters from the right).</p>
+<pre class="shell"><code>blsq ) &quot;12345&quot;4&#39; [P
+&quot;1234&quot;
+blsq ) &quot;12&quot;4&#39; [P
+&quot;12  &quot;</code></pre>
+<h3 id="parse-ps">Parse <code>ps</code></h3>
 <p>This built-in auto-maps if the argument given is a Block.</p>
 <p><code>String a:</code> Tries to parse <code>a</code> with the Burlesque parser. (Tries to parse <code>a</code> as Burlesque code). Returns a Block.</p>
 <pre class="shell"><code>blsq ) &quot;5&quot;ps
@@ -674,7 +823,7 @@ blsq ) &quot;{5 3.0.+}m[&quot;ps
 <p>you can just do:</p>
 <pre class="shell"><code>blsq ) &quot;5 3 6 7&quot;ps++
 21</code></pre>
-<h3 id="pop-vv"><a href="#TOC">Pop <code>vv</code></a></h3>
+<h3 id="pop-vv">Pop <code>vv</code></h3>
 <p>Removes the element on top of the stack.</p>
 <pre class="shell"><code>blsq ) 1 2
 2
@@ -682,7 +831,7 @@ blsq ) &quot;{5 3.0.+}m[&quot;ps
 blsq ) 1 2vv
 1</code></pre>
 <p><strong>Authors' Notes:</strong> If there only is one element on top of the stack using <code>,</code> is shorter.</p>
-<h3 id="pow"><a href="#TOC">Pow <code>**</code></a></h3>
+<h3 id="pow">Pow <code>**</code></h3>
 <p><code>Int a, Int b:</code> Returns <code>a</code> to the power of <code>b</code> (<code>a ^ b</code>).</p>
 <pre class="shell"><code>blsq ) 2 3**
 8</code></pre>
@@ -700,7 +849,7 @@ blsq ) 1 2vv
 65
 blsq ) &#39;a**
 97</code></pre>
-<h3 id="prefixof"><a href="#TOC">PrefixOf <code>~!</code></a></h3>
+<h3 id="prefixof">PrefixOf <code>~!</code></h3>
 <p><code>Block a, Block b:</code> Returns 1 if <code>b</code> is a prefix of <code>a</code> otherwise returns 0.</p>
 <pre class="shell"><code>blsq ) {1 4 3 2}{1 4}~!
 1
@@ -716,7 +865,7 @@ blsq ) &quot;http://mroman.ch&quot; &quot;https://&quot;~!
 0
 blsq ) 1991 199~!
 1</code></pre>
-<h3 id="prepend"><a href="#TOC">Prepend <code>+]</code></a></h3>
+<h3 id="prepend">Prepend <code>+]</code></h3>
 <p><code>Block a, Any b:</code> Prepend <code>b</code> to <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2}3+]
 {3 1 2}</code></pre>
@@ -726,7 +875,7 @@ blsq ) 1991 199~!
 <p><code>Int a, Int b:</code> Prepends <code>b</code> to <code>a</code> (result is an Integer).</p>
 <pre class="shell"><code>blsq ) 12 23+]
 2312</code></pre>
-<h3 id="pretty-sh"><a href="#TOC">Pretty <code>sh</code></a></h3>
+<h3 id="pretty-sh">Pretty <code>sh</code></h3>
 <p><code>Any a:</code> Convert to a Pretty with format <em>Normal</em>.</p>
 <pre class="shell"><code>blsq ) &quot;abc\ndef&quot;sh
 abc
@@ -739,21 +888,21 @@ blsq ) 5.0
 5.0
 blsq ) 5.0sh
 5.0</code></pre>
-<h3 id="prettyformatfromformat-sh"><a href="#TOC">PrettyFormatFromFormat <code>SH</code></a></h3>
+<h3 id="prettyformatfromformat-sh">PrettyFormatFromFormat <code>SH</code></h3>
 <p><em>Defined as:</em> <em><code>jshjFf</code></em>. Can be used to convert something to a String with a specified format.</p>
 <pre class="shell"><code>blsq ) {1 2 {3 4}}2SH
 &quot;[1 2 [3 4]]&quot;
 blsq ) {1 2 {3 4}}1SH
 &quot;[1,2,[3,4]]&quot;</code></pre>
-<h3 id="prettyfromformat-sh"><a href="#TOC">PrettyFromFormat <code>Sh</code></a></h3>
+<h3 id="prettyfromformat-sh">PrettyFromFormat <code>Sh</code></h3>
 <p><em>Defined as:</em> <em><code>shff</code></em>. Can be used to convert something to a String with format <code>Normal</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3}Sh
 &quot;[1, 2, 3]&quot;</code></pre>
-<h3 id="prettypretty-sh"><a href="#TOC">PrettyPretty <code>sH</code></a></h3>
+<h3 id="prettypretty-sh">PrettyPretty <code>sH</code></h3>
 <p><em>Defined as:</em> <em><code>SHsh</code></em>. Can be used to convert something for display with a specified format.</p>
 <pre class="shell"><code>blsq ) {1 2 {3 4}}1sH
 [1,2,[3,4]]</code></pre>
-<h3 id="product-pd"><a href="#TOC">Product <code>pd</code></a></h3>
+<h3 id="product-pd">Product <code>pd</code></h3>
 <p><code>Block {}:</code> <em>Defined as:</em> <em><code>1</code></em>. The product of an empty block is one.</p>
 <p><code>Block a:</code> <em>Defined as:</em> <em><code>{.*}r[</code></em>. Calculates the product of a Block.</p>
 <pre class="shell"><code>blsq ) {1 2 3 4}{.*}r[
@@ -773,28 +922,55 @@ blsq ) 5rd
 <pre class="shell"><code>blsq ) 1.1pd
 2</code></pre>
 <p><strong>Authors' Notes:</strong> If you want ceiling of <code>a</code> as Double use <code>cl</code>.</p>
-<h3 id="productmany-pd"><a href="#TOC">ProductMany <code>PD</code></a></h3>
+<h3 id="productmany-pd">ProductMany <code>PD</code></h3>
 <p><em>Defined as:</em> <em><code>{pd}m[</code></em>. Just maps <code>pd</code> over a Block.</p>
 <pre class="shell"><code>blsq ) {{1 2 3} 5 {2 4}}{pd}m[
 {6 5.0 8}
 blsq ) {{1 2 3} 5 {2 4}}PD
 {6 5.0 8}</code></pre>
 <p><strong>Authors' Notes:</strong> Can be used as a shortcut for <code>)pd</code>. Otherwise this built-in doesn't offer too much over <code>rd</code> as <code>rd</code> auto-maps.</p>
-<h3 id="pushmany-p"><a href="#TOC">PushMany <code>^p</code></a></h3>
+<h3 id="pushmany-p">PushMany <code>^p</code></h3>
 <p><code>Block a:</code> Pushes every element in <code>a</code> to the stack.</p>
 <pre class="shell"><code>blsq ) &#39;a{1 2 3}^p
 3
 2
 1
 &#39;a</code></pre>
-<h3 id="pushmanyreverse-p"><a href="#TOC">PushManyReverse <code>p^</code></a></h3>
+<h3 id="pushmanyreverse-p">PushManyReverse <code>p^</code></h3>
 <p><code>Block a:</code> Pushes every element in <code>a</code> to the stack in reversed order.</p>
 <pre class="shell"><code>blsq ) &#39;a{1 2 3}p^
 1
 2
 3
 &#39;a</code></pre>
-<h3 id="readarray-ra"><a href="#TOC">ReadArray <code>ra</code></a></h3>
+<h3 id="range-r">Range <code>r@</code></h3>
+<p><code>Int a, Int b:</code> Generates a Block containing the numbers <code>a</code> through <code>b</code>.</p>
+<pre class="shell"><code>blsq ) 1 10r@
+{1 2 3 4 5 6 7 8 9 10}</code></pre>
+<p><code>Char a, Char b:</code> Generates a Block containing the characters <code>a</code> through <code>b</code>.</p>
+<pre class="shell"><code>blsq ) &#39;a&#39;zr@
+{&#39;a &#39;b &#39;c &#39;d &#39;e &#39;f &#39;g &#39;h &#39;i &#39;j &#39;k &#39;l &#39;m &#39;n &#39;o &#39;p &#39;q &#39;r &#39;s &#39;t &#39;u &#39;v &#39;w &#39;x &#39;y &#39;z}</code></pre>
+<p><strong>Authors' Notes:</strong> Use <em>RangeConcat</em> if you need a String.</p>
+<p><code>Double a:</code> Square root of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) 64.0r@
+8.0</code></pre>
+<p><code>String a:</code> Returns a Block with all permutations of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;abc&quot;r@
+{&quot;abc&quot; &quot;bac&quot; &quot;cba&quot; &quot;bca&quot; &quot;cab&quot; &quot;acb&quot;}</code></pre>
+<p><code>Block a:</code> Returns a Block with all permutations of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 0 9}r@
+{{1 0 9} {0 1 9} {9 0 1} {0 9 1} {9 1 0} {1 9 0}}</code></pre>
+<h3 id="rangeinfinity-r">RangeInfinity <code>R@</code></h3>
+<p><code>Str a:</code> All subsequences of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;abc&quot;R@
+{&quot;&quot; &quot;a&quot; &quot;b&quot; &quot;ab&quot; &quot;c&quot; &quot;ac&quot; &quot;bc&quot; &quot;abc&quot;}</code></pre>
+<p><code>Block a:</code> All subsequences of <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3}R@
+{{} {1} {2} {1 2} {3} {1 3} {2 3} {1 2 3}}</code></pre>
+<p><code>Int a:</code> Generates a Block containing the numbers <code>a</code> to Infinity.</p>
+<pre class="shell"><code>blsq ) 5R@10.+
+{5 6 7 8 9 10 11 12 13 14}</code></pre>
+<h3 id="readarray-ra">ReadArray <code>ra</code></h3>
 <p>This built-in auto-maps if the argument given is a Block.</p>
 <p><code>String a:</code> Parses an array in <code>[,]</code>-notation.</p>
 <pre class="shell"><code>blsq ) &quot;[1,2,3]&quot;ra
@@ -809,7 +985,7 @@ blsq ) &quot;[1,[2 4],,,,3]&quot;ra
 <p><code>Char a:</code> Returns 1 iff <code>a</code> is space, else returns 0.</p>
 <pre class="shell"><code>blsq ) &quot; \t\ra0&quot;{ra}m[
 {1 1 1 0 0}</code></pre>
-<h3 id="readdouble-rd"><a href="#TOC">ReadDouble <code>rd</code></a></h3>
+<h3 id="readdouble-rd">ReadDouble <code>rd</code></h3>
 <p>This built-in auto-maps if the argument given is a Block.</p>
 <p><code>String a:</code> Converts <code>a</code> to Double.</p>
 <pre class="shell"><code>blsq ) &quot;3.0&quot;rd
@@ -826,7 +1002,7 @@ blsq ) &#39;1rd
 <p><strong>Authors' Notes:</strong> This built-in is useful to convert every element in a Block to a Double:</p>
 <pre class="shell"><code>blsq ) {3.0 5 &quot;3.14&quot;}rd
 {3.0 5.0 3.14}</code></pre>
-<h3 id="readint-ri"><a href="#TOC">ReadInt <code>ri</code></a></h3>
+<h3 id="readint-ri">ReadInt <code>ri</code></h3>
 <p>This built-in auto-maps if the argument given is a Block.</p>
 <p><code>String a:</code> Converts <code>a</code> to Int.</p>
 <pre class="shell"><code>blsq ) &quot;100&quot;ri
@@ -850,13 +1026,13 @@ blsq ) &#39;.ri
 <pre class="shell"><code>blsq ) {&quot;12&quot; 12.0 13 12.7}ri
 {12 12 13 12}</code></pre>
 <p>However, Doubles are not rounded to the nearest Integer but are truncated. Rounding everything to the nearest Integer can be done with for example <code>rd)R_</code>.</p>
-<h3 id="reduce-r"><a href="#TOC">Reduce <code>r[</code></a></h3>
+<h3 id="reduce-r">Reduce <code>r[</code></h3>
 <p><code>Block a, Block f:</code> Takes the first element of <code>a</code> and the second element of <code>a</code>, applies <code>f</code>, takes the next element of <code>a</code> and applies <code>f</code> again and continues like that. More symbolically speaking <code>{1 2 3 4}{.+}r[</code> becomes <code>1 2 .+ 3 .+ 4 .+</code>, <code>{1 2 3 5}{?-}r[</code> becomes <code>1 2 ?- 3 ?- 4?-</code> and so forth.</p>
 <pre class="shell"><code>blsq ) {1 2 3 4}{.+}r[
 10
 blsq ) {1 2 3 4}{.*}r[
 24</code></pre>
-<h3 id="replace-r"><a href="#TOC">Replace <code>r~</code></a></h3>
+<h3 id="replace-r">Replace <code>r~</code></h3>
 <p><code>Block a, Any b, Any c:</code> Replaces every occurence of <code>b</code> in <code>a</code> with <code>c</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3 1 4}1 9r~
 {9 2 3 9 4}</code></pre>
@@ -869,7 +1045,7 @@ blsq ) {1 2 3 4}{.*}r[
 <p><code>Int a, Int b, Int c:</code> Replaces every occurence of <code>b</code> in <code>a</code> with <code>c</code> (works on absolute values).</p>
 <pre class="shell"><code>blsq ) -1334336 33 10r~
 1104106</code></pre>
-<h3 id="replaceregex-r"><a href="#TOC">ReplaceRegex <code>R~</code></a></h3>
+<h3 id="replaceregex-r">ReplaceRegex <code>R~</code></h3>
 <p><code>String str, String repl, String regex:</code> Replaces every match of <code>regex</code> with <code>repl</code>.</p>
 <pre class="shell"><code>blsq ) &quot;Year 2014.&quot;&quot;X&quot;&quot;[[:digit:]]&quot;R~
 &quot;Year XXXX.&quot;
@@ -877,7 +1053,7 @@ blsq ) &quot;Year 2014.&quot;&quot;X&quot;&quot;[0-3]&quot;R~
 &quot;Year XXX4.&quot;
 blsq ) &quot;Year 2014.&quot;&quot;__&quot;&quot;[a-z]|[0-3]{2}&quot;R~
 &quot;Y______ __14.&quot;</code></pre>
-<h3 id="reverse--"><a href="#TOC">Reverse <code>&lt;-</code></a></h3>
+<h3 id="reverse--">Reverse <code>&lt;-</code></h3>
 <p><code>String a:</code> Reverses <code>a</code>.</p>
 <pre class="shell"><code>blsq ) &quot;123&quot;&lt;-
 &quot;321&quot;</code></pre>
@@ -892,7 +1068,7 @@ blsq ) &quot;Year 2014.&quot;&quot;__&quot;&quot;[a-z]|[0-3]{2}&quot;R~
 &#39;A
 blsq ) &#39;B&lt;-
 &#39;b</code></pre>
-<h3 id="round-r_"><a href="#TOC">Round <code>r_</code></a></h3>
+<h3 id="round-r_">Round <code>r_</code></h3>
 <p>This built-in accepts a Block as first argument, in which case an auto-map is performed.</p>
 <p><code>Double a, Int b:</code> Rounds <code>a</code> to <code>b</code> decimal points.</p>
 <pre class="shell"><code>blsq ) 3.12 2r_
@@ -903,7 +1079,7 @@ blsq ) 3.5 0r_
 4.0
 blsq ) {3.5 3.4}0r_
 {4.0 3.0}</code></pre>
-<h3 id="round2-r_"><a href="#TOC">Round2 <code>R_</code></a></h3>
+<h3 id="round2-r_">Round2 <code>R_</code></h3>
 <p><em>Defined as:</em> <em><code>0r_pd</code></em>.</p>
 <pre class="shell"><code>blsq ) {3.5 3.4}0r_pd
 12.0
@@ -916,7 +1092,18 @@ blsq ) 5.3R_
 blsq ) 5.3 0r_pd
 5</code></pre>
 <p><strong>Authors' Notes:</strong> Even though <code>r_</code> can auto-map this built-in won't do the same <em>expected</em> job because <code>pd</code> will calculate the product of a Block. You may however use this fact as a shortcut for example for <code>{0r_}m[pd</code>. If you want to round every Double to the nearest Integer in a Block use <code>)R_</code>.</p>
-<h3 id="smaller-."><a href="#TOC">Smaller <code>.&lt;</code></a></h3>
+<h3 id="signum-sn">Signum <code>sn</code></h3>
+<p><code>Int a:</code> Signum of <code>a</code>. (-1 for negative, 1 for positive, 0 for zero).</p>
+<pre class="shell"><code>blsq ) -6sn6sn0sn
+0
+1
+-1</code></pre>
+<p><code>Double a:</code> Signum of <code>a</code>. (-1.0 for negative, 1.0 for positive, 0.0 for zero).</p>
+<pre class="shell"><code>blsq ) -6.0sn6.0sn0.0sn
+0.0
+1.0
+-1.0</code></pre>
+<h3 id="smaller-.">Smaller <code>.&lt;</code></h3>
 <p><code>Any a, Any b:</code> Returns 1 if <code>a &lt; b</code> else returns 0.</p>
 <pre class="shell"><code>blsq ) 2 3.&lt;
 1
@@ -925,7 +1112,63 @@ blsq ) 4 3.&lt;
 blsq ) {1 2 3}{2 2 3}.&lt;
 1</code></pre>
 <p><strong>Note:</strong> Comparing values with different types may result in unexpected (but determinstic, thus not undefined) behaviour.</p>
-<h3 id="sub-.-"><a href="#TOC">Sub <code>.-</code></a></h3>
+<h3 id="sort">Sort <code>&gt;&lt;</code></h3>
+<p><code>Block a:</code> Sorts <code>a</code> in ascending order.</p>
+<pre class="shell"><code>blsq ) {5 3 4}&gt;&lt;
+{3 4 5}</code></pre>
+<p><code>Str a:</code> Sorts <code>a</code> in ascending order.</p>
+<pre class="shell"><code>blsq ) &quot;there&quot;&gt;&lt;
+&quot;eehrt&quot;</code></pre>
+<p><code>Int a:</code> Sorts <code>a</code> in ascending order.</p>
+<pre class="shell"><code>blsq ) 3241&gt;&lt;
+1234
+blsq ) 32401&gt;&lt;
+1234</code></pre>
+<p><strong>Notes:</strong> Please be aware that this will remove zeroes as numbers don't have leading zeroes.</p>
+<p><code>Char a:</code> Returns <code>1</code> if <code>a</code> is a digit, <code>0</code> otherwise.</p>
+<pre class="shell"><code>blsq ) &quot;ab10c&quot;)&gt;&lt;
+{0 0 1 1 0}</code></pre>
+<h3 id="sortreverse">SortReverse <code>&lt;&gt;</code></h3>
+<p><em>Defined as:</em> <em><code>&gt;&lt;&lt;-</code></em></p>
+<pre class="shell"><code>blsq ) {5 3 0 9 7 8}&lt;&gt;
+{9 8 7 5 3 0}
+blsq ) {5 3 0 9 7 8}&gt;&lt;&lt;-
+{9 8 7 5 3 0}</code></pre>
+<h3 id="split">Split <code>;;</code></h3>
+<p><code>Block a, Block b:</code> Split <code>a</code> on <code>b</code>.</p>
+<pre class="shell"><code>blsq ) {1 2 3 4 2 3 5 7 2 3 8}{2 3};;
+{{1} {4} {5 7} {8}}</code></pre>
+<p><code>String a, String b:</code> Split <code>a</code> on <code>b</code>.</p>
+<pre class="shell"><code>blsq ) &quot;Hello, world, is,&quot;&quot;, &quot;;;
+{&quot;Hello&quot; &quot;world&quot; &quot;is,&quot;}</code></pre>
+<p><code>String a, Char b:</code> Split <code>a</code> on <code>b</code>.</p>
+<pre class="shell"><code>blsq ) &quot;Hello&quot;&#39;l;;
+{&quot;He&quot; &quot;&quot; &quot;o&quot;}</code></pre>
+<p><code>Char a, String b:</code> Split <code>b</code> on <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &#39;e&quot;Hello&quot;;;
+{&quot;H&quot; &quot;llo&quot;}</code></pre>
+<p><code>Int a, Int b:</code> Split <code>a</code> on <code>b</code>.</p>
+<pre class="shell"><code>blsq ) 1234256238 23;;
+{1 4256 8}</code></pre>
+<h3 id="stripleft-s">StripLeft <code>S[</code></h3>
+<p><code>Block a, Any b:</code> Removes any leading <code>b</code>s from <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 1 2 5}1S[
+{2 5}</code></pre>
+<p><code>String a, Char b:</code> Removes any leading <code>b</code>s from <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;QQabQ&quot;&#39;QS[
+&quot;abQ&quot;</code></pre>
+<p><code>Int a:</code> Returns (<code>a</code> * <code>a</code>) (squares).</p>
+<pre class="shell"><code>blsq ) 5S[
+25</code></pre>
+<p><strong>Authors' Notes:</strong> For Doubles use <code>fC</code>.</p>
+<h3 id="stripright-s">StripRight <code>[S</code></h3>
+<p><code>Block a, Any b:</code> Removes any trailing <code>b</code>s from <code>a</code>.</p>
+<pre class="shell"><code>blsq ) {1 0 0 0}0[S
+{1}</code></pre>
+<p><code>String a, Char b:</code> Removes any trailing <code>b</code>s from <code>a</code>.</p>
+<pre class="shell"><code>blsq ) &quot;abccc&quot;&#39;c[S
+&quot;ab&quot;</code></pre>
+<h3 id="sub-.-">Sub <code>.-</code></h3>
 <p><code>Int a, Int b:</code> Integer subtraction.</p>
 <pre class="shell"><code>blsq ) 1 5.-
 -4</code></pre>
@@ -960,7 +1203,7 @@ blsq ) &quot;README.md&quot; &quot;.txt&quot;.-
 {1 2}
 blsq ) {1 2 3 4}{3 4 5}.-
 {1 2 3 4}</code></pre>
-<h3 id="suffixof"><a href="#TOC">SuffixOf <code>!~</code></a></h3>
+<h3 id="suffixof">SuffixOf <code>!~</code></h3>
 <p><code>Block a, Block b:</code> Returns 1 if <code>b</code> is a suffix of <code>a</code> otherwise returns 0.</p>
 <pre class="shell"><code>blsq ) {1 2 3}{2 3}!~
 1
@@ -976,7 +1219,7 @@ blsq ) &quot;this.txt&quot; &quot;.pdf&quot;!~
 1
 blsq ) 123 -24!~
 0</code></pre>
-<h3 id="sum"><a href="#TOC">Sum <code>++</code></a></h3>
+<h3 id="sum">Sum <code>++</code></h3>
 <p><code>Block {}:</code> <em>Defined as:</em> <em><code>0</code></em>. The sum of an empty Block is zero.</p>
 <p><code>Block a:</code> <em>Defined as:</em> <em><code>{.+}r[</code></em>. Calculates the sum of a Block.</p>
 <pre class="shell"><code>blsq ) {1 2 3 4}{.+}r[
@@ -988,7 +1231,7 @@ blsq ) {1 2 3 4.0}++
 <p><code>Int a, Int b:</code> Concatenates Integers (works on absolute values).</p>
 <pre class="shell"><code>blsq ) 12 34++
 1234</code></pre>
-<h3 id="swap-j"><a href="#TOC">Swap <code>j</code> <code>\/</code></a></h3>
+<h3 id="swap-j">Swap <code>j</code> <code>\/</code></h3>
 <p>Swaps the top two elements.</p>
 <pre class="shell"><code>blsq ) 1 2
 2
@@ -996,7 +1239,7 @@ blsq ) {1 2 3 4.0}++
 blsq ) 1 2j
 1
 2</code></pre>
-<h3 id="tail--"><a href="#TOC">Tail <code>[-</code></a></h3>
+<h3 id="tail--">Tail <code>[-</code></h3>
 <p><code>Block a:</code> Returns all but the first element of <code>a</code>.</p>
 <pre class="shell"><code>blsq ) {1 2 3}[-
 {2 3}</code></pre>
@@ -1009,7 +1252,18 @@ blsq ) 1 2j
 <p><code>Char a:</code> Convert to string.</p>
 <pre class="shell"><code>blsq ) &#39;a[-
 &quot;a&quot;</code></pre>
-<h3 id="unlines-un"><a href="#TOC">Unlines <code>un</code></a></h3>
+<h3 id="union-un">Union <code>UN</code></h3>
+<p><strong>Notes:</strong> If left argument contains duplicates these will be preserved. Duplicates in the right argument will be removed. Order is preserved.</p>
+<p><code>Block a, Block b:</code> Union of <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) {1 1} {1 2 2 2 3}UN
+{1 1 2 3}</code></pre>
+<p><code>String a, String b:</code> Union of <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) &quot;zabc&quot;&quot;cde&quot;UN
+&quot;zabcde&quot;</code></pre>
+<p><code>Int a, Int b:</code> Union of <code>a</code> and <code>b</code>.</p>
+<pre class="shell"><code>blsq ) 12 14UN
+124</code></pre>
+<h3 id="unlines-un">Unlines <code>un</code></h3>
 <p><code>Block {}:</code> If given an empty block returns an empty string.</p>
 <pre class="shell"><code>blsq ) {}un
 &quot;&quot;</code></pre>
@@ -1023,7 +1277,7 @@ blsq ) {&quot;abc&quot; &quot;def&quot; &quot;ghe&quot;}un
 &quot;\n12\n3&quot;
 blsq ) {1 2 3}Su
 &quot;1\n2\n3&quot;</code></pre>
-<h3 id="unlinespretty-un"><a href="#TOC">UnlinesPretty <code>uN</code></a></h3>
+<h3 id="unlinespretty-un">UnlinesPretty <code>uN</code></h3>
 <p><em>Defined as:</em> <em><code>unsh</code></em>.</p>
 <pre class="shell"><code>blsq ) {&quot;12&quot; &quot;23&quot;}un
 &quot;12\n23&quot;
@@ -1033,12 +1287,12 @@ blsq ) {&quot;12&quot; &quot;23&quot;}uN
 blsq ) {&quot;12&quot; &quot;23&quot;}unsh
 12
 23</code></pre>
-<h3 id="unparse-up"><a href="#TOC">Unparse <code>up</code></a></h3>
+<h3 id="unparse-up">Unparse <code>up</code></h3>
 <p><code>Any a:</code> Converts a to display string. This is somewhat the <em>inverse</em> of <code>ps</code>.</p>
 <pre class="shell"><code>blsq ) {1 2++}up
 &quot;{1 2 ++}&quot;</code></pre>
 <p><strong>Authors' Note:</strong> This built-in is somewhat equivalent to using <code>3SH</code>.</p>
-<h3 id="while-w"><a href="#TOC">While <code>w!</code></a></h3>
+<h3 id="while-w">While <code>w!</code></h3>
 <p>A while-loop</p>
 <p><code>Block f, Block p:</code> Executes <code>f</code> while <code>p</code> is not zero. <code>p</code> will be tested each time against the top of the stack.</p>
 <pre class="shell"><code>blsq ) 5{+.}{10.&lt;}w!
@@ -1047,13 +1301,13 @@ blsq ) {&quot;12&quot; &quot;23&quot;}unsh
 <pre class="shell"><code>blsq ) 0 10{j+.+.j-.}w!
 0
 20</code></pre>
-<h3 id="withlines-wl"><a href="#TOC">WithLines <code>wl</code></a></h3>
+<h3 id="withlines-wl">WithLines <code>wl</code></h3>
 <p><em>Defined as:</em> <em><code>jlnjm[un</code></em>. This built-in allows to map over the lines in a String.</p>
 <pre class="shell"><code>blsq ) &quot;abc\ndef&quot;{&lt;-}jlnjm[un
 &quot;cba\nfed&quot;
 blsq ) &quot;abc\ndef&quot;{&lt;-}wl
 &quot;cba\nfed&quot;</code></pre>
-<h3 id="withlinesparsepretty-wl"><a href="#TOC">WithLinesParsePretty <code>wL</code></a></h3>
+<h3 id="withlinesparsepretty-wl">WithLinesParsePretty <code>wL</code></h3>
 <p><em>Defined as:</em> <em><code>(ps)+]WL</code></em>. This built-in allows to map over the lines in a String while calling <em>Parse</em> on each line automatically.</p>
 <pre class="shell"><code>blsq ) &quot;11 22\n5 6&quot;{++Sh}(ps)+]WL
 33
@@ -1061,7 +1315,7 @@ blsq ) &quot;abc\ndef&quot;{&lt;-}wl
 blsq ) &quot;11 22\n5 6&quot;{++Sh}wL
 33
 11</code></pre>
-<h3 id="withlinespretty-wl"><a href="#TOC">WithLinesPretty <code>WL</code></a></h3>
+<h3 id="withlinespretty-wl">WithLinesPretty <code>WL</code></h3>
 <p><em>Defined as:</em> <em><code>wlsh</code></em>.</p>
 <pre class="shell"><code>blsq ) &quot;abc\ndef&quot;{&lt;-}wlsh
 cba
@@ -1069,20 +1323,20 @@ fed
 blsq ) &quot;abc\ndef&quot;{&lt;-}WL
 cba
 fed</code></pre>
-<h3 id="withwords-ww"><a href="#TOC">WithWords <code>ww</code></a></h3>
+<h3 id="withwords-ww">WithWords <code>ww</code></h3>
 <p><em>Defined as</em>: <em><code>jWDjm[wd</code></em>. This built-in allows to map over the words in a String.</p>
 <pre class="shell"><code>blsq ) &quot;hello world&quot;{&lt;-}jWDjm[wd
 &quot;olleh dlrow&quot;
 blsq ) &quot;hello world&quot;{&lt;-}ww
 &quot;olleh dlrow&quot;</code></pre>
-<h3 id="withwordspretty-ww"><a href="#TOC">WithWordsPretty <code>WW</code></a></h3>
+<h3 id="withwordspretty-ww">WithWordsPretty <code>WW</code></h3>
 <p><em>Defined as</em>: <em><code>wwsh</code></em>.</p>
 <pre class="shell"><code>blsq ) &quot;hello world&quot;{&lt;-}wwsh
 olleh dlrow
 blsq ) &quot;hello world&quot;{&lt;-}WW
 olleh dlrow</code></pre>
-<h3 id="xor"><a href="#TOC">Xor <code>$$</code></a></h3>
-<p>This built-in auto-zips if an argument provided is a block.</p>
+<h3 id="xor">Xor <code>$$</code></h3>
+<p>This built-in auto-zips if an argument provided is a Block.</p>
 <p><code>Int a, Int b:</code> Bitwise XOR.</p>
 <pre class="shell"><code>blsq ) 66 34$$
 96

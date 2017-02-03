@@ -23,6 +23,9 @@ import System.Random
 import Data.Digits
 import Data.Function
 import System.Process
+import Database.HDBC
+import Database.HDBC.MySQL
+import qualified Data.ByteString.UTF8 as B8
 
 import Statistics.Distribution
 import Statistics.Distribution.Normal
@@ -302,8 +305,8 @@ builtins = [
   ("\\\\", builtinDiffLs),
   ("r@", builtinRange), 
   ("R@", builtinRangeInf), 
-  ("bx", builtinBox), -- < moonpage until here 30.09.2016
-  ("><", builtinSort),
+  ("bx", builtinBox), 
+  ("><", builtinSort), -- < moonpage until here 30.09.2016
   ("<>", builtinSortReverse),
   ("/v", builtinSwapPop),
   ("v/", builtinPopSwap),
@@ -595,6 +598,8 @@ builtins = [
   ("e-", builtinEMinus),
   ("rw", builtinRaw),
   ("ex", builtinExecute),
+
+  ("my", builtinMySQL),
   
   ("?_", builtinBuiltins),
   ("?n", builtinBuiltinNth),
@@ -604,6 +609,24 @@ builtins = [
 lookupBuiltin b = lookup b builtins
 
 putResult = putStack
+
+builtinMySQL = do
+  st <- getStack
+  case st of
+    (BlsqStr query : BlsqStr db : BlsqStr pwd : BlsqStr user : xs) -> do
+      rows <- lift $ withRTSSignalsBlocked $ do
+        conn <- connectMySQL defaultMySQLConnectInfo {
+                  mysqlUser = user,
+                  mysqlDatabase = db,
+                  mysqlPassword = pwd
+                }
+        result <- quickQuery' conn query []
+        disconnect conn
+        return result
+      putResult $ BlsqBlock ((map (BlsqBlock . map convert)) rows) : xs
+ where convert (SqlInt64 x) = BlsqInt $ ((fromIntegral x) :: Integer)
+       convert (SqlByteString xb) = BlsqStr (B8.toString xb)
+       convert a = BlsqStr (show a)
 
 builtinEMinus = pushToStack (BlsqDouble 10.0) >> builtinSwap >> builtinCoercePow >> 
   pushToStack (BlsqDouble 1) >> builtinSwap >> builtinDiv
