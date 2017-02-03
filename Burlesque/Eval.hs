@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE CPP #-}
 
 module Burlesque.Eval
   (eval, runStack, builtins, fst')
@@ -620,11 +621,17 @@ lookupBuiltin b = lookup b builtins
 
 putResult = putStack
 
+#ifdef HAVE_IO_SHIT
+doIOShit xs = lift xs
+#else
+doIOShit _ = error "IO shit is disabled in this build."
+#endif
+
 builtinMySQL = do
   st <- getStack
   case st of
     (BlsqStr query : BlsqStr db : BlsqStr pwd : BlsqStr user : xs) -> do
-      rows <- lift $ withRTSSignalsBlocked $ do
+      rows <- doIOShit $ withRTSSignalsBlocked $ do
         conn <- connectMySQL defaultMySQLConnectInfo {
                   mysqlUser = user,
                   mysqlDatabase = db,
@@ -643,7 +650,7 @@ builtinReadFile = do
   st <- getStack
   case st of
     (BlsqStr path : xs) -> do
-      contents <- lift $ readFile path
+      contents <- doIOShit $ readFile path
       putResult $ (BlsqStr contents) : xs
     _ -> pushToStack (BlsqError "Burlesque (rf): Invalid arguments!")
     
@@ -651,7 +658,7 @@ builtinWriteFile = do
   st <- getStack
   case st of
     (BlsqStr path : BlsqStr contents : xs) -> do
-      lift $ writeFile path contents
+      doIOShit $ writeFile path contents
       putResult $ xs
     _ -> pushToStack (BlsqError "Burlesque (wf): Invalid arguments!")
 
@@ -660,10 +667,10 @@ builtinPrintOut = do
   st <- getStack
   case st of
     (BlsqStr a : xs) -> do
-      lift $ putStr a
+      doIOShit $ putStr a
       putResult $ xs
     (a : xs) -> do
-      lift $ putStr (toDisplay a)
+      doIOShit $ putStr (toDisplay a)
       putResult $ xs
     _ -> pushToStack (BlsqError "Burlesque (PO): Invalid arguments!")
 
@@ -672,10 +679,10 @@ builtinPrintOutLn = do
   st <- getStack
   case st of
     (BlsqStr a : xs) -> do
-      lift $ putStrLn a
+      doIOShit $ putStrLn a
       putResult $ xs
     (a : xs) -> do
-      lift $ putStrLn (toDisplay a)
+      doIOShit $ putStrLn (toDisplay a)
       putResult $ xs
     _ -> pushToStack (BlsqError "Burlesque (Po): Invalid arguments!")
 
@@ -4681,10 +4688,10 @@ builtinExecute = do
   st <- getStack
   case st of
     (BlsqStr input : BlsqBlock args : BlsqStr path : xs) -> do
-      rp <- lift $ readProcess path (stringsOnly args) input
+      rp <- doIOShit $ readProcess path (stringsOnly args) input
       putResult $ BlsqStr rp : xs
     (BlsqBlock args : BlsqStr path : xs) -> do
-      rp <- lift $ readProcess path (stringsOnly args) ""
+      rp <- doIOShit $ readProcess path (stringsOnly args) ""
       putResult $ BlsqStr rp : xs
     _ -> pushToStack $ BlsqError "Burlesque: (ex) Invalid arguments!"
   where stringsOnly [] = []
