@@ -60,7 +60,7 @@ toDisplay (BlsqHackMode x) = "#" ++ x ++ "#"
 
 toDisplay (BlsqMap m _) = intercalate "" $  (map (\(a,b) -> "<" ++ toDisplay a ++ "," ++ toDisplay b ++ ">") $ M.toList m)
 
-toDisplay q = "__INTERNAL__"
+toDisplay q = "__INTERNAL__:" ++ (show q)
 
 toHTML a@(BlsqInt _) = "<span class=\"int\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
 toHTML a@(BlsqBlock xs) = "<span class=\"blck\">{</span>" ++ (intercalate " " $ map toHTML xs) ++ "<span class=\"blck\">}</span>"

@@ -86,7 +86,7 @@ eval (BlsqIdent "#J" : xs) = do
 eval (BlsqHackMode x : xs) = do
  let m = map (\c -> BlsqIdent . fst $ builtins !! (ord c)) x
  eval (m ++ xs)
- 
+eval (BlsqAutoBlock blck : xs) = eval blck >> eval xs
 eval (x:xs) = evalI x >> eval xs
 eval [] = return ()
 
@@ -1865,6 +1865,9 @@ builtinEval :: BlsqState
 builtinEval = do
  st <- getStack
  case st of
+   (BlsqAutoBlock b : xs) -> do
+     putResult $ (BlsqBlock b) : xs
+     builtinEval
    (BlsqBlock b : xs) -> do
      rr <- runStack b xs
      putResult rr

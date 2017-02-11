@@ -288,11 +288,68 @@ parseQuoted2 = do
 parseData :: Parser BlsqExp
 parseData = parseString {- <|> parsePretty <|> parseHackMode -} <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
 
+parseData' = do 
+  d <- parseData <|> parseBlock
+  optional spaces
+  optional $ char ','
+  optional spaces
+  return d
+
 parseBlsq :: Parser [BlsqExp]
 parseBlsq = many parseSingle
 
+parseBlsqFancy :: Parser [BlsqExp]
+parseBlsqFancy = many1 $ parseSingleFancy
+
+parseFancyCall :: Parser BlsqExp
+parseFancyCall = do
+  ident <- many1 $ noneOf "@%=!?<>:() \\\t\n\r"
+  optional spaces
+  char '('
+  optional spaces
+  args <- many $ parseData'
+  optional spaces
+  char ')'
+  optional spaces
+  return $ BlsqAutoBlock ( (reverse args) ++ [BlsqCall ident])
+
+parseFancy :: Parser BlsqExp
+parseFancy = do
+  string "fancy"
+  optional spaces
+  block <- parseBlsqFancy
+  optional spaces
+  string "end"
+  optional spaces
+  return $ BlsqAutoBlock block
+  
+
+parseUnfancy = do
+  char '\\'
+  single <- parseSingle
+  optional spaces
+  return single
+  
+parseFancyDef :: Parser BlsqExp
+parseFancyDef = do
+  string "def"
+  optional spaces
+  ident <- many1 $ noneOf "@%=!?<>: \\\t\n\r"
+  optional spaces
+  char ':'
+  optional spaces
+  block <- parseBlsqFancy
+  optional spaces
+  string "end"
+  optional spaces
+  return $ BlsqAssign ident (BlsqBlock block) False False
+  
+  
+parseSingleFancy :: Parser BlsqExp
+parseSingleFancy = (try parseFancyCall) <|> parseFancyDef <|> parseData' <|> parseUnfancy
+
 parseSingle :: Parser BlsqExp
-parseSingle = (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
+parseSingle = (try parseFancy) <|> (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
               (try parseCall) <|> (try parseAssign) <|> (try parseProc) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseIntE) <|> (try parseNumber) <|>
