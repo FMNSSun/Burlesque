@@ -30,7 +30,7 @@ data BlsqExp =  BlsqInt Integer
               | BlsqFilterBlock [BlsqExp]
               | BlsqReduceBlock [BlsqExp]
               | BlsqAssign String BlsqExp Bool Bool
-              | BlsqCall String
+              | BlsqCall String Bool
               | BlsqGet String
               | BlsqMap (M.Map BlsqExp BlsqExp) BlsqExp
               | BlsqSet String BlsqExp

@@ -229,7 +229,7 @@ parseCall'' = do
   optional spaces
   ident <- many1 $ noneOf "@%=!?<>: \t\n\r"
   optional spaces
-  return $ BlsqCall ident
+  return $ BlsqCall ident False
   
 parseCall' :: Parser BlsqExp
 parseCall' = do
@@ -237,7 +237,7 @@ parseCall' = do
   name <- many1 $ noneOf "%=!?<>:"
   char '!'
   optional spaces
-  return $ BlsqCall name
+  return $ BlsqCall name False
 
 parseGet = parseGet' <|> parseGet''
   
@@ -289,7 +289,7 @@ parseData :: Parser BlsqExp
 parseData = parseString {- <|> parsePretty <|> parseHackMode -} <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
 
 parseData' = do 
-  d <- parseData <|> parseBlock
+  d <- (try parseFancyCall) <|> parseData <|> parseBlock
   optional spaces
   optional $ char ','
   optional spaces
@@ -301,9 +301,18 @@ parseBlsq = many parseSingle
 parseBlsqFancy :: Parser [BlsqExp]
 parseBlsqFancy = many1 $ parseSingleFancy
 
+parseFancyAssign = do
+  ident <- many1 $ noneOf "@%=!?<>:() ,{}[]\\\t\n\r"
+  optional spaces
+  string ":="
+  optional spaces
+  exp <- parseSingleFancy
+  optional spaces
+  return $ BlsqSet ident (BlsqBlock [exp, BlsqIdent "bx"])
+
 parseFancyCall :: Parser BlsqExp
 parseFancyCall = do
-  ident <- many1 $ noneOf "@%=!?<>:() \\\t\n\r"
+  ident <- many1 $ noneOf "@%=!?<>:() ,{}[]\\\t\n\r"
   optional spaces
   char '('
   optional spaces
@@ -311,7 +320,7 @@ parseFancyCall = do
   optional spaces
   char ')'
   optional spaces
-  return $ BlsqAutoBlock ( (reverse args) ++ [BlsqCall ident])
+  return $ BlsqAutoBlock ( (args) ++ [BlsqCall ident True])
 
 parseFancy :: Parser BlsqExp
 parseFancy = do
@@ -346,7 +355,7 @@ parseFancyDef = do
   
   
 parseSingleFancy :: Parser BlsqExp
-parseSingleFancy = (try parseFancyCall) <|> parseFancyDef <|> parseData' <|> parseUnfancy
+parseSingleFancy = (try parseFancyCall) <|> (try parseFancyAssign) <|> parseFancyDef <|> parseData' <|> parseUnfancy
 
 parseSingle :: Parser BlsqExp
 parseSingle = (try parseFancy) <|> (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>

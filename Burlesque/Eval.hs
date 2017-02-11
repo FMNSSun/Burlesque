@@ -118,24 +118,36 @@ evalI (BlsqSet name (BlsqBlock exp)) = do
     (x:xs) -> do setVar (BlsqStr name) x
 evalI (BlsqAssign name e False _) = do
   (st, st', v) <- get
-  let v' = M.insert (BlsqStr name) e v
-  put (st, st', v')
+  --let v' = M.insert (BlsqStr name) e v
+  --put (st, st', v')
+  setVar (BlsqStr name) e
 evalI (BlsqAssign name _ True q) = 
   if q then do
     e <- popFromStack
     pushToStack e
     (st, st', v) <- get
-    let v' = M.insert (BlsqStr name) e v
-    put(st, st', v')
+    --let v' = M.insert (BlsqStr name) e v
+    --put(st, st', v')
+    setVar (BlsqStr name) e
   else do
     e <- popFromStack
     (st, st', v) <- get
-    let v' = M.insert (BlsqStr name) e v
-    put(st, st', v')
-evalI (BlsqCall name) = do
+    --let v' = M.insert (BlsqStr name) e v
+    --put(st, st', v')
+    setVar (BlsqStr name) e
+evalI (BlsqCall name False) = do
   pushToStack (BlsqStr name)
   builtinGetVar
   builtinEval
+evalI (BlsqCall name True) = do
+  pushToStack (BlsqStr name)
+  builtinGetVar
+  -- set up scope
+  pushStateStack (BlsqMap (M.fromList[]) BlsqNil)
+  builtinEval
+  -- delete scope
+  popStateStack
+  return ()
 evalI (BlsqGet name) = do
   pushToStack (BlsqStr name)
   builtinGetVar
@@ -181,11 +193,19 @@ pushToBottom q = do
 
 setVar name value = do
   (st, st', v) <- get
-  put (st, st', M.insert name value v)
+  case st' of
+    ((BlsqMap v' d) : xs) -> do
+      put (st, (BlsqMap (M.insert name value v') d : xs), v)
+    _ -> put (st, st', M.insert name value v)
   
 getVar name  = do
-  (_, _, v) <- get
-  return $ fromMaybe BlsqNil (M.lookup name v)
+  (_, st', v) <- get
+  case st' of
+    ((BlsqMap v' d) : xs) -> do
+      case M.member name v' of
+        True -> return $ fromMaybe d (M.lookup name v')
+        _ -> return $ fromMaybe BlsqNil (M.lookup name v)
+    _ -> do return $ fromMaybe BlsqNil (M.lookup name v)
   
 fst' (a,b,c) = a
 snd' (a,b,c) = b
