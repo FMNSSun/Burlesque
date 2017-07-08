@@ -12,6 +12,16 @@ module Burlesque.Types
 
 import Control.Monad.State.Lazy
 import Data.Map as M
+import Control.Concurrent.Chan
+
+instance Show (Chan a) where
+  show _ = "_CHAN_"
+  
+instance Ord (Chan a) where
+  _ <= _ = True
+
+instance Read (Chan a) where
+  readsPrec _ _ = [(error "fuck you you can't read chans", "")]
 
 data BlsqExp =  BlsqInt Integer
               | BlsqDouble Double
@@ -35,6 +45,7 @@ data BlsqExp =  BlsqInt Integer
               | BlsqMap (M.Map BlsqExp BlsqExp) BlsqExp
               | BlsqSet String BlsqExp
               | BlsqAutoBlock [BlsqExp]
+              | BlsqChan (Chan BlsqExp)
   deriving (Show,Eq,Read,Ord)
 
 data BlsqPrettyFormat =  BlsqFormatNormal

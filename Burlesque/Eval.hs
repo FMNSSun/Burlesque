@@ -38,10 +38,25 @@ import qualified Data.Map as M
 import Debug.Trace
 
 -- Imports only for IO
+
 #ifdef HAVE_IO_SHIT
+#define HAVE_IO_UNSAFE
+#define HAVE_IO_SAFE
+#define HAVE_IO_MYSQL
+#endif
+
+#ifdef HAVE_IO_UNSAFE
 import System.Process
+#endif
+
+#ifdef HAVE_IO_MYSQL
 import Database.HDBC
 import Database.HDBC.MySQL
+#endif
+
+#ifdef HAVE_IO_SAFE
+import Control.Concurrent.Chan
+import Control.Concurrent
 #endif
 
 -- | > Evaluate a Burlesque program
@@ -625,14 +640,24 @@ builtins = [
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
 
-#ifdef HAVE_IO_SHIT
+#ifdef HAVE_IO_UNSAFE
   ("rw", builtinRaw),
   ("ex", builtinExecute),
-  ("my", builtinMySQL),
   ("rf", builtinReadFile),
   ("wf", builtinWriteFile),
   ("PO", builtinPrintOut),
   ("Po", builtinPrintOutLn),
+#endif
+
+#ifdef HAVE_IO_MYSQL
+  ("my", builtinMySQL),
+#endif
+
+#ifdef HAVE_IO_SAFE
+  ("mc", builtinMakeChan),
+  ("wc", builtinWriteChan),
+  ("rc", builtinReadChan),
+  ("fk", builtinFork),
 #endif
   
   ("?_", builtinBuiltins),
@@ -644,16 +669,59 @@ lookupBuiltin b = lookup b builtins
 
 putResult = putStack
 
-#ifdef HAVE_IO_SHIT
+#ifdef HAVE_IO_UNSAFE
 doIOShit xs = lift xs
 #else
 doIOShit _ = error "IO shit is disabled in this build."
 #endif
 
+#ifdef HAVE_IO_SAFE
+doIOSafe xs = lift xs
+#else
+doIOSafe _ = error "Even safe IO is disabled in this build."
+#endif
+
+-- Safe IO Builtins
+
+#ifdef HAVE_IO_SAFE
+builtinMakeChan = do
+  ch <- doIOSafe newChan
+  pushToStack (BlsqChan ch)
+  
+builtinWriteChan = do
+  st <- getStack
+  case st of
+    (x : BlsqChan ch : xs) -> do
+      doIOSafe $ writeChan ch x
+      putResult xs
+    (BlsqChan ch : x : xs) -> do
+      builtinSwap
+      builtinWriteChan
+    _ -> pushToStack (BlsqError "Burlesque (wc): Invalid arguments!")
+    
+builtinReadChan = do
+  st <- getStack
+  case st of
+    (BlsqChan ch : xs) -> do
+      r <- doIOSafe $ readChan ch
+      putResult (r : xs)
+    _ -> pushToStack (BlsqError "Burlesque (rc): Invalid arguments!")
+    
+builtinFork = do
+  st <- getStack
+  case st of
+    (BlsqBlock exp : xs) -> do
+      putResult xs
+      doIOSafe $ forkIO (do {  a <- runStack'' exp [] [] (M.fromList []); fuckLazy a ; return (); })
+      return ()
+    _ -> pushToStack (BlsqError "Burlesque (fk): Invalid arguments!")
+ where fuckLazy ([],[],c) = return ()
+       fuckLazy _ = return ()
+#endif
 
 -- IO Builtins
 
-#ifdef HAVE_IO_SHIT
+#ifdef HAVE_IO_MYSQL
 builtinMySQL = do
   st <- getStack
   case st of
@@ -671,8 +739,9 @@ builtinMySQL = do
  where convert (SqlInt64 x) = BlsqInt $ ((fromIntegral x) :: Integer)
        convert (SqlByteString xb) = BlsqStr (B8.toString xb)
        convert a = BlsqStr (show a)
+#endif
 
-
+#ifdef HAVE_IO_UNSAFE
 builtinReadFile = do
   st <- getStack
   case st of
