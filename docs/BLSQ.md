@@ -585,6 +585,12 @@ blsq ) 5J
 5
 ```
 
+### DupSwap ```^/```
+
+*Defined as:* *```^^\/```*. 
+
+**Authors' Notes:** Nobody has yet figured out what this is actually useful for. Some say it's useless, other's say... 'Fuck you'.
+
 ### Equal ```==```
 
 ```Any a, Any b: ``` Returns 1 if `a == b` else returns 0.
@@ -1362,6 +1368,21 @@ blsq ) 1 2vv
 ```
 
 **Authors' Notes:** If there only is one element on top of the stack using `,` is shorter. 
+
+### PopSwap ```v/```
+
+*Defined as:* *```vv\/```*. 
+
+```shell
+blsq ) 1 2 3 4v/
+2
+3
+1
+blsq ) 1 2 3 4vv\/
+2
+3
+1
+```
 
 ### Pow ```**```
 
@@ -2162,6 +2183,52 @@ blsq ) 1 2
 blsq ) 1 2j
 1
 2
+```
+
+### SwapDup ```/^```
+
+*Defined as:* *```\/^^```.
+
+```shell
+blsq ) 1 2 3/^
+2
+2
+3
+1
+blsq ) 1 2 3\/^^
+2
+2
+3
+1
+blsq ) 1 2 3/^
+2
+2
+3
+1
+blsq ) 1 2 3jJ
+2
+2
+3
+1
+```
+
+**Author's Notes**: You might as well use ```jJ```. 
+
+### SwapPop ```/v```
+
+*Defined as:* *```\/vv```*. This builtin essentially pops the element under the top of the stack.
+
+```shell
+blsq ) 1 2
+2
+1
+blsq ) 1 2 /v
+2
+blsq ) 1 2 \/vv
+2
+blsq ) 1 2 3 \/vv
+3
+1
 ```
 
 ### Tail ```[-```

@@ -349,8 +349,8 @@ builtins = [
   ("r@", builtinRange), 
   ("R@", builtinRangeInf), 
   ("bx", builtinBox), 
-  ("><", builtinSort), -- < moonpage until here 30.09.2016
-  ("<>", builtinSortReverse),
+  ("><", builtinSort), 
+  ("<>", builtinSortReverse), -- < moonpage until here 30.09.2016
   ("/v", builtinSwapPop),
   ("v/", builtinPopSwap),
   ("^/", builtinDupSwap),
