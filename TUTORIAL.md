@@ -97,7 +97,7 @@ If you are familiar with other programming languages you will notice that the ``
 
 ## Comparisons
 
-Burlesque treats ```0``` as false end everything else as false. To test if something is smaller we use ```.<```, to test if something is larger we use ```.>``` and to test equality we use ```==```:
+Burlesque treats ```0``` as false end everything else as true. To test if something is smaller we use ```.<```, to test if something is larger we use ```.>``` and to test equality we use ```==```:
 
 ```
 blsq ) 5 3.>
