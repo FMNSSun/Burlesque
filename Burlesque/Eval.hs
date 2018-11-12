@@ -627,6 +627,11 @@ builtins = [
   ("|-", builtinStringSub),
   ("|i", builtinStringInc),
   ("|d", builtinStringDec),
+  ("|=", builtinStringEqual),
+  ("|<", builtinStringSmaller),
+  ("|>", builtinStringGreater),
+  ("|l", builtinStringLeq),
+  ("|g", builtinStringGeq),
   ("DB", builtinDebug),
   ("mk", builtinMapKeys),
   ("mv", builtinMapValues),
@@ -892,6 +897,41 @@ builtinStringSub = do
     builtinParseId
     builtinSwap
     builtinCoerceSub
+	
+builtinStringEqual = do
+	builtinParseId
+	builtinSwap
+	builtinParseId
+	builtinSwap
+	builtinEqual
+	
+builtinStringSmaller = do
+	builtinParseId
+	builtinSwap
+	builtinParseId
+	builtinSwap
+	builtinSmaller
+	
+builtinStringGreater = do
+	builtinParseId
+	builtinSwap
+	builtinParseId
+	builtinSwap
+	builtinGreater
+	
+builtinStringLeq = do
+	builtinParseId
+	builtinSwap
+	builtinParseId
+	builtinSwap
+	builtinLeq
+	
+builtinStringGeq = do
+	builtinParseId
+	builtinSwap
+	builtinParseId
+	builtinSwap
+	builtinGeq
 
 builtinParseId = do
     st <- getStack
