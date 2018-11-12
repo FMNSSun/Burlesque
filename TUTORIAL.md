@@ -3,7 +3,7 @@
 Welcome to the re-newed tutorial for *The Burlesque Programming Language*.
 This tutorial assumes that you have the Burlesque-Shell installed locally (you can get it at
 http://github.com/FMNSSun/Burlesque). If you don't have it installed, don't want to install it or
-can't install it there's also an online version available which works in your browser at http://104.167.104.168/~burlesque/burlesque.cgi?q=10ro. 
+can't install it there's also an online version available which works in your browser at http://cheap.int-e.eu/~burlesque/burlesque.cgi.
 
 ## What is Burlesque
 
@@ -97,7 +97,7 @@ If you are familiar with other programming languages you will notice that the ``
 
 ## Comparisons
 
-Burlesque treats ```0``` as false end everything else as false. To test if something is smaller we use ```.<```, to test if something is larger we use ```.>``` and to test equality we use ```==```:
+Burlesque treats ```0``` as false end everything else as true. To test if something is smaller we use ```.<```, to test if something is larger we use ```.>``` and to test equality we use ```==```:
 
 ```
 blsq ) 5 3.>
