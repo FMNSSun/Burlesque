@@ -113,6 +113,9 @@ evalI v@(BlsqSpecial ",") = do
  if length st == 1 then
    do putStack []
  else return ()
+evalI (BlsqSExp i args) = do
+  eval args
+  evalI i
 evalI v@(BlsqIdent i) = do
   case lookupBuiltin i of
     (Just f) -> f

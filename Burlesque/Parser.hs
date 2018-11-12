@@ -81,12 +81,25 @@ parseSingleIdent = do
   optional spaces
   return . BlsqIdent $ [a]
 
-parseIdent :: Parser BlsqExp
-parseIdent = do 
+parseIdent = (try parseIdent'') <|> parseIdent'
+  
+parseIdent' :: Parser BlsqExp
+parseIdent' = do 
   a <- noneOf "1234567890{}',\" ()yYV"
   b <- anyChar
   optional spaces
   return . BlsqIdent $ a:b:[]
+  
+parseIdent'' = do
+  string "``"
+  s <- parseIdent'''
+  optional spaces
+  return s
+  
+parseIdent''' = do
+  s <- many $ noneOf " \r\n\t"
+  optional spaces
+  return . BlsqIdent $ s
 
 parseSep :: Parser BlsqExp
 parseSep = do
@@ -288,6 +301,8 @@ parseQuoted2 = do
 parseData :: Parser BlsqExp
 parseData = parseString {- <|> parsePretty <|> parseHackMode -} <|> (try parseDouble) <|> (try parseNumber) <|> parseChar' <|> parseArray
 
+parseData'' = parseString <|> (try parseDouble) <|> parseNumber <|> parseBlock
+
 parseData' = do 
   d <- (try parseFancyCall) <|> parseData <|> parseBlock
   optional spaces
@@ -333,6 +348,31 @@ parseFancy = do
   return $ BlsqAutoBlock block
   
 
+parseLispExp :: Parser BlsqExp
+parseLispExp = parseSExp <|> parseData''
+  
+parseSExp :: Parser BlsqExp
+parseSExp = do
+  char '('
+  optional spaces
+  i <- parseIdent'''
+  optional spaces
+  args <- many $ parseLispExp
+  optional spaces
+  char ')'
+  optional spaces
+  return $ BlsqSExp i args
+  
+parseLisp :: Parser BlsqExp
+parseLisp = do
+  string "begin lisp"
+  optional spaces
+  sexps <- many1 $ parseSExp
+  optional spaces
+  string "end lisp"
+  optional spaces
+  return $ BlsqAutoBlock sexps
+
 parseUnfancy = do
   char '\\'
   single <- parseSingle
@@ -358,7 +398,7 @@ parseSingleFancy :: Parser BlsqExp
 parseSingleFancy = (try parseFancyCall) <|> (try parseFancyAssign) <|> parseFancyDef <|> parseData' <|> parseUnfancy
 
 parseSingle :: Parser BlsqExp
-parseSingle = (try parseFancy) <|> (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
+parseSingle = (try parseLisp) <|> (try parseFancy) <|> (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
               (try parseCall) <|> (try parseAssign) <|> (try parseProc) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseIntE) <|> (try parseNumber) <|>

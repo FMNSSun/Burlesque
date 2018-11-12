@@ -46,6 +46,7 @@ data BlsqExp =  BlsqInt Integer
               | BlsqSet String BlsqExp
               | BlsqAutoBlock [BlsqExp]
               | BlsqChan (Chan BlsqExp)
+              | BlsqSExp BlsqExp [BlsqExp]
   deriving (Show,Eq,Read,Ord)
 
 data BlsqPrettyFormat =  BlsqFormatNormal
