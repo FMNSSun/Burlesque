@@ -290,6 +290,7 @@ builtins = [
   ("up", builtinUnparse),
   ("if", builtinIff),
   ("ie", builtinIfElse),
+  ("IE", builtinIfElse2),
   ("e!", builtinEval),
   ("E!", builtinEvalMany),
   ("c!", builtinContinuation),
@@ -537,6 +538,7 @@ builtins = [
   ("td", builtinToDouble),
   ("ti", builtinToInt),
   ("su", builtinSubstrings),
+  ("##", builtinSetStack),
   ("#s", builtinPushStack),
   ("#S", builtinPopStack),
   ("#r", builtinRotateStackLeft),
@@ -644,6 +646,7 @@ builtins = [
   ("Su", builtinStringUnlines),
   ("Sw", builtinStringWords),
   ("FL", builtinFlatten),
+  ("iv", builtinInverse),
   
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
@@ -1991,6 +1994,12 @@ builtinIfElse = do
      rr <- runStack a xs
      putResult rr
    _ -> putResult $ BlsqError "Burlesque: (ie Invalid arguments!" : st
+   
+-- | IE
+builtinIfElse2 :: BlsqState
+builtinIfElse2 = do
+  builtinXSwap
+  builtinIfElse
 
 -- | > e!
 builtinEval :: BlsqState
@@ -4709,6 +4718,12 @@ builtinSubstrings = do
    (BlsqInt s : xs) -> putResult $ (BlsqBlock . map (BlsqInt . read) $ genSubstrings (show . abs$s)) : xs
 
   
+-- | iv
+builtinInverse :: BlsqState
+builtinInverse = do
+  pushToStack (BlsqInt 1)
+  builtinCoerceDiv
+  
 -- | #s
 builtinPushStack :: BlsqState
 builtinPushStack = do
@@ -4835,6 +4850,14 @@ builtinSwapStacks :: BlsqState
 builtinSwapStacks = do
   (st, st', v) <- get
   put (st', st, v)
+  
+-- | ##
+builtinSetStack :: BlsqState
+builtinSetStack = do
+  st <- getStack
+  case st of
+    (BlsqBlock xs : a) -> putStack xs
+    _ -> pushToStack $ BlsqError "Burlesque: (##) Invalid arguments!"
   
 builtinDebug :: BlsqState
 builtinDebug = do
