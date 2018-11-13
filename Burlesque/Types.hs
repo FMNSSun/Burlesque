@@ -34,9 +34,7 @@ data BlsqExp =  BlsqInt Integer
               | BlsqNil
               | BlsqPretty BlsqExp BlsqPrettyFormat
               | BlsqQuoted [BlsqExp]
-              | BlsqHackMode String
               | BlsqHiddenState BlsqExp
-              | BlsqMapBlock [BlsqExp]
               | BlsqFilterBlock [BlsqExp]
               | BlsqReduceBlock [BlsqExp]
               | BlsqAssign String BlsqExp Bool Bool

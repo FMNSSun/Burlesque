@@ -98,9 +98,6 @@ eval (BlsqIdent "#J" : xs) = do
  case st of
    (BlsqBlock nss : ss) -> builtinPop >> eval (xs++nss)
    _ -> eval xs
-eval (BlsqHackMode x : xs) = do
- let m = map (\c -> BlsqIdent . fst $ builtins !! (ord c)) x
- eval (m ++ xs)
 eval (BlsqAutoBlock blck : xs) = eval blck >> eval xs
 eval (x:xs) = evalI x >> eval xs
 eval [] = return ()
@@ -125,9 +122,6 @@ evalI v@(BlsqIdent i) = do
               (Just (BlsqBlock f)) -> eval f
               (Just f) -> pushToStack f
               _ -> pushToStack (BlsqError ("Unknown command: (" ++ i ++ ")!"))
-evalI (BlsqMapBlock e) = do
-  pushToStack (BlsqBlock e)
-  builtinMap
 evalI (BlsqSet name (BlsqBlock exp)) = do
   st <- getStack
   nst <- runStack exp st
@@ -3968,7 +3962,6 @@ builtinTypeOf = do
    (BlsqQuoted _ : xs) -> BlsqStr "Quoted" : xs
    (BlsqSpecial _ : xs) -> BlsqStr "Special" : xs
    (BlsqError _ : xs) -> BlsqStr "Error" : xs
-   (BlsqHackMode _ :xs) -> BlsqStr "HackMode" : xs
    (BlsqChar _ : xs) -> BlsqStr "Char" : xs
    (BlsqMap _ _ : xs) -> BlsqStr "Map" : xs
    (_ : xs) -> BlsqStr "INTERNAL" : xs

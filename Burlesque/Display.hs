@@ -56,8 +56,6 @@ toDisplay (BlsqSpecial q) = q
 toDisplay (BlsqQuoted q) = "(" ++ (intercalate " " $ map toDisplay q) ++ ")"
 toDisplay (BlsqNil) = "_|_"
 
-toDisplay (BlsqHackMode x) = "#" ++ x ++ "#"
-
 toDisplay (BlsqMap m _) = intercalate "" $  (map (\(a,b) -> "<" ++ toDisplay a ++ "," ++ toDisplay b ++ ">") $ M.toList m)
 
 toDisplay q = "__INTERNAL__:" ++ (show q)
@@ -69,7 +67,6 @@ toHTML a@(BlsqError _) = "<span class=\"err\">" ++ (encodeHtml $ toDisplay a) ++
 toHTML a@(BlsqIdent _) = "<span class=\"id\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
 toHTML a@(BlsqChar _) = "<span class=\"chr\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
 toHTML a@(BlsqDouble _) = "<span class=\"dbl\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
-toHTML a@(BlsqHackMode _) = "<span class=\"hack\">" ++ (encodeHtml $ toDisplay a) ++ "</span>"
 toHTML q = "<span class=\"raw\">" ++ (encodeHtml $ toDisplay q) ++ "</span>"
 
 escapeHtml :: Char -> String

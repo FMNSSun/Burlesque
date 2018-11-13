@@ -132,7 +132,27 @@ parseMapBlock = do
   optional spaces
   char '}'
   optional spaces
-  return $ BlsqMapBlock e
+  return $ BlsqAutoBlock [BlsqBlock e, BlsqIdent "m["]
+  
+parseFilterBlock :: Parser BlsqExp
+parseFilterBlock = do
+  string "f{"
+  optional spaces
+  e <- parseBlsq
+  optional spaces
+  char '}'
+  optional spaces
+  return $ BlsqAutoBlock [BlsqBlock e, BlsqIdent "f["]
+  
+parseReduceBlock :: Parser BlsqExp
+parseReduceBlock = do
+  string "r{"
+  optional spaces
+  e <- parseBlsq
+  optional spaces
+  char '}'
+  optional spaces
+  return $ BlsqAutoBlock [BlsqBlock e, BlsqIdent "r["]
 
 parseArray :: Parser BlsqExp
 parseArray = do char '['
@@ -268,14 +288,6 @@ parseGet' = do
   char '?'
   optional spaces
   return $BlsqGet name
- 
-parseHackMode :: Parser BlsqExp
-parseHackMode = do
- _ <- char '#'
- e <- many (noneOf "#")
- _ <- char '#'
- optional spaces
- return $ BlsqHackMode (unescape e)
 
 parseQuoted :: Parser BlsqExp
 parseQuoted = do
@@ -399,10 +411,12 @@ parseSingleFancy = (try parseFancyCall) <|> (try parseFancyAssign) <|> parseFanc
 
 parseSingle :: Parser BlsqExp
 parseSingle = (try parseLisp) <|> (try parseFancy) <|> (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
-              (try parseCall) <|> (try parseAssign) <|> (try parseProc) <|> (try parseMapBlock) <|> parseSingleBlock <|> 
+              (try parseCall) <|> (try parseAssign) <|> (try parseProc) <|> (try parseBlocks') <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
               (try parseDouble) <|> (try parseIntE) <|> (try parseNumber) <|>
               parseChar <|> parseQuoted <|> parseQuoted2 <|> parseSingleIdent <|> parseIdent
+			  
+parseBlocks' = (try parseMapBlock) <|> (try parseFilterBlock) <|> (try parseReduceBlock)
 
 runParserWithString p input = 
   case parse p "" input of

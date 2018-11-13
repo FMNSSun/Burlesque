@@ -88,6 +88,28 @@ tmpfs
 
 ## SYNTAX
 
+The syntax of Burlesque is rather easy on one hand but incredibly complicated once one dives
+deeper into the rabbit hole. The basic syntax of Burlesque is rather easy.
+
+## BUILT-IN
+
+A built-in used to be exactly two characters long but this rule no longer applies. A built-in
+can have pretty much any number of characters. The rules for parsing built-ins are incredibly
+complicated. Burlesque tries to parse identifiers as a last option
+meaning if any other parsing rule matches it is not parsed as an identifier. It's thus vital
+to know all the other parsing rules to be able to know when something is parsed as an identifier or not. 
+
+A two character built-in must start with one of `1234567890{}',\" ()yYV` and the second character
+can be anything. A single character built-in must start with one of `jJQ`. 
+
+`\`\`` can be used to parse an arbitrary length built-in. The two backticks aren't part of the parsed
+built-in. It parses until it sees a space or newline. 
+
+## Specials
+
+A special is not a built-in nor are evaluated at runtime. Currently the following specials exist:
+`,`, `)`, `@`, `:`, and `%`. 
+
 ## BUILT-INS
 
 ### Abs ```ab```
