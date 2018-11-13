@@ -102,7 +102,7 @@ to know all the other parsing rules to be able to know when something is parsed 
 A two character built-in must start with one of `1234567890{}',\" ()yYV` and the second character
 can be anything. A single character built-in must start with one of `jJQ`. 
 
-`\`\`` can be used to parse an arbitrary length built-in. The two backticks aren't part of the parsed
+Two backticks can be used to parse an arbitrary length built-in. The two backticks aren't part of the parsed
 built-in. It parses until it sees a space or newline. 
 
 ## Specials
