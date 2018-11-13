@@ -2293,6 +2293,42 @@ blsq ) 'a[-
 "a"
 ```
 
+### ToLower ```zz```
+
+This built-in auto-maps if an argument provided is a block.
+
+```Char a```: Convert `a` to lower case.
+
+```shell
+blsq ) 'Qzz
+'q
+```
+
+```String a```: Convert `a` to lower case.
+
+```shell
+blsq ) "aBc."zz
+"abc."
+```
+
+### ToUpper ```ZZ```
+
+This built-in auto-maps if an argument provided is a block.
+
+```Char a```: Convert `a` to upper case.
+
+```shell
+blsq ) 'aZZ
+'A
+```
+
+```String a```: Convert `a` to upper case.
+
+```shell
+blsq ) "aBc."ZZ
+"ABC."
+```
+
 ### Union ```UN```
 
 **Notes:** If left argument contains duplicates these will be preserved. Duplicates in the right argument will be removed. Order is preserved. 

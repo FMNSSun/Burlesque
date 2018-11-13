@@ -360,9 +360,9 @@ builtins = [
   ("^/", builtinDupSwap),
   ("/^", builtinSwapDup), 
   ("r&", builtinAndLs),
-  ("r|", builtinOrLs), -- < doc
+  ("r|", builtinOrLs),
   ("ZZ", builtinToUpper),
-  ("zz", builtinToLower),
+  ("zz", builtinToLower), -- < doc
   ("M[", builtinMapPretty),
   ("M]", builtinMapToPretty),
   ("m]", builtinMapToPrettyFromFormat),
