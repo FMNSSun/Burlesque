@@ -358,9 +358,9 @@ builtins = [
   ("/v", builtinSwapPop),
   ("v/", builtinPopSwap),
   ("^/", builtinDupSwap),
-  ("/^", builtinSwapDup),
+  ("/^", builtinSwapDup), 
   ("r&", builtinAndLs),
-  ("r|", builtinOrLs),
+  ("r|", builtinOrLs), -- < doc
   ("ZZ", builtinToUpper),
   ("zz", builtinToLower),
   ("M[", builtinMapPretty),

@@ -275,6 +275,22 @@ blsq ) 1 7&&
 1
 ```
 
+### AndLs ```r&```
+
+```Block {}```: If the top of the stack is an empty Block then this built-in will push a zero integer. 
+
+```shell
+blsq ) {}r&
+0
+```
+
+```Otherwise```: *Defined as*: *```{&&}r[```*.
+
+```shell
+blsq ) {3 3 3}r&
+3
+```
+
 ### Append ```[+```
 
 ```Block a, Any b: ``` Append `b` to `a`.
@@ -1282,6 +1298,22 @@ blsq ) 2 4||
 6
 blsq ) 2 {4 8}||
 {6 10}
+```
+
+### OrLs ```r|```
+
+```Block {}```: If the top of the stack is an empty Block then this built-in will push a zero integer. 
+
+```shell
+blsq ) {}r|
+0
+```
+
+```Otherwise```: *Defined as*: *```{||}r[```*.
+
+```shell
+blsq ) {1 2 3}r|
+3
 ```
 
 ### PadLeft ```P[```
