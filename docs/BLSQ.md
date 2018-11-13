@@ -99,7 +99,7 @@ complicated. Burlesque tries to parse identifiers as a last option
 meaning if any other parsing rule matches it is not parsed as an identifier. It's thus vital
 to know all the other parsing rules to be able to know when something is parsed as an identifier or not. 
 
-A two character built-in must start with one of `1234567890{}',\" ()yYV` and the second character
+A two character built-in must start with one of `1234567890{}'," ()yYV` and the second character
 can be anything. A single character built-in must start with one of `jJQ`. 
 
 Two backticks can be used to parse an arbitrary length built-in. The two backticks aren't part of the parsed
