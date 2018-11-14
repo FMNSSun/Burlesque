@@ -91,7 +91,7 @@ tmpfs
 The syntax of Burlesque is rather easy on one hand but incredibly complicated once one dives
 deeper into the rabbit hole. The basic syntax of Burlesque is rather easy.
 
-## BUILT-IN
+### BUILT-IN
 
 A built-in used to be exactly two characters long but this rule no longer applies. A built-in
 can have pretty much any number of characters. The rules for parsing built-ins are incredibly
@@ -105,10 +105,37 @@ can be anything. A single character built-in must start with one of `jJQ`.
 Two backticks can be used to parse an arbitrary length built-in. The two backticks aren't part of the parsed
 built-in. It parses until it sees a space or newline. 
 
-## Specials
+### Specials
 
 A special is not a built-in nor are evaluated at runtime. Currently the following specials exist:
 `,`, `)`, `@`, `:`, and `%`. 
+
+## Evaluation model
+
+Burlesque is a lazy language. It only evaluates things when necessary. This enables one to use
+Blocks that are infinitely long. Burlesque has a primary stack and a secondary stack and
+a Map. These are passed from built-in to built-in. However, in sub-evaluations for example when
+using the map or filter builtins the primary stack changes during the sub-evaluation. In other words
+sub-evaluations run on their own primary stack - sometimes - not always. It depends on the built-in. The secondary
+stack and the Map remain accessible within sub-evaluations - sometimes - not always. It depends on
+the built-in. Burlesque evaluates from left to right. When a value is encountered it is pushed to the
+primary stack, when an Identifier is encountered the corresponding Command (built-in) will be executed. 
+To push a Command to the stack use the quote syntax: `(++)` for example to push the Identifier `++` to the stack.
+
+```shell
+blsq ) (ab)to
+"Ident"
+blsq ) abto
+"Error"
+```  
+
+The Map is where variables are stored (the DB command pushes the Map to the primary stack and allows
+one to inspect it):
+
+```shell
+blsq ) %a=5 DB
+<"a",5>
+```
 
 ## BUILT-INS
 
