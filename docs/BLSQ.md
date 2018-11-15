@@ -2645,7 +2645,7 @@ blsq ) {"hi" "there" "you"}'.wd
 {"hi" '. "there" '. "you"}
 ```
 
-**Author's Notes:*** This built-in only splits by a regular space. If you want to split by
+**Author's Notes:** This built-in only splits by a regular space. If you want to split by
 whitespaces you need to use ```WD``` (Words2).
 
 ```shell
