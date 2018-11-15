@@ -532,7 +532,6 @@ builtins = [
   ("td", builtinToDouble),
   ("ti", builtinToInt),
   ("su", builtinSubstrings),
-  ("##", builtinSetStack),
   ("#s", builtinPushStack),
   ("#S", builtinPopStack),
   ("#r", builtinRotateStackLeft),
@@ -4856,15 +4855,9 @@ builtinSwapStacks :: BlsqState
 builtinSwapStacks = do
   (st, st', v) <- get
   put (st', st, v)
-  
--- | ##
-builtinSetStack :: BlsqState
-builtinSetStack = do
-  st <- getStack
-  case st of
-    (BlsqBlock xs : a) -> putStack xs
-    _ -> pushToStack $ BlsqError "Burlesque: (##) Invalid arguments!"
-  
+
+
+-- | DB  
 builtinDebug :: BlsqState
 builtinDebug = do
   (_, _, v) <- get
