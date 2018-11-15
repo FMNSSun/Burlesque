@@ -356,12 +356,12 @@ builtins = [
   ("r&", builtinAndLs),
   ("r|", builtinOrLs),
   ("ZZ", builtinToUpper),
-  ("zz", builtinToLower), -- < doc
+  ("zz", builtinToLower),
   ("M[", builtinMapPretty),
   ("M]", builtinMapToPretty),
   ("m]", builtinMapToPrettyFromFormat),
   ("[m", builtinMapDup),
-  ("]m", builtinMapString),
+  ("]m", builtinMapString), -- < doc
   ("[M", builtinMapParse),
   ("wd", builtinWords),
   ("wD", builtinWords3),
