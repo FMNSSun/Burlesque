@@ -2638,7 +2638,7 @@ blsq ) {"hi" "there"}' \/[[\[
 "hi there"
 ```
 
-```Otherwise: ``` *Defined as*: *\/[[*. 
+```Otherwise: ``` *Defined as*: *```\/[[```*. 
 
 ```shell
 blsq ) {"hi" "there" "you"}'.wd
