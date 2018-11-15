@@ -1142,6 +1142,58 @@ blsq ) {1 2 3 4 5}{J.*}m[
 
 **See also:** *ConcatMap* and there are many other different versions and shortcuts for *Map*. 
 
+### MapDup ```[m```
+
+*Defined as:* *```(^^)+]m[```*.
+
+```shell
+blsq ) {1 2 3}{?*}[m
+{1 4 9}
+```
+
+### MapPretty ```M[```
+
+*Defined as:* *```m[sh```. Can be used as a shortcut if the result of mapping should
+be pretty printed. 
+
+```shell
+blsq ) "hi there"{L[}m[
+"aaaaaaaa"
+blsq ) "hi there"{L[}M[
+aaaaaaaa
+```
+
+### MapString ```]m```
+
+*Defined as:* *```(Sh)[+m[```. Can be used when one wants to apply a function to every
+element of a Block and each result should be converted to a String.
+
+```shell
+blsq ) {{1 2 3}{4 5 6}}{<-}]m
+{"[3, 2, 1]" "[6, 5, 4]"}
+```
+
+### MapToPretty ```M]```
+
+*Defined as:* *```{sh}m[```. Can be used as a shortcut to convert every element of a 
+Block to Pretty. 
+
+```shell
+blsq ) "hi there"wd
+{"hi" "there"}
+blsq ) "hi there"wdM]
+{hi there}
+```
+
+### MapToPrettyFromFormat ```m]```
+
+*Defined as:* *```{shff}m[```. 
+
+```shell
+blsq ) {{1 2 3}{4 5 6}}m]
+{"[1, 2, 3]" "[4, 5, 6]"}
+```
+
 ### Matches ```~=```
 
 ```String str, String regex: ``` Returns 1 if `regex` matches `str` otherwise returns 0.
