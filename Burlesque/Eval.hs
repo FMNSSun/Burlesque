@@ -2791,13 +2791,26 @@ builtinWords = do
 builtinZip :: BlsqState
 builtinZip = do
  st <- getStack
- putResult $
-  case st of
-   (BlsqBlock b : BlsqBlock a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [x,y]) $ zip a b) : xs
-   (BlsqStr b : BlsqStr a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [BlsqChar x,BlsqChar y]) $ zip a b) : xs
-   (BlsqStr b : BlsqBlock a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [x,BlsqChar y]) $ zip a b) : xs
-   (BlsqBlock b : BlsqStr a : xs) -> (BlsqBlock $ map (\(x,y) -> BlsqBlock [BlsqChar x,y]) $ zip a b) : xs
-   _ -> BlsqError "Burlesque: (z[) Invalid arguments!" : st
+ case st of
+   (BlsqBlock b : BlsqBlock a : xs) -> putResult $ (BlsqBlock $ map (\(x,y) -> BlsqBlock [x,y]) $ zip a b) : xs
+   (BlsqStr b : BlsqStr a : xs) -> putResult $ (BlsqBlock $ map (\(x,y) -> BlsqBlock [BlsqChar x,BlsqChar y]) $ zip a b) : xs
+   (BlsqStr b : BlsqBlock a : xs) -> putResult $ (BlsqBlock $ map (\(x,y) -> BlsqBlock [x,BlsqChar y]) $ zip a b) : xs
+   (BlsqBlock b : BlsqStr a : xs) -> putResult $ (BlsqBlock $ map (\(x,y) -> BlsqBlock [BlsqChar x,y]) $ zip a b) : xs
+   (BlsqInt a : BlsqInt b : xs) -> do 
+     builtinExplode
+     builtinSwap
+     builtinExplode
+     builtinSwap
+     builtinZip
+   (BlsqBlock a : b : xs) -> do
+     builtinSwap
+     builtinExplode
+     builtinSwap
+     builtinZip
+   (a : BlsqBlock b : xs) -> do
+     builtinExplode
+     builtinZip
+   _ -> putResult $ BlsqError "Burlesque: (z[) Invalid arguments!" : st
 
 -- | Z[
 builtinZipWith :: BlsqState 
