@@ -1151,9 +1151,19 @@ blsq ) {1 2 3}{?*}[m
 {1 4 9}
 ```
 
+### MapParse ```[M```
+
+*Defined as:* *```(ps)+]m[```*. Can be used as a shortcut if the first step of the function that is
+being mapped over the Block is parsing. 
+
+```shell
+blsq ) "5 6;7 8"';;;{++}[M
+{11 15}
+```
+
 ### MapPretty ```M[```
 
-*Defined as:* *```m[sh```. Can be used as a shortcut if the result of mapping should
+*Defined as:* *```m[sh```*. Can be used as a shortcut if the result of mapping should
 be pretty printed. 
 
 ```shell
@@ -1165,7 +1175,7 @@ aaaaaaaa
 
 ### MapString ```]m```
 
-*Defined as:* *```(Sh)[+m[```. Can be used when one wants to apply a function to every
+*Defined as:* *```(Sh)[+m[```*. Can be used when one wants to apply a function to every
 element of a Block and each result should be converted to a String.
 
 ```shell
@@ -1175,7 +1185,7 @@ blsq ) {{1 2 3}{4 5 6}}{<-}]m
 
 ### MapToPretty ```M]```
 
-*Defined as:* *```{sh}m[```. Can be used as a shortcut to convert every element of a 
+*Defined as:* *```{sh}m[```*. Can be used as a shortcut to convert every element of a 
 Block to Pretty. 
 
 ```shell
@@ -1187,7 +1197,7 @@ blsq ) "hi there"wdM]
 
 ### MapToPrettyFromFormat ```m]```
 
-*Defined as:* *```{shff}m[```. 
+*Defined as:* *```{shff}m[```*. 
 
 ```shell
 blsq ) {{1 2 3}{4 5 6}}m]
@@ -2600,6 +2610,39 @@ blsq ) "hello world"{<-}wwsh
 olleh dlrow
 blsq ) "hello world"{<-}WW
 olleh dlrow
+```
+
+### Words ```wd```
+
+```String _: ``` *Defined as:* *```" ";;```*. Splits by space. 
+
+```shell
+blsq ) "hi there"wd
+{"hi" "there"}
+```
+
+```Block {}: ``` Pushes an empty string to the stack.
+
+```shell
+blsq ) {}wd
+""
+```
+
+```Block a: ``` *Defined as*: *```' \/[[\[```*. An *unwords*. It converts a Block of words
+into a String.
+
+```shell
+blsq ) {"hi" "there"}wd
+"hi there"
+blsq ) {"hi" "there"}' \/[[\[
+"hi there"
+```
+
+```Otherwise: ``` *Defined as*: *\/[[*. 
+
+```shell
+blsq ) {"hi" "there" "you"}'.wd
+{"hi" '. "there" '. "you"}
 ```
 
 ### Xor ```$$```
