@@ -752,6 +752,27 @@ blsq ) {1 2}XX
 
 **Authors' Notes:** Sometimes this built-in is also referred to as *Xplode*. 
 
+### Filter ```f[```
+
+```String a, Block f: ``` *Somewhat defined as:* *```\/XX\/f[```*. Explodes the String to a Block of Chars
+before doing ```f[```. This has a lot of special casing to simulate proper behaviour. The ```f[``` actually
+returns a Block of Chars which is then concatenated to form a proper String again.  
+
+```shell
+blsq ) "abcdehge"{'e==}f[
+"ee"
+```
+
+```Block v, Block f: ``` Filters `f` using `v` as the condition. Filter removes all elements of the Block
+for which `v` returns false. 
+
+```shell
+blsq ) {1 2 3 4 5 6}{2dv}f[
+{2 4 6}
+blsq ) {1 2 3 4 5 6}{3.>}f[
+{4 5 6}
+```
+
 ### Format ```FF```
 
 ```Pretty a, Int format: ``` Change format of `a` to `format`.
@@ -2653,6 +2674,15 @@ blsq ) "a\nb"wd
 {"a\nb"}
 blsq ) "a\nb"WD
 {"a" "b"}
+```
+
+### Words3 ```wD```
+
+*Defined as:* *```wdsh```*. 
+
+```shell
+blsq ) {"abc" "def"}wD
+abc def
 ```
 
 ### Xor ```$$```

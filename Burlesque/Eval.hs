@@ -363,9 +363,9 @@ builtins = [
   ("[m", builtinMapDup),
   ("]m", builtinMapString),
   ("[M", builtinMapParse),
-  ("wd", builtinWords), -- < doc
-  ("wD", builtinWords3),
-  ("f[", builtinFilter),
+  ("wd", builtinWords), 
+  ("wD", builtinWords3), 
+  ("f[", builtinFilter), -- < doc
   ("z[", builtinZip),
   ("Z[", builtinZipWith),
   ("Z]", builtinZipWithPush),
