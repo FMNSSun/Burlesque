@@ -51,6 +51,8 @@ Usage
   --compile <path>        Pseudo-compile file to haskell code
   --stdin <code>          Read code from argv (incl. STDIN)
 ```
+
+Note: There needs to be a file "Prelude.blsq" in the working directory except if you're using the main_golf.hs version. 
     
 Tests
 =====
