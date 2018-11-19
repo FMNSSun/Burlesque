@@ -30,7 +30,7 @@ toDisplay (BlsqDouble d) = showFFloat Nothing (d) ""
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNormal) = s
 toDisplay (BlsqPretty (BlsqStr s) BlsqFormatNoSpaces) = noSpaces s
 
-toDisplay (BlsqPretty (BlsqDouble a) _) = show a
+toDisplay (BlsqPretty (BlsqDouble a) _) = showFFloat Nothing (d) ""
 
 toDisplay (BlsqPretty (BlsqChar c) BlsqFormatNormal) = [c]
 
