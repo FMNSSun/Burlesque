@@ -39,6 +39,19 @@ If you just want the "--file" option (like on golf.shinh.org) use
 
     ghc --make main_golf.hs -o blsq -O3 -fforce-recomp
     
+Usage
+=====
+
+```
+  --file <path>           Read code from file (incl. STDIN)
+  --file-no-stdin <path>  Read code from file (excl. STDIN)
+  --no-stdin <code>       Read code from argv (excl. STDIN)
+  --shell                 Start in shell mode
+  --version               Print version info
+  --compile <path>        Pseudo-compile file to haskell code
+  --stdin <code>          Read code from argv (incl. STDIN)
+```
+    
 Tests
 =====
 
