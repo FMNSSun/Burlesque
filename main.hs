@@ -16,16 +16,16 @@ import qualified Data.Map as M
 loadPrelude :: IO String
 loadPrelude = readFile "Prelude.blsq"
 
-runProgram :: String -> String -> IO String
-runProgram p stdin = do
+runProgram :: String -> String -> String -> IO String
+runProgram p stdin file = do
  p' <- loadPrelude
- result <- execStateT (eval (runParserWithString parseBlsq (p'++p))) ([BlsqStr stdin],[], M.fromList [])
+ result <- execStateT (eval (runParserWithString parseBlsq (p'++p))) ([BlsqStr stdin],[], M.fromList [(BlsqStr "____FILE", BlsqStr file)])
  return . unlines . map toDisplay . filter notHidden . fst' $ result
 
-runProgramNoStdin :: String -> IO String
-runProgramNoStdin p = do
+runProgramNoStdin :: String -> String -> IO String
+runProgramNoStdin p file = do
  p' <- loadPrelude
- result <- execStateT (eval (runParserWithString parseBlsq (p'++p))) ([],[], M.fromList [])
+ result <- execStateT (eval (runParserWithString parseBlsq (p'++p))) ([],[], M.fromList [(BlsqStr "____FILE", BlsqStr file)])
  return . unlines . map toDisplay . filter notHidden . fst' $ result
 
 runTheFreakingShell = runInputT settings burlesqueShell
@@ -36,21 +36,21 @@ main = do
    ["--file",file] -> do 
      prog <- readFile file
      cin <- getContents
-     cout <- runProgram prog cin
+     cout <- runProgram prog cin file
      putStr cout
    ["--file-no-stdin",file] -> do 
      prog <- readFile file
-     cout <- runProgramNoStdin prog
+     cout <- runProgramNoStdin prog file
      putStr cout
    ["--no-stdin",prog] -> do
-     cout <- runProgramNoStdin prog
+     cout <- runProgramNoStdin prog ""
      putStr cout
    ["--shell"] -> runInputT settings burlesqueShell
    ["--version"] -> putStrLn "burlesque v1.6.9!"
    ["--stdin",prog] -> do
      cin <- getContents
      p' <- loadPrelude
-     cout <- runProgram (p'++prog) cin
+     cout <- runProgram (p'++prog) cin ""
      putStr cout
    _ -> do putStrLn $ "Invalid usage"
            putStrLn "  --file <path>           Read code from file (incl. STDIN)"
@@ -77,6 +77,6 @@ burlesqueShell = do
  case line of 
    Nothing     -> outputStrLn "* Abort..." >> return ()
    Just "exit!" -> outputStrLn "* Exit!" >> return()
-   Just q -> do cout <- lift $ runProgramNoStdin q
+   Just q -> do cout <- lift $ runProgramNoStdin q ""
                 outputStr cout
                 burlesqueShell
