@@ -641,6 +641,7 @@ builtins = [
   ("FL", builtinFlatten),
   ("iv", builtinInverse),
   ("id", builtinIndices),
+  ("wi", builtinWithIndices),
   
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
@@ -4871,3 +4872,12 @@ builtinIndices = do
   builtinDup
   builtinLength
   builtinRangeFromZero
+  
+  
+-- | wi
+builtinWithIndices :: BlsqState
+builtinWithIndices = do
+  builtinSwap
+  builtinZipIndices
+  builtinSwap
+  builtinMapPushManyReverse
