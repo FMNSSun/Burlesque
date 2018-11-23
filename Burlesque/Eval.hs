@@ -667,6 +667,7 @@ builtins = [
 #endif
   
   ("?_", builtinBuiltins),
+  ("?a", builtinAllBuiltins),
   ("?n", builtinBuiltinNth),
   ("??", builtinVersion)
  ]
@@ -1053,10 +1054,17 @@ builtinBuiltinNth = do
   (BlsqInt n) <- popFromStack
   pushToStack . BlsqIdent $ fst (builtins !! (toInt n))
 
+
 -- | ?_
 builtinBuiltins = do
   pushToStack . BlsqStr $ "I have " ++ (show $ length builtins) ++ " non-special builtins!"
-  
+
+
+-- | ?|
+builtinAllBuiltins = do
+  pushToStack . BlsqBlock $ (map (BlsqIdent . fst) builtins)
+
+
 -- | iT
 builtinInits = do
   st <- getStack
