@@ -640,6 +640,7 @@ builtins = [
   ("Sw", builtinStringWords),
   ("FL", builtinFlatten),
   ("iv", builtinInverse),
+  ("id", builtinIndices),
   
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
@@ -4862,3 +4863,11 @@ builtinDebug :: BlsqState
 builtinDebug = do
   (_, _, v) <- get
   pushToStack $ BlsqMap v BlsqNil
+
+
+-- | id
+builtinIndices :: BlsqState
+builtinIndices = do
+  builtinDup
+  builtinLength
+  builtinRangeFromZero
