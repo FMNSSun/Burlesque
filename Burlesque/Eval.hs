@@ -36,6 +36,7 @@ import Statistics.Distribution.StudentT
 import Statistics.Distribution.Uniform
 import qualified Data.Map as M
 import Debug.Trace
+import System.IO.Unsafe
 
 -- Imports only for IO
 
@@ -235,6 +236,8 @@ runStack p xs = do
   
 runStack' :: BlsqProg -> BlsqStack -> IO BlsqStack
 runStack' p xs = execStateT (eval p) (xs,[],M.fromList []) >>= return . fst'
+
+runStackLazy'' p xs g v = unsafeInterleaveIO $ runStack'' p xs g v
 
 runStack'' p xs g v = execStateT (eval p) (xs,g, v)
 
@@ -645,6 +648,7 @@ builtins = [
   ("fn", builtinFilterNot),
   ("F[", builtinFilter2),
   ("F]", builtinFilter3),
+  ("C~", builtinContinuationForever),
   
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
@@ -1334,6 +1338,23 @@ builtinContinuationMany = do
      putStack xs
      pushToStack (BlsqBlock ls)
      builtinEval
+     
+-- | C~
+builtinContinuationForever :: BlsqState
+builtinContinuationForever = do
+  st <- getStack
+  case st of
+    (BlsqBlock cont : BlsqInt n : xs) -> do 
+       ys <- f n cont (genericTake n xs)
+       putStack $ (BlsqBlock $ (genericTake n xs) ++ ys) : (genericDrop n xs)
+    _ -> pushToStack $ BlsqError "Burlesque (C~): Invalid arguments!"
+ where f n cont xs = do
+         (st, g, v) <- get
+         (nst, ng, nv) <- lift $ runStackLazy'' cont xs g v
+         let nst' = genericTake n (nst ++ xs)
+         put (st, ng, nv)
+         zs <- f n cont nst'
+         return $ (head nst') : zs
 
 -- | MV
 builtinMove = do 
@@ -1814,15 +1835,15 @@ builtinMap = do
       builtinConcat
    (BlsqBlock a : BlsqBlock b : xs) -> do 
       (s , g, v) <- get
-      (mst, ng, nv) <- lift $ map' a b g v
-      put (s, ng, nv)
+      ~(mst, g', v') <- lift $ unsafeInterleaveIO $ map' a b g v
+      put (s, g', v')
       putResult $ (BlsqBlock $ mst) : xs
    _ -> putResult $ BlsqError "Burlesque: (m[) Invalid arguments!" : st
  where map' _ [] g v = return ([], g, v)
        map' f (x:xs) g v = do
-         (st, ng, nv) <- runStack'' f [x] g v
-         (st', ng', nv') <- map' f xs ng nv
-         return (st++st', ng', nv')    
+         ~(st, ng, nv) <- runStackLazy'' f [x] g v
+         ~(st', ng', nv') <- unsafeInterleaveIO $ map' f xs ng nv
+         return (st ++ st', ng', nv')  
 
 builtinPartial :: BlsqState
 builtinPartial = do
@@ -1838,7 +1859,7 @@ builtinPartial = do
     _ -> putResult $ BlsqError "Burlesque: (pa) Invalid arguments!" : st
  where partial' _ [] g v = return ([], g, v)
        partial' f xs g v = do
-         (st, ng, nv) <- runStack'' f [BlsqBlock xs] g v
+         (st, ng, nv) <- runStackLazy'' f [BlsqBlock xs] g v
          (st', ng', nv') <- partial' f (init xs) ng nv
          return (st++st', ng', nv')             
          
@@ -1875,7 +1896,7 @@ builtinFilter = do
   _ -> putResult $ BlsqError "Burlesque: (f[) Invalid arguments!" : st
  where filter' _ [] g vv = return ([], g, vv)
        filter' f (x:xs) g vv = do
-         (st, ng, nvv) <- runStack'' f [x] g vv
+         (st, ng, nvv) <- runStackLazy'' f [x] g vv
          case st of
            (BlsqInt 0):ys -> filter' f xs ng nvv
            _ -> do (ys, ng', nvv') <- filter' f xs ng nvv
@@ -2392,7 +2413,7 @@ builtinApplyRegex = do
                            case matchRegexAll (mkRegex regex) str of
                                 Nothing -> return ([], g, v, "")
                                 Just (pre, matched, after, _) -> do
-                                   ((BlsqStr x:_), ng, nv) <- runStack'' (f ++ [BlsqIdent "Sh"]) [BlsqStr matched] g v
+                                   ((BlsqStr x:_), ng, nv) <- runStackLazy'' (f ++ [BlsqIdent "Sh"]) [BlsqStr matched] g v
                                    (_, ng', nv', p) <- allMatches'' f regex after ng nv
                                    return ([], ng', nv', pre ++ x ++ p)
                                   
@@ -2408,7 +2429,7 @@ builtinLoop = do
     _ -> putResult $ BlsqError "Burlesque: (LO) Invalid arguments!" : st
  where loop' f [] g v _ = return (g, v, [])
        loop' f (q:qs) g v s = do
-                            (stc, ng, nv) <- runStack'' f [s,q] g v
+                            (stc, ng, nv) <- runStackLazy'' f [s,q] g v
                             case stc of
                               (BlsqInt 0 : _) -> loop' f qs ng nv s
                               _ -> do (ng', nv', intm) <- loop' f qs ng nv q
@@ -2426,7 +2447,7 @@ builtinLoopIndices = do
     _ -> putResult $ BlsqError "Burlesque: (LI) Invalid arguments!" : st
  where loop' f [] g v _ idx = return (g, v, [])
        loop' f (q:qs) g v s idx = do
-                            (stc, ng, nv) <- runStack'' f [s,q] g v
+                            (stc, ng, nv) <- runStackLazy'' f [s,q] g v
                             case stc of
                               (BlsqInt 0 : _) -> loop' f qs ng nv s (idx+1)
                               _ -> do (ng', nv', intm) <- loop' f qs ng nv q (idx+1)
