@@ -700,7 +700,7 @@ builtinWriteChan = do
   case st of
     (x : BlsqChan ch : xs) -> do
       doIOSafe $ writeChan ch x
-      putResult xs
+      putResult $ (BlsqChan ch) : xs
     (BlsqChan ch : x : xs) -> do
       builtinSwap
       builtinWriteChan
@@ -711,15 +711,15 @@ builtinReadChan = do
   case st of
     (BlsqChan ch : xs) -> do
       r <- doIOSafe $ readChan ch
-      putResult (r : xs)
+      putResult (r : (BlsqChan) ch : xs)
     _ -> pushToStack (BlsqError "Burlesque (rc): Invalid arguments!")
     
 builtinFork = do
   st <- getStack
   case st of
-    (BlsqBlock exp : xs) -> do
+    (BlsqBlock exp : BlsqBlock ctx : xs) -> do
       putResult xs
-      doIOSafe $ forkIO (do {  a <- runStack'' exp [] [] (M.fromList []); fuckLazy a ; return (); })
+      doIOSafe $ forkIO (do {  a <- runStack'' exp ctx [] (M.fromList []); fuckLazy a ; return (); })
       return ()
     _ -> pushToStack (BlsqError "Burlesque (fk): Invalid arguments!")
  where fuckLazy ([],[],c) = return ()
@@ -1460,6 +1460,7 @@ builtinMul = do
     
     (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ (fromIntegral a) * b) : xs
     (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ a * (fromIntegral b)) : xs
+    (BlsqChar a : xs) -> (BlsqInt $ if isSymbol a then 1 else 0) : xs
     _ -> (BlsqError "Burlesque: (.*) Invalid arguments!") : st
 
 -- | > ./
@@ -1480,6 +1481,7 @@ builtinDiv = do
                                  
     (BlsqInt a : BlsqDouble b : xs) -> (BlsqDouble $ b / (fromIntegral a)) : xs
     (BlsqDouble a : BlsqInt b : xs) -> (BlsqDouble $ (fromIntegral b) / a) : xs
+    (BlsqChar a : xs) -> (BlsqInt $ if isNumber a then 1 else 0) : xs
     _ -> (BlsqError "Burlesque: (./) Invalid arguments!") : st
 
 -- | .%
@@ -1496,6 +1498,7 @@ builtinMod = do
                                          builtinMod
     (BlsqBlock a : BlsqBlock b : xs) -> do pushToStack (BlsqBlock [ BlsqIdent ".%" ])
                                            builtinZipWithPush
+    (BlsqChar a : xs) -> putResult $ (BlsqInt $ if isPunctuation a then 1 else 0) : xs
     _ -> putResult $ (BlsqError "Burlesque: (.%) Invalid arguments!") : st
 
 -- | > +.
@@ -1564,6 +1567,7 @@ builtinLines = do
    (BlsqStr a) : xs -> (BlsqBlock . map BlsqStr . lines $ a) : xs
    (BlsqInt a) : xs -> (BlsqInt . genericLength . show $ abs a) : xs
    (BlsqBlock b : BlsqBlock a : xs) -> (BlsqBlock (if (genericLength a) > (genericLength b) then a else b)) : xs
+   (BlsqChar b : xs) -> (BlsqInt $ if isPrint b then 1 else 0) : xs
    _ -> (BlsqError "Burlesque: (ln) Invalid arguments!") : st
 
 -- | > un
@@ -1572,6 +1576,7 @@ builtinUnlines = do
  st <- getStack
  case st of
   (BlsqBlock [] : xs) -> putResult $ BlsqStr "" : xs
+  (BlsqChar b : xs) -> putResult $ (BlsqInt $ if isAscii b then 1 else 0) : xs
   _ -> do pushToStack (BlsqStr "\n")
           builtinSwap
           builtinIntersperse
@@ -3100,6 +3105,7 @@ builtinCos = do
    (BlsqInt a : xs) -> putResult $ BlsqDouble (cos (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (cos a) : xs
    (BlsqBlock a : xs) -> pushToStack (BlsqBlock [ BlsqIdent "Tc" ]) >> builtinMap
+   (BlsqChar a : xs) -> putResult $ BlsqInt (if isSeparator a then 1 else 0) : xs
    _ -> putResult $ BlsqError "Burlesque: (Tc) Invalid arguments!" : st
 
 -- | TC
@@ -3110,6 +3116,7 @@ builtinAcos = do
    (BlsqInt a : xs) -> putResult $ BlsqDouble (acos (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (acos a) : xs
    (BlsqBlock a : xs) -> pushToStack (BlsqBlock [ BlsqIdent "TC" ]) >> builtinMap
+   (BlsqChar a : xs) -> putResult $ BlsqInt (if isLetter a then 1 else 0) : xs
    _ -> putResult $ BlsqError "Burlesque: (TC) Invalid arguments!" : st
 
 -- | Tt
@@ -3120,6 +3127,7 @@ builtinTan = do
    (BlsqInt a : xs) -> putResult $ BlsqDouble (tan (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (tan a) : xs
    (BlsqBlock a : xs) -> pushToStack (BlsqBlock [ BlsqIdent "Tt" ]) >> builtinMap
+   (BlsqChar a : xs) -> putResult $ BlsqInt (if isMark a then 1 else 0) : xs
    _ -> putResult $ BlsqError "Burlesque: (Tt) Invalid arguments!" : st
 
 -- | TT
@@ -3130,6 +3138,7 @@ builtinAtan = do
    (BlsqInt a : xs) -> putResult $ BlsqDouble (atan (fromIntegral a)) : xs
    (BlsqDouble a : xs) -> putResult $ BlsqDouble (atan a) : xs
    (BlsqBlock a : xs) -> pushToStack (BlsqBlock [ BlsqIdent "TT" ]) >> builtinMap
+   (BlsqChar a : xs) -> putResult $ BlsqInt (if isLatin1 a then 1 else 0) : xs
    _ -> putResult $ BlsqError "Burlesque: (TT) Invalid arguments!" : st
 
 -- | WD
@@ -4737,6 +4746,7 @@ builtinSubstrings = do
 builtinInverse :: BlsqState
 builtinInverse = do
   pushToStack (BlsqInt 1)
+  builtinSwap
   builtinCoerceDiv
   
 -- | #s

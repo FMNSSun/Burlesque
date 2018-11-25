@@ -652,6 +652,15 @@ blsq ) 10.0 3./
 3.3333333333333335
 ```
 
+```Char a: ``` Returns `1` if `a` is a number else returns `0`. 
+
+```shell
+blsq ) 1634L[./
+1
+blsq ) '9./
+1
+```
+
 ### Duplicate ```J``` ```^^```
 
 Duplicates the top most element.
@@ -1141,6 +1150,15 @@ blsq ) {1 2 4}{1 2 3}ln
 {1 2 3}
 ```
 
+```Char a: ``` Returns 1 if `a` is a printable character otherwise returns 0.
+
+```shell
+blsq ) 1L[ln
+0
+blsq ) 'aln
+1
+```
+
 **See also:** *WithLines*.
 
 ### Map ```m[```
@@ -1332,6 +1350,14 @@ blsq ) 10 3.%
 1
 ```
 
+```Char a: ``` Returns `1` if `a` is punctuation otherwise returns `0`. 
+
+```shell
+blsq ) '..%
+1
+blsq ) 'a.%
+0
+```
 
 ### Mul ```.*```
 
@@ -1389,6 +1415,15 @@ blsq ) 2 3.0.*
 ```shell
 blsq ) 2.0 3.*
 6.0
+```
+
+```Char a: ``` Returns `1` if `a` is a symbol else returns `0`. 
+
+```shell
+blsq ) '9.*
+0
+blsq ) '+.*
+1
 ```
 
 ### NotEqual ```!=```
