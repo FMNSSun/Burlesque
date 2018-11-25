@@ -1345,16 +1345,16 @@ builtinContinuationForever = do
   st <- getStack
   case st of
     (BlsqBlock cont : BlsqInt n : xs) -> do 
-       ys <- f n cont (genericTake n xs)
+       (st, g, v) <- get
+       ~(ys, g', v') <- lift $ f n cont (genericTake n xs) g v
+       put (st, g', v')
        putStack $ (BlsqBlock $ (genericTake n xs) ++ ys) : (genericDrop n xs)
     _ -> pushToStack $ BlsqError "Burlesque (C~): Invalid arguments!"
- where f n cont xs = do
-         (st, g, v) <- get
-         (nst, ng, nv) <- lift $ runStackLazy'' cont xs g v
+ where f n cont xs g v = do
+         ~(nst, ng, nv) <- runStackLazy'' cont xs g v
          let nst' = genericTake n (nst ++ xs)
-         put (st, ng, nv)
-         zs <- f n cont nst'
-         return $ (head nst') : zs
+         ~(zs, ng', nv') <- unsafeInterleaveIO $ f n cont nst' ng nv
+         return $ ((head nst') : zs, ng', nv')
 
 -- | MV
 builtinMove = do 
