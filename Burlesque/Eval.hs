@@ -2507,6 +2507,7 @@ builtinAbs = do
   case st of
    (BlsqInt a : xs) -> (BlsqInt $ abs a) : xs
    (BlsqDouble a : xs) -> (BlsqDouble $ abs a) : xs
+   (BlsqChar a : xs) -> (BlsqInt $ if isControl a then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (ab) Invalid arguments!" : st
 
 -- | sn
@@ -2517,6 +2518,7 @@ builtinSignum = do
   case st of
    (BlsqInt a : xs) -> (BlsqInt $ signum a) : xs
    (BlsqDouble a : xs) -> (BlsqDouble $ signum a) : xs
+   (BlsqChar a : xs) -> (BlsqInt $ if isUpper a then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (sn) Invalid arguments!" : st
 
 -- | S[
@@ -2616,6 +2618,7 @@ builtinNub = do
    (BlsqBlock a : xs) -> BlsqBlock (nub a) : xs
    (BlsqStr a : xs) -> BlsqStr (nub a) : xs
    (BlsqInt a : xs) -> BlsqInt (read $ nub (show (abs a))) : xs
+   (BlsqChar a : xs) -> (BlsqInt $ if isLower a then 1 else 0) : xs
    _ -> BlsqError "Burlesque: (NB) Invalid arguments!" : st
 
 -- | \\
@@ -3392,6 +3395,7 @@ builtinLcm = do
                             builtinSwap
                             builtinLast
                             builtinSwap
+    (BlsqChar a : xs) -> putResult $ BlsqStr (show $ generalCategory a) : xs
     _ -> putResult $ BlsqError "Burlesque: (l_) Invalid arguments!" : st
 	
 -- |tw

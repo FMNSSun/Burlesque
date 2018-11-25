@@ -173,6 +173,15 @@ blsq ) 6.0ab
 6.0
 ```
 
+```Char a: ``` Returns `1` if `a` is a control else returns `0`. 
+
+```shell
+blsq ) 0L[ab
+1
+blsq ) 32L[ab
+0
+```
+
 ### Add ```.+```
 
 ```Int a, Int b: ``` Integer addition.
@@ -1468,6 +1477,15 @@ blsq ) 101010011NB
 10
 ```
 
+```Char a: ``` Returns `1` if `a` is lower case else returns `0`. 
+
+```shell
+blsq ) 'BNB
+0
+blsq ) 'bNB
+1
+```
+
 ### Or ```||```
 
 This built-in auto-zips if an argument provided is a Block.
@@ -2118,6 +2136,15 @@ blsq ) -6.0sn6.0sn0.0sn
 0.0
 1.0
 -1.0
+```
+
+```Char a: ``` Returns `1` if `a` is upper case else returns `0`. 
+
+```shell
+blsq ) 'Bsn
+1
+blsq ) 'bsn
+0
 ```
 
 ### Smaller ```.<```
