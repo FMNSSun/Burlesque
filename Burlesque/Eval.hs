@@ -642,6 +642,8 @@ builtins = [
   ("iv", builtinInverse),
   ("id", builtinIndices),
   ("wi", builtinWithIndices),
+  ("fn", builtinFilterNot),
+  ("F[", builtinFilter2),
   
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
@@ -4903,3 +4905,23 @@ builtinWithIndices = do
   builtinZipIndices
   builtinSwap
   builtinMapPushManyReverse
+  
+-- | fn
+builtinFilterNot :: BlsqState
+builtinFilterNot = do
+  pushToStack $ BlsqIdent "n!"
+  builtinAppend
+  builtinFilter
+  
+-- | F[
+builtinFilter2 :: BlsqState
+builtinFilter2 = do
+  builtinXSwap
+  builtinXSwap
+  builtinSwap
+  builtinBoxCycle
+  builtinZip
+  builtinSwap
+  pushToStack $ BlsqIdent "p^"
+  builtinPrepend
+  builtinFilter

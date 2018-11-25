@@ -101,8 +101,8 @@ parseIdent''' = do
   optional spaces
   return . BlsqIdent $ s
 
-parseSep :: Parser BlsqExp
-parseSep = do
+parseSpecial :: Parser BlsqExp
+parseSpecial = do
   b <- oneOf ",)@:%"
   optional spaces
   return $ BlsqSpecial [b]
@@ -405,19 +405,27 @@ parseFancyDef = do
   optional spaces
   return $ BlsqAssign ident (BlsqBlock block) False False
   
-  
 parseSingleFancy :: Parser BlsqExp
 parseSingleFancy = (try parseFancyCall) <|> (try parseFancyAssign) <|> parseFancyDef <|> parseData' <|> parseUnfancy
 
 parseSingle :: Parser BlsqExp
 parseSingle = (try parseLisp) <|> (try parseFancy) <|> (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
               (try parseCall) <|> (try parseAssign) <|> (try parseProc) <|> (try parseBlocks') <|> parseSingleBlock <|> 
-              parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSep <|> 
+              parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSpecial <|> 
               (try parseDouble) <|> (try parseIntE) <|> (try parseNumber) <|>
-              parseChar <|> parseQuoted <|> parseQuoted2 <|> parseSingleIdent <|> parseIdent
+              parseChar <|> parseQuoted <|> parseQuoted2 <|> parseSingleIdent <|> (try parseShortcuts) <|> parseIdent
 			  
 parseBlocks' = (try parseMapBlock) <|> (try parseFilterBlock) <|> (try parseReduceBlock)
 
+parseShortcuts = do
+  char '`'
+  sc
+ where sc = sc_FilterNot
+       sc_FilterNot = do
+         char 'F'
+         s <- parseSingle
+         return $ BlsqAutoBlock [BlsqBlock [s], BlsqIdent "fn"]
+   
 runParserWithString p input = 
   case parse p "" input of
     Left err -> [BlsqError $ show err]
