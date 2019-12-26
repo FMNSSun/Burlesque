@@ -377,7 +377,7 @@ builtins = [
   ("!!", builtinBlockAccess),
   ("fi", builtinFindIndex),
   ("Fi", builtinFindIndexEq),
-  ("fI", builtinFindIndices),
+  ("fI", builtinFindIndices), -- < doc 26.12.2019
   ("fe", builtinFindElement),
   ("CB", builtinCombinations),
   ("cb", builtinCombinationsUpTo),

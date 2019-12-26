@@ -811,6 +811,58 @@ blsq ) {1 2 3 4 5 6}{3.>}f[
 {4 5 6}
 ```
 
+### FindIndex ```fi```
+
+```Block a, Block p```: Scans through the list (l2r) and returns the index of the first element where
+`p` evaluates to true. 
+
+```shell
+blsq ) {1 2 3 4 5 6}{3==}fi
+2
+```
+
+```String a, Block p```: *Defined as*: *```\/XX\/fi```*. 
+
+```shell
+blsq ) "abcdef"{'a!=}fi
+1
+```
+
+### FindIndexEq ```Fi```
+
+```Block a, Any x```: Scans through the list (l2r) and returs the index of the first element equal
+to `x`. 
+
+```shell
+blsq ) {1 3 9 10 2}10Fi
+3
+```
+
+```String a, Char x```: Scans through the list (l2r) and returns the index of the first element equal
+to `x`. 
+
+```shell
+blsq ) "abcdef"'aFi
+0
+```
+
+### FindIndices ```fI```
+
+```Block a, Block p```: Scans through the list (l2r) and returns all indices of elements where
+`p` evaluates to true. 
+
+```shell
+blsq ) {1 2 3 4 5 6 7 8}{2.%0==}fI
+{1 3 5 7}
+```
+
+```String a, Block p```: *Defined as*: *```\/XX\/fI```*. 
+
+```shell
+blsq ) "hello"{'l==}fI
+{2 3}
+```
+
 ### Format ```FF```
 
 ```Pretty a, Int format: ``` Change format of `a` to `format`.
@@ -2819,7 +2871,7 @@ blsq ) 123 456z[
 {{1 4} {2 5} {3 6}}
 ```
 
-```Block a, Any b```: *Defined as*: *```\/XX\/z[*. (It'll explode argument `b`).
+```Block a, Any b```: *Defined as*: *```\/XX\/z[```*. (It'll explode argument `b`).
 
 ```Any a, Block b:```: *Defined as*: *```XXz[```*. (It'll explode argument `a`).
 
