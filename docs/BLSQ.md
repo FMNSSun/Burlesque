@@ -2879,7 +2879,7 @@ blsq ) 123 456z[
 
 ```Any a, Any b, Block f```: Performs a *Zip* followed by a *Map*. 
 
-### ZipWithPush ``Z]```
+### ZipWithPush ```Z]```
 
 *Defined as:* *```(^p+])Z[```*. 
 

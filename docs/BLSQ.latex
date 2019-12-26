@@ -1,0 +1,3454 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Burleseque - Moonpage},
+  pdfauthor={Roman Müntener},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{Burleseque - Moonpage}
+\author{Roman Müntener}
+\date{}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\hypertarget{about}{%
+\section{ABOUT}\label{about}}
+
+An interpreter for the esoteric programming language \emph{The Burlesque
+Programming Language}. Actually, Burlesque is less of a programming
+language than it is a tool. The actual language behind it is very simple
+and the only thing that makes Burlesque notable is the amount of
+built-ins it has. The syntax can be learnt within a few minutes (there
+are basically only Numbers, Strings and Blocks) and the concepts can be
+learnt quickly as well. People familiar with functional programming
+languages will already know these concepts so Burlesque is especially
+easy to learn if you already know the terms \emph{map}, \emph{filter},
+\emph{reduce}, \emph{zip} and others. This moonpage tries to be as
+accurate, complete and easy to understand as possible. If you encounter
+an error in the documentation please report it on
+\href{http://github.com/FMNSSun/Burlesque}{github}. \textbf{Author:}
+Roman Müntener, 2012-?
+
+Useful Weblinks:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{http://rosettacode.org/wiki/Category:Burlesque}{Burlesque on
+  RosettaCode}
+\item
+  \href{http://github.com/FMNSSun/Burlesque}{Source code}
+\item
+  \href{http://mroman.ch/burlesque/lref.html}{Language Reference}
+\end{itemize}
+
+\textbf{Until this moonpage is complete please consult the Language
+Reference. Once compelete, the moonpage will superseed the Language
+Reference and this warning will disappear.}
+
+\hypertarget{history}{%
+\subsection{HISTORY}\label{history}}
+
+Burlesque has been under development since 2012 and is still being
+improved on a regular basis. It was built as a tool for me (mroman) to
+use as a helper for my computer science studies.
+
+\hypertarget{synopsis}{%
+\section{SYNOPSIS}\label{synopsis}}
+
+\begin{verbatim}
+blsq 
+  --file <path>           Read code from file (incl. STDIN)
+  --file-no-stdin <path>  Read code from file (excl. STDIN)
+  --no-stdin <code>       Read code from argv (excl. STDIN)
+  --shell                 Start in shell mode
+  --version               Print version info
+  --compile <path>        Pseudo-compile file to haskell code
+  --stdin <code>          Read code from argv (incl. STDIN)
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{path} - Path to a file
+\item
+  \emph{code} - Burlesque code
+\end{itemize}
+
+\emph{STDIN} will be pushed as a String to the stack. On exit all
+elements are printed in order from top to bottom. No output will be
+produced before the Burlesque code terminates.
+
+\hypertarget{example-usages}{%
+\subsection{EXAMPLE USAGES}\label{example-usages}}
+
+\begin{verbatim}
+$ blsq --file-no-stdin hw.blsq 
+Hello, world!
+$ echo -n "hello" | blsq --file revstdin.blsq 
+olleh
+$ echo -n "hello" | blsq --stdin "<-Q"
+olleh
+$ blsq --no-stdin "2 64**"
+18446744073709551616
+\end{verbatim}
+
+\begin{verbatim}
+$ echo -n `ls *.blsq` | blsq --stdin "wdzisp"
+0 hw.blsq
+1 index.blsq
+2 prog.blsq
+3 revstdin.blsq
+4 test.blsq
+\end{verbatim}
+
+\begin{verbatim}
+$ echo -n `ls` | blsq --stdin 'wd{".blsq"!~}{".blsq".-}FMuN'
+hw
+index
+prog
+revstdin
+test
+\end{verbatim}
+
+\begin{verbatim}
+$ df | blsq --stdin "ln[-{WD-]}muQ"
+rootfs
+udev
+tmpfs
+/dev/disk/by-uuid/2e7e48d9-b728-48f7-95db-a58db91f4769
+tmpfs
+tmpfs
+\end{verbatim}
+
+\hypertarget{language}{%
+\section{LANGUAGE}\label{language}}
+
+\hypertarget{glossary}{%
+\subsection{GLOSSARY}\label{glossary}}
+
+\begin{itemize}
+\tightlist
+\item
+  Block: A collection of values.
+\item
+  Identifier: An identifier. Refers to a Command.
+\item
+  Command: A unit of execution. A Command does something.
+\item
+  Built-in: A Command that is built-in. It's not a user defined Command.
+\item
+  Map: Other languages call this asociative array or dictionary.
+\item
+  Special: A special identifier.
+\item
+  Modifier: A Modifier is not a Command. A Modifier may modify the
+  behaviour of the next Command or may alter evaluation.
+\end{itemize}
+
+\hypertarget{types}{%
+\subsection{TYPES}\label{types}}
+
+\hypertarget{syntax}{%
+\subsection{SYNTAX}\label{syntax}}
+
+The syntax of Burlesque is rather easy on one hand but incredibly
+complicated once one dives deeper into the rabbit hole. The basic syntax
+of Burlesque is rather easy.
+
+\hypertarget{identifier}{%
+\subsubsection{Identifier}\label{identifier}}
+
+An Identifier used to be exactly two characters long but this rule no
+longer applies. A built-in can have pretty much any number of
+characters. The rules for parsing Identifiers are incredibly
+complicated. Burlesque tries to parse Identifiers as a last option
+meaning if any other parsing rule matches it is not parsed as an
+Identifier. It's thus vital to know all the other parsing rules to be
+able to know when something is parsed as an identifier or not.
+
+A two character Identifier must start with one of
+\texttt{1234567890\{\}\textquotesingle{},"\ ()yYV} and the second
+character can be anything. A single character built-in must start with
+one of \texttt{jJQ}.
+
+Two backticks can be used to parse an arbitrary length built-in. The two
+backticks aren't part of the parsed built-in. It parses until it sees a
+space or newline.
+
+\hypertarget{specials}{%
+\subsubsection{Specials}\label{specials}}
+
+A special is not a Command nor is it an Identifier. It is a Modifier
+that is evaluated at runtime. Currently the following specials exist:
+\texttt{,}, \texttt{)}, \texttt{@}, \texttt{:}, and \texttt{\%}.
+\texttt{\#Q}, \texttt{\#q}, \texttt{\#J}, \texttt{\#j} are technically
+modifiers as well but are parsed as Identifiers and have a runtime type
+of \texttt{Ident}.
+
+\hypertarget{evaluation-model}{%
+\subsection{Evaluation model}\label{evaluation-model}}
+
+Burlesque is a lazy language. It only evaluates things when necessary.
+This enables one to use Blocks that are infinitely long. Burlesque has a
+primary stack and a secondary stack and a Map. These are passed from
+built-in to built-in. However, in sub-evaluations for example when using
+the map or filter builtins the primary stack changes during the
+sub-evaluation. In other words sub-evaluations run on their own primary
+stack - sometimes - not always. It depends on the built-in. The
+secondary stack and the Map remain accessible within sub-evaluations -
+sometimes - not always. It depends on the built-in. Burlesque evaluates
+from left to right. When a value is encountered it is pushed to the
+primary stack, when an Identifier is encountered the corresponding
+Command (built-in) will be executed. To push a Command to the stack use
+the quote syntax: \texttt{(++)} for example to push the Identifier
+\texttt{++} to the stack.
+
+\begin{verbatim}
+blsq ) (ab)to
+"Ident"
+blsq ) abto
+"Error"
+\end{verbatim}
+
+The Map is where variables are stored (the DB command pushes the Map to
+the primary stack and allows one to inspect it):
+
+\begin{verbatim}
+blsq ) %a=5 DB
+<"a",5>
+\end{verbatim}
+
+\hypertarget{built-ins}{%
+\subsection{BUILT-INS}\label{built-ins}}
+
+\hypertarget{abs-ab}{%
+\subsubsection{\texorpdfstring{Abs \texttt{ab}}{Abs ab}}\label{abs-ab}}
+
+\texttt{Int\ a:} Absolute value of \texttt{a}.
+
+\begin{verbatim}
+blsq ) -6ab
+6
+blsq ) 6ab
+6
+\end{verbatim}
+
+\texttt{Double\ a:} Absolute value of \texttt{a}.
+
+\begin{verbatim}
+blsq ) -6.0ab
+6.0
+blsq ) 6.0ab
+6.0
+\end{verbatim}
+
+\texttt{Char\ a:} Returns \texttt{1} if \texttt{a} is a control else
+returns \texttt{0}.
+
+\begin{verbatim}
+blsq ) 0L[ab
+1
+blsq ) 32L[ab
+0
+\end{verbatim}
+
+\hypertarget{add-.}{%
+\subsubsection{\texorpdfstring{Add \texttt{.+}}{Add .+}}\label{add-.}}
+
+\texttt{Int\ a,\ Int\ b:} Integer addition.
+
+\begin{verbatim}
+blsq ) 5 5.+
+10
+\end{verbatim}
+
+\texttt{Double\ a,\ Double\ b:} Double addition.
+
+\begin{verbatim}
+blsq ) 5.1 0.9.+
+6.0
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Concatenates two strings.
+
+\begin{verbatim}
+blsq ) "ab" "cd" .+
+"abcd"
+\end{verbatim}
+
+\texttt{Int\ a,\ String\ b:} Returns the first \texttt{a} characters of
+\texttt{b} as a String.
+
+\begin{verbatim}
+blsq ) 3 "abcdef" .+
+"abc"
+\end{verbatim}
+
+\texttt{Block\ a,\ Block\ b:} Concatenates two blocks.
+
+\begin{verbatim}
+blsq ) {1 2}{3 4}.+
+{1 2 3 4}
+\end{verbatim}
+
+\texttt{Char\ a,\ Char\ b:} Creates a string with the two characters
+\texttt{a} and \texttt{b} in it (in that exact order).
+
+\begin{verbatim}
+blsq ) 'a'b.+
+"ab"
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ b:} Append \texttt{b} to \texttt{a}.
+
+\begin{verbatim}
+blsq ) "ab"'c.+
+"abc"
+\end{verbatim}
+
+\texttt{Int\ a,\ Block\ b:} Returns the first \texttt{a} elements of
+\texttt{b}.
+
+\begin{verbatim}
+blsq ) 2{1 2 3}.+
+{1 2}
+\end{verbatim}
+
+\texttt{Block\ a,\ Int\ b:} Returns the first \texttt{b} elements of
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3}2.+
+{1 2}
+\end{verbatim}
+
+\texttt{String\ a,\ Int\ b:} Returns the first \texttt{b} characters of
+\texttt{a} as a String.
+
+\begin{verbatim}
+blsq ) "abc"2.+
+"ab"
+\end{verbatim}
+
+\texttt{Double\ a,\ Int\ b:} Convert \texttt{b} to Double, then perform
+addition.
+
+\begin{verbatim}
+blsq ) 1.0 2.+
+3.0
+\end{verbatim}
+
+\texttt{Int\ a,\ Double\ b:} Convert \texttt{a} to Double, then perform
+addition.
+
+\begin{verbatim}
+blsq ) 2 1.0.+
+3.0
+\end{verbatim}
+
+\hypertarget{addx-_}{%
+\subsubsection{\texorpdfstring{AddX
+\texttt{\_+}}{AddX \_+}}\label{addx-_}}
+
+\texttt{Int\ a,\ Int\ b:} Creates a Block with the two Integers
+\texttt{a} and \texttt{b} as elements (in this exact order).
+
+\begin{verbatim}
+blsq ) 1 2_+
+{1 2}
+\end{verbatim}
+
+\texttt{Double\ a,\ Double\ b:} Creates a Block with the two Doubles
+\texttt{a} and \texttt{b} as elements (in this exact order).
+
+\begin{verbatim}
+blsq ) 1.0 2.0_+
+{1.0 2.0}
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Concatenates the two Strings.
+
+\begin{verbatim}
+blsq ) "ab""cd"_+
+"abcd"
+\end{verbatim}
+
+\texttt{Block\ a,\ Block\ b:} Concatenates the two Blocks.
+
+\begin{verbatim}
+blsq ) {1}{2}_+
+{1 2}
+\end{verbatim}
+
+\texttt{Char\ a,\ Char\ b:} Converts both arguments two string and
+concatenates them.
+
+\begin{verbatim}
+blsq ) 'a'b_+
+"ab"
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ b:} Converts \texttt{b} to String, then
+concatenates.
+
+\begin{verbatim}
+blsq ) "a"'b_+
+"ab"
+\end{verbatim}
+
+\texttt{Char\ a,\ String\ b:} Converts \texttt{a} to String, then
+appends it to \texttt{b}.
+
+\begin{verbatim}
+blsq ) 'a"b"_+
+"ba"
+\end{verbatim}
+
+\texttt{Int\ a,\ String\ b:} Converts \texttt{a} to String, then appends
+it to \texttt{b}.
+
+\begin{verbatim}
+blsq ) 1"b"_+
+"b1"
+\end{verbatim}
+
+\texttt{String\ a,\ Int\ b:} Converts \texttt{b} to String, then
+concatenates.
+
+\begin{verbatim}
+blsq ) "b"1_+
+"b1"
+\end{verbatim}
+
+\hypertarget{and}{%
+\subsubsection{\texorpdfstring{And \texttt{\&\&}}{And \&\&}}\label{and}}
+
+This built-in auto-zips if an argument provided is a Block.
+
+\texttt{Int\ a,\ Int\ b:} Bitwise AND.
+
+\begin{verbatim}
+blsq ) 2 4&&
+0
+blsq ) 1 7&&
+1
+\end{verbatim}
+
+\hypertarget{andls-r}{%
+\subsubsection{\texorpdfstring{AndLs
+\texttt{r\&}}{AndLs r\&}}\label{andls-r}}
+
+\texttt{Block\ \{\}}: If the top of the stack is an empty Block then
+this built-in will push a zero integer.
+
+\begin{verbatim}
+blsq ) {}r&
+0
+\end{verbatim}
+
+\texttt{Otherwise}: \emph{Defined as}: \emph{\texttt{\{\&\&\}r{[}}}.
+
+\begin{verbatim}
+blsq ) {3 3 3}r&
+3
+\end{verbatim}
+
+\hypertarget{append}{%
+\subsubsection{\texorpdfstring{Append
+\texttt{{[}+}}{Append {[}+}}\label{append}}
+
+\texttt{Block\ a,\ Any\ b:} Append \texttt{b} to \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2}9[+
+{1 2 9}
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ b:} Append \texttt{b} to \texttt{a}.
+
+\begin{verbatim}
+blsq ) "ab"'c[+
+"abc"
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Concatenates Integers.
+
+\begin{verbatim}
+blsq ) 12 23[+
+1223
+\end{verbatim}
+
+\textbf{Authors' Notes:} This built-in is rather superfluous because
+most of its use-cases can be covered by either using \texttt{++} or
+\texttt{\_+}. Yet, there may be some rare use-cases where you might want
+to use it for example in \texttt{\{{[}+\}r{[}} or the like.
+
+\hypertarget{average-av}{%
+\subsubsection{\texorpdfstring{Average
+\texttt{av}}{Average av}}\label{average-av}}
+
+\texttt{Block\ a:} \emph{Defined as:} \emph{\texttt{J++jL{[}pd./}}.
+Calculates average.
+
+\begin{verbatim}
+blsq ) {1 2 3 4}J++jL[pd./
+2.5
+blsq ) {1 2 3 4}av
+2.5
+\end{verbatim}
+
+\textbf{Authors' Notes:} The \texttt{pd} is there to ensure that the
+result is always a Double.
+
+\texttt{Block\ a:} Floor of \texttt{a} as Integer.
+
+\begin{verbatim}
+blsq ) 5.9av
+5
+blsq ) 5.1av
+5
+\end{verbatim}
+
+\textbf{Authors' Notes:} If you want the floor of \texttt{a} as Double
+use \texttt{fo}.
+
+\hypertarget{average2-av}{%
+\subsubsection{\texorpdfstring{Average2
+\texttt{AV}}{Average2 AV}}\label{average2-av}}
+
+\emph{Defined as:} \emph{\texttt{PDav}}. Calculates average.
+
+\begin{verbatim}
+blsq ) {1 2 3.2 4}AV
+2.75
+blsq ) {1 2 3.2 4}av
+2.55
+\end{verbatim}
+
+\textbf{Authors' Notes:} This built-in is a relic from earlier versions
+of Burlesque where \texttt{./} only worked on \texttt{Int,\ Int} or
+\texttt{Double,\ Double} but not with \texttt{Double,\ Int} or
+\texttt{Int,\ Double}. This meant that \texttt{av} could only be used on
+Blocks that contained Doubles (because \texttt{++} would produce an
+Integer otherwise and the \texttt{L{[}pd./} would fail because an
+Integer could not be divided by a Double). In such cases \texttt{AV} had
+to be used. With newer versions the functionality of \texttt{./} was
+extended and \texttt{av} can now be used on Blocks that contain Integers
+as well. However, if you use \texttt{AV} on a Block that contains
+Doubles it will convert all these Doubles to ceiling(a) which is not
+what you want in most cases. Thus: The use of \texttt{av} is recommended
+as it is safer.
+
+\hypertarget{blockaccess}{%
+\subsubsection{\texorpdfstring{BlockAccess
+\texttt{!!}}{BlockAccess !!}}\label{blockaccess}}
+
+\texttt{Block\ a,\ Int\ b}: Returns the \texttt{b}-th element of
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3 4}0!!
+1
+blsq ) {1 2 3 4}2!!
+3
+\end{verbatim}
+
+\texttt{String\ a,\ Int\ b}: Returns the \texttt{b}-th character of
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3 4}0!!
+1
+blsq ) {1 2 3 4}2!!
+3
+\end{verbatim}
+
+\hypertarget{box-bx}{%
+\subsubsection{\texorpdfstring{Box \texttt{bx}}{Box bx}}\label{box-bx}}
+
+\texttt{Any\ a:} Puts \texttt{a} into a Block.
+
+\begin{verbatim}
+blsq ) 5bx
+{5}
+blsq ) 'abx
+{'a}
+\end{verbatim}
+
+\hypertarget{concat}{%
+\subsubsection{\texorpdfstring{Concat
+\texttt{\textbackslash{}{[}}}{Concat \textbackslash{[}}}\label{concat}}
+
+\texttt{Block\ \{\}:} \emph{Defined as:} \emph{\texttt{\{\}}}. Empty
+Block becomes empty Block.
+
+\begin{verbatim}
+blsq ) {}\[
+{}
+\end{verbatim}
+
+\texttt{Block\ \{Block\ (Char\ a)\}:} Return a single character string
+consisting of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {'a}\[
+"a"
+\end{verbatim}
+
+\texttt{Block\ a:} \emph{Defined as:} \emph{\texttt{\{\_+\}r{[}}}.
+Concatenates elements in a Block.
+
+\begin{verbatim}
+blsq ) {{1 1} {2 1} {3}}{_+}r[
+{1 1 2 1 3}
+blsq ) {{1 1} {2 1} {3}}\[
+{1 1 2 1 3}
+blsq ) {'a 'b 'c}\[
+"abc"
+\end{verbatim}
+
+\textbf{Authors' Notes:} There is an additional special case when
+\texttt{\{\_+\}r{[}} does not return a Block the return value will be
+boxed. Why this special case exist remains unknown.
+
+\hypertarget{concatmap-m}{%
+\subsubsection{\texorpdfstring{ConcatMap
+\texttt{\textbackslash{}m}}{ConcatMap \textbackslash m}}\label{concatmap-m}}
+
+\emph{Defined as:} \emph{\texttt{m{[}\textbackslash{}{[}}}.
+
+\begin{verbatim}
+blsq ) {1 2 3}{ro}m[\[
+{1 1 2 1 2 3}
+blsq ) {1 2 3}{ro}\m
+{1 1 2 1 2 3}
+blsq ) {1 2 3}{ro}m[
+{{1} {1 2} {1 2 3}}
+blsq ) "abc"{'ajr@}\m
+"aababc"
+\end{verbatim}
+
+\textbf{Authors' Notes:} The Map built-in detects if the input argument
+is a String and will concat automatically. Compare these examples:
+
+\begin{verbatim}
+blsq ) "abc"{'ajr@}m[
+{'a 'a 'b 'a 'b 'c}
+blsq ) "abc"XX{'ajr@}m[
+{{'a} {'a 'b} {'a 'b 'c}}
+blsq ) "abc"XX{'ajr@}\m
+{'a 'a 'b 'a 'b 'c}
+blsq ) "abc"XX{'ajr@}\m\[
+"aababc"
+blsq ) "abc"{'ajr@}\m
+"aababc"
+\end{verbatim}
+
+\hypertarget{contains}{%
+\subsubsection{\texorpdfstring{Contains
+\texttt{\textasciitilde{}{[}}}{Contains \textasciitilde{[}}}\label{contains}}
+
+\texttt{Block\ a,\ Any\ b:} Returns 1 if \texttt{a} contains \texttt{b}
+otherwise returns 0.
+
+\begin{verbatim}
+blsq ) {1 2 3}4~[
+0
+blsq ) {1 2 3}2~[
+1
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ b:} Returns 1 if \texttt{a} contains
+\texttt{b} otherwise returns 0.
+
+\begin{verbatim}
+blsq ) "abc"'b~[
+1
+blsq ) "abc"'z~[
+0
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Returns 1 if \texttt{a} contains \texttt{b}
+otherwise returns 0 (works on absolute values).
+
+\begin{verbatim}
+blsq ) 1223 22~[
+1
+blsq ) 1223 21~[
+0
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Returns 1 if \texttt{a} contains
+\texttt{b} otherwise returns 0.
+
+\begin{verbatim}
+blsq ) "hello" "ell"~[
+1
+blsq ) "hello" "elo"~[
+0
+\end{verbatim}
+
+\hypertarget{continuation-c}{%
+\subsubsection{\texorpdfstring{Continuation
+\texttt{c!}}{Continuation c!}}\label{continuation-c}}
+
+Generally speaking a \emph{Continuation} refers to executing code on a
+snapshot of the stack and then pushing the result back to the actual
+stack. This means that this built-in lets you run code without
+destroying data on the stack.
+
+\texttt{Block\ a:} Run \texttt{a} as a Continuation.
+
+\begin{verbatim}
+blsq ) 5 4.+
+9
+blsq ) 5 4{.+}c!
+9
+4
+5
+blsq ) 5 4{.+J}c!
+9
+4
+5
+\end{verbatim}
+
+\hypertarget{decrement--.}{%
+\subsubsection{\texorpdfstring{Decrement
+\texttt{-.}}{Decrement -.}}\label{decrement--.}}
+
+\texttt{Int\ a:} Decrements \texttt{a}.
+
+\begin{verbatim}
+blsq ) 5-.
+4
+\end{verbatim}
+
+\texttt{Char\ a:} Returns the previous character (unicode point - 1)
+
+\begin{verbatim}
+blsq ) 'c-.
+'b
+\end{verbatim}
+
+\texttt{String\ a:} Prepend first character of \texttt{a} to \texttt{a}.
+
+\begin{verbatim}
+blsq ) "abc"-.
+"aabc"
+\end{verbatim}
+
+\texttt{Block\ a:} Prepend first element of \texttt{a} to \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3}-.
+{1 1 2 3}
+\end{verbatim}
+
+\hypertarget{difference}{%
+\subsubsection{\texorpdfstring{Difference
+\texttt{\textbackslash{}\textbackslash{}}}{Difference \textbackslash\textbackslash{}}}\label{difference}}
+
+\textbf{Notes:} If left argument contains duplicates as many of them
+will be removed as are in the right argument. Order is preserved.
+
+\texttt{Block\ a,\ Block\ b:} Difference of \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) {1 1 1 2 3}{1 1}\\
+{1 2 3}
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Difference of \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) "abcde""ce"\\
+"abd"
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Difference of \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) 1232 22\\
+13
+\end{verbatim}
+
+\hypertarget{div-.}{%
+\subsubsection{\texorpdfstring{Div \texttt{./}}{Div ./}}\label{div-.}}
+
+\texttt{Int\ a,\ Int\ b:} Integer division.
+
+\begin{verbatim}
+blsq ) 10 3./
+3
+\end{verbatim}
+
+\texttt{Double\ a,\ Double\ b:} Double division.
+
+\begin{verbatim}
+blsq ) 10.0 3.0./
+3.3333333333333335
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Removes \texttt{b} from the beginning of
+\texttt{a} iff \texttt{b} is a prefix of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "README.md" "README" ./
+".md"
+blsq ) "README.md" "REDME" ./
+"README.md"
+\end{verbatim}
+
+\texttt{Block\ a,\ Block\ b:} Removes \texttt{b} from the beginning of
+\texttt{a} iff \texttt{b} is a prefix of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3}{1 2}./
+{3}
+blsq ) {1 2 3}{2 2}./
+{1 2 3}
+\end{verbatim}
+
+\texttt{Int\ a,\ Double\ b:} Converts \texttt{a} to Double, then
+divides.
+
+\begin{verbatim}
+blsq ) 10 3.0./
+3.3333333333333335
+\end{verbatim}
+
+\texttt{Double\ a,\ Int\ b:} Converts \texttt{b} to Double, then
+divides.
+
+\begin{verbatim}
+blsq ) 10.0 3./
+3.3333333333333335
+\end{verbatim}
+
+\texttt{Char\ a:} Returns \texttt{1} if \texttt{a} is a number else
+returns \texttt{0}.
+
+\begin{verbatim}
+blsq ) 1634L[./
+1
+blsq ) '9./
+1
+\end{verbatim}
+
+\hypertarget{duplicate-j}{%
+\subsubsection{\texorpdfstring{Duplicate \texttt{J}
+\texttt{\^{}\^{}}}{Duplicate J \^{}\^{}}}\label{duplicate-j}}
+
+Duplicates the top most element.
+
+\begin{verbatim}
+blsq ) 5
+5
+blsq ) 5J
+5
+5
+\end{verbatim}
+
+\hypertarget{dupswap}{%
+\subsubsection{\texorpdfstring{DupSwap
+\texttt{\^{}/}}{DupSwap \^{}/}}\label{dupswap}}
+
+\emph{Defined as:} \emph{\texttt{\^{}\^{}\textbackslash{}/}}.
+
+\textbf{Authors' Notes:} Nobody has yet figured out what this is
+actually useful for. Some say it's useless, other's say\ldots{} `Fuck
+you'.
+
+\hypertarget{equal}{%
+\subsubsection{\texorpdfstring{Equal
+\texttt{==}}{Equal ==}}\label{equal}}
+
+\texttt{Any\ a,\ Any\ b:} Returns 1 if \texttt{a\ ==\ b} else returns 0.
+
+\begin{verbatim}
+blsq ) 5 5==
+1
+blsq ) 5.0 5==
+0
+blsq ) 3 2==
+0
+blsq ) {1 23}{1 23}==
+1
+\end{verbatim}
+
+\hypertarget{eval-e}{%
+\subsubsection{\texorpdfstring{Eval
+\texttt{e!}}{Eval e!}}\label{eval-e}}
+
+\texttt{Block\ a:} Evaluates (executes) \texttt{a}.
+
+\begin{verbatim}
+blsq ) {5 5.+}e!
+10
+\end{verbatim}
+
+\textbf{Authors' Notes:} If you want to eval a String use \texttt{pe}.
+
+\hypertarget{evalmany-e}{%
+\subsubsection{\texorpdfstring{EvalMany
+\texttt{E!}}{EvalMany E!}}\label{evalmany-e}}
+
+\emph{Defined as:} \emph{\texttt{.*\textbackslash{}{[}e!}}. This
+built-in can be used to evaluate a Block a number of times.
+
+\begin{verbatim}
+blsq ) 1{J.+}1E!
+2
+blsq ) 1{J.+}2E!
+4
+blsq ) 1{J.+}3E!
+8
+blsq ) 1{J.+}4E!
+16
+blsq ) 1{J.+}4.*\[e!
+16
+\end{verbatim}
+
+\hypertarget{explode-xx}{%
+\subsubsection{\texorpdfstring{Explode
+\texttt{XX}}{Explode XX}}\label{explode-xx}}
+
+\texttt{String\ a:} Converts \texttt{a} to a Block of characters.
+
+\begin{verbatim}
+blsq ) "abc"XX
+{'a 'b 'c}
+\end{verbatim}
+
+\texttt{Int\ a:} Converts \texttt{a} to a Block of digits (works on
+absolute value.
+
+\begin{verbatim}
+blsq ) 971XX
+{9 7 1}
+\end{verbatim}
+
+\texttt{Double\ a:} Converts \texttt{a} to a Block containing
+floor(\texttt{a}) and ceiling(\texttt{a}).
+
+\begin{verbatim}
+blsq ) 5.3XX
+{5 6}
+\end{verbatim}
+
+\texttt{Char\ a:} Converts to String.
+
+\begin{verbatim}
+blsq ) 'aXX
+"a"
+\end{verbatim}
+
+\texttt{Block\ a:} No operation.
+
+\begin{verbatim}
+blsq ) {1 2}XX
+{1 2}
+\end{verbatim}
+
+\textbf{Authors' Notes:} Sometimes this built-in is also referred to as
+\emph{Xplode}.
+
+\hypertarget{filter-f}{%
+\subsubsection{\texorpdfstring{Filter
+\texttt{f{[}}}{Filter f{[}}}\label{filter-f}}
+
+\texttt{String\ a,\ Block\ f:} \emph{Somewhat defined as:}
+\emph{\texttt{\textbackslash{}/XX\textbackslash{}/f{[}}}. Explodes the
+String to a Block of Chars before doing \texttt{f{[}}. This has a lot of
+special casing to simulate proper behaviour. The \texttt{f{[}} actually
+returns a Block of Chars which is then concatenated to form a proper
+String again.
+
+\begin{verbatim}
+blsq ) "abcdehge"{'e==}f[
+"ee"
+\end{verbatim}
+
+\texttt{Block\ v,\ Block\ f:} Filters \texttt{f} using \texttt{v} as the
+condition. Filter removes all elements of the Block for which \texttt{v}
+returns false.
+
+\begin{verbatim}
+blsq ) {1 2 3 4 5 6}{2dv}f[
+{2 4 6}
+blsq ) {1 2 3 4 5 6}{3.>}f[
+{4 5 6}
+\end{verbatim}
+
+\hypertarget{findindex-fi}{%
+\subsubsection{\texorpdfstring{FindIndex
+\texttt{fi}}{FindIndex fi}}\label{findindex-fi}}
+
+\texttt{Block\ a,\ Block\ p}: Scans through the list (l2r) and returns
+the index of the first element where \texttt{p} evaluates to true.
+
+\begin{verbatim}
+blsq ) {1 2 3 4 5 6}{3==}fi
+2
+\end{verbatim}
+
+\texttt{String\ a,\ Block\ p}: \emph{Defined as}:
+\emph{\texttt{\textbackslash{}/XX\textbackslash{}/fi}}.
+
+\begin{verbatim}
+blsq ) "abcdef"{'a!=}fi
+1
+\end{verbatim}
+
+\hypertarget{findindexeq-fi}{%
+\subsubsection{\texorpdfstring{FindIndexEq
+\texttt{Fi}}{FindIndexEq Fi}}\label{findindexeq-fi}}
+
+\texttt{Block\ a,\ Any\ x}: Scans through the list (l2r) and returs the
+index of the first element equal to \texttt{x}.
+
+\begin{verbatim}
+blsq ) {1 3 9 10 2}10Fi
+3
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ x}: Scans through the list (l2r) and returns
+the index of the first element equal to \texttt{x}.
+
+\begin{verbatim}
+blsq ) "abcdef"'aFi
+0
+\end{verbatim}
+
+\hypertarget{findindices-fi}{%
+\subsubsection{\texorpdfstring{FindIndices
+\texttt{fI}}{FindIndices fI}}\label{findindices-fi}}
+
+\texttt{Block\ a,\ Block\ p}: Scans through the list (l2r) and returns
+all indices of elements where \texttt{p} evaluates to true.
+
+\begin{verbatim}
+blsq ) {1 2 3 4 5 6 7 8}{2.%0==}fI
+{1 3 5 7}
+\end{verbatim}
+
+\texttt{String\ a,\ Block\ p}: \emph{Defined as}:
+\emph{\texttt{\textbackslash{}/XX\textbackslash{}/fI}}.
+
+\begin{verbatim}
+blsq ) "hello"{'l==}fI
+{2 3}
+\end{verbatim}
+
+\hypertarget{format-ff}{%
+\subsubsection{\texorpdfstring{Format
+\texttt{FF}}{Format FF}}\label{format-ff}}
+
+\texttt{Pretty\ a,\ Int\ format:} Change format of \texttt{a} to
+\texttt{format}.
+
+Formats are:
+
+\begin{itemize}
+\tightlist
+\item
+  0 - Normal
+\item
+  1 - No spaces
+\item
+  2 - With spaces
+\item
+  3 - Raw
+\end{itemize}
+
+\begin{verbatim}
+blsq ) {1 2 {3 4 "5"}}sh0FF
+[1, 2, [3, 4, "5"]]
+blsq ) {1 2 {3 4 "5"}}sh1FF
+[1,2,[3,4,"5"]]
+blsq ) {1 2 {3 4 "5"}}sh2FF
+[1 2 [3 4 "5"]]
+blsq ) {1 2 {3 4 "5"}}sh3FF
+{1 2 {3 4 "5"}}
+\end{verbatim}
+
+\hypertarget{formatfromformat-ff}{%
+\subsubsection{\texorpdfstring{FormatFromFormat
+\texttt{Ff}}{FormatFromFormat Ff}}\label{formatfromformat-ff}}
+
+\emph{Defined as:} \emph{\texttt{FFff}}. Generally just a shortcut for
+\texttt{FFff}.
+
+\begin{verbatim}
+blsq ) {1 2 {3 4}}sh2Ff
+"[1 2 [3 4]]"
+\end{verbatim}
+
+\textbf{Authors' Notes:} In most cases you want to use \texttt{SH}
+directly.
+
+\hypertarget{fromformat-ff}{%
+\subsubsection{\texorpdfstring{FromFormat
+\texttt{ff}}{FromFormat ff}}\label{fromformat-ff}}
+
+\texttt{Pretty\ a:} Converts the \texttt{a} to String.
+
+\begin{verbatim}
+blsq ) {1 2 {3 4}}shff
+"[1, 2, [3, 4]]"
+blsq ) {1 2 {3 4}}sh2FFff
+"[1 2 [3 4]]"
+\end{verbatim}
+
+\hypertarget{greater-.}{%
+\subsubsection{\texorpdfstring{Greater
+\texttt{.\textgreater{}}}{Greater .\textgreater{}}}\label{greater-.}}
+
+\texttt{Any\ a,\ Any\ b:} Returns 1 if \texttt{a\ \textgreater{}\ b}
+else returns 0.
+
+\begin{verbatim}
+blsq ) 3.0 2.9 .>
+1
+blsq ) 2.0 2.9 .>
+0
+blsq ) 10 5 .>
+1
+blsq ) 10 5.0 .>
+0
+blsq ) 'a 1 .>
+1
+blsq ) 'a 9.0 .>
+1
+blsq ) 'a {} .>
+0
+blsq ) {} 9.0 .>
+1
+blsq ) {} 9 .>
+1
+\end{verbatim}
+
+\textbf{Note:} Comparing values with different types may result in
+unexpected (but determinstic, thus not undefined) behaviour.
+
+\hypertarget{group}{%
+\subsubsection{\texorpdfstring{Group
+\texttt{={[}}}{Group ={[}}}\label{group}}
+
+\texttt{Block\ a:} Groups together elements next to each other that are
+equal.
+
+\begin{verbatim}
+blsq ) {1 2 2 3 4 4 5 6}=[
+{{1} {2 2} {3} {4 4} {5} {6}}
+blsq ) {1 2 2 3 4 4 4 6}=[
+{{1} {2 2} {3} {4 4 4} {6}}
+\end{verbatim}
+
+\texttt{String\ a:} Groups together characters next to each other that
+are equal.
+
+\begin{verbatim}
+blsq ) "abbbbbc"=[
+{"a" "bbbbb" "c"}
+\end{verbatim}
+
+\textbf{See also:} \emph{GroupBy}.
+
+\hypertarget{head--}{%
+\subsubsection{\texorpdfstring{Head
+\texttt{-{]}}}{Head -{]}}}\label{head--}}
+
+\texttt{Block\ a:} Returns the first element of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {2 4 0}-]
+2
+\end{verbatim}
+
+\texttt{String\ a:} Returns the first character of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "abc"-]
+'a
+\end{verbatim}
+
+\textbf{Authors' Notes:} If you need the first character of \texttt{a}
+as a String use \texttt{-\textasciitilde{}}.
+
+\texttt{Int\ a:} Returns the first digit of \texttt{a} (works on
+absolute value).
+
+\begin{verbatim}
+blsq ) -451-]
+4
+\end{verbatim}
+
+\hypertarget{headtail--}{%
+\subsubsection{\texorpdfstring{HeadTail
+\texttt{-\textasciitilde{}}}{HeadTail -\textasciitilde{}}}\label{headtail--}}
+
+\emph{Defined as:} \emph{\texttt{-{]}{[}-}}.
+
+\begin{verbatim}
+blsq ) "abcd"-][-
+"a"
+blsq ) {{1 2 3} {4 5 6}}-~
+{2 3}
+blsq ) "abcd"-~
+"a"
+\end{verbatim}
+
+\textbf{Authors' Notes:} Useful to get the first character of a String
+as a String.
+
+\hypertarget{ifelse-ie}{%
+\subsubsection{\texorpdfstring{IfElse
+\texttt{ie}}{IfElse ie}}\label{ifelse-ie}}
+
+\texttt{Block\ a,\ Block\ b,\ Int\ a:} Executes \texttt{a} if b is not
+zero, otherwise executes \texttt{b}.
+
+\begin{verbatim}
+blsq ) 5{3.*}{2.*}1ie
+15
+blsq ) 5{3.*}{2.*}0ie
+10
+\end{verbatim}
+
+\textbf{Authors' Notes:} This built-in is terrible because in most
+real-world cases it requires at least two additional swaps to get the
+result of a predicate to the top of the stack.
+
+\hypertarget{iff-if}{%
+\subsubsection{\texorpdfstring{Iff \texttt{if}}{Iff if}}\label{iff-if}}
+
+\texttt{Int\ a,\ Block\ b:} Executes \texttt{b} only iff \texttt{a} is
+not zero.
+
+\begin{verbatim}
+blsq ) 5 1{3.*}if
+15
+blsq ) 5 0{3.*}if
+5
+\end{verbatim}
+
+\texttt{Block\ a,\ Int\ b:} Executes \texttt{a} only iff \texttt{b} is
+not zero.
+
+\begin{verbatim}
+blsq ) 5{3.*}0if
+5
+blsq ) 5{3.*}1if
+15
+\end{verbatim}
+
+\hypertarget{increment-.}{%
+\subsubsection{\texorpdfstring{Increment
+\texttt{+.}}{Increment +.}}\label{increment-.}}
+
+\texttt{Int\ a:} Increments a.
+
+\begin{verbatim}
+blsq ) 5+.
+6
+\end{verbatim}
+
+\texttt{Char\ a:} Returns the next character (unicode point + 1).
+
+\begin{verbatim}
+blsq ) 'a+.
+'b
+\end{verbatim}
+
+\texttt{String\ a:} Appends the last character of \texttt{a} to
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) "abc"+.
+"abcc"
+\end{verbatim}
+
+\texttt{Block\ a:} Appends the last element of \texttt{a} to \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3}+.
+{1 2 3 3}
+\end{verbatim}
+
+\hypertarget{infixof}{%
+\subsubsection{\texorpdfstring{InfixOf
+\texttt{\textasciitilde{}\textasciitilde{}}}{InfixOf \textasciitilde\textasciitilde{}}}\label{infixof}}
+
+\texttt{Block\ a,\ Block\ b:} Returns 1 if \texttt{b} is an infix of
+\texttt{a} otherwise returns 0.
+
+\begin{verbatim}
+blsq ) {1 2 3 4}{2 3}~~
+1
+blsq ) {1 2 3 4}{3 3}~~
+0
+\end{verbatim}
+
+\textbf{Authors' Notes:} For Strings use \texttt{\textasciitilde{}{[}}.
+
+\hypertarget{init}{%
+\subsubsection{\texorpdfstring{Init
+\texttt{\textasciitilde{}{]}}}{Init \textasciitilde{]}}}\label{init}}
+
+\texttt{Block\ a:} Returns all but the last elements of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3}~]
+{1 2}
+\end{verbatim}
+
+\texttt{String\ a:} Returns all but the last character of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "12a"~]
+"12"
+\end{verbatim}
+
+\texttt{Int\ a:} Returns all but the last digit of \texttt{a} (as
+Integer) (works on absolute value).
+
+\begin{verbatim}
+blsq ) 451~]
+45
+\end{verbatim}
+
+\hypertarget{inittail--}{%
+\subsubsection{\texorpdfstring{InitTail
+\texttt{\textasciitilde{}-}}{InitTail \textasciitilde-}}\label{inittail--}}
+
+\emph{Defined as:} \emph{\texttt{\textasciitilde{}{]}{[}-}}. Can be used
+to remove the first and last element of a String/Block.
+
+\begin{verbatim}
+blsq ) "abcd"~][-
+"bc"
+blsq ) "abcd"~-
+"bc"
+\end{verbatim}
+
+\hypertarget{intersection-in}{%
+\subsubsection{\texorpdfstring{Intersection
+\texttt{IN}}{Intersection IN}}\label{intersection-in}}
+
+\textbf{Notes:} Duplicates in the left argument are preserved. Order is
+preserved.
+
+\texttt{Block\ a,\ Block\ b:} Intersection of \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) {5 1 1 2 2 2 2} {1 2 2 2 3 4 5}IN
+{5 1 1 2 2 2 2}
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Intersection of \texttt{a} and
+\texttt{b}.
+
+\begin{verbatim}
+blsq ) "abc""dce"IN
+"c"
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Intersection of \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) 512 721IN
+12
+\end{verbatim}
+
+\hypertarget{intersperse}{%
+\subsubsection{\texorpdfstring{Intersperse
+\texttt{{[}{[}}}{Intersperse {[}{[}}}\label{intersperse}}
+
+\texttt{Any\ a,\ Block\ b:} Inserts \texttt{a} between elements in
+\texttt{b}.
+
+\begin{verbatim}
+blsq ) 0{1 2 3}[[
+{1 0 2 0 3}
+\end{verbatim}
+
+\texttt{Char\ a,\ String\ b:} Inserts \texttt{a} between characters in
+\texttt{b}.
+
+\begin{verbatim}
+blsq ) 'x"abc"[[
+"axbxc"
+\end{verbatim}
+
+\textbf{See also:} \emph{Intercalate}.
+
+\hypertarget{last}{%
+\subsubsection{\texorpdfstring{Last
+\texttt{{[}\textasciitilde{}}}{Last {[}\textasciitilde{}}}\label{last}}
+
+\texttt{String\ a:} Returns the last character of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "abc"[~
+'c
+\end{verbatim}
+
+\texttt{Block\ a:} Returns the last element of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3}[~
+3
+\end{verbatim}
+
+\texttt{Int\ a:} Returns the last digit of \texttt{a} (works on absolute
+value).
+
+\begin{verbatim}
+blsq ) 451[~
+1
+\end{verbatim}
+
+\hypertarget{length-l}{%
+\subsubsection{\texorpdfstring{Length
+\texttt{L{[}}}{Length L{[}}}\label{length-l}}
+
+\texttt{String\ a:} Number of characters in a String.
+
+\begin{verbatim}
+blsq ) "abc"L[
+3
+\end{verbatim}
+
+\texttt{Block\ a:} Number of elements in a Block.
+
+\begin{verbatim}
+blsq ) {1 2 3}L[
+3
+\end{verbatim}
+
+\texttt{Int\ a:} Converts to character based on unicode code point.
+
+\begin{verbatim}
+blsq ) 69L[
+'E
+blsq ) 98L[
+'b
+\end{verbatim}
+
+\texttt{Char\ a:} Returns case as either \texttt{\textquotesingle{}A} or
+\texttt{\textquotesingle{}a}.
+
+\begin{verbatim}
+blsq ) 'BL[
+'A
+blsq ) 'bL[
+'a
+\end{verbatim}
+
+\hypertarget{lines-ln}{%
+\subsubsection{\texorpdfstring{Lines
+\texttt{ln}}{Lines ln}}\label{lines-ln}}
+
+\texttt{String\ a:} Split \texttt{a} into lines.
+
+\begin{verbatim}
+blsq ) "abc\ndef\ngeh"ln
+{"abc" "def" "geh"}
+\end{verbatim}
+
+\texttt{Int\ a:} Number of digits in \texttt{a} (works on absolute
+value).
+
+\begin{verbatim}
+blsq ) 123ln
+3
+blsq ) -123ln
+3
+\end{verbatim}
+
+\texttt{Block\ a,\ Block\ b:} Returns whichever is longer. If both are
+equal in length \texttt{b} is returned.
+
+\begin{verbatim}
+blsq ) {1 2}{1 2 3}ln
+{1 2 3}
+blsq ) {1 2 4}{1 2 3}ln
+{1 2 3}
+\end{verbatim}
+
+\texttt{Char\ a:} Returns 1 if \texttt{a} is a printable character
+otherwise returns 0.
+
+\begin{verbatim}
+blsq ) 1L[ln
+0
+blsq ) 'aln
+1
+\end{verbatim}
+
+\textbf{See also:} \emph{WithLines}.
+
+\hypertarget{map-m}{%
+\subsubsection{\texorpdfstring{Map
+\texttt{m{[}}}{Map m{[}}}\label{map-m}}
+
+\texttt{String\ a,\ Block\ f:} \emph{Defined as:}
+\emph{\texttt{jXXjm{[}\textbackslash{}{[}}}. Applies \texttt{f} to every
+character in \texttt{a}.
+
+\begin{verbatim}
+blsq ) "aBc"{<-}jXXjm[\[
+"AbC"
+blsq ) "aBc"{<-}m[
+"AbC"
+\end{verbatim}
+
+\texttt{Block\ a,\ Block\ f:} Applies \texttt{f} to every element in
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3 4 5}{J.*}m[
+{1 4 9 16 25}
+\end{verbatim}
+
+\textbf{See also:} \emph{ConcatMap} and there are many other different
+versions and shortcuts for \emph{Map}.
+
+\hypertarget{mapdup-m}{%
+\subsubsection{\texorpdfstring{MapDup
+\texttt{{[}m}}{MapDup {[}m}}\label{mapdup-m}}
+
+\emph{Defined as:} \emph{\texttt{(\^{}\^{})+{]}m{[}}}.
+
+\begin{verbatim}
+blsq ) {1 2 3}{?*}[m
+{1 4 9}
+\end{verbatim}
+
+\hypertarget{mapparse-m}{%
+\subsubsection{\texorpdfstring{MapParse
+\texttt{{[}M}}{MapParse {[}M}}\label{mapparse-m}}
+
+\emph{Defined as:} \emph{\texttt{(ps)+{]}m{[}}}. Can be used as a
+shortcut if the first step of the function that is being mapped over the
+Block is parsing.
+
+\begin{verbatim}
+blsq ) "5 6;7 8"';;;{++}[M
+{11 15}
+\end{verbatim}
+
+\hypertarget{mappretty-m}{%
+\subsubsection{\texorpdfstring{MapPretty
+\texttt{M{[}}}{MapPretty M{[}}}\label{mappretty-m}}
+
+\emph{Defined as:} \emph{\texttt{m{[}sh}}. Can be used as a shortcut if
+the result of mapping should be pretty printed.
+
+\begin{verbatim}
+blsq ) "hi there"{L[}m[
+"aaaaaaaa"
+blsq ) "hi there"{L[}M[
+aaaaaaaa
+\end{verbatim}
+
+\hypertarget{mapstring-m}{%
+\subsubsection{\texorpdfstring{MapString
+\texttt{{]}m}}{MapString {]}m}}\label{mapstring-m}}
+
+\emph{Defined as:} \emph{\texttt{(Sh){[}+m{[}}}. Can be used when one
+wants to apply a function to every element of a Block and each result
+should be converted to a String.
+
+\begin{verbatim}
+blsq ) {{1 2 3}{4 5 6}}{<-}]m
+{"[3, 2, 1]" "[6, 5, 4]"}
+\end{verbatim}
+
+\hypertarget{maptopretty-m}{%
+\subsubsection{\texorpdfstring{MapToPretty
+\texttt{M{]}}}{MapToPretty M{]}}}\label{maptopretty-m}}
+
+\emph{Defined as:} \emph{\texttt{\{sh\}m{[}}}. Can be used as a shortcut
+to convert every element of a Block to Pretty.
+
+\begin{verbatim}
+blsq ) "hi there"wd
+{"hi" "there"}
+blsq ) "hi there"wdM]
+{hi there}
+\end{verbatim}
+
+\hypertarget{maptoprettyfromformat-m}{%
+\subsubsection{\texorpdfstring{MapToPrettyFromFormat
+\texttt{m{]}}}{MapToPrettyFromFormat m{]}}}\label{maptoprettyfromformat-m}}
+
+\emph{Defined as:} \emph{\texttt{\{shff\}m{[}}}.
+
+\begin{verbatim}
+blsq ) {{1 2 3}{4 5 6}}m]
+{"[1, 2, 3]" "[4, 5, 6]"}
+\end{verbatim}
+
+\hypertarget{matches}{%
+\subsubsection{\texorpdfstring{Matches
+\texttt{\textasciitilde{}=}}{Matches \textasciitilde=}}\label{matches}}
+
+\texttt{String\ str,\ String\ regex:} Returns 1 if \texttt{regex}
+matches \texttt{str} otherwise returns 0.
+
+\begin{verbatim}
+blsq ) "123""[0-3]{3}"~=
+1
+blsq ) "123""[1-3]{3}"~=
+1
+blsq ) "123""[1-3]{4}"~=
+0
+\end{verbatim}
+
+\hypertarget{matcheslist}{%
+\subsubsection{\texorpdfstring{MatchesList
+\texttt{=\textasciitilde{}}}{MatchesList =\textasciitilde{}}}\label{matcheslist}}
+
+\texttt{String\ str,\ String\ regex:} Returns the capturing groups as a
+list. Empty block if no matches or no capture groups were used in the
+regular expression.
+
+\begin{verbatim}
+blsq ) "123abc""([0-3]{3}).(b.)"=~
+{"123" "bc"}
+\end{verbatim}
+
+\hypertarget{max-.}{%
+\subsubsection{\texorpdfstring{Max
+\texttt{\textgreater{}.}}{Max \textgreater.}}\label{max-.}}
+
+\texttt{Any\ a,\ Any\ b:} Returns whichever is greatest.
+
+\begin{verbatim}
+blsq ) 5 6>.
+6
+blsq ) 6 5>.
+6
+blsq ) {12}12>.
+{12}
+\end{verbatim}
+
+\hypertarget{maximum}{%
+\subsubsection{\texorpdfstring{Maximum
+\texttt{\textgreater{}{]}}}{Maximum \textgreater{]}}}\label{maximum}}
+
+\texttt{Block\ a:} Returns the maximum of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3 2 1}>]
+3
+\end{verbatim}
+
+\texttt{String\ a:} Returns the maximum of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "debca">]
+'e
+\end{verbatim}
+
+\texttt{Int\ a:} Returns the largest digit as an Integer.
+
+\begin{verbatim}
+blsq ) 1971>]
+9
+blsq ) 1671>]
+7
+\end{verbatim}
+
+\hypertarget{min-.}{%
+\subsubsection{\texorpdfstring{Min
+\texttt{\textless{}.}}{Min \textless.}}\label{min-.}}
+
+\texttt{Any\ a,\ Any\ b:} Returns whichever is smallest.
+
+\begin{verbatim}
+blsq ) 5 4<.
+4
+blsq ) 5 4<.
+4
+blsq ) 10 10.0<.
+10
+\end{verbatim}
+
+\hypertarget{minimum}{%
+\subsubsection{\texorpdfstring{Minimum
+\texttt{\textless{}{]}}}{Minimum \textless{]}}}\label{minimum}}
+
+\texttt{Block\ a:} Returns the minimum of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 0 3}<]
+0
+\end{verbatim}
+
+\texttt{String\ a:} Returns the minimum of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "bac"<]
+'a
+\end{verbatim}
+
+\texttt{Int\ a:} Returns the smallest digit as an Integer.
+
+\begin{verbatim}
+blsq ) 109<]
+0
+\end{verbatim}
+
+\hypertarget{mod-.}{%
+\subsubsection{\texorpdfstring{Mod \texttt{.\%}}{Mod .\%}}\label{mod-.}}
+
+This is an auto-zip and auto-map built-in.
+
+\texttt{Int\ a,\ Int\ b:} Integer modulo.
+
+\begin{verbatim}
+blsq ) 10 3.%
+1
+\end{verbatim}
+
+\texttt{Char\ a:} Returns \texttt{1} if \texttt{a} is punctuation
+otherwise returns \texttt{0}.
+
+\begin{verbatim}
+blsq ) '..%
+1
+blsq ) 'a.%
+0
+\end{verbatim}
+
+\hypertarget{mul-.}{%
+\subsubsection{\texorpdfstring{Mul \texttt{.*}}{Mul .*}}\label{mul-.}}
+
+\texttt{Int\ a,\ Int\ b:} Integer multiplication.
+
+\begin{verbatim}
+blsq ) 2 3.*
+6
+\end{verbatim}
+
+\texttt{Double\ a,\ Double\ b:} Double multiplication.
+
+\begin{verbatim}
+blsq ) 2.0 3.0.*
+6.0
+\end{verbatim}
+
+\texttt{String\ a,\ Int\ b:} Creates a Block containing \texttt{a}
+exactly \texttt{b} times.
+
+\begin{verbatim}
+blsq ) "ab"3.*
+{"ab" "ab" "ab"}
+\end{verbatim}
+
+\texttt{Char\ a,\ Int\ b:} Creates a String containing \texttt{a}
+exactly \texttt{b} times.
+
+\begin{verbatim}
+blsq ) 'a 3.*
+"aaa"
+\end{verbatim}
+
+\texttt{Block\ a,\ Int\ b:} Creates a Block containing \texttt{a}
+exactly \texttt{b} times.
+
+\begin{verbatim}
+blsq ) {1 2}3.*
+{{1 2} {1 2} {1 2}}
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Appends \texttt{a} to \texttt{b} then
+reverses.
+
+\begin{verbatim}
+blsq ) "123""456".*
+"321654"
+\end{verbatim}
+
+\texttt{Int\ a,\ Double\ b:} Converts \texttt{a} to Double, then
+multiplies.
+
+\begin{verbatim}
+blsq ) 2 3.0.*
+6.0
+\end{verbatim}
+
+\texttt{Double\ a,\ Int\ b:} Converts \texttt{b} to Double, then
+multiplies.
+
+\begin{verbatim}
+blsq ) 2.0 3.*
+6.0
+\end{verbatim}
+
+\texttt{Char\ a:} Returns \texttt{1} if \texttt{a} is a symbol else
+returns \texttt{0}.
+
+\begin{verbatim}
+blsq ) '9.*
+0
+blsq ) '+.*
+1
+\end{verbatim}
+
+\hypertarget{notequal}{%
+\subsubsection{\texorpdfstring{NotEqual
+\texttt{!=}}{NotEqual !=}}\label{notequal}}
+
+\emph{Defined as:} \emph{\texttt{==n!}}.
+
+\begin{verbatim}
+blsq ) 4 4==n!
+0
+blsq ) 4 3==n!
+1
+blsq ) 3 4==n!
+1
+blsq ) 3 4!=
+1
+blsq ) 4 4!=
+0
+\end{verbatim}
+
+\hypertarget{nub-nb}{%
+\subsubsection{\texorpdfstring{Nub \texttt{NB}}{Nub NB}}\label{nub-nb}}
+
+Nub means \emph{removing duplicates}. Order is preserved.
+
+\texttt{Block\ a:} Nub \texttt{a}.
+
+\begin{verbatim}
+blsq ) {5 1 1 2 2 2 2}NB
+{5 1 2}
+\end{verbatim}
+
+\texttt{String\ a:} Nub \texttt{a}.
+
+\begin{verbatim}
+blsq ) "abccd"NB
+"abcd"
+\end{verbatim}
+
+\texttt{Int\ a:} Nub \texttt{a}.
+
+\begin{verbatim}
+blsq ) 101010011NB
+10
+\end{verbatim}
+
+\texttt{Char\ a:} Returns \texttt{1} if \texttt{a} is lower case else
+returns \texttt{0}.
+
+\begin{verbatim}
+blsq ) 'BNB
+0
+blsq ) 'bNB
+1
+\end{verbatim}
+
+\hypertarget{or}{%
+\subsubsection{\texorpdfstring{Or
+\texttt{\textbar{}\textbar{}}}{Or \textbar\textbar{}}}\label{or}}
+
+This built-in auto-zips if an argument provided is a Block.
+
+\texttt{Int\ a,\ Int\ b:} Bitwise OR.
+
+\begin{verbatim}
+blsq ) 2 4||
+6
+blsq ) 2 {4 8}||
+{6 10}
+\end{verbatim}
+
+\hypertarget{orls-r}{%
+\subsubsection{\texorpdfstring{OrLs
+\texttt{r\textbar{}}}{OrLs r\textbar{}}}\label{orls-r}}
+
+\texttt{Block\ \{\}}: If the top of the stack is an empty Block then
+this built-in will push a zero integer.
+
+\begin{verbatim}
+blsq ) {}r|
+0
+\end{verbatim}
+
+\texttt{Otherwise}: \emph{Defined as}:
+\emph{\texttt{\{\textbar{}\textbar{}\}r{[}}}.
+
+\begin{verbatim}
+blsq ) {1 2 3}r|
+3
+\end{verbatim}
+
+\hypertarget{padleft-p}{%
+\subsubsection{\texorpdfstring{PadLeft
+\texttt{P{[}}}{PadLeft P{[}}}\label{padleft-p}}
+
+\texttt{Block\ a,\ Int\ b,\ Any\ c:} Pad \texttt{a} to length \texttt{b}
+by inserting \texttt{c} on the left (or removing elements from the
+right).
+
+\begin{verbatim}
+blsq ) {3 4 5}4 1P[
+{1 3 4 5}
+blsq ) {3 4 5 6 7}4 1P[
+{3 4 5 6}
+\end{verbatim}
+
+\texttt{String\ a,\ Int\ b,\ Char\ c:} Pad \texttt{a} to length
+\texttt{b} by inserting \texttt{c} on the left (or removing characters
+from the right).
+
+\begin{verbatim}
+blsq ) "12"4' P[
+"  12"
+blsq ) "12345"4' P[
+"1234"
+\end{verbatim}
+
+\hypertarget{padright-p}{%
+\subsubsection{\texorpdfstring{PadRight
+\texttt{{[}P}}{PadRight {[}P}}\label{padright-p}}
+
+\texttt{Block\ a,\ Int\ b,\ Any\ c:} Pad \texttt{a} to length \texttt{b}
+by inserting \texttt{c} on the right (or removing elements from the
+right).
+
+\begin{verbatim}
+blsq ) {3 4 5}4 1[P
+{3 4 5 1}
+blsq ) {3 4 5 6 7}4 1[P
+{3 4 5 6}
+\end{verbatim}
+
+\texttt{String\ a,\ Int\ b,\ Char\ c:} Pad \texttt{a} to length
+\texttt{b} by inserting \texttt{c} on the right (or removing characters
+from the right).
+
+\begin{verbatim}
+blsq ) "12345"4' [P
+"1234"
+blsq ) "12"4' [P
+"12  "
+\end{verbatim}
+
+\hypertarget{parse-ps}{%
+\subsubsection{\texorpdfstring{Parse
+\texttt{ps}}{Parse ps}}\label{parse-ps}}
+
+This built-in auto-maps if the argument given is a Block.
+
+\texttt{String\ a:} Tries to parse \texttt{a} with the Burlesque parser.
+(Tries to parse \texttt{a} as Burlesque code). Returns a Block.
+
+\begin{verbatim}
+blsq ) "5"ps
+{5}
+blsq ) "5 3.0.+"ps
+{5 3.0 .+}
+blsq ) "{5 3.0.+}m["ps
+{{5 3.0 .+} m[}
+\end{verbatim}
+
+\textbf{Authors' Notes:} This built-in is handy. Instead of doing
+something like:
+
+\begin{verbatim}
+blsq ) "5 3 6 7"wdri++
+21
+\end{verbatim}
+
+you can just do:
+
+\begin{verbatim}
+blsq ) "5 3 6 7"ps++
+21
+\end{verbatim}
+
+\hypertarget{pop-vv}{%
+\subsubsection{\texorpdfstring{Pop \texttt{vv}}{Pop vv}}\label{pop-vv}}
+
+Removes the element on top of the stack.
+
+\begin{verbatim}
+blsq ) 1 2
+2
+1
+blsq ) 1 2vv
+1
+\end{verbatim}
+
+\textbf{Authors' Notes:} If there only is one element on top of the
+stack using \texttt{,} is shorter.
+
+\hypertarget{popswap-v}{%
+\subsubsection{\texorpdfstring{PopSwap
+\texttt{v/}}{PopSwap v/}}\label{popswap-v}}
+
+\emph{Defined as:} \emph{\texttt{vv\textbackslash{}/}}.
+
+\begin{verbatim}
+blsq ) 1 2 3 4v/
+2
+3
+1
+blsq ) 1 2 3 4vv\/
+2
+3
+1
+\end{verbatim}
+
+\hypertarget{pow}{%
+\subsubsection{\texorpdfstring{Pow \texttt{**}}{Pow **}}\label{pow}}
+
+\texttt{Int\ a,\ Int\ b:} Returns \texttt{a} to the power of \texttt{b}
+(\texttt{a\ \^{}\ b}).
+
+\begin{verbatim}
+blsq ) 2 3**
+8
+\end{verbatim}
+
+\texttt{Double\ a,\ Double\ b:} Returns \texttt{a} to the power of
+\texttt{b} (\texttt{a\ \^{}\ b}).
+
+\begin{verbatim}
+blsq ) 4.0 3.0**
+64.0
+\end{verbatim}
+
+\texttt{Block\ a,\ Block\ b:} Merges \texttt{a} and \texttt{b}.
+\texttt{c\ =\ a\_1,\ b\_1,\ a\_2,\ b\_2}
+
+\begin{verbatim}
+blsq ) {1 2 3}{4 5 6}**
+{1 4 2 5 3 6}
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Merges \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) "123""456"**
+"142536"
+\end{verbatim}
+
+\texttt{Char\ a:} Returns the unicode codepoint of \texttt{a} as an
+Integer.
+
+\begin{verbatim}
+blsq ) 'A**
+65
+blsq ) 'a**
+97
+\end{verbatim}
+
+\hypertarget{prefixof}{%
+\subsubsection{\texorpdfstring{PrefixOf
+\texttt{\textasciitilde{}!}}{PrefixOf \textasciitilde!}}\label{prefixof}}
+
+\texttt{Block\ a,\ Block\ b:} Returns 1 if \texttt{b} is a prefix of
+\texttt{a} otherwise returns 0.
+
+\begin{verbatim}
+blsq ) {1 4 3 2}{1 4}~!
+1
+blsq ) {1 4 3 2}{4 3}~!
+0
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Returns 1 if \texttt{b} is a prefix of
+\texttt{a} otherwise returns 0.
+
+\begin{verbatim}
+blsq ) "http://mroman.ch" "http://"~!
+1
+blsq ) "http://mroman.ch" "https://"~!
+0
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Returns 1 if \texttt{b} is a prefix of
+\texttt{a} otherwise returns 0 (works on absolute values).
+
+\begin{verbatim}
+blsq ) 1991 91~!
+0
+blsq ) 1991 199~!
+1
+\end{verbatim}
+
+\hypertarget{prepend}{%
+\subsubsection{\texorpdfstring{Prepend
+\texttt{+{]}}}{Prepend +{]}}}\label{prepend}}
+
+\texttt{Block\ a,\ Any\ b:} Prepend \texttt{b} to \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2}3+]
+{3 1 2}
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ b:} Prepend \texttt{b} to \texttt{a}.
+
+\begin{verbatim}
+blsq ) "ab"'c+]
+"cab"
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Prepends \texttt{b} to \texttt{a} (result is
+an Integer).
+
+\begin{verbatim}
+blsq ) 12 23+]
+2312
+\end{verbatim}
+
+\hypertarget{pretty-sh}{%
+\subsubsection{\texorpdfstring{Pretty
+\texttt{sh}}{Pretty sh}}\label{pretty-sh}}
+
+\texttt{Any\ a:} Convert to a Pretty with format \emph{Normal}.
+
+\begin{verbatim}
+blsq ) "abc\ndef"sh
+abc
+def
+blsq ) {1 2 3}
+{1 2 3}
+blsq ) {1 2 3}sh
+[1, 2, 3]
+blsq ) 5.0
+5.0
+blsq ) 5.0sh
+5.0
+\end{verbatim}
+
+\hypertarget{prettyformatfromformat-sh}{%
+\subsubsection{\texorpdfstring{PrettyFormatFromFormat
+\texttt{SH}}{PrettyFormatFromFormat SH}}\label{prettyformatfromformat-sh}}
+
+\emph{Defined as:} \emph{\texttt{jshjFf}}. Can be used to convert
+something to a String with a specified format.
+
+\begin{verbatim}
+blsq ) {1 2 {3 4}}2SH
+"[1 2 [3 4]]"
+blsq ) {1 2 {3 4}}1SH
+"[1,2,[3,4]]"
+\end{verbatim}
+
+\hypertarget{prettyfromformat-sh}{%
+\subsubsection{\texorpdfstring{PrettyFromFormat
+\texttt{Sh}}{PrettyFromFormat Sh}}\label{prettyfromformat-sh}}
+
+\emph{Defined as:} \emph{\texttt{shff}}. Can be used to convert
+something to a String with format \texttt{Normal}.
+
+\begin{verbatim}
+blsq ) {1 2 3}Sh
+"[1, 2, 3]"
+\end{verbatim}
+
+\hypertarget{prettypretty-sh}{%
+\subsubsection{\texorpdfstring{PrettyPretty
+\texttt{sH}}{PrettyPretty sH}}\label{prettypretty-sh}}
+
+\emph{Defined as:} \emph{\texttt{SHsh}}. Can be used to convert
+something for display with a specified format.
+
+\begin{verbatim}
+blsq ) {1 2 {3 4}}1sH
+[1,2,[3,4]]
+\end{verbatim}
+
+\hypertarget{product-pd}{%
+\subsubsection{\texorpdfstring{Product
+\texttt{pd}}{Product pd}}\label{product-pd}}
+
+\texttt{Block\ \{\}:} \emph{Defined as:} \emph{\texttt{1}}. The product
+of an empty block is one.
+
+\texttt{Block\ a:} \emph{Defined as:} \emph{\texttt{\{.*\}r{[}}}.
+Calculates the product of a Block.
+
+\begin{verbatim}
+blsq ) {1 2 3 4}{.*}r[
+24
+blsq ) {1 2 3 4}pd
+24
+blsq ) {1 2 3.0 4}pd
+24.0
+\end{verbatim}
+
+\texttt{Int\ a:} \emph{Defined as:} \emph{\texttt{Shrd}}. Converts to
+double.
+
+\begin{verbatim}
+blsq ) 5Shrd
+5.0
+blsq ) 5pd
+5.0
+blsq ) 5rd
+5.0
+\end{verbatim}
+
+\texttt{Double\ a:} Ceiling of \texttt{a} as Integer.
+
+\begin{verbatim}
+blsq ) 1.1pd
+2
+\end{verbatim}
+
+\textbf{Authors' Notes:} If you want ceiling of \texttt{a} as Double use
+\texttt{cl}.
+
+\hypertarget{productmany-pd}{%
+\subsubsection{\texorpdfstring{ProductMany
+\texttt{PD}}{ProductMany PD}}\label{productmany-pd}}
+
+\emph{Defined as:} \emph{\texttt{\{pd\}m{[}}}. Just maps \texttt{pd}
+over a Block.
+
+\begin{verbatim}
+blsq ) {{1 2 3} 5 {2 4}}{pd}m[
+{6 5.0 8}
+blsq ) {{1 2 3} 5 {2 4}}PD
+{6 5.0 8}
+\end{verbatim}
+
+\textbf{Authors' Notes:} Can be used as a shortcut for \texttt{)pd}.
+Otherwise this built-in doesn't offer too much over \texttt{rd} as
+\texttt{rd} auto-maps.
+
+\hypertarget{pushmany-p}{%
+\subsubsection{\texorpdfstring{PushMany
+\texttt{\^{}p}}{PushMany \^{}p}}\label{pushmany-p}}
+
+\texttt{Block\ a:} Pushes every element in \texttt{a} to the stack.
+
+\begin{verbatim}
+blsq ) 'a{1 2 3}^p
+3
+2
+1
+'a
+\end{verbatim}
+
+\hypertarget{pushmanyreverse-p}{%
+\subsubsection{\texorpdfstring{PushManyReverse
+\texttt{p\^{}}}{PushManyReverse p\^{}}}\label{pushmanyreverse-p}}
+
+\texttt{Block\ a:} Pushes every element in \texttt{a} to the stack in
+reversed order.
+
+\begin{verbatim}
+blsq ) 'a{1 2 3}p^
+1
+2
+3
+'a
+\end{verbatim}
+
+\hypertarget{range-r}{%
+\subsubsection{\texorpdfstring{Range
+\texttt{r@}}{Range r@}}\label{range-r}}
+
+\texttt{Int\ a,\ Int\ b:} Generates a Block containing the numbers
+\texttt{a} through \texttt{b}.
+
+\begin{verbatim}
+blsq ) 1 10r@
+{1 2 3 4 5 6 7 8 9 10}
+\end{verbatim}
+
+\texttt{Char\ a,\ Char\ b:} Generates a Block containing the characters
+\texttt{a} through \texttt{b}.
+
+\begin{verbatim}
+blsq ) 'a'zr@
+{'a 'b 'c 'd 'e 'f 'g 'h 'i 'j 'k 'l 'm 'n 'o 'p 'q 'r 's 't 'u 'v 'w 'x 'y 'z}
+\end{verbatim}
+
+\textbf{Authors' Notes:} Use \emph{RangeConcat} if you need a String.
+
+\texttt{Double\ a:} Square root of \texttt{a}.
+
+\begin{verbatim}
+blsq ) 64.0r@
+8.0
+\end{verbatim}
+
+\texttt{String\ a:} Returns a Block with all permutations of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "abc"r@
+{"abc" "bac" "cba" "bca" "cab" "acb"}
+\end{verbatim}
+
+\texttt{Block\ a:} Returns a Block with all permutations of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 0 9}r@
+{{1 0 9} {0 1 9} {9 0 1} {0 9 1} {9 1 0} {1 9 0}}
+\end{verbatim}
+
+\hypertarget{rangeinfinity-r}{%
+\subsubsection{\texorpdfstring{RangeInfinity
+\texttt{R@}}{RangeInfinity R@}}\label{rangeinfinity-r}}
+
+\texttt{Str\ a:} All subsequences of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "abc"R@
+{"" "a" "b" "ab" "c" "ac" "bc" "abc"}
+\end{verbatim}
+
+\texttt{Block\ a:} All subsequences of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3}R@
+{{} {1} {2} {1 2} {3} {1 3} {2 3} {1 2 3}}
+\end{verbatim}
+
+\texttt{Int\ a:} Generates a Block containing the numbers \texttt{a} to
+Infinity.
+
+\begin{verbatim}
+blsq ) 5R@10.+
+{5 6 7 8 9 10 11 12 13 14}
+\end{verbatim}
+
+\hypertarget{readarray-ra}{%
+\subsubsection{\texorpdfstring{ReadArray
+\texttt{ra}}{ReadArray ra}}\label{readarray-ra}}
+
+This built-in auto-maps if the argument given is a Block.
+
+\texttt{String\ a:} Parses an array in \texttt{{[},{]}}-notation.
+
+\begin{verbatim}
+blsq ) "[1,2,3]"ra
+{1 2 3}
+blsq ) "[1,[2,4],3]"ra
+{1 {2 4} 3}
+blsq ) "[1,[2 4],3]"ra
+{1 {2 4} 3}
+blsq ) "[1,[2 4],,,,3]"ra
+{1 {2 4} 3}
+\end{verbatim}
+
+It should be noted that \texttt{,} are optional and multiple \texttt{,}
+will be skipped as well. Nesting is supported.
+
+\texttt{Char\ a:} Returns 1 iff \texttt{a} is space, else returns 0.
+
+\begin{verbatim}
+blsq ) " \t\ra0"{ra}m[
+{1 1 1 0 0}
+\end{verbatim}
+
+\hypertarget{readdouble-rd}{%
+\subsubsection{\texorpdfstring{ReadDouble
+\texttt{rd}}{ReadDouble rd}}\label{readdouble-rd}}
+
+This built-in auto-maps if the argument given is a Block.
+
+\texttt{String\ a:} Converts \texttt{a} to Double.
+
+\begin{verbatim}
+blsq ) "3.0"rd
+3.0
+\end{verbatim}
+
+\texttt{Int\ a:} \emph{Defined as:} \emph{\texttt{pd}}.
+
+\texttt{Double\ a:} No operation.
+
+\begin{verbatim}
+blsq ) 3.1rd
+3.1
+\end{verbatim}
+
+\texttt{Char\ a:} Returns 1 iff \texttt{a} is alpha, else returns 0.
+
+\begin{verbatim}
+blsq ) 'ard
+1
+blsq ) '1rd
+0
+\end{verbatim}
+
+\textbf{Authors' Notes:} This built-in is useful to convert every
+element in a Block to a Double:
+
+\begin{verbatim}
+blsq ) {3.0 5 "3.14"}rd
+{3.0 5.0 3.14}
+\end{verbatim}
+
+\hypertarget{readint-ri}{%
+\subsubsection{\texorpdfstring{ReadInt
+\texttt{ri}}{ReadInt ri}}\label{readint-ri}}
+
+This built-in auto-maps if the argument given is a Block.
+
+\texttt{String\ a:} Converts \texttt{a} to Int.
+
+\begin{verbatim}
+blsq ) "100"ri
+100
+blsq ) "-101"ri
+-101
+\end{verbatim}
+
+\texttt{Int\ a:} No operation.
+
+\begin{verbatim}
+blsq ) 5ri
+5
+blsq ) -5ri
+-5
+\end{verbatim}
+
+\texttt{Double\ a:} \emph{Defined as:} \emph{\texttt{av}}.
+
+\texttt{Char\ a:} Returns 1 iff \texttt{a} is alpha numeric, else
+returns 0.
+
+\begin{verbatim}
+blsq ) 'ari
+1
+blsq ) '1ri
+1
+blsq ) '.ri
+0
+\end{verbatim}
+
+\textbf{Authors' Notes:} This built-in is useful to convert every
+element in a Block to an Integer:
+
+\begin{verbatim}
+blsq ) {"12" 12.0 13 12.7}ri
+{12 12 13 12}
+\end{verbatim}
+
+However, Doubles are not rounded to the nearest Integer but are
+truncated. Rounding everything to the nearest Integer can be done with
+for example \texttt{rd)R\_}.
+
+\hypertarget{reduce-r}{%
+\subsubsection{\texorpdfstring{Reduce
+\texttt{r{[}}}{Reduce r{[}}}\label{reduce-r}}
+
+\texttt{Block\ a,\ Block\ f:} Takes the first element of \texttt{a} and
+the second element of \texttt{a}, applies \texttt{f}, takes the next
+element of \texttt{a} and applies \texttt{f} again and continues like
+that. More symbolically speaking \texttt{\{1\ 2\ 3\ 4\}\{.+\}r{[}}
+becomes \texttt{1\ 2\ .+\ 3\ .+\ 4\ .+},
+\texttt{\{1\ 2\ 3\ 5\}\{?-\}r{[}} becomes \texttt{1\ 2\ ?-\ 3\ ?-\ 4?-}
+and so forth.
+
+\begin{verbatim}
+blsq ) {1 2 3 4}{.+}r[
+10
+blsq ) {1 2 3 4}{.*}r[
+24
+\end{verbatim}
+
+\hypertarget{replace-r}{%
+\subsubsection{\texorpdfstring{Replace
+\texttt{r\textasciitilde{}}}{Replace r\textasciitilde{}}}\label{replace-r}}
+
+\texttt{Block\ a,\ Any\ b,\ Any\ c:} Replaces every occurence of
+\texttt{b} in \texttt{a} with \texttt{c}.
+
+\begin{verbatim}
+blsq ) {1 2 3 1 4}1 9r~
+{9 2 3 9 4}
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ b,\ Char\ c:} Replaces every occurence of
+\texttt{b} in \texttt{a} with \texttt{c}.
+
+\begin{verbatim}
+blsq ) "hello"'l'!r~
+"he!!o"
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b,\ String\ c:} Replaces every occurence of
+\texttt{b} in \texttt{a} with \texttt{c}.
+
+\begin{verbatim}
+blsq ) "hi there hi go""hi""bye"r~
+"bye there bye go"
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b,\ Int\ c:} Replaces every occurence of
+\texttt{b} in \texttt{a} with \texttt{c} (works on absolute values).
+
+\begin{verbatim}
+blsq ) -1334336 33 10r~
+1104106
+\end{verbatim}
+
+\hypertarget{replaceregex-r}{%
+\subsubsection{\texorpdfstring{ReplaceRegex
+\texttt{R\textasciitilde{}}}{ReplaceRegex R\textasciitilde{}}}\label{replaceregex-r}}
+
+\texttt{String\ str,\ String\ repl,\ String\ regex:} Replaces every
+match of \texttt{regex} with \texttt{repl}.
+
+\begin{verbatim}
+blsq ) "Year 2014.""X""[[:digit:]]"R~
+"Year XXXX."
+blsq ) "Year 2014.""X""[0-3]"R~
+"Year XXX4."
+blsq ) "Year 2014.""__""[a-z]|[0-3]{2}"R~
+"Y______ __14."
+\end{verbatim}
+
+\hypertarget{reverse--}{%
+\subsubsection{\texorpdfstring{Reverse
+\texttt{\textless{}-}}{Reverse \textless-}}\label{reverse--}}
+
+\texttt{String\ a:} Reverses \texttt{a}.
+
+\begin{verbatim}
+blsq ) "123"<-
+"321"
+\end{verbatim}
+
+\texttt{Block\ a:} Reverses \texttt{a}.
+
+\begin{verbatim}
+blsq ) {4 5 6}<-
+{6 5 4}
+\end{verbatim}
+
+\texttt{Int\ a:} Reverses the digits of an Integer. (Works on absolute
+value).
+
+\begin{verbatim}
+blsq ) -123<-
+321
+\end{verbatim}
+
+\texttt{Char\ a:} Inverts case.
+
+\begin{verbatim}
+blsq ) 'a<-
+'A
+blsq ) 'B<-
+'b
+\end{verbatim}
+
+\hypertarget{round-r_}{%
+\subsubsection{\texorpdfstring{Round
+\texttt{r\_}}{Round r\_}}\label{round-r_}}
+
+This built-in accepts a Block as first argument, in which case an
+auto-map is performed.
+
+\texttt{Double\ a,\ Int\ b:} Rounds \texttt{a} to \texttt{b} decimal
+points.
+
+\begin{verbatim}
+blsq ) 3.12 2r_
+3.12
+blsq ) 3.19 2r_
+3.19
+blsq ) 3.5 0r_
+4.0
+blsq ) {3.5 3.4}0r_
+{4.0 3.0}
+\end{verbatim}
+
+\hypertarget{round2-r_}{%
+\subsubsection{\texorpdfstring{Round2
+\texttt{R\_}}{Round2 R\_}}\label{round2-r_}}
+
+\emph{Defined as:} \emph{\texttt{0r\_pd}}.
+
+\begin{verbatim}
+blsq ) {3.5 3.4}0r_pd
+12.0
+blsq ) {3.5 3.4}R_
+12.0
+blsq ) 5.5R_
+6
+blsq ) 5.3R_
+5
+blsq ) 5.3 0r_pd
+5
+\end{verbatim}
+
+\textbf{Authors' Notes:} Even though \texttt{r\_} can auto-map this
+built-in won't do the same \emph{expected} job because \texttt{pd} will
+calculate the product of a Block. You may however use this fact as a
+shortcut for example for \texttt{\{0r\_\}m{[}pd}. If you want to round
+every Double to the nearest Integer in a Block use \texttt{)R\_}.
+
+\hypertarget{signum-sn}{%
+\subsubsection{\texorpdfstring{Signum
+\texttt{sn}}{Signum sn}}\label{signum-sn}}
+
+\texttt{Int\ a:} Signum of \texttt{a}. (-1 for negative, 1 for positive,
+0 for zero).
+
+\begin{verbatim}
+blsq ) -6sn6sn0sn
+0
+1
+-1
+\end{verbatim}
+
+\texttt{Double\ a:} Signum of \texttt{a}. (-1.0 for negative, 1.0 for
+positive, 0.0 for zero).
+
+\begin{verbatim}
+blsq ) -6.0sn6.0sn0.0sn
+0.0
+1.0
+-1.0
+\end{verbatim}
+
+\texttt{Char\ a:} Returns \texttt{1} if \texttt{a} is upper case else
+returns \texttt{0}.
+
+\begin{verbatim}
+blsq ) 'Bsn
+1
+blsq ) 'bsn
+0
+\end{verbatim}
+
+\hypertarget{smaller-.}{%
+\subsubsection{\texorpdfstring{Smaller
+\texttt{.\textless{}}}{Smaller .\textless{}}}\label{smaller-.}}
+
+\texttt{Any\ a,\ Any\ b:} Returns 1 if \texttt{a\ \textless{}\ b} else
+returns 0.
+
+\begin{verbatim}
+blsq ) 2 3.<
+1
+blsq ) 4 3.<
+0
+blsq ) {1 2 3}{2 2 3}.<
+1
+\end{verbatim}
+
+\textbf{Note:} Comparing values with different types may result in
+unexpected (but determinstic, thus not undefined) behaviour.
+
+\hypertarget{sort}{%
+\subsubsection{\texorpdfstring{Sort
+\texttt{\textgreater{}\textless{}}}{Sort \textgreater\textless{}}}\label{sort}}
+
+\texttt{Block\ a:} Sorts \texttt{a} in ascending order.
+
+\begin{verbatim}
+blsq ) {5 3 4}><
+{3 4 5}
+\end{verbatim}
+
+\texttt{Str\ a:} Sorts \texttt{a} in ascending order.
+
+\begin{verbatim}
+blsq ) "there"><
+"eehrt"
+\end{verbatim}
+
+\texttt{Int\ a:} Sorts \texttt{a} in ascending order.
+
+\begin{verbatim}
+blsq ) 3241><
+1234
+blsq ) 32401><
+1234
+\end{verbatim}
+
+\textbf{Notes:} Please be aware that this will remove zeroes as numbers
+don't have leading zeroes.
+
+\texttt{Char\ a:} Returns \texttt{1} if \texttt{a} is a digit,
+\texttt{0} otherwise.
+
+\begin{verbatim}
+blsq ) "ab10c")><
+{0 0 1 1 0}
+\end{verbatim}
+
+\hypertarget{sortreverse}{%
+\subsubsection{\texorpdfstring{SortReverse
+\texttt{\textless{}\textgreater{}}}{SortReverse \textless\textgreater{}}}\label{sortreverse}}
+
+\emph{Defined as:} \emph{\texttt{\textgreater{}\textless{}\textless{}-}}
+
+\begin{verbatim}
+blsq ) {5 3 0 9 7 8}<>
+{9 8 7 5 3 0}
+blsq ) {5 3 0 9 7 8}><<-
+{9 8 7 5 3 0}
+\end{verbatim}
+
+\hypertarget{split}{%
+\subsubsection{\texorpdfstring{Split
+\texttt{;;}}{Split ;;}}\label{split}}
+
+\texttt{Block\ a,\ Block\ b:} Split \texttt{a} on \texttt{b}.
+
+\begin{verbatim}
+blsq ) {1 2 3 4 2 3 5 7 2 3 8}{2 3};;
+{{1} {4} {5 7} {8}}
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Split \texttt{a} on \texttt{b}.
+
+\begin{verbatim}
+blsq ) "Hello, world, is,"", ";;
+{"Hello" "world" "is,"}
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ b:} Split \texttt{a} on \texttt{b}.
+
+\begin{verbatim}
+blsq ) "Hello"'l;;
+{"He" "" "o"}
+\end{verbatim}
+
+\texttt{Char\ a,\ String\ b:} Split \texttt{b} on \texttt{a}.
+
+\begin{verbatim}
+blsq ) 'e"Hello";;
+{"H" "llo"}
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Split \texttt{a} on \texttt{b}.
+
+\begin{verbatim}
+blsq ) 1234256238 23;;
+{1 4256 8}
+\end{verbatim}
+
+\hypertarget{stripleft-s}{%
+\subsubsection{\texorpdfstring{StripLeft
+\texttt{S{[}}}{StripLeft S{[}}}\label{stripleft-s}}
+
+\texttt{Block\ a,\ Any\ b:} Removes any leading \texttt{b}s from
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 1 2 5}1S[
+{2 5}
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ b:} Removes any leading \texttt{b}s from
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) "QQabQ"'QS[
+"abQ"
+\end{verbatim}
+
+\texttt{Int\ a:} Returns (\texttt{a} * \texttt{a}) (squares).
+
+\begin{verbatim}
+blsq ) 5S[
+25
+\end{verbatim}
+
+\textbf{Authors' Notes:} For Doubles use \texttt{fC}.
+
+\hypertarget{stripright-s}{%
+\subsubsection{\texorpdfstring{StripRight
+\texttt{{[}S}}{StripRight {[}S}}\label{stripright-s}}
+
+\texttt{Block\ a,\ Any\ b:} Removes any trailing \texttt{b}s from
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 0 0 0}0[S
+{1}
+\end{verbatim}
+
+\texttt{String\ a,\ Char\ b:} Removes any trailing \texttt{b}s from
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) "abccc"'c[S
+"ab"
+\end{verbatim}
+
+\hypertarget{sub-.-}{%
+\subsubsection{\texorpdfstring{Sub \texttt{.-}}{Sub .-}}\label{sub-.-}}
+
+\texttt{Int\ a,\ Int\ b:} Integer subtraction.
+
+\begin{verbatim}
+blsq ) 1 5.-
+-4
+\end{verbatim}
+
+\texttt{Double\ a,\ Double\ b:} Double subtraction.
+
+\begin{verbatim}
+blsq ) 1.0 4.0.-
+-3.0
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Removes \texttt{b} from the end of
+\texttt{a} iff \texttt{b} is a suffix of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "README.md" ".md".-
+"README"
+blsq ) "README.md" ".txt".-
+"README.md"
+\end{verbatim}
+
+\texttt{Int\ a,\ Block\ b:} Removes the first \texttt{a} elements from
+\texttt{b}.
+
+\begin{verbatim}
+blsq ) 3{1 2 3 4}.-
+{4}
+\end{verbatim}
+
+\texttt{String\ a,\ Int\ b:} Removes the first \texttt{b} characters
+from \texttt{a}.
+
+\begin{verbatim}
+blsq ) "abcd"2.-
+"cd"
+\end{verbatim}
+
+\texttt{Int\ a,\ String\ b:} Removes the first \texttt{a} characters
+from \texttt{b}.
+
+\begin{verbatim}
+blsq ) 2"abcd".-
+"cd"
+\end{verbatim}
+
+\texttt{Block\ a,\ Int\ b:} Removes the first \texttt{b} elements from
+\texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3 4}2.-
+{3 4}
+\end{verbatim}
+
+\texttt{Int\ a,\ Double\ b:} Converts \texttt{a} to Double, then
+subtracts.
+
+\begin{verbatim}
+blsq ) 4 3.0.-
+1.0
+\end{verbatim}
+
+\texttt{Double\ a,\ Int\ b:} Converts \texttt{b} to Double, then
+subtracts.
+
+\begin{verbatim}
+blsq ) 4.0 3.-
+1.0
+\end{verbatim}
+
+\texttt{Block\ a,\ Block\ b:} Removes \texttt{b} from the end of
+\texttt{a} iff \texttt{b} is a suffix of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3 4}{3 4}.-
+{1 2}
+blsq ) {1 2 3 4}{3 4 5}.-
+{1 2 3 4}
+\end{verbatim}
+
+\hypertarget{suffixof}{%
+\subsubsection{\texorpdfstring{SuffixOf
+\texttt{!\textasciitilde{}}}{SuffixOf !\textasciitilde{}}}\label{suffixof}}
+
+\texttt{Block\ a,\ Block\ b:} Returns 1 if \texttt{b} is a suffix of
+\texttt{a} otherwise returns 0.
+
+\begin{verbatim}
+blsq ) {1 2 3}{2 3}!~
+1
+blsq ) {1 2 3}{1 2}!~
+0
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Returns 1 if \texttt{b} is a suffix of
+\texttt{a} otherwise returns 0.
+
+\begin{verbatim}
+blsq ) "this.txt" ".txt"!~
+1
+blsq ) "this.txt" ".pdf"!~
+0
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Returns 1 if \texttt{b} is a suffix of
+\texttt{a} otherwise returns 0 (works on absolute values).
+
+\begin{verbatim}
+blsq ) 123 -23!~
+1
+blsq ) 123 -24!~
+0
+\end{verbatim}
+
+\hypertarget{sum}{%
+\subsubsection{\texorpdfstring{Sum \texttt{++}}{Sum ++}}\label{sum}}
+
+\texttt{Block\ \{\}:} \emph{Defined as:} \emph{\texttt{0}}. The sum of
+an empty Block is zero.
+
+\texttt{Block\ a:} \emph{Defined as:} \emph{\texttt{\{.+\}r{[}}}.
+Calculates the sum of a Block.
+
+\begin{verbatim}
+blsq ) {1 2 3 4}{.+}r[
+10
+blsq ) {1 2 3 4}++
+10
+blsq ) {1 2 3 4.0}++
+10.0
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Concatenates Integers (works on absolute
+values).
+
+\begin{verbatim}
+blsq ) 12 34++
+1234
+\end{verbatim}
+
+\hypertarget{swap-j}{%
+\subsubsection{\texorpdfstring{Swap \texttt{j}
+\texttt{\textbackslash{}/}}{Swap j \textbackslash/}}\label{swap-j}}
+
+Swaps the top two elements.
+
+\begin{verbatim}
+blsq ) 1 2
+2
+1
+blsq ) 1 2j
+1
+2
+\end{verbatim}
+
+\hypertarget{swapdup}{%
+\subsubsection{\texorpdfstring{SwapDup
+\texttt{/\^{}}}{SwapDup /\^{}}}\label{swapdup}}
+
+\emph{Defined as:} *\texttt{\textbackslash{}/\^{}\^{}}.
+
+\begin{verbatim}
+blsq ) 1 2 3/^
+2
+2
+3
+1
+blsq ) 1 2 3\/^^
+2
+2
+3
+1
+blsq ) 1 2 3/^
+2
+2
+3
+1
+blsq ) 1 2 3jJ
+2
+2
+3
+1
+\end{verbatim}
+
+\textbf{Author's Notes}: You might as well use \texttt{jJ}.
+
+\hypertarget{swappop-v}{%
+\subsubsection{\texorpdfstring{SwapPop
+\texttt{/v}}{SwapPop /v}}\label{swappop-v}}
+
+\emph{Defined as:} \emph{\texttt{\textbackslash{}/vv}}. This builtin
+essentially pops the element under the top of the stack.
+
+\begin{verbatim}
+blsq ) 1 2
+2
+1
+blsq ) 1 2 /v
+2
+blsq ) 1 2 \/vv
+2
+blsq ) 1 2 3 \/vv
+3
+1
+\end{verbatim}
+
+\hypertarget{tail--}{%
+\subsubsection{\texorpdfstring{Tail
+\texttt{{[}-}}{Tail {[}-}}\label{tail--}}
+
+\texttt{Block\ a:} Returns all but the first element of \texttt{a}.
+
+\begin{verbatim}
+blsq ) {1 2 3}[-
+{2 3}
+\end{verbatim}
+
+\texttt{String\ a:} Returns all but the first character of \texttt{a}.
+
+\begin{verbatim}
+blsq ) "hello"[-
+"ello"
+\end{verbatim}
+
+\texttt{Int\ a:} Returns all but the last digit of \texttt{a} (as
+Integer) (works on absolute value).
+
+\begin{verbatim}
+blsq ) 451[-
+51
+\end{verbatim}
+
+\texttt{Char\ a:} Convert to string.
+
+\begin{verbatim}
+blsq ) 'a[-
+"a"
+\end{verbatim}
+
+\hypertarget{tolower-zz}{%
+\subsubsection{\texorpdfstring{ToLower
+\texttt{zz}}{ToLower zz}}\label{tolower-zz}}
+
+This built-in auto-maps if an argument provided is a block.
+
+\texttt{Char\ a}: Convert \texttt{a} to lower case.
+
+\begin{verbatim}
+blsq ) 'Qzz
+'q
+\end{verbatim}
+
+\texttt{String\ a}: Convert \texttt{a} to lower case.
+
+\begin{verbatim}
+blsq ) "aBc."zz
+"abc."
+\end{verbatim}
+
+\hypertarget{toupper-zz}{%
+\subsubsection{\texorpdfstring{ToUpper
+\texttt{ZZ}}{ToUpper ZZ}}\label{toupper-zz}}
+
+This built-in auto-maps if an argument provided is a block.
+
+\texttt{Char\ a}: Convert \texttt{a} to upper case.
+
+\begin{verbatim}
+blsq ) 'aZZ
+'A
+\end{verbatim}
+
+\texttt{String\ a}: Convert \texttt{a} to upper case.
+
+\begin{verbatim}
+blsq ) "aBc."ZZ
+"ABC."
+\end{verbatim}
+
+\hypertarget{union-un}{%
+\subsubsection{\texorpdfstring{Union
+\texttt{UN}}{Union UN}}\label{union-un}}
+
+\textbf{Notes:} If left argument contains duplicates these will be
+preserved. Duplicates in the right argument will be removed. Order is
+preserved.
+
+\texttt{Block\ a,\ Block\ b:} Union of \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) {1 1} {1 2 2 2 3}UN
+{1 1 2 3}
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Union of \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) "zabc""cde"UN
+"zabcde"
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b:} Union of \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) 12 14UN
+124
+\end{verbatim}
+
+\hypertarget{unlines-un}{%
+\subsubsection{\texorpdfstring{Unlines
+\texttt{un}}{Unlines un}}\label{unlines-un}}
+
+\texttt{Block\ \{\}:} If given an empty block returns an empty string.
+
+\begin{verbatim}
+blsq ) {}un
+""
+\end{verbatim}
+
+\texttt{Otherwise:} \emph{Defined as:}
+\emph{\texttt{"\textbackslash{}n"j{[}{[}\textbackslash{}{[}}}. This is
+the \emph{inverse} of \texttt{ln} and inserts newlines between elements.
+
+\begin{verbatim}
+blsq ) {"abc" "def" "ghe"}"\n"j[[\[
+"abc\ndef\nghe"
+blsq ) {"abc" "def" "ghe"}un
+"abc\ndef\nghe"
+\end{verbatim}
+
+\textbf{Authors' Notes:} Due to its definition this built-in will only
+work as expected when the Block contains Strings. If you want to
+\emph{unlines} a Block containing other types use \texttt{Su}.
+
+\begin{verbatim}
+blsq ) {1 2 3}un
+"\n12\n3"
+blsq ) {1 2 3}Su
+"1\n2\n3"
+\end{verbatim}
+
+\hypertarget{unlinespretty-un}{%
+\subsubsection{\texorpdfstring{UnlinesPretty
+\texttt{uN}}{UnlinesPretty uN}}\label{unlinespretty-un}}
+
+\emph{Defined as:} \emph{\texttt{unsh}}.
+
+\begin{verbatim}
+blsq ) {"12" "23"}un
+"12\n23"
+blsq ) {"12" "23"}uN
+12
+23
+blsq ) {"12" "23"}unsh
+12
+23
+\end{verbatim}
+
+\hypertarget{unparse-up}{%
+\subsubsection{\texorpdfstring{Unparse
+\texttt{up}}{Unparse up}}\label{unparse-up}}
+
+\texttt{Any\ a:} Converts a to display string. This is somewhat the
+\emph{inverse} of \texttt{ps}.
+
+\begin{verbatim}
+blsq ) {1 2++}up
+"{1 2 ++}"
+\end{verbatim}
+
+\textbf{Authors' Note:} This built-in is somewhat equivalent to using
+\texttt{3SH}.
+
+\hypertarget{while-w}{%
+\subsubsection{\texorpdfstring{While
+\texttt{w!}}{While w!}}\label{while-w}}
+
+A while-loop
+
+\texttt{Block\ f,\ Block\ p:} Executes \texttt{f} while \texttt{p} is
+not zero. \texttt{p} will be tested each time against the top of the
+stack.
+
+\begin{verbatim}
+blsq ) 5{+.}{10.<}w!
+10
+\end{verbatim}
+
+\texttt{Block\ f:} Executes \texttt{f} as long as the top of the stack
+is not zero. Same thing as doing \texttt{\{code\}\{\}w!}.
+
+\begin{verbatim}
+blsq ) 0 10{j+.+.j-.}w!
+0
+20
+\end{verbatim}
+
+\hypertarget{withlines-wl}{%
+\subsubsection{\texorpdfstring{WithLines
+\texttt{wl}}{WithLines wl}}\label{withlines-wl}}
+
+\emph{Defined as:} \emph{\texttt{jlnjm{[}un}}. This built-in allows to
+map over the lines in a String.
+
+\begin{verbatim}
+blsq ) "abc\ndef"{<-}jlnjm[un
+"cba\nfed"
+blsq ) "abc\ndef"{<-}wl
+"cba\nfed"
+\end{verbatim}
+
+\hypertarget{withlinesparsepretty-wl}{%
+\subsubsection{\texorpdfstring{WithLinesParsePretty
+\texttt{wL}}{WithLinesParsePretty wL}}\label{withlinesparsepretty-wl}}
+
+\emph{Defined as:} \emph{\texttt{(ps)+{]}WL}}. This built-in allows to
+map over the lines in a String while calling \emph{Parse} on each line
+automatically.
+
+\begin{verbatim}
+blsq ) "11 22\n5 6"{++Sh}(ps)+]WL
+33
+11
+blsq ) "11 22\n5 6"{++Sh}wL
+33
+11
+\end{verbatim}
+
+\hypertarget{withlinespretty-wl}{%
+\subsubsection{\texorpdfstring{WithLinesPretty
+\texttt{WL}}{WithLinesPretty WL}}\label{withlinespretty-wl}}
+
+\emph{Defined as:} \emph{\texttt{wlsh}}.
+
+\begin{verbatim}
+blsq ) "abc\ndef"{<-}wlsh
+cba
+fed
+blsq ) "abc\ndef"{<-}WL
+cba
+fed
+\end{verbatim}
+
+\hypertarget{withwords-ww}{%
+\subsubsection{\texorpdfstring{WithWords
+\texttt{ww}}{WithWords ww}}\label{withwords-ww}}
+
+\emph{Defined as}: \emph{\texttt{jWDjm{[}wd}}. This built-in allows to
+map over the words in a String.
+
+\begin{verbatim}
+blsq ) "hello world"{<-}jWDjm[wd
+"olleh dlrow"
+blsq ) "hello world"{<-}ww
+"olleh dlrow"
+\end{verbatim}
+
+\hypertarget{withwordspretty-ww}{%
+\subsubsection{\texorpdfstring{WithWordsPretty
+\texttt{WW}}{WithWordsPretty WW}}\label{withwordspretty-ww}}
+
+\emph{Defined as}: \emph{\texttt{wwsh}}.
+
+\begin{verbatim}
+blsq ) "hello world"{<-}wwsh
+olleh dlrow
+blsq ) "hello world"{<-}WW
+olleh dlrow
+\end{verbatim}
+
+\hypertarget{words-wd}{%
+\subsubsection{\texorpdfstring{Words
+\texttt{wd}}{Words wd}}\label{words-wd}}
+
+\texttt{String\ \_:} \emph{Defined as:} \emph{\texttt{"\ ";;}}. Splits
+by space.
+
+\begin{verbatim}
+blsq ) "hi there"wd
+{"hi" "there"}
+\end{verbatim}
+
+\texttt{Block\ \{\}:} Pushes an empty string to the stack.
+
+\begin{verbatim}
+blsq ) {}wd
+""
+\end{verbatim}
+
+\texttt{Block\ a:} \emph{Defined as}:
+\emph{\texttt{\textquotesingle{}\ \textbackslash{}/{[}{[}\textbackslash{}{[}}}.
+An \emph{unwords}. It converts a Block of words into a String.
+
+\begin{verbatim}
+blsq ) {"hi" "there"}wd
+"hi there"
+blsq ) {"hi" "there"}' \/[[\[
+"hi there"
+\end{verbatim}
+
+\texttt{Otherwise:} \emph{Defined as}:
+\emph{\texttt{\textbackslash{}/{[}{[}}}.
+
+\begin{verbatim}
+blsq ) {"hi" "there" "you"}'.wd
+{"hi" '. "there" '. "you"}
+\end{verbatim}
+
+\textbf{Authors' Notes:} This built-in only splits by a regular space.
+If you want to split by whitespaces you need to use \texttt{WD}
+(Words2).
+
+\begin{verbatim}
+blsq ) "a\nb"wd
+{"a\nb"}
+blsq ) "a\nb"WD
+{"a" "b"}
+\end{verbatim}
+
+\hypertarget{words3-wd}{%
+\subsubsection{\texorpdfstring{Words3
+\texttt{wD}}{Words3 wD}}\label{words3-wd}}
+
+\emph{Defined as:} \emph{\texttt{wdsh}}.
+
+\begin{verbatim}
+blsq ) {"abc" "def"}wD
+abc def
+\end{verbatim}
+
+\hypertarget{xor}{%
+\subsubsection{\texorpdfstring{Xor \texttt{\$\$}}{Xor \$\$}}\label{xor}}
+
+This built-in auto-zips if an argument provided is a Block.
+
+\texttt{Int\ a,\ Int\ b:} Bitwise XOR.
+
+\begin{verbatim}
+blsq ) 66 34$$
+96
+blsq ) 96 66 $$
+34
+blsq ) 96 34 $$
+66
+\end{verbatim}
+
+\hypertarget{zip-z}{%
+\subsubsection{\texorpdfstring{Zip
+\texttt{z{[}}}{Zip z{[}}}\label{zip-z}}
+
+\texttt{Block\ a,\ Block\ b:} Zips \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) {1 2 3}{4 5 6}z[
+{{1 4} {2 5} {3 6}}
+\end{verbatim}
+
+\texttt{String\ a,\ String\ b:} Zips \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) "abc""def"z[
+{{'a 'd} {'b 'e} {'c 'f}}
+\end{verbatim}
+
+\texttt{String\ a,\ Block\ b:} Zips \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) "abc"{1 2 3}z[
+{{'a 1} {'b 2} {'c 3}}
+\end{verbatim}
+
+\texttt{Block\ a,\ String\ b:} Zips \texttt{a} and \texttt{b}.
+
+\begin{verbatim}
+blsq ) {1 2 3}"abc"z[
+{{1 'a} {2 'b} {3 'c}}
+\end{verbatim}
+
+\texttt{Int\ a,\ Int\ b}: \emph{Defined as}:
+\emph{\texttt{XX\textbackslash{}/XX\textbackslash{}/z{[}}}. (It'll
+explode the integers).
+
+\begin{verbatim}
+blsq ) 123 456z[
+{{1 4} {2 5} {3 6}}
+\end{verbatim}
+
+\texttt{Block\ a,\ Any\ b}: \emph{Defined as}:
+\emph{\texttt{\textbackslash{}/XX\textbackslash{}/z{[}}}. (It'll explode
+argument \texttt{b}).
+
+\texttt{Any\ a,\ Block\ b:}: \emph{Defined as}: \emph{\texttt{XXz{[}}}.
+(It'll explode argument \texttt{a}).
+
+\hypertarget{zipwith-z}{%
+\subsubsection{\texorpdfstring{ZipWith
+\texttt{Z{[}}}{ZipWith Z{[}}}\label{zipwith-z}}
+
+\texttt{Any\ a,\ Any\ b,\ Block\ f}: Performs a \emph{Zip} followed by a
+\emph{Map}.
+
+\hypertarget{zipwithpush-z}{%
+\subsubsection{\texorpdfstring{ZipWithPush
+\texttt{Z{]}}}{ZipWithPush Z{]}}}\label{zipwithpush-z}}
+
+\emph{Defined as:} \emph{\texttt{(\^{}p+{]})Z{[}}}.
+
+\textbf{Authors' Notes:} This is was introduced to the fact that with
+the usual \emph{ZipWith} the arguments are as a Block on the stack which
+is kinda inconvenient in most cases.
+
+\end{document}
