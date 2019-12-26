@@ -10,6 +10,7 @@ import Burlesque.Parser
 import Burlesque.Helpers
 import Burlesque.Display
 
+import Data.Int
 import Data.Maybe
 import Data.List
 import Data.List.Split
@@ -242,6 +243,7 @@ runStackLazy'' p xs g v = unsafeInterleaveIO $ runStack'' p xs g v
 runStack'' p xs g v = execStateT (eval p) (xs,g, v)
 
 toInt p = (fromIntegral p) :: Int
+toInt32 p = (fromIntegral p) :: Int32
 
 -- Very Important!
 -- The order of this list is relevant!
@@ -652,6 +654,8 @@ builtins = [
   
   ("rM", builtinRangeModulo2),
   ("e-", builtinEMinus),
+  ("rl", builtinRotateLeft),
+  ("rr", builtinRotateRight),
 
 #ifdef HAVE_IO_UNSAFE
   ("rw", builtinRaw),
@@ -4964,3 +4968,17 @@ builtinFilter3 = do
   builtinFilter
   pushToStack $ BlsqBlock [BlsqIdent "-]"]
   builtinMap
+  
+builtinRotateLeft = do
+  pushToStack $ BlsqInt 2
+  builtinDigits
+  builtinRotate2
+  pushToStack $ BlsqInt 2
+  builtinUnDigits
+  
+builtinRotateRight = do
+  pushToStack $ BlsqInt 2
+  builtinDigits
+  builtinRotate
+  pushToStack $ BlsqInt 2
+  builtinUnDigits

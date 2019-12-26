@@ -429,6 +429,26 @@ This meant that ```av``` could only be used on Blocks that contained Doubles (be
 a Double). In such cases `AV` had to be used. With newer versions the functionality of `./` was extended and `av` can now be used on Blocks that contain Integers as well. However,
 if you use `AV` on a Block that contains Doubles it will convert all these Doubles to ceiling(a) which is not what you want in most cases. Thus: The use of `av` is recommended as it is safer. 
 
+### BlockAccess ```!!```
+
+```Block a, Int b```: Returns the `b`-th element of `a`.
+
+```shell
+blsq ) {1 2 3 4}0!!
+1
+blsq ) {1 2 3 4}2!!
+3
+```
+
+```String a, Int b```: Returns the `b`-th character of `a`.
+
+```shell
+blsq ) {1 2 3 4}0!!
+1
+blsq ) {1 2 3 4}2!!
+3
+```
+
 ### Box ```bx```
 
 ```Any a: ``` Puts `a` into a Block.
@@ -2761,3 +2781,55 @@ blsq ) 96 66 $$
 blsq ) 96 34 $$
 66
 ```
+
+### Zip ```z[```
+
+```Block a, Block b: ``` Zips `a` and `b`. 
+
+```shell
+blsq ) {1 2 3}{4 5 6}z[
+{{1 4} {2 5} {3 6}}
+```
+
+```String a, String b: ``` Zips `a` and `b`.
+
+```shell
+blsq ) "abc""def"z[
+{{'a 'd} {'b 'e} {'c 'f}}
+```
+
+```String a, Block b: ``` Zips `a` and `b`.
+
+```shell
+blsq ) "abc"{1 2 3}z[
+{{'a 1} {'b 2} {'c 3}}
+```
+
+```Block a, String b: ``` Zips `a` and `b`.
+
+```shell
+blsq ) {1 2 3}"abc"z[
+{{1 'a} {2 'b} {3 'c}}
+```
+
+```Int a, Int b```: *Defined as*: *```XX\/XX\/z[```*. (It'll explode the integers).
+
+```shell
+blsq ) 123 456z[
+{{1 4} {2 5} {3 6}}
+```
+
+```Block a, Any b```: *Defined as*: *```\/XX\/z[*. (It'll explode argument `b`).
+
+```Any a, Block b:```: *Defined as*: *```XXz[```*. (It'll explode argument `a`).
+
+### ZipWith ```Z[```
+
+```Any a, Any b, Block f```: Performs a *Zip* followed by a *Map*. 
+
+### ZipWithPush ``Z]```
+
+*Defined as:* *```(^p+])Z[```*. 
+
+**Authors' Notes:** This is was introduced to the fact that with the usual *ZipWith* the arguments are as a Block on the
+stack which is kinda inconvenient in most cases. 

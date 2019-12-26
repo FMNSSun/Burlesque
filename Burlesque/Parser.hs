@@ -27,7 +27,13 @@ import Debug.Trace
 import qualified Data.Map as M
 
 
--- Usable singles: kKoO
+-- Usable singles: KO
+
+parseLilO = do
+ char 'o'
+ times <- many1 digit
+ e <- parseSingle
+ return $ BlsqAutoBlock (replicate (read times) e)
 
 parseDouble :: Parser BlsqExp
 parseDouble = do 
@@ -409,22 +415,33 @@ parseSingleFancy :: Parser BlsqExp
 parseSingleFancy = (try parseFancyCall) <|> (try parseFancyAssign) <|> parseFancyDef <|> parseData' <|> parseUnfancy
 
 parseSingle :: Parser BlsqExp
-parseSingle = (try parseLisp) <|> (try parseFancy) <|> (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
+parseSingle = (try parseLilO) <|> (try parseLisp) <|> (try parseFancy) <|> (try parseMap) <|> (try parseSet) <|> (try parseGet2) <|> (try parseGet) <|> (try parseAssign2) <|> (try parseAssign3) <|>
               (try parseCall) <|> (try parseAssign) <|> (try parseProc) <|> (try parseBlocks') <|> parseSingleBlock <|> 
               parseBlock <|> parseString {- <|> parsePretty <|> parseHackMode -} <|> parseSpecial <|> 
               (try parseDouble) <|> (try parseIntE) <|> (try parseNumber) <|>
-              parseChar <|> parseQuoted <|> parseQuoted2 <|> parseSingleIdent <|> (try parseShortcuts) <|> parseIdent
+              parseChar <|> parseQuoted <|> parseQuoted2 <|> (try parseTriplet) <|> parseSingleIdent <|> (try parseShortcuts) <|> parseIdent
 			  
 parseBlocks' = (try parseMapBlock) <|> (try parseFilterBlock) <|> (try parseReduceBlock)
+
+parseTriplet = do
+  char 'k'
+  a <- parseSingle
+  b <- parseSingle
+  c <- parseSingle
+  return $ BlsqAutoBlock [BlsqIdent "J", a, BlsqIdent "j", c, b]
 
 parseShortcuts = do
   char '`'
   sc
- where sc = sc_FilterNot
+ where sc = sc_FilterNot <|> sc_MapFilterSame
        sc_FilterNot = do
          char 'F'
          s <- parseSingle
          return $ BlsqAutoBlock [BlsqBlock [s], BlsqIdent "fn"]
+       sc_MapFilterSame = do
+         char 'M'
+    	 s <- parseSingle
+    	 return $ BlsqAutoBlock [BlsqBlock[s], BlsqIdent "m[", BlsqBlock[s], BlsqIdent "f["]
    
 runParserWithString p input = 
   case parse p "" input of
